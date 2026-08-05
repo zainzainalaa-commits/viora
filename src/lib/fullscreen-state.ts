@@ -1,3 +1,4 @@
+import { can } from "@/lib/capabilities";
 import { loadStoredSettings } from "@/lib/settings/load";
 
 let windowFullscreen = false;
@@ -99,7 +100,9 @@ export async function toggleWindowFullscreen(): Promise<void> {
 }
 
 async function osWindowFullscreen(): Promise<boolean> {
-  if (!isTauri()) return false;
+  // Android drives fullscreen through immersive mode, not a window command;
+  // asking Tauri here rejects with "Window API not available on mobile".
+  if (!isTauri() || !can("customTitlebar")) return false;
   try {
     const { getCurrentWindow } = await import("@tauri-apps/api/window");
     return await getCurrentWindow().isFullscreen().catch(() => false);
@@ -118,7 +121,7 @@ export async function exitAnyFullscreen(): Promise<void> {
   if (typeof document !== "undefined" && document.fullscreenElement) {
     await document.exitFullscreen().catch(() => {});
   }
-  if (isTauri()) {
+  if (isTauri() && can("customTitlebar")) {
     try {
       const { getCurrentWindow } = await import("@tauri-apps/api/window");
       const w = getCurrentWindow();

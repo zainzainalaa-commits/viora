@@ -94,25 +94,29 @@ export function isWindowsDesktop(): boolean {
   return platformOS() === "windows";
 }
 
-// Fire TV sticks report AFTB/AFTS/AFTM/AFTT..., Chromecast-with-GoogleTV reports
-// "Android ... Build/... " with no touch, Tizen/webOS/VIDAA are their own thing.
-const TV_UA = /\b(smart-?tv|googletv|android\s?tv|bravia|aft[a-z]{1,3}\b|hbbtv|netcast|vidaa|roku|tizen|web0s|webos|crkey|philipstv|netfrontlifebrowser)\b/i;
+// Fire TV sticks report AFTB/AFTS/AFTM/AFTT..., Google's Android TV images carry
+// "atv" in the model, Tizen/webOS/VIDAA are their own thing.
+const TV_UA = /\b(smart-?tv|googletv|android\s?tv|atv\d*|bravia|aft[a-z]{1,3}\b|hbbtv|netcast|vidaa|roku|tizen|web0s|webos|crkey|philipstv|netfrontlifebrowser)\b/i;
 
+/**
+ * Checked against a real Android TV WebView, where the obvious signals all lie:
+ * the UA still ends in "Mobile Safari", `maxTouchPoints` reports 5 despite there
+ * being no touchscreen, and `(tv: tv)` is not implemented. What does hold is
+ * that a TV has no pointing device at all — `(pointer: none)` — because the only
+ * input is a D-pad. That is the primary test; the UA is the fallback for hosts
+ * that claim a pointer anyway.
+ */
 export function isTVDevice(): boolean {
   if (nativeIsTV !== null) return nativeIsTV;
-  const u = ua();
-  if (TV_UA.test(u)) return true;
-  // A touchless Android build is a TV box (or a very unusual tablet).
-  if (/android/i.test(u) && touchPoints() === 0) return true;
   if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
-    // The leanback media query is honoured by Android TV WebView.
     try {
+      if (window.matchMedia("(pointer: none)").matches) return true;
       if (window.matchMedia("(tv: tv)").matches) return true;
     } catch {
       /* unsupported query */
     }
   }
-  return false;
+  return TV_UA.test(ua());
 }
 
 export function isAndroidTV(): boolean {

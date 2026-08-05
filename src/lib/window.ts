@@ -3,8 +3,13 @@ import { getCurrentWindow, type Window } from "@tauri-apps/api/window";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { getWindowFullscreen } from "@/lib/fullscreen-state";
+import { can } from "@/lib/capabilities";
 
-const win: Window | null = isTauri() ? getCurrentWindow() : null;
+// Tauri exists on Android too, but its window commands reject there with
+// "Window API not available on mobile". Gating on the capability instead of on
+// `isTauri()` keeps every helper below a no-op rather than an unhandled
+// rejection — TV reuses the desktop chrome, so it reaches this code.
+const win: Window | null = can("customTitlebar") ? getCurrentWindow() : null;
 
 const IS_MAC =
   typeof navigator !== "undefined" && /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
@@ -49,9 +54,11 @@ export function useMaximized(): boolean {
     let cancelled = false;
     let timer: number | null = null;
     const check = () => {
-      (IS_MAC ? win.isFullscreen() : win.isMaximized()).then((v) => {
-        if (!cancelled) setMaxed(v);
-      });
+      (IS_MAC ? win.isFullscreen() : win.isMaximized())
+        .then((v) => {
+          if (!cancelled) setMaxed(v);
+        })
+        .catch(() => {});
     };
     check();
     const schedule = () => {

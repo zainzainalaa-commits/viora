@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { useCallback, useEffect, useRef, useState } from "react";
 import snip404 from "@/assets/snip404.svg";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -150,14 +151,7 @@ export function ErrorView() {
           className="font-display text-[24px] font-medium leading-none tracking-tight sm:text-[28px]"
           style={{ transform: "translateY(1px)" }}
         >
-          Harb
-          <span
-            className="inline-block"
-            style={{ transform: "rotate(7deg)", transformOrigin: "50% 65%" }}
-          >
-            o
-          </span>
-          r
+          {APP_NAME}
         </span>
       </div>
 

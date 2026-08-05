@@ -156,8 +156,13 @@ if (!skipWeb) {
 }
 
 step(++n, total, `Compiling the native library for ${arch.triple}`);
+// Without `custom-protocol`, tauri's build script sets `dev = true` and the app
+// loads `devUrl` (localhost:1420) instead of the bundled frontend — an APK that
+// shows "Failed to request http://localhost:1420/" on a device with no dev
+// server. The Tauri CLI passes this feature itself; driving cargo directly means
+// we have to.
 run(
-  `cargo build --target ${arch.triple}${release ? " --release" : ""} --manifest-path "${join(ROOT, "src-tauri", "Cargo.toml")}"`,
+  `cargo build --target ${arch.triple}${release ? " --release" : ""} --features tauri/custom-protocol --manifest-path "${join(ROOT, "src-tauri", "Cargo.toml")}"`,
   ROOT,
 );
 
