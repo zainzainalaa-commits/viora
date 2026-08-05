@@ -26,6 +26,10 @@ jobs:
   apk:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    # The workflow token is read-only by default, so publishing a release 403s
+    # at the very last step — after a nine-minute build has already succeeded.
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
