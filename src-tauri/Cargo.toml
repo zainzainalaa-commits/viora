@@ -42,7 +42,7 @@ hound = "3.5"
 rust_cast = { path = "vendor/rust_cast", version = "0.20" }
 mdns-sd = "0.13"
 rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
-harbor-core = { path = "../harbor-core" }
+viora-core = { path = "../viora-core" }
 librqbit = { version = "=8.1.1", default-features = false, features = ["rust-tls"] }
 url = "2"
 realfft = "3"

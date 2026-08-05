@@ -19,7 +19,7 @@ fn to_js_err<E: std::fmt::Display>(e: E) -> JsValue {
 }
 
 #[wasm_bindgen]
-pub fn harbor_core_version() -> String {
+pub fn viora_core_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
 }
 

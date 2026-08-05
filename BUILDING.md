@@ -76,3 +76,18 @@ Set in three places that have to agree:
 
 Android's `versionCode` and `versionName` are generated from the Tauri config;
 do not edit `gen/android/app/tauri.properties` by hand.
+
+## After moving the project directory
+
+Cargo bakes absolute paths into `src-tauri/target`, so a move breaks the next
+build with `failed to read plugin permissions: ... \old\path\...`. Clear the
+build-script output and fingerprints — the compiled crates themselves survive:
+
+```bash
+rm -rf src-tauri/target/*/debug/build src-tauri/target/debug/build
+find src-tauri/target -name .fingerprint -type d -exec rm -rf {} +
+```
+
+pnpm records paths too and refuses to purge `node_modules` without a prompt.
+`build-apk.mjs` sets `CI=true` so it answers itself, but a bare `pnpm install`
+after a move needs `CI=true pnpm install` or a manual `rm -rf node_modules`.

@@ -1,5 +1,5 @@
 [package]
-name = "harbor-core"
+name = "viora-core"
 version = "0.1.0"
 edition = "2021"
 description = "Shared protocol layer for Harbor: stream parsing, trust filtering, scoring."

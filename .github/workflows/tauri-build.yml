@@ -63,7 +63,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: |
-            harbor-core
+            viora-core
             src-tauri
 
       - uses: pnpm/action-setup@v4
@@ -170,8 +170,8 @@ jobs:
             rm -rf mpv-player mpv-player.7z
           fi
 
-      - name: harbor-core check
-        working-directory: harbor-core
+      - name: viora-core check
+        working-directory: viora-core
         run: |
           cargo check
           cargo test --all-targets

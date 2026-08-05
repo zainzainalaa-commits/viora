@@ -103,6 +103,7 @@ const env = {
   ANDROID_NDK_ROOT: tc.ndk,
   NDK_HOME: tc.ndk,
   JAVA_HOME: tc.jdk,
+  CI: process.env.CI ?? "true",
   [`CC_${envKey}`]: clang,
   [`CXX_${envKey}`]: join(tc.ndkBin, `${arch.cc}${API_LEVEL}-clang++${ext}`),
   [`AR_${envKey}`]: join(tc.ndkBin, `llvm-ar${process.platform === "win32" ? ".exe" : ""}`),
@@ -152,6 +153,9 @@ console.log(`\nViora ${version} — Android ${arch.abi} (${profile})`);
 
 if (!skipWeb) {
   step(++n, total, "Building the web bundle");
+  // pnpm refuses to purge a node_modules whose recorded paths no longer match
+  // (after the project directory is moved, say) unless it can ask — and this
+  // script has no TTY. CI=true is pnpm's documented way to answer yes.
   run("pnpm run build", ROOT);
 }
 

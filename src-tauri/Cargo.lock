@@ -2016,20 +2016,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "harbor-core"
-version = "0.1.0"
-dependencies = [
- "js-sys",
- "once_cell",
- "regex",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "unicode-normalization",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "hashbrown"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6746,7 +6732,6 @@ dependencies = [
  "flate2",
  "futures-util",
  "gtk",
- "harbor-core",
  "hound",
  "jni 0.21.1",
  "libc",
@@ -6782,11 +6767,26 @@ dependencies = [
  "tokio-util",
  "url",
  "uuid 1.23.1",
+ "viora-core",
  "walkdir",
  "wasapi",
  "webview2-com 0.37.0",
  "window-vibrancy",
  "windows 0.61.3",
+]
+
+[[package]]
+name = "viora-core"
+version = "0.1.0"
+dependencies = [
+ "js-sys",
+ "once_cell",
+ "regex",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "unicode-normalization",
+ "wasm-bindgen",
 ]
 
 [[package]]

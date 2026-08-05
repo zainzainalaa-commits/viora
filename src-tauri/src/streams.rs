@@ -1,4 +1,4 @@
-use harbor_core::{
+use viora_core::{
     parser, scoring, trust,
     ParsedStream, RankedPicker, Rejection, ScoreOptions, ScoredStream, Stream, TrustOptions,
 };
