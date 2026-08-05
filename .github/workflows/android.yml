@@ -90,10 +90,14 @@ jobs:
         run: |
           path=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' | head -1)
           [ -n "$path" ] || { echo "no APK produced"; exit 1; }
-          name="Viora-${{ steps.meta.outputs.version }}-arm64.apk"
-          cp "$path" "$name"
-          echo "path=$name" >> "$GITHUB_OUTPUT"
-          ls -lh "$name"
+          versioned="Viora-${{ steps.meta.outputs.version }}-arm64.apk"
+          cp "$path" "$versioned"
+          # The version-less copy is what makes /releases/latest/download/ work:
+          # that path needs a filename that never changes, so a TV configured
+          # once keeps fetching the newest build forever.
+          cp "$path" "Viora-arm64.apk"
+          echo "path=$versioned" >> "$GITHUB_OUTPUT"
+          ls -lh "$versioned" "Viora-arm64.apk"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -101,17 +105,24 @@ jobs:
           path: ${{ steps.apk.outputs.path }}
           retention-days: 30
 
-      # A tag publishes a release, which gives the TV a stable URL to fetch
+      # A tag publishes a release, which gives the TV a plain URL to fetch
       # through the Downloader app instead of a login-gated artifact.
       - name: Publish the release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ steps.apk.outputs.path }}
+          files: |
+            ${{ steps.apk.outputs.path }}
+            Viora-arm64.apk
           generate_release_notes: true
           body: |
-            Install on Android TV: open **Downloader**, enter this release's APK
-            URL, and allow installation from unknown sources when prompted.
+            **Install on Android TV** — open Downloader and enter this address,
+            which always resolves to the newest release:
 
-            Debug builds are signed with the standard Android debug key, so a
-            newer build installs over an older one without uninstalling first.
+            `https://github.com/${{ github.repository }}/releases/latest/download/Viora-arm64.apk`
+
+            Set it once; every future update arrives at the same address. Allow
+            installation from unknown sources when prompted.
+
+            Builds are signed with the standard Android debug key, so a newer
+            build installs over an older one without uninstalling first.
