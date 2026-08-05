@@ -15,7 +15,8 @@
     "setup:ffmpeg": "node scripts/fetch-ffmpeg.mjs",
     "setup:fonts": "node scripts/fetch-fonts.mjs",
     "build:apk": "node scripts/build-apk.mjs",
-    "build:apk:release": "node scripts/build-apk.mjs --release"
+    "build:apk:release": "node scripts/build-apk.mjs --release",
+    "optimize:images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
@@ -47,6 +48,7 @@
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
     "cheerio": "^1.2.0",
+    "sharp": "^0.35.3",
     "typescript": "~5.8.3",
     "vite": "^7.0.4"
   },
