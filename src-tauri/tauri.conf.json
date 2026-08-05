@@ -42,7 +42,7 @@
     "fileAssociations": [
       {
         "ext": ["mkv", "mp4", "avi", "mov", "webm", "m4v"],
-        "name": "HarborVideo",
+        "name": "VioraVideo",
         "description": "Video file",
         "role": "Viewer"
       }

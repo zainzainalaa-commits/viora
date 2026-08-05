@@ -79,6 +79,16 @@ gtk = { version = "0.18", features = ["v3_24"] }
 [profile.dev]
 debug = "line-tables-only"
 
+# Cargo's release defaults keep full debug symbols, and those are most of the
+# APK: the unstripped library runs ~150 MB per ABI, which is why shipping two
+# architectures produced a 296 MB download. Stripping and optimising for size
+# changes no behaviour.
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+opt-level = "s"
+
 [target.'cfg(target_os = "macos")'.dependencies]
 objc2 = "0.6"
 objc2-foundation = { version = "0.3", features = ["NSGeometry", "NSThread", "NSValue", "NSDictionary", "NSString"] }

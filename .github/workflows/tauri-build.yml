@@ -79,7 +79,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # ARM64 links against libmpv too, but there is no bare ARM64 libmpv-2.dll
-      # hosted by Harbor and the committed src-tauri/libmpv/mpv.lib is x64-only.
+      # hosted by Viora and the committed src-tauri/libmpv/mpv.lib is x64-only.
       # Set up the ARM64 MSVC dev environment so lib.exe is available to rebuild
       # the import library for the ARM64 target from the committed libmpv.def.
       - name: Set up MSVC (Windows ARM64)
