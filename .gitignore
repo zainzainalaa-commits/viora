@@ -49,3 +49,10 @@ local_docs/
 /src-tauri/gen/android/local.properties
 /src-tauri/gen/android/app/src/main/jniLibs/
 /src-tauri/gen/apple/build/
+
+# Android release signing. CI writes these from secrets; they must never be
+# committed — the key is the only thing that lets an update install over an
+# existing build.
+keystore.properties
+*.jks
+*.keystore

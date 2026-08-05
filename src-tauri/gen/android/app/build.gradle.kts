@@ -13,9 +13,29 @@ val tauriProperties = Properties().apply {
     }
 }
 
+// Release signing, if a keystore has been supplied. CI writes this file from
+// repository secrets; it is gitignored, so a clone never carries the key.
+val keystoreProperties = Properties().apply {
+    val propFile = rootProject.file("keystore.properties")
+    if (propFile.exists()) {
+        propFile.inputStream().use { load(it) }
+    }
+}
+
 android {
     compileSdk = 36
     namespace = "app.viora"
+
+    signingConfigs {
+        if (keystoreProperties.containsKey("storeFile")) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
     defaultConfig {
         manifestPlaceholders["usesCleartextTraffic"] = "false"
         applicationId = "app.viora"
@@ -37,6 +57,12 @@ android {
             }
         }
         getByName("release") {
+            // An unsigned release APK cannot be installed at all — Android
+            // rejects it with a bare "App not installed". Fall back to the debug
+            // key when no keystore is configured so a local release build stays
+            // testable rather than silently producing something uninstallable.
+            signingConfig = signingConfigs.findByName("release")
+                ?: signingConfigs.getByName("debug")
             isMinifyEnabled = true
             proguardFiles(
                 *fileTree(".") { include("**/*.pro") }

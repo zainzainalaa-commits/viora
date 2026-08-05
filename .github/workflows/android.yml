@@ -75,6 +75,31 @@ jobs:
       - name: Typecheck and build the web bundle
         run: pnpm run build
 
+      # Release APKs must be signed or Android refuses to install them. Without
+      # the secrets the Gradle config falls back to the debug key, which is
+      # still installable — just not suitable for distribution.
+      - name: Write the signing keystore
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$KEYSTORE" ]; then
+            echo "no keystore secret — release builds will use the debug key"
+            exit 0
+          fi
+          dir=src-tauri/gen/android
+          echo "$KEYSTORE" | base64 -d > "$dir/viora-release.jks"
+          # Written rather than interpolated inline so the password never lands
+          # in the step's echoed command line.
+          {
+            echo "storeFile=viora-release.jks"
+            echo "storePassword=$STORE_PASS"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$STORE_PASS"
+          } > "$dir/keystore.properties"
+          echo "keystore configured"
+
       # arm64 covers every current phone and TV box. Building all four ABIs
       # would quadruple the time for architectures almost nobody runs.
       - name: Build the APK
