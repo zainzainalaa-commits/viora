@@ -1787,15 +1787,11 @@ html[data-input="dpad"] [role="gridcell"]:focus {
   transition: transform 120ms ease-out;
 }
 
-html[data-form-factor="tv"] {
-  /* Most TVs still overscan; anything inside 4% of the edge can be cut off. */
-  --harbor-safe-inset: 4vmin;
-  font-size: 18px;
-}
-
-html[data-form-factor="tv"] body {
-  padding: var(--harbor-safe-inset);
-}
+/* The TV deliberately renders at the same scale as the desktop. An earlier
+   revision bumped the root font to 18px and inset the body by 4vmin for
+   overscan, which made every screen read as a zoomed-in version of the desktop
+   app rather than the same app. Modern TVs do not overscan, and the layout was
+   already designed for a 16:9 screen. */
 
 /* Hover affordances never fire from a D-pad or a finger; make them permanent
    rather than unreachable. */
@@ -1865,13 +1861,9 @@ html[data-input="dpad"] [data-harbor-player] [role="slider"] {
   padding-block: 12px;
 }
 
-/* TV rows sit further apart so the focus ring and its glow do not collide
-   with neighbours, and text has to survive being read across a room. */
-html[data-form-factor="tv"] [data-harbor-row] {
-  gap: 1.5rem;
-}
-html[data-form-factor="tv"] h1 { font-size: 2.25rem; }
-html[data-form-factor="tv"] h2 { font-size: 1.75rem; }
+/* Row spacing and heading sizes are inherited from the desktop layout on
+   purpose — the TV should be the same app at the same scale, not a magnified
+   one. Only the focus ring above is added, because a D-pad has no cursor. */
 
 /* Scrollbars are pointer furniture; a remote or a finger never uses them. */
 html[data-form-factor="tv"] ::-webkit-scrollbar,
