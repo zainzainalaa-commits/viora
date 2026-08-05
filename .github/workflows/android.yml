@@ -1,0 +1,113 @@
+name: Android
+
+# Builds an installable APK on every push and attaches one to a release when a
+# version tag lands. Linux runners have no symlink restriction, so the official
+# `tauri android build` works here — the local build-apk.mjs workaround is only
+# needed on Windows hosts.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Build a release APK instead of debug"
+        type: boolean
+        default: false
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: meta
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install the NDK
+        run: |
+          sdkmanager --install "ndk;28.2.13676358" "platforms;android-36" "build-tools;36.0.0"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/28.2.13676358" >> "$GITHUB_ENV"
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      # Keyed on the lockfile so a dependency bump busts it, and on the OS so a
+      # runner image change does not resurrect stale artefacts.
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+          key: android
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck and build the web bundle
+        run: pnpm run build
+
+      # arm64 covers every current phone and TV box. Building all four ABIs
+      # would quadruple the time for architectures almost nobody runs.
+      - name: Build the APK
+        run: |
+          if [ "${{ github.ref_type == 'tag' || inputs.release }}" = "true" ]; then
+            pnpm exec tauri android build --target aarch64 --apk
+          else
+            pnpm exec tauri android build --debug --target aarch64 --apk
+          fi
+
+      - name: Locate the APK
+        id: apk
+        run: |
+          path=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' | head -1)
+          [ -n "$path" ] || { echo "no APK produced"; exit 1; }
+          name="Viora-${{ steps.meta.outputs.version }}-arm64.apk"
+          cp "$path" "$name"
+          echo "path=$name" >> "$GITHUB_OUTPUT"
+          ls -lh "$name"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: viora-apk
+          path: ${{ steps.apk.outputs.path }}
+          retention-days: 30
+
+      # A tag publishes a release, which gives the TV a stable URL to fetch
+      # through the Downloader app instead of a login-gated artifact.
+      - name: Publish the release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.apk.outputs.path }}
+          generate_release_notes: true
+          body: |
+            Install on Android TV: open **Downloader**, enter this release's APK
+            URL, and allow installation from unknown sources when prompted.
+
+            Debug builds are signed with the standard Android debug key, so a
+            newer build installs over an older one without uninstalling first.
