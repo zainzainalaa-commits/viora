@@ -21,9 +21,7 @@
   },
   "plugins": {
     "deep-link": {
-      "mobile": [
-        { "host": "harbor.site", "pathPrefix": ["/open"] }
-      ],
+      "mobile": [],
       "desktop": {
         "schemes": ["viora", "stremio"]
       }

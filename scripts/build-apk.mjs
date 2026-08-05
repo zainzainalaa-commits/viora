@@ -114,6 +114,34 @@ function run(cmd, cwd) {
   execSync(cmd, { cwd, env, stdio: "inherit" });
 }
 
+/**
+ * `settings.gradle` applies `tauri.settings.gradle`, which lists the Android
+ * modules of every Tauri plugin with absolute paths into the Cargo registry.
+ * Only the Tauri CLI knows how to resolve those, and it writes the file during
+ * `android build` — before the symlink step this script exists to avoid. So we
+ * let that command run and fail, then check the file appeared.
+ */
+function ensureTauriSettings() {
+  const settings = join(ANDROID, "tauri.settings.gradle");
+  if (existsSync(settings)) return;
+  console.log("    tauri.settings.gradle missing — generating it via the Tauri CLI");
+  try {
+    execSync(`pnpm exec tauri android build --debug --target ${archKey} --apk`, {
+      cwd: ROOT,
+      env,
+      stdio: "ignore",
+    });
+  } catch {
+    // Expected: it gets as far as the symlink and stops there.
+  }
+  if (!existsSync(settings)) {
+    fail(
+      "could not generate tauri.settings.gradle.\n" +
+        "  Run `pnpm exec tauri android init` once, then retry.",
+    );
+  }
+}
+
 const version = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
 const profile = release ? "release" : "debug";
 const gradleProfile = release ? "Release" : "Debug";
@@ -144,7 +172,8 @@ copyFileSync(built, join(jniDir, soName));
 console.log(`    ${(statSync(built).size / 1024 / 1024).toFixed(1)} MB -> jniLibs/${arch.abi}/`);
 
 step(++n, total, "Packaging the APK");
-const gradlew = process.platform === "win32" ? "gradlew.bat" : "./gradlew";
+ensureTauriSettings();
+const gradlew = process.platform === "win32" ? ".\\gradlew.bat" : "./gradlew";
 // The excluded task is the one that shells back out to tauri and symlinks;
 // stage 3 already produced its output.
 run(
