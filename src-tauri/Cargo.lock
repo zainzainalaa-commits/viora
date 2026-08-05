@@ -2016,61 +2016,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "harbor"
-version = "0.9.87"
-dependencies = [
- "axum",
- "base64 0.22.1",
- "core-foundation 0.10.1",
- "core-video",
- "discord-rich-presence",
- "flate2",
- "futures-util",
- "gtk",
- "harbor-core",
- "hound",
- "jni 0.21.1",
- "libc",
- "libmpv2",
- "libmpv2-sys",
- "librqbit",
- "mdns-sd",
- "ndk-context",
- "objc2",
- "objc2-app-kit",
- "objc2-foundation",
- "objc2-web-kit",
- "png",
- "realfft",
- "reqwest 0.12.28",
- "rust_cast",
- "rustls",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-deep-link",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-http",
- "tauri-plugin-opener",
- "tauri-plugin-process",
- "tauri-plugin-shell",
- "tauri-plugin-single-instance",
- "tauri-plugin-updater",
- "tauri-plugin-window-state",
- "tokio",
- "tokio-util",
- "url",
- "uuid 1.23.1",
- "walkdir",
- "wasapi",
- "webview2-com 0.37.0",
- "window-vibrancy",
- "windows 0.61.3",
-]
-
-[[package]]
 name = "harbor-core"
 version = "0.1.0"
 dependencies = [
@@ -6788,6 +6733,61 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+
+[[package]]
+name = "viora"
+version = "1.0.0"
+dependencies = [
+ "axum",
+ "base64 0.22.1",
+ "core-foundation 0.10.1",
+ "core-video",
+ "discord-rich-presence",
+ "flate2",
+ "futures-util",
+ "gtk",
+ "harbor-core",
+ "hound",
+ "jni 0.21.1",
+ "libc",
+ "libmpv2",
+ "libmpv2-sys",
+ "librqbit",
+ "mdns-sd",
+ "ndk-context",
+ "objc2",
+ "objc2-app-kit",
+ "objc2-foundation",
+ "objc2-web-kit",
+ "png",
+ "realfft",
+ "reqwest 0.12.28",
+ "rust_cast",
+ "rustls",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-deep-link",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-http",
+ "tauri-plugin-opener",
+ "tauri-plugin-process",
+ "tauri-plugin-shell",
+ "tauri-plugin-single-instance",
+ "tauri-plugin-updater",
+ "tauri-plugin-window-state",
+ "tokio",
+ "tokio-util",
+ "url",
+ "uuid 1.23.1",
+ "walkdir",
+ "wasapi",
+ "webview2-com 0.37.0",
+ "window-vibrancy",
+ "windows 0.61.3",
+]
 
 [[package]]
 name = "virtue"

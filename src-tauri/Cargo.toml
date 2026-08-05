@@ -1,6 +1,6 @@
 [package]
 name = "viora"
-version = "0.9.87"
+version = "1.0.0"
 description = "A Stremio client built for adventure"
 edition = "2021"
 
