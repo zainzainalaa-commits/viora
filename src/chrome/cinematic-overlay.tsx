@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -112,7 +113,7 @@ export function CinematicOverlay() {
             )}
             {themePreset?.id === "crunch" && (
               <span className="font-display text-[22px] font-bold leading-none text-ink">
-                Harbor
+                {APP_NAME}
               </span>
             )}
           </button>

@@ -35,6 +35,13 @@
   --font-channel: "General Sans", "Switzer", "Inter", system-ui, sans-serif;
   --font-anime: "WonderfulFontyCure", "Sentient", "Georgia", serif;
   --font-arabic: "Geeza Pro", "SF Arabic", "Segoe UI", "Tahoma", "Noto Naskh Arabic", serif;
+  /* Author signature. The bundled face leads so a phone or a TV box renders the
+     same script the desktop does; the platform names behind it only cover a
+     build where the font file went missing. The `cursive` keyword alone is not
+     enough — it resolves to Comic Sans on Windows and to a plain sans on most
+     Android builds, which is not cursive at all. */
+  --font-signature: "WonderfulFontyCure", "Segoe Script", "Brush Script MT",
+    "Lucida Handwriting", "Apple Chancery", cursive;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);

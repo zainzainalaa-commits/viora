@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Harbor",
+  "productName": "Viora",
   "version": "0.9.87",
-  "identifier": "app.harbor",
+  "identifier": "app.viora",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Harbor",
+        "title": "Viora",
         "width": 1280,
         "height": 800,
         "minWidth": 960,
@@ -106,7 +106,7 @@
     "deep-link": {
       "mobile": [],
       "desktop": {
-        "schemes": ["harbor", "stremio"]
+        "schemes": ["viora", "stremio"]
       }
     },
     "updater": {

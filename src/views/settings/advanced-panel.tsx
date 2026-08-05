@@ -1,3 +1,4 @@
+import { VioraWordmark } from "@/components/icons/viora-wordmark";
 import { WEBSITE_URL, REPO_URL, SUPPORT_EMAIL } from "@/lib/brand";
 import { Check, Download, FlaskConical, Github, Link2, Loader2, Lock, RotateCw, Wrench } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -584,6 +585,9 @@ function AboutRow() {
   const t = useT();
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3.5 text-[13px] text-ink-muted">
+      <div className="mb-1.5 border-b border-edge-soft pb-3">
+        <VioraWordmark markClassName="h-8 w-8" />
+      </div>
       <InfoLine label={t("Version")} value={`${__APP_VERSION__}${IS_BETA_BUILD ? " (Beta)" : ""}`} />
       <InfoLine label={t("Build")} value={isTauri ? t("Desktop (Tauri 2 / WebView2)") : t("Web")} />
       {SUPPORT_EMAIL && <InfoLine label={t("Bug reports")} value={SUPPORT_EMAIL} />}

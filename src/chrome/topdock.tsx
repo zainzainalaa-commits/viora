@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Pencil, Search, Settings as SettingsIcon, Users } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -103,7 +104,7 @@ export function TopDock() {
             )}
             {themePreset?.id === "crunch" && (
               <span className="font-display text-[22px] font-bold leading-none text-ink">
-                Harbor
+                {APP_NAME}
               </span>
             )}
           </button>

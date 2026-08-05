@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -79,7 +80,7 @@ export function SideRail() {
                 className="text-[25px] font-medium leading-none tracking-tight"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Harbor
+                {APP_NAME}
               </span>
             )}
           </button>

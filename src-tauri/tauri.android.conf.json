@@ -3,7 +3,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Harbor",
+        "title": "Viora",
         "decorations": true,
         "transparent": false,
         "backgroundColor": [0, 0, 0, 255],
@@ -25,7 +25,7 @@
         { "host": "harbor.site", "pathPrefix": ["/open"] }
       ],
       "desktop": {
-        "schemes": ["harbor", "stremio"]
+        "schemes": ["viora", "stremio"]
       }
     }
   }

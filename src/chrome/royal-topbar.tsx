@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LogIn, LogOut, Pencil, Search, Settings as SettingsLucide, Users } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -111,7 +112,7 @@ export function RoyalTopbar() {
                 className="hidden text-[18px] font-medium uppercase leading-none tracking-[0.14em] text-ink lg:inline"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Harbor
+                {APP_NAME}
               </span>
             </button>
 

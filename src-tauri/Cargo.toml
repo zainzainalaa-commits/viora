@@ -1,11 +1,11 @@
 [package]
-name = "harbor"
+name = "viora"
 version = "0.9.87"
 description = "A Stremio client built for adventure"
 edition = "2021"
 
 [lib]
-name = "harbor_lib"
+name = "viora_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

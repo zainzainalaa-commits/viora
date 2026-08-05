@@ -4,22 +4,26 @@ import { setUserAddons, userAddons, type Addon } from "./addons";
 import { applyOrderToItems } from "./addons-store/reorder";
 
 const STORAGE_KEY = "harbor.installed-addons";
-const SEEDED_KEY = "harbor.addons.seeded.v1";
+// Bump when the default set changes so existing profiles pick the addition up
+// instead of only ever seeding on a completely fresh install.
+const SEEDED_KEY = "harbor.addons.seeded.v2";
 const DISABLED_KEY = "harbor.addons.disabled";
 
-const DEFAULT_ADDONS: Array<{ id: string; transportUrl: string }> = [];
+const DEFAULT_ADDONS: Array<{ id: string; transportUrl: string }> = [
+  { id: "community.cinemana", transportUrl: "local://cinemana/manifest.json" },
+];
 
 export async function seedDefaultAddonsIfFirstRun(): Promise<void> {
   try {
     if (localStorage.getItem(SEEDED_KEY) === "1") return;
-    if (loadInstalled().length > 0) {
-      localStorage.setItem(SEEDED_KEY, "1");
-      return;
-    }
+    // Additive on purpose: a profile that already has addons should still gain a
+    // newly shipped default. The key is written once per seed version, so an
+    // addon the user removes afterwards stays removed.
     for (const def of DEFAULT_ADDONS) {
+      if (loadInstalled().some((a) => a.transportUrl === def.transportUrl)) continue;
       try {
         const manifest = await fetchManifestAt(def.transportUrl);
-        const next = loadInstalled().filter((a) => a.transportUrl !== def.transportUrl);
+        const next = loadInstalled();
         next.push({
           id: manifest.id || def.id,
           transportUrl: def.transportUrl,

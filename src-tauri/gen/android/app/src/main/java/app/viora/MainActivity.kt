@@ -1,4 +1,4 @@
-package app.harbor
+package app.viora
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

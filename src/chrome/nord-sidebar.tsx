@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { Lock } from "lucide-react";
 import { useState } from "react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -76,7 +77,7 @@ export function NordSidebar() {
                   className="hidden text-[27px] font-medium leading-none lg:inline"
                   style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.4px" }}
                 >
-                  Harbor
+                  {APP_NAME}
                 </span>
               )}
             </button>

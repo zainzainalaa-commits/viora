@@ -7,10 +7,16 @@
  * a third party's infrastructure again.
  */
 
-/** Change these three when the product name is decided. */
-export const APP_NAME = "Harbor";
-export const APP_IDENTIFIER = "app.harbor";
-export const APP_SCHEME = "harbor";
+/**
+ * Product identity. Annotated as `string` rather than left to literal inference
+ * so callers can compare against other names without TypeScript declaring the
+ * comparison impossible.
+ */
+export const APP_NAME: string = "Viora";
+export const APP_IDENTIFIER: string = "app.viora";
+export const APP_SCHEME: string = "viora";
+/** Byline under the app name in the lockup. Empty string hides it. */
+export const APP_AUTHOR: string = "zayo0ni";
 
 /**
  * Your own backend, if and when you deploy one. Null means "not configured":

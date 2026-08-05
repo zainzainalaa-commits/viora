@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { fetch as tauriFetchImpl } from "@tauri-apps/plugin-http";
 import { TrackerBlockedError, isBlockedUrl, noteBlocked } from "./privacy/blocklist";
+import { handleLocalAddonRequest, isLocalAddonUrl } from "@/lib/addons/local";
 
 const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 
@@ -112,6 +113,12 @@ function isIdempotent(method: string | undefined): boolean {
 
 export const safeFetch: typeof fetch = (input, init) => {
   const target = typeof input === "string" ? input : input instanceof URL ? input.href : null;
+  // Built-in addons are served in-process. Routing them here means the rest of
+  // the app addresses them with an ordinary transport URL and never has to know
+  // the difference.
+  if (target && isLocalAddonUrl(target)) {
+    return handleLocalAddonRequest(target, init?.signal ?? undefined);
+  }
   if (target && isBlockedUrl(target)) {
     noteBlocked();
     let host = target;
