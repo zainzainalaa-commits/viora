@@ -100,29 +100,37 @@ jobs:
           } > "$dir/keystore.properties"
           echo "keystore configured"
 
-      # arm64 covers every current phone and TV box. Building all four ABIs
-      # would quadruple the time for architectures almost nobody runs.
+      # arm64 plus armv7: plenty of cheap TV boxes and older Fire TV sticks are
+      # still 32-bit, and an arm64-only APK simply refuses to install there with
+      # no explanation beyond "App not installed". x86 is skipped — no shipping
+      # Android TV runs it.
       - name: Build the APK
         run: |
           if [ "${{ github.ref_type == 'tag' || inputs.release }}" = "true" ]; then
-            pnpm exec tauri android build --target aarch64 --apk
+            pnpm exec tauri android build --target aarch64 armv7 --apk
           else
-            pnpm exec tauri android build --debug --target aarch64 --apk
+            pnpm exec tauri android build --debug --target aarch64 armv7 --apk
           fi
 
       - name: Locate the APK
         id: apk
         run: |
-          path=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' | head -1)
+          # Two targets produce a universal APK carrying both ABIs; prefer it
+          # over the per-ABI splits sitting in the same tree.
+          path=$(find src-tauri/gen/android/app/build/outputs/apk -name '*universal*.apk' | head -1)
+          [ -n "$path" ] || path=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' | head -1)
           [ -n "$path" ] || { echo "no APK produced"; exit 1; }
-          versioned="Viora-${{ steps.meta.outputs.version }}-arm64.apk"
+          versioned="Viora-${{ steps.meta.outputs.version }}-android.apk"
           cp "$path" "$versioned"
           # The version-less copy is what makes /releases/latest/download/ work:
           # that path needs a filename that never changes, so a TV configured
           # once keeps fetching the newest build forever.
+          cp "$path" "Viora-android.apk"
+          # Alias kept so any address already written down keeps resolving, even
+          # though the file is no longer arm64-only.
           cp "$path" "Viora-arm64.apk"
           echo "path=$versioned" >> "$GITHUB_OUTPUT"
-          ls -lh "$versioned" "Viora-arm64.apk"
+          ls -lh "$versioned" "Viora-android.apk"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -138,13 +146,16 @@ jobs:
         with:
           files: |
             ${{ steps.apk.outputs.path }}
+            Viora-android.apk
             Viora-arm64.apk
           generate_release_notes: true
           body: |
+            Carries both arm64 and armv7, so it installs on 32-bit TV boxes too.
+
             **Install on Android TV** — open Downloader and enter this address,
             which always resolves to the newest release:
 
-            `https://github.com/${{ github.repository }}/releases/latest/download/Viora-arm64.apk`
+            `https://github.com/${{ github.repository }}/releases/latest/download/Viora-android.apk`
 
             Set it once; every future update arrives at the same address. Allow
             installation from unknown sources when prompted.

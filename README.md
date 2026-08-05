@@ -22,7 +22,7 @@ Open the **Downloader** app and enter this address. It always resolves to the
 newest build, so it only has to be typed once:
 
 ```
-github.com/zainzainalaa-commits/viora/releases/latest/download/Viora-arm64.apk
+github.com/zainzainalaa-commits/viora/releases/latest/download/Viora-android.apk
 ```
 
 Allow installation from unknown sources when prompted.
