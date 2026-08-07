@@ -1,3 +1,5 @@
+import { FocusButton } from "@/lib/tv-focus";
+import { APP_NAME } from "@/lib/brand";
 import { Check, Loader2, Trash2, Upload } from "lucide-react";
 import { useRef, type ChangeEvent } from "react";
 import { useCustomFonts } from "@/lib/custom-fonts";
@@ -48,7 +50,7 @@ export function CustomFontTiles({
             }`}
             style={{ animation: "harborFontIn 240ms ease both" }}
           >
-            <button
+            <FocusButton
               type="button"
               onClick={() => onSelect(f.id)}
               className="flex flex-1 flex-col gap-1.5 pe-8 text-start"
@@ -57,7 +59,7 @@ export function CustomFontTiles({
                 className={`${previewSize} font-medium leading-none tracking-tight text-ink`}
                 style={{ fontFamily: family }}
               >
-                Harbor
+                {APP_NAME}
               </span>
               {!compact && (
                 <span className="text-[13px] text-ink-muted" style={{ fontFamily: family }}>
@@ -73,7 +75,7 @@ export function CustomFontTiles({
               >
                 {f.name}
               </span>
-            </button>
+            </FocusButton>
             <div className="absolute end-3 top-3 flex items-center">
               {active && (
                 <span
@@ -82,20 +84,20 @@ export function CustomFontTiles({
                   <Check size={12} strokeWidth={3} />
                 </span>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => remove(f.id)}
                 aria-label={`Remove ${f.name}`}
                 className="hidden h-7 w-7 items-center justify-center rounded-full bg-canvas/70 text-ink-subtle transition-colors hover:bg-danger/20 hover:text-danger group-hover/font:flex"
               >
                 <Trash2 size={13} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             </div>
           </div>
         );
       })}
 
-      <button
+      <FocusButton
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={busy}
@@ -118,7 +120,7 @@ export function CustomFontTiles({
           {busy ? "Adding font..." : "Upload a font"}
         </span>
         {!busy && <span className="text-[11px] text-ink-subtle">TTF, OTF, WOFF or WOFF2</span>}
-      </button>
+      </FocusButton>
 
       {error && <p className="col-span-full text-[12px] font-medium text-danger">{error}</p>}
 

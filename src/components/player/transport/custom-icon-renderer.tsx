@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import type { PlayerControlId } from "@/lib/player-chrome";
@@ -47,13 +48,13 @@ export function renderCustomIconControl(
       if (!ctx.onBack) return null;
       return (
         <Tooltip label={t("Back")} side="bottom">
-          <button
+          <FocusButton
             onClick={ctx.onBack}
             aria-label={t("Back")}
             className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-colors hover:bg-black/80"
           >
             <CustomIcon url={iconUrl} size={24} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }
@@ -62,13 +63,13 @@ export function renderCustomIconControl(
       const boxSize = ctx.tight ? "h-12 w-12" : ctx.compact ? "h-14 w-14" : "h-16 w-16";
       return (
         <Tooltip label={ctx.playing ? t("Pause") : t("Play")}>
-          <button
+          <FocusButton
             onClick={ctx.onPlayPause}
             aria-label={ctx.playing ? t("Pause") : t("Play")}
             className={`flex items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-[background-color,transform] hover:bg-white/22 active:scale-95 ${boxSize}`}
           >
             <CustomIcon url={iconUrl} size={iconSize} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }
@@ -77,14 +78,14 @@ export function renderCustomIconControl(
       const seconds = ctx.seekBackStepSec;
       return (
         <Tooltip label={t("Back {n}s", { n: seconds })}>
-          <button
+          <FocusButton
             type="button"
             onClick={() => ctx.onSeekStep(-seconds)}
             aria-label={t("Back {n} seconds", { n: seconds })}
             className="flex h-14 w-14 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-white"
           >
             <CustomIcon url={iconUrl} size={28} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }
@@ -93,14 +94,14 @@ export function renderCustomIconControl(
       const seconds = ctx.seekForwardStepSec;
       return (
         <Tooltip label={t("Forward {n}s", { n: seconds })}>
-          <button
+          <FocusButton
             type="button"
             onClick={() => ctx.onSeekStep(seconds)}
             aria-label={t("Forward {n} seconds", { n: seconds })}
             className="flex h-14 w-14 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-white"
           >
             <CustomIcon url={iconUrl} size={28} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }
@@ -108,7 +109,7 @@ export function renderCustomIconControl(
       if (ctx.tight || !ctx.showEpisodeNav) return null;
       return (
         <Tooltip label={t("Previous Episode")}>
-          <button
+          <FocusButton
             onClick={ctx.hasPrevEp ? ctx.onPrevEp : undefined}
             disabled={!ctx.hasPrevEp}
             aria-label={t("Previous Episode")}
@@ -117,7 +118,7 @@ export function renderCustomIconControl(
             }`}
           >
             <CustomIcon url={iconUrl} size={22} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }
@@ -125,7 +126,7 @@ export function renderCustomIconControl(
       if (ctx.tight || !ctx.showEpisodeNav) return null;
       return (
         <Tooltip label={t("Next Episode")}>
-          <button
+          <FocusButton
             onClick={ctx.hasNextEp ? ctx.onNextEp : undefined}
             disabled={!ctx.hasNextEp}
             aria-label={t("Next Episode")}
@@ -134,7 +135,7 @@ export function renderCustomIconControl(
             }`}
           >
             <CustomIcon url={iconUrl} size={22} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }

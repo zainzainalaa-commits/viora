@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Layers } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -68,7 +69,7 @@ export function CollectionCard({
   const to = `oklch(0.15 0.06 ${hue})`;
 
   return (
-    <button
+    <FocusButton
       ref={ref}
       type="button"
       onClick={() => {
@@ -96,6 +97,6 @@ export function CollectionCard({
       <h3 className="absolute inset-x-4 bottom-3.5 font-display text-[21px] font-medium leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.7)]">
         {name}
       </h3>
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Play } from "lucide-react";
 import { Poster } from "@/components/poster";
 import type { Meta } from "@/lib/cinemeta";
@@ -59,7 +60,7 @@ export function AnimeEpisodeRow({
       }
       className="group flex gap-6 rounded-2xl px-4 py-5 transition-colors hover:bg-elevated/30"
     >
-      <button
+      <FocusButton
         onClick={() => openPicker(epMeta, playEpisode, { autoPlay: settings.instantPlay })}
         className="flex min-w-0 flex-1 gap-6 text-start"
       >
@@ -129,7 +130,7 @@ export function AnimeEpisodeRow({
             </p>
           )}
         </div>
-      </button>
+      </FocusButton>
       <EpisodeDownloadButton meta={epMeta} episode={playEpisode} />
     </div>
   );

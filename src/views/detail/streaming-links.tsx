@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { animeStreamerInfo } from "@/lib/providers/anime-streamer";
 import type { KitsuStreamer } from "@/lib/providers/kitsu";
@@ -32,7 +33,7 @@ function StreamingLinkChip({ streamer }: { streamer: KitsuStreamer }) {
   const info = animeStreamerInfo(streamer.service);
   const [logoFailed, setLogoFailed] = useState(false);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => openUrl(streamer.url)}
       className="group flex h-11 items-center gap-2.5 rounded-xl border border-edge-soft bg-elevated/70 px-4 transition-[transform,background-color,border-color] duration-150 hover:border-ink-subtle hover:bg-elevated active:scale-[0.97]"
@@ -57,6 +58,6 @@ function StreamingLinkChip({ streamer }: { streamer: KitsuStreamer }) {
           {streamer.service}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }

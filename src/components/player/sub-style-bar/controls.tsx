@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -63,7 +64,7 @@ export function FontMenu({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onClick={() => setOpen((v) => !v)}
         className="flex h-11 min-w-[120px] shrink-0 items-center justify-between gap-2 px-3 text-[14px] font-semibold text-ink transition-colors hover:bg-elevated"
@@ -73,7 +74,7 @@ export function FontMenu({
           {current.id.startsWith("custom:") ? current.label : t(current.label)}
         </span>
         <ChevronDown size={15} className="shrink-0 text-ink-subtle" />
-      </button>
+      </FocusButton>
       {open &&
         pos &&
         createPortal(
@@ -93,7 +94,7 @@ export function FontMenu({
               {items.map((it) => {
                 const active = it.id === value;
                 return (
-                  <button
+                  <FocusButton
                     key={it.id}
                     onClick={() => {
                       onChange(it.id);
@@ -108,7 +109,7 @@ export function FontMenu({
                       {it.id.startsWith("custom:") ? it.label : t(it.label)}
                     </span>
                     {active && <Check size={15} className="shrink-0 text-ink" />}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>
@@ -136,10 +137,10 @@ export function SizeStepper({ value, onChange }: { value: number; onChange: (n: 
   };
   return (
     <div className="flex h-11 shrink-0 items-stretch">
-      <button aria-label={t("Smaller")} onClick={() => onChange(value - 1)} className="flex w-9 items-center justify-center text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
+      <FocusButton aria-label={t("Smaller")} onClick={() => onChange(value - 1)} className="flex w-9 items-center justify-center text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
         <span className="text-[13px] font-bold">A</span>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}
@@ -147,10 +148,10 @@ export function SizeStepper({ value, onChange }: { value: number; onChange: (n: 
         className="flex min-w-[48px] cursor-ew-resize touch-none items-center justify-center px-1 font-mono text-[14px] tabular-nums text-ink"
       >
         {value}
-      </button>
-      <button aria-label={t("Larger")} onClick={() => onChange(value + 1)} className="flex w-9 items-center justify-center text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
+      </FocusButton>
+      <FocusButton aria-label={t("Larger")} onClick={() => onChange(value + 1)} className="flex w-9 items-center justify-center text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
         <span className="text-[17px] font-bold">A</span>
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -158,7 +159,7 @@ export function SizeStepper({ value, onChange }: { value: number; onChange: (n: 
 export function BoldToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onToggle}
       aria-pressed={on}
@@ -169,7 +170,7 @@ export function BoldToggle({ on, onToggle }: { on: boolean; onToggle: () => void
       }`}
     >
       B
-    </button>
+    </FocusButton>
   );
 }
 
@@ -178,7 +179,7 @@ export function ColorRow({ value, onChange }: { value: string; onChange: (c: str
   return (
     <div className="flex h-11 shrink-0 items-center gap-1 px-2">
       {SWATCHES.map((c) => (
-        <button
+        <FocusButton
           key={c}
           aria-label={t("Subtitle color {color}", { color: c })}
           onClick={() => onChange(c)}

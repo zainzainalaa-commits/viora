@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { BookOpen, Check, Copy, Download, Play, Redo2, Undo2 } from "lucide-react";
 import { useState } from "react";
 import { CodeEditor, type CodeLang } from "@/components/code-editor";
@@ -77,14 +78,14 @@ export function CodePopout({
             Code
           </span>
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={requestClose}
           className="ms-auto flex h-10 items-center rounded-lg px-5 text-[14.5px] font-semibold transition-opacity hover:opacity-90"
           style={{ background: IDE.accent, color: IDE.overlay }}
         >
           Done
-        </button>
+        </FocusButton>
       </header>
 
       <div className="flex min-h-0 flex-1">
@@ -107,7 +108,7 @@ export function CodePopout({
                 const Icon = f.icon;
                 const on = f.id === tab;
                 return (
-                  <button
+                  <FocusButton
                     key={f.id}
                     type="button"
                     onClick={() => setTab(f.id)}
@@ -122,13 +123,13 @@ export function CodePopout({
                   >
                     <Icon size={17} strokeWidth={2} style={{ color: f.tint }} />
                     {f.name}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>
 
             <div className="ms-auto flex items-center gap-1.5 pe-3">
-              <button
+              <FocusButton
                 type="button"
                 onClick={onUndo}
                 disabled={!canUndo}
@@ -137,8 +138,8 @@ export function CodePopout({
                 style={{ color: IDE.textDim }}
               >
                 <Undo2 size={16} strokeWidth={2.2} />
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 type="button"
                 onClick={onRedo}
                 disabled={!canRedo}
@@ -147,9 +148,9 @@ export function CodePopout({
                 style={{ color: IDE.textDim }}
               >
                 <Redo2 size={16} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
               <span className="mx-0.5 h-5 w-px" style={{ background: IDE.border }} />
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setCheatOpen(true)}
                 className="flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13.5px] font-medium transition-colors hover:bg-white/10"
@@ -157,9 +158,9 @@ export function CodePopout({
               >
                 <BookOpen size={15} strokeWidth={2.2} />
                 Cheat sheet
-              </button>
+              </FocusButton>
               {tab === "js" && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={onRunJs}
                   disabled={!value.trim()}
@@ -168,9 +169,9 @@ export function CodePopout({
                 >
                   <Play size={14} strokeWidth={2.6} fill="currentColor" />
                   Run
-                </button>
+                </FocusButton>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={copy}
                 className="flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13.5px] font-medium transition-colors hover:bg-white/10"
@@ -178,8 +179,8 @@ export function CodePopout({
               >
                 {copied ? <Check size={15} strokeWidth={2.6} /> : <Copy size={15} strokeWidth={2.2} />}
                 {copied ? "Copied" : "Copy"}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 type="button"
                 onClick={() => download(tab)}
                 className="flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13.5px] font-medium transition-colors hover:bg-white/10"
@@ -187,7 +188,7 @@ export function CodePopout({
               >
                 <Download size={15} strokeWidth={2.2} />
                 Download
-              </button>
+              </FocusButton>
             </div>
           </div>
 

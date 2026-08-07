@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Sparkles, Star } from "lucide-react";
 import { usePosterChain } from "@/components/poster";
 import type { AnimeHit } from "@/lib/search";
@@ -46,7 +47,7 @@ function AnimeRowItem({ hit, onOpen }: { hit: AnimeHit; onOpen: (hit: AnimeHit) 
   const { settings } = useSettings();
   const poster = usePosterChain(settings.rpdbKey, `mal:${hit.malId}`, hit.poster ?? undefined, "series");
   return (
-    <button
+    <FocusButton
       onClick={() => onOpen(hit)}
       className="group flex items-start gap-3 rounded-xl border border-edge-soft/60 bg-elevated/40 p-2.5 text-start transition-colors hover:border-edge hover:bg-elevated"
     >
@@ -81,6 +82,6 @@ function AnimeRowItem({ hit, onOpen }: { hit: AnimeHit; onOpen: (hit: AnimeHit) 
           </span>
         )}
       </span>
-    </button>
+    </FocusButton>
   );
 }

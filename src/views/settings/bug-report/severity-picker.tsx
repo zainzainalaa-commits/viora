@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { Severity } from "@/lib/bug-report";
 
 const OPTIONS: Array<{ id: Severity; label: string; sub: string }> = [
@@ -26,7 +27,7 @@ export function SeverityPicker({
       {OPTIONS.map((o) => {
         const selected = value === o.id;
         return (
-          <button
+          <FocusButton
             key={o.id}
             type="button"
             onClick={() => onChange(o.id)}
@@ -38,7 +39,7 @@ export function SeverityPicker({
           >
             <span className="text-[13.5px] font-semibold">{o.label}</span>
             <span className="text-[11px] text-ink-subtle">{o.sub}</span>
-          </button>
+          </FocusButton>
         );
       })}
     </div>

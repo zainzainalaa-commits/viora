@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Search, X } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -28,14 +29,14 @@ export function EpisodeSearch({
       {query.trim() !== "" && (
         <div className="absolute end-2.5 flex items-center gap-2">
           <span className="text-[12.5px] tabular-nums text-ink-subtle">{matched ?? 0}</span>
-          <button
+          <FocusButton
             type="button"
             onClick={() => onQuery("")}
             aria-label={t("Clear")}
             className="flex h-7 w-7 items-center justify-center rounded-full text-ink-muted transition-colors duration-150 hover:bg-elevated/60 hover:text-ink"
           >
             <X size={15} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>

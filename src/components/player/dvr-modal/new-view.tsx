@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { FolderOpen, Tv } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -136,12 +137,12 @@ export function NewRecordingView({
             <div className="flex h-10 flex-1 items-center truncate rounded-lg border border-edge-soft bg-canvas/60 px-3 text-[13px] text-ink-muted">
               {dir || t("Choose a folder...")}
             </div>
-            <button
+            <FocusButton
               onClick={handleBrowse}
               className="flex h-10 items-center rounded-lg bg-raised px-3 text-[13px] font-semibold text-ink transition-colors hover:bg-raised/70"
             >
               {t("Browse")}
-            </button>
+            </FocusButton>
           </div>
           <input
             type="text"
@@ -160,14 +161,14 @@ export function NewRecordingView({
             <span className="text-ink-subtle">{t("Saved as .ts (works in mpv, VLC, ffmpeg)")}</span>
           )}
         </div>
-        <button
+        <FocusButton
           onClick={handleStart}
           disabled={!canStart}
           className="flex h-10 shrink-0 items-center gap-2 rounded-lg bg-danger px-4 text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <span className="h-2 w-2 rounded-full bg-white" />
           {t("Start recording")}
-        </button>
+        </FocusButton>
       </Footer>
     </>
   );
@@ -185,7 +186,7 @@ function ChoiceRow({
   renderTrailing?: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onSelect}
       className={`flex items-center gap-3 rounded-xl border px-3.5 py-3 text-start transition-colors ${
         selected
@@ -205,7 +206,7 @@ function ChoiceRow({
         <span className="truncate text-[12px] text-ink-muted">{choice.caption}</span>
       </div>
       {renderTrailing}
-    </button>
+    </FocusButton>
   );
 }
 

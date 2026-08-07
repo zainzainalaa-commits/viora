@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check } from "lucide-react";
 import { ServiceLogo } from "@/components/service-logo";
 import { useT } from "@/lib/i18n";
@@ -27,7 +28,7 @@ export function StreamingStep() {
         {(Object.keys(SERVICES) as StreamingService[]).map((svc) => {
           const on = settings.streaming[svc];
           return (
-            <button
+            <FocusButton
               key={svc}
               onClick={() => toggleStreaming(svc)}
               aria-pressed={on}
@@ -43,7 +44,7 @@ export function StreamingStep() {
                   <Check size={9} strokeWidth={3} className="text-canvas" />
                 </span>
               )}
-            </button>
+            </FocusButton>
           );
         })}
       </div>

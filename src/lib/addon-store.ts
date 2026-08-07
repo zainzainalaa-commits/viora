@@ -4,40 +4,73 @@ import { setUserAddons, userAddons, type Addon } from "./addons";
 import { applyOrderToItems } from "./addons-store/reorder";
 
 const STORAGE_KEY = "harbor.installed-addons";
-// Bump when the default set changes so existing profiles pick the addition up
-// instead of only ever seeding on a completely fresh install.
-const SEEDED_KEY = "harbor.addons.seeded.v2";
 const DISABLED_KEY = "harbor.addons.disabled";
 
-const DEFAULT_ADDONS: Array<{ id: string; transportUrl: string }> = [
+/**
+ * Addons that ship inside the app rather than being fetched from a server.
+ *
+ * They are reached over `local://`, which is answered in-process, so there is
+ * no server to add and nothing to download. "Installed" and "uninstalled" do
+ * not describe anything real for them — the code is in the binary either way.
+ * The only honest control is on and off, which is why they are never removable
+ * and always reappear if a list somewhere says otherwise.
+ */
+const BUILT_IN_ADDONS: Array<{ id: string; transportUrl: string }> = [
   { id: "community.cinemana", transportUrl: "local://cinemana/manifest.json" },
 ];
 
-export async function seedDefaultAddonsIfFirstRun(): Promise<void> {
-  try {
-    if (localStorage.getItem(SEEDED_KEY) === "1") return;
-    // Additive on purpose: a profile that already has addons should still gain a
-    // newly shipped default. The key is written once per seed version, so an
-    // addon the user removes afterwards stays removed.
-    for (const def of DEFAULT_ADDONS) {
-      if (loadInstalled().some((a) => a.transportUrl === def.transportUrl)) continue;
-      try {
-        const manifest = await fetchManifestAt(def.transportUrl);
-        const next = loadInstalled();
-        next.push({
-          id: manifest.id || def.id,
-          transportUrl: def.transportUrl,
-          installedAt: Date.now(),
-          manifest,
-        });
-        saveInstalled(next);
-      } catch (e) {
-        console.warn(`[addons] failed to seed ${def.id}`, e);
+export function isBuiltInAddon(transportUrl: string | undefined | null): boolean {
+  return !!transportUrl && transportUrl.startsWith("local://");
+}
+
+/**
+ * Puts every built-in addon back in the list, on every start.
+ *
+ * The previous version seeded once and wrote a flag, so anything the user
+ * removed stayed removed for good — which is right for a suggested default and
+ * wrong for something shipped as part of the app. Running each boot is what
+ * makes "not removable" true rather than merely intended, and it repairs
+ * profiles that lost the entry before this change.
+ *
+ * The disabled set is deliberately untouched: restoring the entry must not
+ * quietly switch the addon back on for someone who turned it off.
+ */
+export async function ensureBuiltInAddons(): Promise<void> {
+  for (const def of BUILT_IN_ADDONS) {
+    try {
+      // Fetched before the list is read, so that reading, changing and writing
+      // happen with no await in between. With the await in the middle, two
+      // overlapping calls both saw "not installed" and both appended - which is
+      // not hypothetical: StrictMode runs the effect twice in development and
+      // produced exactly that duplicate.
+      const manifest = await fetchManifestAt(def.transportUrl);
+
+      const installed = loadInstalled();
+      const at = installed.findIndex((a) => a.transportUrl === def.transportUrl);
+
+      if (at >= 0) {
+        // Refresh the manifest so a shipped change to the catalogue appears
+        // without the user doing anything, and keep the position they dragged
+        // it to. Any later copies are collapsed, repairing lists that a
+        // previous version of this function duplicated.
+        installed[at] = { ...installed[at], id: manifest.id || def.id, manifest };
+        const deduped = installed.filter((a, i) => a.transportUrl !== def.transportUrl || i === at);
+        saveInstalled(deduped);
+        continue;
       }
+
+      installed.push({
+        id: manifest.id || def.id,
+        transportUrl: def.transportUrl,
+        installedAt: Date.now(),
+        manifest,
+      });
+      saveInstalled(installed);
+    } catch (e) {
+      // A local manifest cannot fail for network reasons, so this means a real
+      // bug. Leaving it to the next boot is better than writing a broken entry.
+      console.warn(`[addons] could not restore built-in ${def.id}`, e);
     }
-    localStorage.setItem(SEEDED_KEY, "1");
-  } catch (e) {
-    console.warn("[addons] seed default failed", e);
   }
 }
 
@@ -46,6 +79,10 @@ function readAuthKey(): string | null {
 }
 
 async function pushToStremio(addon: Addon, mode: "install" | "uninstall"): Promise<boolean> {
+  // A `local://` URL means nothing outside this app. Syncing one to a Stremio
+  // account would put an entry in the user's cloud list that no other client
+  // could ever resolve.
+  if (isBuiltInAddon(addon.transportUrl)) return true;
   const authKey = readAuthKey();
   if (!authKey) return true;
   try {
@@ -247,12 +284,21 @@ function validateManifest(m: unknown): { ok: true; manifest: Addon["manifest"] }
 
 export async function fetchManifestAt(transportUrl: string): Promise<Addon["manifest"]> {
   const res = await fetch(transportUrl, { headers: { Accept: "application/json" } });
-  if (!res.ok) throw new Error(`Manifest fetch failed (HTTP ${res.status}). Check the URL.`);
+  if (!res.ok) {
+    // The URL is part of the message on purpose. What the user pasted and what
+    // was actually requested are not the same string — a base URL gains
+    // `/manifest.json`, a `stremio://` link changes scheme, `/configure` is
+    // stripped — so "check the URL" without saying which URL leaves them
+    // checking the one thing that was already correct.
+    throw new Error(`Manifest fetch failed (HTTP ${res.status}) for ${transportUrl}`);
+  }
   let json: unknown;
   try {
     json = await res.json();
   } catch {
-    throw new Error("Response wasn't valid JSON. The URL may not be a Stremio manifest.");
+    throw new Error(
+      `Response from ${transportUrl} wasn't valid JSON. The URL may not be a Stremio manifest.`,
+    );
   }
   const v = validateManifest(json);
   if (!v.ok) throw new Error(v.error);
@@ -310,10 +356,21 @@ export async function installFromUrl(
   return { addon, syncedToStremio, replaced: replacedById || replacedByOld };
 }
 
-export async function uninstallAddon(id: string, transportUrl?: string): Promise<void> {
+/** Resolves true when the addon was actually removed, false when it is built in. */
+export async function uninstallAddon(id: string, transportUrl?: string): Promise<boolean> {
   const removed = transportUrl
     ? loadInstalled().filter((a) => a.transportUrl === transportUrl)
     : loadInstalled().filter((a) => a.id === id);
+
+  // Enforced here rather than only in the UI. Uninstalling a built-in would
+  // succeed for exactly one boot and then be undone by ensureBuiltInAddons,
+  // which looks like the app ignoring the user. Refusing outright is honest,
+  // and it also covers the other callers: the settings panel, and anything that
+  // removes an addon as a side effect of replacing one.
+  if (removed.some((a) => isBuiltInAddon(a.transportUrl))) {
+    console.warn(`[addons] ${id} ships with the app and cannot be removed; turn it off instead`);
+    return false;
+  }
   const next = transportUrl
     ? loadInstalled().filter((a) => a.transportUrl !== transportUrl)
     : loadInstalled().filter((a) => a.id !== id);
@@ -325,7 +382,7 @@ export async function uninstallAddon(id: string, transportUrl?: string): Promise
     if (touched) saveDisabledAddons(disabled);
   }
   const authKey = readAuthKey();
-  if (!authKey) return;
+  if (!authKey) return true;
   const current = await userAddons(authKey).catch(() => [] as Addon[]);
   const filtered = transportUrl
     ? current.filter((a) => a.transportUrl !== transportUrl)
@@ -333,6 +390,7 @@ export async function uninstallAddon(id: string, transportUrl?: string): Promise
   if (filtered.length !== current.length) {
     await setUserAddons(authKey, filtered).catch(() => {});
   }
+  return true;
 }
 
 export async function fetchInstalledAddons(): Promise<Addon[]> {

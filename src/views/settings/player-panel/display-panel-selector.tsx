@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 
@@ -14,7 +15,7 @@ export function DisplayPanelSelector() {
       </div>
       <div className="flex shrink-0 overflow-hidden rounded-lg border border-edge-soft">
         {(["auto", "oled", "lcd"] as const).map((p) => (
-          <button
+          <FocusButton
             key={p}
             type="button"
             onClick={() => update({ playerDisplayPanel: p })}
@@ -25,7 +26,7 @@ export function DisplayPanelSelector() {
             }`}
           >
             {p === "auto" ? t("Auto") : p.toUpperCase()}
-          </button>
+          </FocusButton>
         ))}
       </div>
     </div>

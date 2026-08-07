@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertTriangle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -85,20 +86,20 @@ export function SettingsUnsavedChanges({ active }: { active: boolean }) {
                 ? t("Careful — you have 1 unsaved change.")
                 : t("Careful — you have {n} unsaved changes.", { n: changed.length })}
             </span>
-            <button
+            <FocusButton
               type="button"
               onClick={() => setConfirmReset(true)}
               className="shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-semibold text-ink-muted transition-colors hover:text-ink"
             >
               {t("Reset")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={save}
               className="shrink-0 rounded-full bg-accent px-4 py-1.5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
             >
               {t("Save Changes")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       )}
@@ -184,14 +185,14 @@ function ConfirmDialog({
         <p className="text-[13.5px] leading-relaxed text-ink-muted">{body}</p>
         <div className="mt-2 flex items-center justify-end gap-2">
           {actions.map((a) => (
-            <button
+            <FocusButton
               key={a.label}
               type="button"
               onClick={a.onClick}
               className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${tone[a.tone]}`}
             >
               {a.label}
-            </button>
+            </FocusButton>
           ))}
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -69,14 +70,14 @@ function ScrollRail({ children }: { children: React.ReactNode }) {
 function RailArrow({ dir, onClick }: { dir: "left" | "right"; onClick: () => void }) {
   const Icon = dir === "left" ? ChevronLeft : ChevronRight;
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
       className={`absolute top-[42%] z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/75 text-white opacity-0 ring-1 ring-white/15 backdrop-blur-sm transition-opacity duration-150 hover:bg-black/95 group-hover/rail:opacity-100 ${dir === "left" ? "left-0" : "right-0"}`}
     >
       <Icon size={20} strokeWidth={2.5} />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -130,9 +131,9 @@ function PersonCard({ person, onOpen }: { person: Person; onOpen?: (p: Person) =
     "group flex w-[104px] shrink-0 flex-col gap-2 text-start [scroll-snap-align:start]" +
     (clickable ? " cursor-pointer" : " cursor-default");
   return clickable ? (
-    <button type="button" onClick={() => onOpen!(person)} className={cls}>
+    <FocusButton type="button" onClick={() => onOpen!(person)} className={cls}>
       {body}
-    </button>
+    </FocusButton>
   ) : (
     <div className={cls}>{body}</div>
   );
@@ -161,7 +162,7 @@ function PosterCard({
   const { imdb } = useCardImdb(meta);
   const { src, onError } = useCardPoster(meta);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => onOpen(meta)}
       className={`group flex flex-col gap-1.5 text-start ${grid ? "w-full" : "w-[116px] shrink-0 [scroll-snap-align:start]"}`}
@@ -198,7 +199,7 @@ function PosterCard({
       </div>
       <span className="line-clamp-1 text-[12.5px] font-medium text-white/90">{meta.name}</span>
       {meta.releaseInfo && <span className="text-[11px] text-white/40">{meta.releaseInfo}</span>}
-    </button>
+    </FocusButton>
   );
 }
 

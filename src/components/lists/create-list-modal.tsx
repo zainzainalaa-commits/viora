@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { createList, MAX_LISTS, useCustomLists } from "@/lib/custom-lists";
@@ -75,20 +76,20 @@ export function CreateListModal({
         )}
 
         <div className="flex items-center justify-end gap-2 pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-11 items-center rounded-xl px-4 text-[13px] font-medium text-ink-subtle transition-colors hover:text-ink"
           >
             {t("Cancel")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="submit"
             disabled={!name.trim() || atMax}
             className="flex h-11 items-center rounded-xl border border-edge bg-raised px-5 text-[14px] font-semibold text-ink transition-colors hover:bg-elevated disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("Create")}
-          </button>
+          </FocusButton>
         </div>
       </form>
     </div>,

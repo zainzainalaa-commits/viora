@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, Check, FlaskConical, X } from "lucide-react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -5,7 +6,7 @@ import { BETA_THEMES, type ThemePreset } from "@/lib/theme";
 
 export function BetaThemesCard({ count, onClick }: { count: number; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className="group flex flex-col overflow-hidden rounded-2xl border border-edge-soft bg-surface text-start transition-all hover:border-edge"
@@ -27,7 +28,7 @@ export function BetaThemesCard({ count, onClick }: { count: number; onClick: () 
           {count} experimental 1:1 ports. Click to explore.
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -64,14 +65,14 @@ export function BetaThemesModal({
         className="flex shrink-0 items-center justify-between gap-4 border-b border-edge-soft bg-surface/40 px-10 py-5"
       >
         <div className="flex items-center gap-4">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-11 items-center gap-2 rounded-full border border-edge-soft bg-canvas/60 px-4 text-[13px] font-semibold text-ink-muted transition-all hover:-translate-x-0.5 hover:border-edge hover:text-ink"
           >
             <ArrowLeft size={15} strokeWidth={2.2} />
             Back
-          </button>
+          </FocusButton>
           <div data-tauri-drag-region className="flex flex-col">
             <h1 className="pointer-events-none flex items-center gap-2 text-[24px] font-semibold tracking-tight text-ink">
               Beta themes
@@ -84,14 +85,14 @@ export function BetaThemesModal({
             </p>
           </div>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={onClose}
           aria-label="Close"
           className="flex h-10 w-10 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
         >
           <X size={18} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-10 py-10">
@@ -157,7 +158,7 @@ function BetaCard({
             <span className="line-clamp-2 text-[12.5px] leading-relaxed text-ink-muted">{theme.blurb}</span>
           )}
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={onActivate}
           disabled={active}
@@ -166,7 +167,7 @@ function BetaCard({
           }`}
         >
           {active ? "Active" : "Apply"}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

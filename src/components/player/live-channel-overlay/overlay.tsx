@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CalendarRange, List, Loader2, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CategorySidebar } from "@/views/live/category-sidebar";
@@ -200,14 +201,14 @@ export function LiveChannelOverlay({
   return (
     <div className="pointer-events-auto absolute inset-0 z-[60] flex flex-col bg-canvas/95 text-ink">
       <div className="flex shrink-0 items-start gap-3 px-6 pt-6">
-        <button
+        <FocusButton
           onClick={onClose}
           aria-label={t("Close guide")}
           className="flex h-11 shrink-0 items-center gap-2 rounded-full border border-edge-soft/60 bg-canvas/80 ps-3 pe-4 text-[13.5px] font-medium text-ink-muted backdrop-blur transition-colors hover:bg-canvas hover:text-ink"
         >
           <X size={15} strokeWidth={2.2} />
           {t("Close")}
-        </button>
+        </FocusButton>
         <CurrentChannelInfo channel={currentChannel} current={currentProgram} now={nowMs} />
       </div>
       <div className="flex shrink-0 items-center gap-2.5 px-6 pt-4 pb-3">
@@ -233,15 +234,15 @@ export function LiveChannelOverlay({
             autoFocus
           />
           {query && (
-            <button
+            <FocusButton
               onClick={() => setQuery("")}
               className="text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
             >
               {t("Clear")}
-            </button>
+            </FocusButton>
           )}
         </div>
-        <button
+        <FocusButton
           onClick={toggleGuideStyle}
           title={guideStyle === "timeline" ? t("Switch to channel list (hide program guide)") : t("Switch to program guide")}
           aria-label={t("Toggle guide layout")}
@@ -249,7 +250,7 @@ export function LiveChannelOverlay({
         >
           {guideStyle === "timeline" ? <List size={15} strokeWidth={2} /> : <CalendarRange size={15} strokeWidth={2} />}
           {guideStyle === "timeline" ? t("List") : t("Guide")}
-        </button>
+        </FocusButton>
       </div>
       <div className="flex min-h-0 flex-1">
         {playlist && sortedGroups.length > 0 && (

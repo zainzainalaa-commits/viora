@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw, Type } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -28,13 +29,13 @@ export function DelayRow({
               {delay.toFixed(2)}s
             </span>
             {delay !== 0 && (
-              <button
+              <FocusButton
                 onClick={() => onDelay(0)}
                 aria-label={t("Reset sync")}
                 className="flex h-6 w-6 items-center justify-center rounded-md bg-raised text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
               >
                 <RotateCcw size={12} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>
@@ -51,7 +52,7 @@ export function DelayRow({
       </div>
       {onEnterSync && (
         <div className="border-t border-edge-soft/50 px-3 py-2">
-          <button
+          <FocusButton
             onClick={onEnterSync}
             disabled={!syncAvailable}
             className={`flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-[12px] font-semibold transition-colors ${
@@ -64,7 +65,7 @@ export function DelayRow({
             {syncAvailable
               ? t("Sync subtitles via text")
               : t("Text sync unavailable for embedded tracks")}
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>
@@ -73,11 +74,11 @@ export function DelayRow({
 
 function Step({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className="flex-1 px-2 py-1.5 text-[12px] font-semibold tabular-nums text-ink-muted transition-colors hover:bg-elevated hover:text-ink active:scale-95"
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }

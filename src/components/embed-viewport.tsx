@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, ExternalLink, Loader2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -93,22 +94,22 @@ function EmbedViewport({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={openExternally}
             className="flex h-9 items-center gap-1.5 rounded-full border border-edge-soft px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <ExternalLink size={12} strokeWidth={2.4} />
             Open in browser
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label="Close"
             className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <X size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       </header>
 
@@ -130,7 +131,7 @@ function EmbedViewport({
               That&apos;s a normal security setting. Use the button below to open it in your
               browser instead.
             </p>
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 openExternally();
@@ -140,7 +141,7 @@ function EmbedViewport({
             >
               <ArrowUpRight size={13} strokeWidth={2.4} />
               Open in browser
-            </button>
+            </FocusButton>
           </div>
         )}
         <iframe

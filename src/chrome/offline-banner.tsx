@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { WifiOff } from "lucide-react";
 import { useDownloads } from "@/lib/download/downloads-store";
@@ -41,12 +42,12 @@ export function OfflineBanner() {
           {hasSaved ? t("You're offline. Your downloads still play.") : t("You're offline")}
         </span>
         {hasSaved && view !== "downloads" ? (
-          <button
+          <FocusButton
             onClick={() => setView("downloads")}
             className="rounded-full bg-ink px-3 py-1 text-[12px] font-semibold text-canvas transition-opacity hover:opacity-90"
           >
             {t("nav.downloads")}
-          </button>
+          </FocusButton>
         ) : (
           <span className="w-1.5" />
         )}

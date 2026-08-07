@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Component, useCallback, useEffect, useState, type ErrorInfo, type ReactNode } from "react";
 import { ExternalLink, Heart, Loader2, MessageCircle, RefreshCw, Users } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -131,13 +132,13 @@ function LetterboxdReviewsInner({ meta, imdbId }: { meta: Meta; imdbId: string |
         <div className="rounded-xl border border-edge-soft bg-elevated/40 p-5 text-center">
           <p className="text-[14px] text-ink-muted">{t("Reviews couldn't be loaded right now.")}</p>
           {filmUrl && (
-            <button
+            <FocusButton
               onClick={() => openUrl(filmUrl)}
               className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
             >
               {t("View on Letterboxd")}
               <ExternalLink size={12} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
         </div>
       </section>
@@ -186,23 +187,23 @@ function LetterboxdReviewsInner({ meta, imdbId }: { meta: Meta; imdbId: string |
           </div>
 
           {/* Refresh */}
-          <button
+          <FocusButton
             onClick={() => fetchReviews()}
             disabled={loading}
             title={t("Refresh")}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted ring-1 ring-edge transition-colors hover:bg-elevated hover:text-ink disabled:opacity-50"
           >
             {loading ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />}
-          </button>
+          </FocusButton>
 
           {reviewsUrl && (
-            <button
+            <FocusButton
               onClick={() => openUrl(reviewsUrl)}
               className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-muted ring-1 ring-edge transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("All reviews")}
               <ExternalLink size={11} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
@@ -225,12 +226,12 @@ function LetterboxdReviewsInner({ meta, imdbId }: { meta: Meta; imdbId: string |
                 background: "linear-gradient(to bottom, color-mix(in srgb, var(--color-canvas) 5%, transparent) 0%, color-mix(in srgb, var(--color-canvas) 78%, transparent) 40%, color-mix(in srgb, var(--color-canvas) 95%, transparent) 100%)",
               }}
             >
-              <button
+              <FocusButton
                 onClick={() => setBlurred(false)}
                 className="rounded-xl bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.97]"
               >
                 {t("Reveal reviews")}
-              </button>
+              </FocusButton>
               <span className="text-[11px] text-ink-muted/60">{t("Reviews are hidden")}</span>
             </div>
           )}
@@ -255,12 +256,12 @@ function LetterboxdReviewsInner({ meta, imdbId }: { meta: Meta; imdbId: string |
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <button
+                  <FocusButton
                     onClick={() => review.authorUrl && openUrl(review.authorUrl)}
                     className="text-[13px] font-semibold text-ink transition-colors hover:text-amber-300"
                   >
                     {review.author || t("Anonymous")}
-                  </button>
+                  </FocusButton>
                   {review.rating && (
                     <span className="text-[14px] leading-none text-amber-300">{review.rating}</span>
                   )}
@@ -284,13 +285,13 @@ function LetterboxdReviewsInner({ meta, imdbId }: { meta: Meta; imdbId: string |
 
           {/* Load more button */}
           {hiddenCount > 0 && (
-            <button
+            <FocusButton
               onClick={() => setShowAll(true)}
               className="mt-1 flex h-10 items-center justify-center gap-2 rounded-xl border border-edge-soft bg-elevated/40 text-[13px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               <Heart size={14} />
               {t("Show {n} more reviews", { n: hiddenCount })}
-            </button>
+            </FocusButton>
           )}
         </div>
         </div>
@@ -313,7 +314,7 @@ function FilterBtn({
   count?: number;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors ${
         active ? "bg-ink text-canvas" : "text-ink-muted hover:bg-raised hover:text-ink"
@@ -326,6 +327,6 @@ function FilterBtn({
           {count}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }

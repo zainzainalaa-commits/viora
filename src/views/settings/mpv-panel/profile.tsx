@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings, type Settings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 
@@ -31,7 +32,7 @@ export function QualityProfile() {
       {PROFILES.map((p) => {
         const selected = value === p.id;
         return (
-          <button
+          <FocusButton
             key={p.id}
             type="button"
             onClick={() => update({ mpvQuality: p.id })}
@@ -53,7 +54,7 @@ export function QualityProfile() {
               <span className="text-[11px] font-semibold uppercase tracking-wider text-accent/90">{t(p.who)}</span>
               <span className="text-[12.5px] leading-snug text-ink-muted">{t(p.sub)}</span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>

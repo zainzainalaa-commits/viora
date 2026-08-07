@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 export function Still({
   src,
   alt,
@@ -16,7 +17,7 @@ export function Still({
     );
   }
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={`Expand ${alt} image`}
@@ -32,6 +33,6 @@ export function Still({
         aria-hidden
         className="absolute inset-0 bg-canvas/0 transition-colors duration-200 group-hover/still:bg-canvas/20"
       />
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActiveBanner } from "./custom-themes-section/active-banner";
@@ -179,13 +180,13 @@ export function CustomThemesSection() {
         <div className="flex items-center gap-2 rounded-xl border border-danger/40 bg-danger/10 px-3.5 py-2.5 text-[12.5px] text-danger">
           <AlertCircle size={14} strokeWidth={2.2} />
           <span>{error}</span>
-          <button
+          <FocusButton
             type="button"
             onClick={() => setError(null)}
             className="ms-auto rounded px-2 text-[11px] font-semibold uppercase tracking-wider opacity-70 hover:opacity-100"
           >
             Dismiss
-          </button>
+          </FocusButton>
         </div>
       )}
 

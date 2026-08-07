@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/lib/brand";
 import { REPO_URL } from "@/lib/brand";
 import { HarborMark } from "@/components/icons/harbor-mark";
 import { useT } from "@/lib/i18n";
@@ -9,7 +10,7 @@ export function MobileNotice() {
       <div className="flex items-center gap-3 text-ink">
         <HarborMark className="h-9 w-9" />
         <span className="font-display text-[36px] font-semibold leading-none tracking-tight">
-          Harbor
+          {APP_NAME}
         </span>
       </div>
       <div className="flex max-w-md flex-col gap-3.5">

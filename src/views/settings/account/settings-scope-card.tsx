@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useProfiles } from "@/lib/profiles";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -26,7 +27,7 @@ export function SettingsScopeCard() {
         {OPTIONS.map(([key, label, desc]) => {
           const active = key === "shared" ? linked : !linked;
           return (
-            <button
+            <FocusButton
               key={key}
               type="button"
               onClick={() => setScope(key === "shared")}
@@ -47,7 +48,7 @@ export function SettingsScopeCard() {
                 <span className="text-[13px] font-medium text-ink">{t(label)}</span>
                 <span className="text-[11.5px] leading-relaxed text-ink-subtle">{t(desc)}</span>
               </span>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

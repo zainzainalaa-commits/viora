@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDown, ArrowUp, ChevronsUp, GripVertical } from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
 import { AddonLogo } from "@/components/addon-logo";
@@ -143,19 +144,19 @@ function OrganizeRow({
       </div>
       <div className="flex shrink-0 items-center gap-0.5">
         <HoverTooltip label={t("Move to top")} side="top" align="center" delayMs={200}>
-          <button onClick={onTop} disabled={!canUp} aria-label={t("Move to top")} className={BTN}>
+          <FocusButton onClick={onTop} disabled={!canUp} aria-label={t("Move to top")} className={BTN}>
             <ChevronsUp size={17} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </HoverTooltip>
         <HoverTooltip label={t("Move up")} side="top" align="center" delayMs={200}>
-          <button onClick={onUp} disabled={!canUp} aria-label={t("Move up")} className={BTN}>
+          <FocusButton onClick={onUp} disabled={!canUp} aria-label={t("Move up")} className={BTN}>
             <ArrowUp size={17} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </HoverTooltip>
         <HoverTooltip label={t("Move down")} side="top" align="center" delayMs={200}>
-          <button onClick={onDown} disabled={!canDown} aria-label={t("Move down")} className={BTN}>
+          <FocusButton onClick={onDown} disabled={!canDown} aria-label={t("Move down")} className={BTN}>
             <ArrowDown size={17} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </HoverTooltip>
       </div>
     </div>

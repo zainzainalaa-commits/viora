@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark } from "lucide-react";
 import { memo, useMemo } from "react";
 import { awardSourceMeta, findTopAward, parseAwardYear } from "@/lib/anime-awards";
@@ -65,7 +66,7 @@ export const TopRankCard = memo(function TopRankCard({ meta, rank }: { meta: Met
     meta.type === "series" ? "series" : "movie",
   );
   return (
-    <button
+    <FocusButton
       onClick={() => openMeta(meta)}
       onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta })}
       onFocus={(e) => hoverPreviewFocus(meta, e.currentTarget)}
@@ -104,7 +105,7 @@ export const TopRankCard = memo(function TopRankCard({ meta, rank }: { meta: Met
       <p className="absolute bottom-0 end-0 w-[63%] truncate text-[12px] text-ink-subtle">
         {meta.name}
       </p>
-    </button>
+    </FocusButton>
   );
 });
 
@@ -122,7 +123,7 @@ export const AnimeRankCard = memo(function AnimeRankCard({ meta, rank }: { meta:
     meta.type === "series" ? "series" : "movie",
   );
   return (
-    <button
+    <FocusButton
       onClick={() => openMeta(meta)}
       onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta })}
       onFocus={(e) => hoverPreviewFocus(meta, e.currentTarget)}
@@ -160,6 +161,6 @@ export const AnimeRankCard = memo(function AnimeRankCard({ meta, rank }: { meta:
       <p className="absolute bottom-0 end-0 w-[63%] truncate text-[12px] text-ink-subtle">
         {meta.name}
       </p>
-    </button>
+    </FocusButton>
   );
 });

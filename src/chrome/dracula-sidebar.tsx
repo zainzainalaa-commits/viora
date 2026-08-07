@@ -1,3 +1,5 @@
+import { FocusButton } from "@/lib/tv-focus";
+import { APP_NAME } from "@/lib/brand";
 import { Lock } from "lucide-react";
 import { useState } from "react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -67,7 +69,7 @@ export function DraculaSidebar() {
               collapsed ? "" : "lg:justify-start lg:px-6"
             }`}
           >
-            <button
+            <FocusButton
               type="button"
               onClick={() => setView("home")}
               aria-label={t("chrome.harborHome")}
@@ -79,14 +81,10 @@ export function DraculaSidebar() {
                   className="hidden text-[40px] font-medium leading-none tracking-tight lg:inline"
                   style={{ fontFamily: "var(--font-display)", transform: "translateY(1px)" }}
                 >
-                  Harb
-                  <span className="inline-block" style={{ transform: "rotate(8deg)", transformOrigin: "50% 65%" }}>
-                    o
-                  </span>
-                  r
+                  {APP_NAME}
                 </span>
               )}
-            </button>
+            </FocusButton>
           </div>
 
           <nav className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-3 pb-4 pt-1 [scrollbar-width:none] lg:px-4 [&::-webkit-scrollbar]:hidden">
@@ -177,7 +175,7 @@ function NavPill({
   const t = useT();
   const label = t(item.label);
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       aria-label={gated ? t("chrome.lockedRequiresPin", { label }) : label}
       title={gated ? t("chrome.lockedShort", { label }) : label}
@@ -215,7 +213,7 @@ function NavPill({
           {label}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

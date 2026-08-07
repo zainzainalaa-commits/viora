@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useProfiles } from "@/lib/profiles";
@@ -26,7 +27,7 @@ export function StartupDefaults() {
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-edge-soft/60 bg-canvas/30 p-3">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center justify-between gap-3 text-start"
@@ -41,7 +42,7 @@ export function StartupDefaults() {
           size={16}
           className={`shrink-0 text-ink-muted transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="flex flex-col gap-4 pt-1">
           <div className="flex flex-col gap-2">
@@ -52,7 +53,7 @@ export function StartupDefaults() {
               {INTERVALS.map(([val, label]) => {
                 const active = interval === val;
                 return (
-                  <button
+                  <FocusButton
                     key={val}
                     type="button"
                     onClick={() => update({ profilePromptInterval: val })}
@@ -63,7 +64,7 @@ export function StartupDefaults() {
                     }`}
                   >
                     {t(label)}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>
@@ -80,7 +81,7 @@ export function StartupDefaults() {
                 ].map(({ id, label }) => {
                   const active = defaultId === id;
                   return (
-                    <button
+                    <FocusButton
                       key={id || "ask"}
                       type="button"
                       onClick={() => update({ defaultProfileId: id })}
@@ -91,7 +92,7 @@ export function StartupDefaults() {
                       }`}
                     >
                       {label}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>

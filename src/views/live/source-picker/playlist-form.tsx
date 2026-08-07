@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CalendarRange, Globe2, Tv } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -90,7 +91,7 @@ export function PlaylistForm({
           {KINDS.map((k) => {
             const selected = kind === k.id;
             return (
-              <button
+              <FocusButton
                 key={k.id}
                 type="button"
                 onClick={() => setKind(k.id)}
@@ -105,7 +106,7 @@ export function PlaylistForm({
                   {t(k.label)}
                 </span>
                 <span className="text-[10px] text-ink-subtle">{t(k.sub)}</span>
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -215,19 +216,19 @@ export function PlaylistForm({
       )}
 
       <div className="flex items-center justify-end gap-2 pt-1">
-        <button
+        <FocusButton
           onClick={onCancel}
           className="h-9 rounded-lg px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:text-ink"
         >
           {t("Cancel")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           disabled={!canSave}
           onClick={submit}
           className="h-9 rounded-lg bg-ink px-3 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {submitLabel}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

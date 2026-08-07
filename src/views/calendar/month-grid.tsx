@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { CalendarItem } from "@/lib/calendar";
 import { useT } from "@/lib/i18n";
 import { CalendarChip } from "./calendar-chip";
@@ -67,12 +68,12 @@ export function MonthGrid({
                   <CalendarChip key={item.id} item={item} onOpen={onOpenItem} />
                 ))}
                 {events.length > 3 && (
-                  <button
+                  <FocusButton
                     onClick={() => onOpenDay(cell.iso)}
                     className="self-start rounded px-1 text-start text-[11px] text-ink-subtle transition-colors hover:text-ink"
                   >
                     {t("+{n} more", { n: events.length - 3 })}
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             </div>

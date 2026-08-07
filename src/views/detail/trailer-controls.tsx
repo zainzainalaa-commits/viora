@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Volume1, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -125,13 +126,13 @@ export function SpeedPill({ speed, onCycle }: { speed: number; onCycle: () => vo
   const label = `${speed}×`;
   return (
     <Tooltip label={t("Playback speed")}>
-      <button
+      <FocusButton
         onClick={onCycle}
         aria-label={t("Playback speed {label}", { label })}
         className="flex h-11 min-w-[48px] items-center justify-center rounded-md px-3 text-[13.5px] font-semibold tabular-nums tracking-wide text-white/90 transition-colors hover:bg-white/15 hover:text-white"
       >
         {label}
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }
@@ -140,7 +141,7 @@ export function PiPButton({ active, onClick }: { active: boolean; onClick: () =>
   const t = useT();
   return (
     <Tooltip label={t("PiP")}>
-      <button
+      <FocusButton
         onClick={onClick}
         aria-label={active ? t("Exit Picture in Picture") : t("Picture in Picture")}
         className={`flex h-11 w-11 items-center justify-center rounded-md transition-colors active:scale-95 ${
@@ -148,7 +149,7 @@ export function PiPButton({ active, onClick }: { active: boolean; onClick: () =>
         }`}
       >
         <PipIcon size={22} />
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }
@@ -218,13 +219,13 @@ export function VolumeControl({
       onMouseLeave={() => setHover(false)}
     >
       <Tooltip label={muted ? t("Unmute · M") : t("Mute · M")}>
-        <button
+        <FocusButton
           onClick={onToggleMute}
           aria-label={muted ? t("Unmute") : t("Mute")}
           className="flex h-11 w-11 items-center justify-center rounded-md text-white/90 transition-colors hover:bg-white/15 hover:text-white active:scale-95"
         >
           <Icon size={22} />
-        </button>
+        </FocusButton>
       </Tooltip>
       <div
         ref={ref}

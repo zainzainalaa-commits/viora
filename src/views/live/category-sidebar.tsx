@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Eye, EyeOff, Layers, Pin, Search, Star, Tv, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -94,13 +95,13 @@ export function CategorySidebar({
             className="flex-1 bg-transparent text-[12.5px] text-ink placeholder:text-ink-subtle focus:outline-none"
           />
           {filter && (
-            <button
+            <FocusButton
               onClick={() => setFilter("")}
               aria-label={t("Clear filter")}
               className="text-ink-subtle transition-colors hover:text-ink"
             >
               <X size={13} strokeWidth={2} />
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
@@ -142,24 +143,24 @@ export function CategorySidebar({
         {visibleGroups.length === 0 && (
           <div className="flex flex-col items-center gap-1.5 px-4 py-8 text-center text-[12px] text-ink-subtle">
             <span>{t("No categories match")}</span>
-            <button
+            <FocusButton
               onClick={() => setFilter("")}
               className="text-[11.5px] font-medium text-ink-muted underline-offset-2 hover:underline"
             >
               {t("Clear filter")}
-            </button>
+            </FocusButton>
           </div>
         )}
       </div>
       {prefs.hidden.length > 0 && (
         <div className="border-t border-edge-soft/40 px-2 py-1.5">
-          <button
+          <FocusButton
             onClick={() => setShowHidden((v) => !v)}
             className="flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-[11.5px] font-medium text-ink-subtle transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <span>{t("{n} hidden", { n: prefs.hidden.length })}</span>
             <span className="text-ink-muted">{showHidden ? t("Done") : t("Manage")}</span>
-          </button>
+          </FocusButton>
           {showHidden && (
             <div className="mt-1 flex max-h-44 flex-col gap-0.5 overflow-y-auto">
               {prefs.hidden.map((g) => (
@@ -168,13 +169,13 @@ export function CategorySidebar({
                   className="flex items-center gap-2 rounded-md px-2 py-1 text-[12px] text-ink-subtle"
                 >
                   <span className="flex-1 truncate">{g}</span>
-                  <button
+                  <FocusButton
                     onClick={() => toggleGroupHidden(sourceId, g)}
                     aria-label={t("Unhide {name}", { name: g })}
                     className="flex h-6 w-6 items-center justify-center rounded text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                   >
                     <Eye size={13} strokeWidth={2} />
-                  </button>
+                  </FocusButton>
                 </div>
               ))}
             </div>
@@ -214,7 +215,7 @@ function CategoryItem({
   const hasActions = !!groupName && !!sourceId;
   return (
     <div className="group/cat relative">
-      <button
+      <FocusButton
         data-cat-idx={idx}
         role="option"
         aria-selected={active}
@@ -255,10 +256,10 @@ function CategoryItem({
         >
           {count.toLocaleString()}
         </span>
-      </button>
+      </FocusButton>
       {hasActions && (
         <div className="absolute end-2 top-1/2 flex -translate-y-1/2 items-center gap-1 opacity-0 transition-opacity group-hover/cat:opacity-100">
-          <button
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -271,8 +272,8 @@ function CategoryItem({
             }`}
           >
             <Pin size={12} strokeWidth={2.2} className={pinned ? "fill-current" : ""} />
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -283,7 +284,7 @@ function CategoryItem({
             className="flex h-6 w-6 items-center justify-center rounded-md bg-canvas/90 text-ink-muted hover:text-ink"
           >
             <EyeOff size={12} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>

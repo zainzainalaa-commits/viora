@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 export function Section({
   title,
   icon,
@@ -39,7 +40,7 @@ export function PillToggle({
   label: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex h-12 items-center gap-2 rounded-full border px-5 text-[14px] font-semibold transition-colors ${
@@ -50,7 +51,7 @@ export function PillToggle({
     >
       {icon}
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -68,7 +69,7 @@ export function ChipMultiselect({
   return (
     <div className="flex flex-wrap gap-2">
       {items.map((item) => (
-        <button
+        <FocusButton
           key={item.key}
           type="button"
           onClick={item.onToggle}
@@ -80,7 +81,7 @@ export function ChipMultiselect({
         >
           {item.leading}
           {item.label}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );
@@ -102,7 +103,7 @@ export function ToggleRow({
   icon?: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onToggle}
       disabled={disabled}
@@ -127,6 +128,6 @@ export function ToggleRow({
           }`}
         />
       </span>
-    </button>
+    </FocusButton>
   );
 }

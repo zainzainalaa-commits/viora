@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import harborStyleImg from "@/assets/onboarding/harborstyle.png";
 import traditionalStyleImg from "@/assets/onboarding/traditional.png";
 import { useT } from "@/lib/i18n";
@@ -40,7 +41,7 @@ export function LayoutStep() {
         {options.map((opt) => {
           const selected = choice === opt.id;
           return (
-            <button
+            <FocusButton
               key={opt.id}
               type="button"
               onClick={() => update({ homeMode: opt.id })}
@@ -93,7 +94,7 @@ export function LayoutStep() {
                   {opt.sub}
                 </span>
               </div>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

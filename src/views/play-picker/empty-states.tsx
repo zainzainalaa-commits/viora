@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import type { Rejection } from "@/lib/streams/trust";
@@ -14,13 +15,13 @@ export function EmptyState({
     <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-edge bg-canvas/70 px-6 py-12 text-center">
       <p className="text-[14px] text-ink-muted">{message}</p>
       {action && (
-        <button
+        <FocusButton
           onClick={action.onClick}
           className="flex h-10 items-center gap-1.5 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           {action.label}
           <ArrowRight size={14} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -98,12 +99,12 @@ export function FilteredOutState({
           </ul>
         )}
         {strictMode && (
-          <button
+          <FocusButton
             onClick={onSearchWider}
             className="mt-3 inline-flex h-12 items-center gap-2 rounded-full bg-ink px-7 text-[14px] font-semibold tracking-[0.04em] text-canvas shadow-[0_12px_36px_rgba(0,0,0,0.4)] transition-[transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             Search wider
-          </button>
+          </FocusButton>
         )}
         {!strictMode && (
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-ink-subtle">
@@ -149,12 +150,12 @@ export function TheatresEmptyState({
           everything that came back as wrong-movie noise.
         </p>
         {onShowAll && !showingAll && (
-          <button
+          <FocusButton
             onClick={onShowAll}
             className="mt-3 inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-canvas/70 px-6 text-[13px] font-semibold tracking-[0.04em] text-ink-muted transition-[transform,background-color,color] duration-200 hover:scale-[1.02] hover:bg-canvas/90 hover:text-ink active:scale-[0.98]"
           >
             Show everything anyway
-          </button>
+          </FocusButton>
         )}
         {showingAll && (
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-ink-subtle">

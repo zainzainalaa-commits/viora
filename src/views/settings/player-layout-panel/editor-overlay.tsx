@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Film, Maximize, Minimize, Plus, Save, Tv, Users, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -241,7 +242,7 @@ export function EditorOverlay({
             onImport={onImportProfile}
             onResetToDefaults={onResetToDefaults}
           />
-          <button
+          <FocusButton
             type="button"
             onClick={onSave}
             disabled={!dirty && !justSaved}
@@ -255,8 +256,8 @@ export function EditorOverlay({
           >
             <Save size={14} strokeWidth={2.4} />
             {justSaved ? "Saved" : "Save"}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={toggleFullscreen}
             aria-label={isFs ? "Exit fullscreen" : "Enter fullscreen"}
@@ -264,8 +265,8 @@ export function EditorOverlay({
             className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/8 text-white/85 transition-colors hover:bg-white/15 hover:text-white"
           >
             {isFs ? <Minimize size={14} strokeWidth={2.4} /> : <Maximize size={14} strokeWidth={2.4} />}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label="Close editor"
@@ -273,7 +274,7 @@ export function EditorOverlay({
           >
             <X size={15} strokeWidth={2.4} />
             Close
-          </button>
+          </FocusButton>
         </div>
       </header>
 
@@ -372,7 +373,7 @@ function HiddenTray({
       <span className="shrink-0 text-[10.5px] font-bold uppercase tracking-[0.24em] text-white/40">Hidden</span>
       <div className="flex items-center gap-1.5">
         {hidden.map((c) => (
-          <button
+          <FocusButton
             key={c.id}
             type="button"
             onClick={() => {
@@ -384,7 +385,7 @@ function HiddenTray({
           >
             <Plus size={12} strokeWidth={2.6} />
             <span className="max-w-[160px] truncate">{CONTROL_META[c.id]?.label ?? c.id}</span>
-          </button>
+          </FocusButton>
         ))}
       </div>
     </div>
@@ -419,7 +420,7 @@ function ModePill({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[12px] font-medium transition-colors ${
@@ -428,6 +429,6 @@ function ModePill({
     >
       {icon}
       {children}
-    </button>
+    </FocusButton>
   );
 }

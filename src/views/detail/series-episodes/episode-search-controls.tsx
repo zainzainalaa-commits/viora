@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Search, X } from "lucide-react";
 import type { AiProvider } from "@/lib/ai-models";
 import { ProviderLogo } from "@/components/ai-provider-logo";
@@ -21,7 +22,7 @@ export function EpisodeSearchToggle({
   const t = useT();
   return (
     <>
-      <button
+      <FocusButton
         type="button"
         onClick={onSearch}
         aria-label={t("Search episodes")}
@@ -33,9 +34,9 @@ export function EpisodeSearchToggle({
         }`}
       >
         <Search size={16} />
-      </button>
+      </FocusButton>
       {aiEnabled && (
-        <button
+        <FocusButton
           type="button"
           onClick={onAskAi}
           aria-label={t("Ask AI")}
@@ -48,7 +49,7 @@ export function EpisodeSearchToggle({
         >
           <ProviderLogo provider={aiProvider} size={16} />
           {t("Ask AI")}
-        </button>
+        </FocusButton>
       )}
     </>
   );
@@ -73,13 +74,13 @@ export function EpisodeSearchBar({
         className="h-12 flex-1 bg-transparent text-[14.5px] text-ink outline-none placeholder:text-ink-subtle"
       />
       {value && (
-        <button
+        <FocusButton
           onClick={() => onChange("")}
           aria-label={t("Clear search")}
           className="shrink-0 text-ink-subtle transition-colors hover:text-ink"
         >
           <X size={16} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

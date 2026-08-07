@@ -7,6 +7,8 @@ import { fingerprint } from "./fingerprint";
 import { fetchAniSkipSegments, kitsuToMal } from "./aniskip";
 import { chaptersToSegments } from "./chapters";
 import { fetchIntroDbSegments } from "./theintrodb";
+import { fetchCinemanaSceneSegments } from "./cinemana-scenes";
+import { useSettings } from "../settings";
 import type { SkipSegment } from "./types";
 import { getLocalCache } from "../simkl/activities";
 
@@ -113,13 +115,38 @@ export function useSkipSegments(
     };
   }, [introDbId, introSeason, introEpisode, durationSec]);
 
+  // Scenes Cinemana marks as cut. Off unless the viewer asks for it: skipping
+  // one removes part of the film, which is not something to do by default.
+  const [flagged, setFlagged] = useState<SkipSegment[]>([]);
+  const wantFlagged = useSettings().settings.skipFlaggedScenes;
+  const cinemanaId = meta.id.startsWith("cnm:")
+    ? meta.id
+    : introDbId.startsWith("tt") && introSeason != null && introEpisode != null
+      ? `${introDbId}:${introSeason}:${introEpisode}`
+      : introDbId;
+
+  useEffect(() => {
+    setFlagged([]);
+    if (!wantFlagged || durationSec <= 0) return;
+    if (!cinemanaId.startsWith("cnm:") && !cinemanaId.startsWith("tt")) return;
+    let cancelled = false;
+    fetchCinemanaSceneSegments(cinemanaId, durationSec)
+      .then((segs) => {
+        if (!cancelled) setFlagged(segs);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [wantFlagged, cinemanaId, durationSec]);
+
   const fromChapters = useMemo(
     () => chaptersToSegments(chapters, durationSec),
     [chapters, durationSec],
   );
 
   return useMemo(() => {
-    const base = mergeSegments([adSegments, aniSkip, introDb, fromChapters]);
+    const base = mergeSegments([adSegments, flagged, aniSkip, introDb, fromChapters]);
     if (durationSec <= 0) return base;
     const minOutroStart = durationSec * MIN_OUTRO_START_FRACTION;
     return base
@@ -130,7 +157,7 @@ export function useSkipSegments(
         return len >= 2 && len <= MAX_SEGMENT_SEC;
       })
       .filter((s) => s.kind !== "outro" || s.startSec >= minOutroStart);
-  }, [aniSkip, introDb, fromChapters, durationSec, adSegments]);
+  }, [aniSkip, introDb, fromChapters, durationSec, adSegments, flagged]);
 }
 
 export function useAdSegments(

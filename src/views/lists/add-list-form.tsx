@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo, useState } from "react";
 import { detectSource } from "@/lib/lists/detect";
 import { sourceLabel } from "@/lib/lists/types";
@@ -82,20 +83,20 @@ export function AddListForm({
 
       <div className="flex items-center justify-end gap-2 pt-1">
         {!hideCancel && onCancel && (
-          <button
+          <FocusButton
             onClick={onCancel}
             className="h-9 rounded-lg px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:text-ink"
           >
             {t("Cancel")}
-          </button>
+          </FocusButton>
         )}
-        <button
+        <FocusButton
           disabled={!detected}
           onClick={submit}
           className="h-9 rounded-lg bg-ink px-3 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {submitLabel}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

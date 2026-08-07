@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { VioraWordmark } from "@/components/icons/viora-wordmark";
 import { WEBSITE_URL, REPO_URL, SUPPORT_EMAIL } from "@/lib/brand";
 import { Check, Download, FlaskConical, Github, Link2, Loader2, Lock, RotateCw, Wrench } from "lucide-react";
@@ -211,22 +212,22 @@ function WebBuildBanner() {
           {t("The web build can't run mpv, the trickplay generator, the local bandwidth probe, or your own Cloudflare relay. If you want HDR passthrough, TrueHD or DTS-HD audio, and smoother seeking, grab the desktop app.")}
         </p>
         <div className="mt-1 flex flex-wrap items-center gap-2">
-          {DOWNLOAD_URL && <button
+          {DOWNLOAD_URL && <FocusButton
             type="button"
             onClick={() => openUrl(DOWNLOAD_URL)}
             className="flex h-10 w-fit items-center gap-2 rounded-xl bg-ink px-4 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
           >
             <Download size={14} strokeWidth={2.4} />
             {t("Get Harbor for desktop")}
-          </button>}
-          {SOURCE_URL && <button
+          </FocusButton>}
+          {SOURCE_URL && <FocusButton
             type="button"
             onClick={() => openUrl(SOURCE_URL)}
             className="flex h-10 w-fit items-center gap-2 rounded-xl border border-edge bg-elevated/60 px-4 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-elevated"
           >
             <Github size={14} strokeWidth={2.2} />
             {t("Source code")}
-          </button>}
+          </FocusButton>}
         </div>
       </div>
     </section>
@@ -252,7 +253,7 @@ function BetaChannelRow() {
           {t("Receive early builds with the newest fixes before they reach the stable release. Betas can be rough around the edges; switch this off to return to stable at the next update.")}
         </p>
       </div>
-      <button
+      <FocusButton
         type="button"
         role="switch"
         aria-checked={on}
@@ -269,7 +270,7 @@ function BetaChannelRow() {
             on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
           }`}
         />
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -296,7 +297,7 @@ function StremioDeeplinkRow() {
             {t("Harbor's in-app installer animates the manifest install and keeps you in context. Anything Harbor installs is also synced to your Stremio account, so the official app stays the canonical library. Turn this off and Stremio becomes the only handler for stremio:// links; Harbor still installs anything you trigger from inside the app (Configure & install, paste, drag-and-drop).")}
           </p>
         </div>
-        <button
+        <FocusButton
           type="button"
           role="switch"
           aria-checked={on}
@@ -310,7 +311,7 @@ function StremioDeeplinkRow() {
               on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
             }`}
           />
-        </button>
+        </FocusButton>
       </div>
       {on ? (
         <p className="px-1 text-[11.5px] leading-relaxed text-ink-subtle">
@@ -363,21 +364,21 @@ function UpdatesRow() {
         <span className="text-[12.5px] text-ink-subtle">{status}</span>
       </div>
       {ready ? (
-        <button
+        <FocusButton
           onClick={openUpdatePanel}
           className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 text-[13px] font-semibold text-[#1b1304] transition-[filter] hover:brightness-105"
         >
           <Download size={15} strokeWidth={2.2} /> {t("Update now")}
-        </button>
+        </FocusButton>
       ) : (
-        <button
+        <FocusButton
           onClick={() => void checkForUpdate(true)}
           disabled={busy}
           className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg border border-edge px-3.5 text-[13px] font-medium text-ink transition-colors hover:bg-raised disabled:opacity-60"
         >
           {busy ? <Loader2 size={15} className="animate-spin" /> : <RotateCw size={15} strokeWidth={2.2} />}
           {busy ? t("Checking") : t("Check for updates")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -402,7 +403,7 @@ function DiscordPresenceRow() {
             {t("Display what you are watching on your Discord profile, with the show poster and a live progress bar. Requires the Discord desktop app to be running.")}
           </p>
         </div>
-        <button
+        <FocusButton
           type="button"
           role="switch"
           aria-checked={on}
@@ -416,7 +417,7 @@ function DiscordPresenceRow() {
               on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
             }`}
           />
-        </button>
+        </FocusButton>
       </div>
       {on && (
         <div className="flex flex-col gap-1.5 ps-4">
@@ -482,7 +483,7 @@ function DiscordSubToggle({
         <span className="text-[13px] font-medium text-ink">{label}</span>
         <span className="text-[11.5px] leading-snug text-ink-subtle">{hint}</span>
       </div>
-      <button
+      <FocusButton
         type="button"
         role="switch"
         aria-checked={on}
@@ -496,7 +497,7 @@ function DiscordSubToggle({
             on ? "translate-x-4 rtl:-translate-x-4" : "translate-x-0"
           }`}
         />
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -634,7 +635,7 @@ function ActionRow({
         <span className="text-[12.5px] text-ink-subtle">{sub}</span>
       </div>
       {cta && (
-        <button
+        <FocusButton
           type="button"
           onClick={onClick}
           disabled={disabled}
@@ -646,7 +647,7 @@ function ActionRow({
         >
           {icon}
           {cta}
-        </button>
+        </FocusButton>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { useTogether } from "@/lib/together/provider";
 import { useView } from "@/lib/view";
@@ -91,18 +92,18 @@ export function TogetherHostLeavingPrompt() {
         </label>
 
         <div className="flex gap-2">
-          <button
+          <FocusButton
             onClick={handleLeave}
             className="flex-1 rounded-full border border-edge bg-elevated px-4 py-3 text-[13.5px] font-medium text-ink transition-colors hover:bg-raised"
           >
             Leave the video
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={handleStay}
             className="flex-1 rounded-full bg-ink px-4 py-3 text-[13.5px] font-semibold text-canvas transition-colors hover:opacity-90"
           >
             Keep watching
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

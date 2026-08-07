@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Library, Globe, Star } from "lucide-react";
 import type { ReactNode } from "react";
 import traktLogo from "@/assets/trakt.svg";
@@ -90,7 +91,7 @@ export function SourceSwitcher({
       {visible.map((opt) => {
         const active = value === opt.id;
         return (
-          <button
+          <FocusButton
             key={opt.id}
             onClick={() => onChange(opt.id)}
             title={t(opt.hint)}
@@ -102,7 +103,7 @@ export function SourceSwitcher({
           >
             {opt.icon()}
             {t(opt.label)}
-          </button>
+          </FocusButton>
         );
       })}
     </div>

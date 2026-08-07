@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   Check,
   ChevronDown,
@@ -83,7 +84,7 @@ export function ListPicker({
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className="flex h-11 items-center gap-2.5 rounded-xl border border-edge-soft/55 bg-elevated px-3.5 pe-3 text-[13.5px] font-medium text-ink transition-colors hover:bg-raised"
       >
@@ -101,7 +102,7 @@ export function ListPicker({
           strokeWidth={2}
           className={`text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
 
       {open && (
         <div className="absolute start-0 top-[calc(100%+8px)] z-[100] w-[340px] overflow-hidden rounded-2xl border border-edge-soft bg-elevated shadow-[0_18px_50px_-15px_rgba(0,0,0,0.6)]">
@@ -143,13 +144,13 @@ export function ListPicker({
                 })}
               </div>
               <div className="border-t border-edge-soft/55 p-1.5">
-                <button
+                <FocusButton
                   onClick={() => setMode("add")}
                   className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-start text-[13px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
                 >
                   <Plus size={15} strokeWidth={2} />
                   {t("Add a list")}
-                </button>
+                </FocusButton>
               </div>
             </>
           )}
@@ -219,7 +220,7 @@ function ListRow({
           isActive ? "bg-raised text-ink" : "text-ink-muted hover:bg-raised hover:text-ink"
         }`}
       >
-        <button
+        <FocusButton
           onClick={onSelect}
           className="flex flex-1 items-center gap-2.5 px-3.5 py-2.5 text-start text-[13.5px]"
         >
@@ -227,8 +228,8 @@ function ListRow({
             className={`h-2 w-2 shrink-0 rounded-full ${isActive ? SOURCE_DOT[list.source] : "bg-ink-subtle/45"}`}
           />
           <span className="truncate">{list.name}</span>
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           ref={triggerRef}
           onClick={(e) => {
             e.stopPropagation();
@@ -240,7 +241,7 @@ function ListRow({
           }`}
         >
           <MoreHorizontal size={15} strokeWidth={2} />
-        </button>
+        </FocusButton>
       </div>
       {isMenuOpen && (
         <PortalMenu triggerRef={triggerRef} onClose={onCloseMenu}>
@@ -347,13 +348,13 @@ function MenuItem({
       ? "text-accent"
       : "text-ink-muted hover:bg-raised hover:text-ink";
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex w-full items-center gap-2.5 px-3 py-2 text-start text-[12.5px] font-medium transition-colors ${tone}`}
     >
       <span className="flex h-4 w-4 items-center justify-center">{icon}</span>
       {children}
-    </button>
+    </FocusButton>
   );
 }

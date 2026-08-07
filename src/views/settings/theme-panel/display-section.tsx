@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { FormatBadge, type BadgeKind } from "@/components/format-badge";
 import previewPoster from "@/assets/preview/poster1.webp";
@@ -138,12 +139,12 @@ export function DisplaySection() {
             {Math.round(settings.uiScale * 100)}%
           </span>
           {settings.uiScale !== 1 && (
-            <button
+            <FocusButton
               onClick={() => update({ uiScale: 1 })}
               className="shrink-0 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
             >
               {t("Reset")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </Section>
@@ -198,12 +199,12 @@ export function DisplaySection() {
             {settings.heroShadow}%
           </span>
           {settings.heroShadow !== 100 && (
-            <button
+            <FocusButton
               onClick={() => update({ heroShadow: 100 })}
               className="shrink-0 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
             >
               {t("Reset")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </Section>
@@ -268,12 +269,12 @@ function SizeSlider({
         {Math.round(value * 100)}%
       </span>
       {value !== 1 && (
-        <button
+        <FocusButton
           onClick={() => onChange(1)}
           className="shrink-0 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
         >
           {t("Reset")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -331,14 +332,14 @@ function PxField({
     );
   }
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => setEditing(true)}
       title="Click to edit"
       className="rounded px-1 py-0.5 tabular-nums text-ink-muted transition-colors hover:bg-raised hover:text-ink"
     >
       {value}px
-    </button>
+    </FocusButton>
   );
 }
 

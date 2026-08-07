@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo } from "react";
 import type { PersonCredit } from "@/lib/providers/tmdb";
 
@@ -28,14 +29,14 @@ export function Bio({
       const credit = byTitle.get(part);
       if (!credit) return <span key={i}>{part}</span>;
       return (
-        <button
+        <FocusButton
           key={i}
           type="button"
           onClick={() => onOpenCredit(credit)}
           className="font-semibold text-ink transition-colors hover:text-accent"
         >
           {part}
-        </button>
+        </FocusButton>
       );
     });
   }, [text, credits, onOpenCredit]);

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { isWindowsDesktop } from "@/lib/platform";
 import { useT } from "@/lib/i18n";
@@ -63,7 +64,7 @@ export function HdrModePicker() {
         {options.map((o) => {
           const selected = current === o.id;
           return (
-            <button
+            <FocusButton
               key={o.id}
               type="button"
               onClick={() => update(MODE_FLAGS[o.id])}
@@ -96,13 +97,13 @@ export function HdrModePicker() {
                 </div>
                 <span className="text-[12.5px] leading-snug text-ink-muted">{o.sub}</span>
               </div>
-            </button>
+            </FocusButton>
           );
         })}
       </div>
       <DisplayPanelSelector />
       {isWindowsDesktop() && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => update({ playerRtxHdr: !settings.playerRtxHdr })}
           className={`mt-1 flex items-center justify-between gap-4 rounded-2xl border px-5 py-4 text-start transition-colors ${
@@ -133,7 +134,7 @@ export function HdrModePicker() {
               }`}
             />
           </span>
-        </button>
+        </FocusButton>
       )}
     </div>
   );

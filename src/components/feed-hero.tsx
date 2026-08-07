@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark, BookmarkCheck, Info, Play, SkipForward, Star, ThumbsDown } from "lucide-react";
 import type { FeedItem } from "@/lib/feed";
 import { useT } from "@/lib/i18n";
@@ -69,14 +70,14 @@ export function FeedHero({
             <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-ink/85">
               {positionLabel}
             </span>
-            <button
+            <FocusButton
               type="button"
               onClick={() => openMeta(meta)}
               aria-label={t("See details")}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 bg-canvas/35 text-ink/85 transition-colors duration-200 hover:bg-canvas/65 hover:text-ink"
             >
               <Info size={18} />
-            </button>
+            </FocusButton>
           </div>
 
           <div className="flex max-w-[760px] shrink-0 flex-col gap-3.5">
@@ -127,14 +128,14 @@ export function FeedHero({
             </p>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <button
+            <FocusButton
               type="button"
               onClick={() => openPicker(meta, smartPlayEpisode(meta), { autoPlay: settings.instantPlay })}
               className="flex h-12 items-center gap-2.5 rounded-full bg-ink px-7 text-[15px] font-semibold text-canvas transition-all duration-200 hover:bg-ink/90"
             >
               <Play size={18} fill="currentColor" />
               <span>{t("Play tonight")}</span>
-            </button>
+            </FocusButton>
             <SecondaryAction
               icon={saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
               label={saved ? t("Saved") : t("Save")}
@@ -176,7 +177,7 @@ function SecondaryAction({
   active?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex h-12 items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition-colors duration-200 ${
@@ -187,7 +188,7 @@ function SecondaryAction({
     >
       {icon}
       <span>{label}</span>
-    </button>
+    </FocusButton>
   );
 }
 

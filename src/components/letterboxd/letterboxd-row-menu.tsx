@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -32,7 +33,7 @@ export function LetterboxdRowMenu({
 
   return (
     <div ref={ref} className="relative inline-flex" onClick={(e) => e.stopPropagation()}>
-      <button
+      <FocusButton
         onClick={(e) => {
           e.stopPropagation();
           setOpen((v) => !v);
@@ -41,27 +42,27 @@ export function LetterboxdRowMenu({
         className="flex h-6 w-6 items-center justify-center rounded-md text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
       >
         <Pencil size={13} strokeWidth={2.2} />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute start-0 top-7 z-50 flex flex-col gap-0.5 rounded-xl border border-edge-soft bg-canvas p-1.5 shadow-xl">
-          <button
+          <FocusButton
             onClick={() => { onMoveUp(); setOpen(false); }}
             disabled={!canMoveUp}
             className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-30 disabled:hover:bg-transparent"
           >
             <ArrowUp size={14} strokeWidth={2.2} />
             {t("Move up")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={() => { onMoveDown(); setOpen(false); }}
             disabled={!canMoveDown}
             className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-30 disabled:hover:bg-transparent"
           >
             <ArrowDown size={14} strokeWidth={2.2} />
             {t("Move down")}
-          </button>
+          </FocusButton>
           <div className="my-0.5 h-px bg-edge-soft" />
-          <button
+          <FocusButton
             onClick={() => { onToggleHidden(); setOpen(false); }}
             className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-[12.5px] font-medium transition-colors ${
               hidden
@@ -71,7 +72,7 @@ export function LetterboxdRowMenu({
           >
             {hidden ? <Eye size={14} strokeWidth={2.2} /> : <EyeOff size={14} strokeWidth={2.2} />}
             {hidden ? t("Show") : t("Hide")}
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>

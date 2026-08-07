@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, type RefObject } from "react";
 import { PickCard } from "@/components/pick-card";
@@ -51,7 +52,7 @@ export function FilmGrid({
 
       {canViewAll && (
         <div className="flex justify-center pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={onViewAll}
             className="group flex items-center gap-2 rounded-full border border-edge-soft bg-elevated/50 px-5 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:bg-elevated"
@@ -63,7 +64,7 @@ export function FilmGrid({
               className="transition-transform duration-200 group-hover:translate-y-0.5"
               style={{ color: tint }}
             />
-          </button>
+          </FocusButton>
         </div>
       )}
 

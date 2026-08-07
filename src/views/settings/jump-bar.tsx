@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
 import type { SectionId } from "./shared";
@@ -168,7 +169,7 @@ export function SettingsJumpBar({
         {items.map((it) => {
           const on = it.id === activeId;
           return (
-            <button
+            <FocusButton
               key={it.id}
               type="button"
               data-jump={it.id}
@@ -178,7 +179,7 @@ export function SettingsJumpBar({
               }`}
             >
               {it.title}
-            </button>
+            </FocusButton>
           );
         })}
       </div>

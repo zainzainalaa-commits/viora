@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AtSign, Github, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
@@ -233,14 +234,14 @@ export function BugReportPanel() {
         <span className="me-auto text-[11.5px] text-ink-subtle">
           {canSubmit ? t("Ready to send") : summary.trim().length < 6 ? t("Summary needs at least 6 characters") : t("Preparing…")}
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={submit}
           disabled={!canSubmit}
           className="h-11 rounded-xl bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {submitting ? t("Sending…") : t("Submit bug report")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );
@@ -276,14 +277,14 @@ function ExportLogButton() {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-3">
-        <button
+        <FocusButton
           type="button"
           onClick={() => void run()}
           disabled={state === "exporting"}
           className="h-11 w-fit rounded-xl border border-edge bg-canvas px-5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink-subtle disabled:opacity-50"
         >
           {t("Export player log")}
-        </button>
+        </FocusButton>
         {pill && (
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${pill.chip}`}

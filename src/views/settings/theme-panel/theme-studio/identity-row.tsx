@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { THEME_PRESETS, type ThemePreset } from "@/lib/theme";
 
 export function IdentityRow({
@@ -34,7 +35,7 @@ export function IdentityRow({
         </span>
         <div className="flex flex-wrap gap-2">
           {Object.values(THEME_PRESETS).map((p) => (
-            <button
+            <FocusButton
               key={p.id}
               type="button"
               onClick={() => onSeed(p)}
@@ -46,7 +47,7 @@ export function IdentityRow({
                 ))}
               </span>
               {p.name}
-            </button>
+            </FocusButton>
           ))}
         </div>
       </div>

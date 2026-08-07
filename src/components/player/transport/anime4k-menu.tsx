@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ANIME4K_MODES } from "@/lib/player/anime4k-modes";
@@ -43,7 +44,7 @@ export function Anime4kMenu({
   return (
     <div ref={wrap} className="relative">
       <Tooltip label={t("Anime4K upscaling")}>
-        <button
+        <FocusButton
           onClick={() => {
             if (!open) measure();
             setOpen((o) => !o);
@@ -57,7 +58,7 @@ export function Anime4kMenu({
           {active && current ? (
             <span className="text-[11px] font-bold tracking-wider">{current.label.replace("Mode ", "")}</span>
           ) : null}
-        </button>
+        </FocusButton>
       </Tooltip>
       {open && (
         <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} w-[320px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>
@@ -72,7 +73,7 @@ export function Anime4kMenu({
               {OPTIONS.map((o) => {
                 const sel = o.id === mode;
                 return (
-                  <button
+                  <FocusButton
                     key={o.id}
                     onClick={() => {
                       onMode(o.id);
@@ -88,7 +89,7 @@ export function Anime4kMenu({
                         {t("default")}
                       </span>
                     )}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>

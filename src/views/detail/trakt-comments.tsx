@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState, useId } from "react";
 import { Heart, MessageCircle, ChevronDown, Settings, Loader2, Send, AlertCircle, Trash2 } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -205,7 +206,7 @@ function CommentCard({
         </div>
         {!revealed ? (
           <div className="mt-1.5">
-            <button
+            <FocusButton
               onClick={() => setRevealed(true)}
               className="inline-flex items-center gap-1.5 rounded-lg bg-yellow-500/10 px-3 py-1.5 text-[12px] font-medium text-yellow-400 transition-colors hover:bg-yellow-500/20"
             >
@@ -213,7 +214,7 @@ function CommentCard({
                 <path d="M8 3C4.5 3 1.7 5.3 0 8c1.7 2.7 4.5 5 8 5s6.3-2.3 8-5c-1.7-2.7-4.5-5-8-5zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
               </svg>
               {t("Spoiler — Click to reveal")}
-            </button>
+            </FocusButton>
           </div>
         ) : (
           <p className="mt-1.5 whitespace-pre-wrap break-words text-[13px] leading-relaxed text-ink" dir="auto">
@@ -221,7 +222,7 @@ function CommentCard({
           </p>
         )}
         <div className="mt-2 flex items-center gap-3 text-[12px] text-ink-muted">
-          <button
+          <FocusButton
             onClick={handleLike}
             disabled={liking || !connected}
             className={`flex items-center gap-1 transition-colors ${
@@ -239,9 +240,9 @@ function CommentCard({
               />
             )}
             {likes}
-          </button>
+          </FocusButton>
           {comment.replies > 0 && (
-            <button
+            <FocusButton
               onClick={() => {
                 if (replies) { setReplies(null); return; }
                 setLoadingReplies(true);
@@ -258,10 +259,10 @@ function CommentCard({
                 <MessageCircle size={12} />
               )}
               {replies ? `${comment.replies}` : `${comment.replies}`}
-            </button>
+            </FocusButton>
           )}
           {comment.user.username === username && (
-            <button
+            <FocusButton
               onClick={async () => {
                 if (deleting) return;
                 setDeleting(true);
@@ -280,7 +281,7 @@ function CommentCard({
               ) : (
                 <Trash2 size={12} />
               )}
-            </button>
+            </FocusButton>
           )}
         </div>
         {replies && (
@@ -527,7 +528,7 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
         <h2 className="text-[20px] font-bold text-ink">{t("Trakt Comments")}</h2>
         {target && (
           <div className="flex items-center gap-3">
-            <button
+            <FocusButton
               onClick={() => setMyComments(!myComments)}
               className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12px] font-medium ring-1 transition-colors ${
                 myComments
@@ -536,19 +537,19 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
               }`}
             >
               {t("My")}
-            </button>
+            </FocusButton>
             <div ref={sortRef} className="relative">
-              <button
+              <FocusButton
                 onClick={() => setShowSort(!showSort)}
                 className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-muted ring-1 ring-edge transition-colors hover:bg-elevated hover:text-ink"
               >
                 {t(sort.charAt(0).toUpperCase() + sort.slice(1))}
                 <ChevronDown size={12} />
-              </button>
+              </FocusButton>
               {showSort && (
                 <div className="absolute end-0 top-full z-50 mt-1 min-w-[100px] overflow-hidden rounded-xl bg-elevated ring-1 ring-edge shadow-lg">
                   {SORTS.map((s) => (
-                    <button
+                    <FocusButton
                       key={s}
                       onClick={() => { setSort(s); setShowSort(false); }}
                       className={`block w-full px-3 py-2 text-start text-[12px] transition-colors hover:bg-raised ${
@@ -556,17 +557,17 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
                       }`}
                     >
                       {t(s.charAt(0).toUpperCase() + s.slice(1))}
-                    </button>
+                    </FocusButton>
                   ))}
                 </div>
               )}
             </div>
-            <button
+            <FocusButton
               onClick={handleOpenTrakt}
               className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-muted ring-1 ring-edge transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("Open on Trakt")}
-            </button>
+            </FocusButton>
           </div>
         )}
       </div>
@@ -578,12 +579,12 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
               background: "linear-gradient(to bottom, color-mix(in srgb, var(--color-canvas) 5%, transparent) 0%, color-mix(in srgb, var(--color-canvas) 78%, transparent) 40%, color-mix(in srgb, var(--color-canvas) 95%, transparent) 100%)",
             }}
           >
-            <button
+            <FocusButton
               onClick={() => setBlurred(false)}
               className="rounded-xl bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.97]"
             >
               {t("Reveal comments")}
-            </button>
+            </FocusButton>
             <span className="text-[11px] text-ink-muted/60">{t("Comments are hidden")}</span>
           </div>
         )}
@@ -598,13 +599,13 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
             </span>
           )}
           {userRating > 0 && !hoverRating && (
-            <button
+            <FocusButton
               onClick={() => handleRate(userRating)}
               disabled={ratinging}
               className="text-[11px] text-ink-muted/50 underline transition-colors hover:text-ink-muted"
             >
               {t("Remove")}
-            </button>
+            </FocusButton>
           )}
         </div>
       )}
@@ -623,13 +624,13 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
             {t("Connect your Trakt account to see comments and reviews.")}
           </p>
           <p className="mt-3">
-            <button
+            <FocusButton
               onClick={() => openSettings("trakt")}
               className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
             >
               <Settings size={14} strokeWidth={2.2} />
               {t("Connect Trakt")}
-            </button>
+            </FocusButton>
           </p>
         </div>
       )}
@@ -660,7 +661,7 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
                   el.style.height = `${Math.min(el.scrollHeight, 128)}px`;
                 }}
               />
-              <button
+              <FocusButton
                 onClick={handlePost}
                 disabled={!text.trim() || posting}
                 className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-[13px] font-semibold transition-all ${
@@ -674,7 +675,7 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
                 ) : (
                   <Send size={14} />
                 )}
-              </button>
+              </FocusButton>
             </div>
           </div>
           <div className="mt-2 flex items-center gap-4">
@@ -727,7 +728,7 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
             <CommentCard key={c.id} comment={c} connected={connected} username={username} onDelete={handleDelete} />
           ))}
           {hasMore && !myComments && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => void loadMore()}
               disabled={loadingMore}
@@ -735,7 +736,7 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
             >
               {loadingMore && <Loader2 size={15} className="animate-spin" />}
               {loadingMore ? t("Loading more") : t("Load more comments")}
-            </button>
+            </FocusButton>
           )}
         </div>
       )}
@@ -751,11 +752,11 @@ function SpoilerLabel({ comment }: { comment: { comment: string } }) {
     return <p className="mt-0.5 whitespace-pre-wrap break-words text-[12px] leading-relaxed text-ink" dir="auto">{comment.comment}</p>;
   }
   return (
-    <button
+    <FocusButton
       onClick={() => setShow(true)}
       className="mt-0.5 inline-flex items-center gap-1 rounded bg-yellow-500/10 px-2 py-0.5 text-[10px] font-medium text-yellow-400 transition-colors hover:bg-yellow-500/20"
     >
 {t("Spoiler — Click")}
-    </button>
+    </FocusButton>
   );
 }

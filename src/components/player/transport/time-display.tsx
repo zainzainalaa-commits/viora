@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { ReactNode } from "react";
 import { usePlaybackDownloadedGated, usePlaybackPositionGated } from "@/lib/player/playback-clock";
 import { fmtTime } from "./transport-utils";
@@ -59,14 +60,14 @@ export function TimeStart({
       );
     if (onCycle) {
       return (
-        <button
+        <FocusButton
           type="button"
           onClick={onCycle}
           title={cycleTitle(fmt)}
           className={`${cls} cursor-pointer transition-colors hover:text-white`}
         >
           {inner}
-        </button>
+        </FocusButton>
       );
     }
     return <span className={cls}>{inner}</span>;
@@ -105,7 +106,7 @@ export function TimeEnd({
     "inline-flex shrink-0 items-center font-mono text-[13px] tabular-nums text-white/65 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]";
   if (onCycle) {
     return (
-      <button
+      <FocusButton
         type="button"
         onClick={onCycle}
         title={cycleTitle(fmt)}
@@ -113,7 +114,7 @@ export function TimeEnd({
       >
         {text}
         <CachedDot active={active} />
-      </button>
+      </FocusButton>
     );
   }
   return (

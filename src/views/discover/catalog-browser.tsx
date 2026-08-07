@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -72,7 +73,7 @@ function PillSelect({
       : options;
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className={`flex h-10 items-center gap-2 rounded-full border ps-3 pe-3.5 text-start transition-colors ${
           open
@@ -86,7 +87,7 @@ function PillSelect({
         {hasLogos && <OptionIcon logo={valueLogo} label={value} />}
         <span className="max-w-[180px] truncate text-[13.5px] font-medium text-ink">{value}</span>
         <ChevronDown size={14} className={`text-ink-muted transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute start-0 top-[calc(100%+8px)] z-30 flex max-h-[340px] w-[300px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-edge bg-canvas shadow-[0_24px_60px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl">
           {searchable && options.length > 6 && (
@@ -108,7 +109,7 @@ function PillSelect({
             {filtered.map((o) => {
               const sel = o.label === value;
               return (
-                <button
+                <FocusButton
                   key={o.value}
                   onClick={() => {
                     onChange(o.value);
@@ -123,7 +124,7 @@ function PillSelect({
                     <span className={`truncate text-[13.5px] ${sel ? "font-semibold" : ""}`}>{o.label}</span>
                     {o.sub && <span className="truncate text-[11px] text-ink-subtle">{o.sub}</span>}
                   </span>
-                </button>
+                </FocusButton>
               );
             })}
           </div>
@@ -222,12 +223,12 @@ export function CatalogBrowser() {
             searchable
           />
         )}
-        <button
+        <FocusButton
           onClick={browse}
           className="flex h-10 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
         >
           {t("Browse")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

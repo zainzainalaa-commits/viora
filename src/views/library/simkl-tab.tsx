@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -297,7 +298,7 @@ export function SimklTab() {
   return (
     <section className="flex flex-col gap-6">
       <div className="flex gap-2 border-b border-edge-soft/60 pb-3">
-        <button
+        <FocusButton
           type="button"
           onClick={() => setSubTab("movies")}
           className={`rounded-lg px-4 py-2 text-[14px] font-semibold transition-all ${
@@ -307,8 +308,8 @@ export function SimklTab() {
           }`}
         >
           {tr("Movies")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => setSubTab("shows")}
           className={`rounded-lg px-4 py-2 text-[14px] font-semibold transition-all ${
@@ -318,8 +319,8 @@ export function SimklTab() {
           }`}
         >
           {tr("TV Shows")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => setSubTab("anime")}
           className={`rounded-lg px-4 py-2 text-[14px] font-semibold transition-all ${
@@ -329,7 +330,7 @@ export function SimklTab() {
           }`}
         >
           {tr("Anime")}
-        </button>
+        </FocusButton>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -338,7 +339,7 @@ export function SimklTab() {
           const isActive = statusFilter === statusKey;
 
           return (
-            <button
+            <FocusButton
               key={statusKey}
               type="button"
               onClick={() => setStatusFilter(statusKey)}
@@ -350,7 +351,7 @@ export function SimklTab() {
             >
               {tr(STATUS_LABELS[statusKey])}
               <span className="ms-1.5 text-[11px] opacity-70">({count})</span>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

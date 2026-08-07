@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { Lock } from "lucide-react";
 import { useState, type ReactNode } from "react";
@@ -68,7 +69,7 @@ export function ForestSidebar() {
               collapsed ? "" : "lg:justify-start lg:px-6"
             }`}
           >
-            <button
+            <FocusButton
               type="button"
               onClick={() => setView("home")}
               aria-label={t("chrome.harborHome")}
@@ -83,7 +84,7 @@ export function ForestSidebar() {
                   {APP_NAME}
                 </span>
               )}
-            </button>
+            </FocusButton>
           </div>
 
           <nav className="relative z-10 flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-2.5 pb-4 pt-2 [scrollbar-width:none] lg:px-3 [&::-webkit-scrollbar]:hidden">
@@ -172,7 +173,7 @@ function NavRow({
   const label = t(item.label);
   const glowX = rtl ? "82%" : "18%";
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       aria-label={gated ? t("chrome.lockedRequiresPin", { label }) : label}
       title={gated ? t("chrome.lockedShort", { label }) : label}
@@ -211,7 +212,7 @@ function NavRow({
           {label}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

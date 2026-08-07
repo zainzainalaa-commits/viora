@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { Lock } from "lucide-react";
 import { useState } from "react";
@@ -65,7 +66,7 @@ export function NordSidebar() {
               collapsed ? "" : "lg:justify-start lg:ps-[27px]"
             }`}
           >
-            <button
+            <FocusButton
               type="button"
               onClick={() => setView("home")}
               aria-label={t("chrome.harborHome")}
@@ -80,7 +81,7 @@ export function NordSidebar() {
                   {APP_NAME}
                 </span>
               )}
-            </button>
+            </FocusButton>
           </div>
 
           <nav className="min-h-0 flex-1 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -177,7 +178,7 @@ function Station({
   const t = useT();
   const label = t(item.label);
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       aria-label={gated ? t("chrome.lockedRequiresPin", { label }) : label}
       title={gated ? t("chrome.lockedShort", { label }) : label}
@@ -221,7 +222,7 @@ function Station({
           {label}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

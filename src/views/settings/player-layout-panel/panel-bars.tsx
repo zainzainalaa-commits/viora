@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Pencil, RotateCcw, Save, Undo2 } from "lucide-react";
 import type { ThemeId } from "@/lib/player-chrome";
 import { useT } from "@/lib/i18n";
@@ -37,14 +38,14 @@ export function EditLayoutCard({
           {hiddenCount > 0 ? t(", {hiddenCount} hidden", { hiddenCount: String(hiddenCount) }) : ""} {t("on the {themeName} theme.", { themeName: themeName })}
         </p>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onOpen}
         className="flex shrink-0 items-center gap-2 self-start rounded-xl bg-ink px-5 py-3 text-[13.5px] font-semibold text-canvas transition-all duration-150 hover:scale-[1.02] active:scale-[0.97] sm:self-auto"
       >
         <Pencil size={14} strokeWidth={2.4} />
         {t("Edit player layout")}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -60,7 +61,7 @@ export function ThemeTabs({ value, onChange }: { value: ThemeId; onChange: (v: T
       {tabs.map((t) => {
         const selected = value === t.id;
         return (
-          <button
+          <FocusButton
             key={t.id}
             type="button"
             onClick={() => onChange(t.id)}
@@ -74,7 +75,7 @@ export function ThemeTabs({ value, onChange }: { value: ThemeId; onChange: (v: T
             <span className={`text-[11.5px] ${selected ? "text-ink-muted" : "text-ink-subtle"}`}>
               {t.sub}
             </span>
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -99,7 +100,7 @@ export function FooterBar({
   const t = useT();
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4">
-      <button
+      <FocusButton
         type="button"
         onClick={onResetAll}
         className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-semibold transition-colors ${
@@ -110,10 +111,10 @@ export function FooterBar({
       >
         <RotateCcw size={12.5} strokeWidth={2.4} />
         {confirmingReset ? t("Confirm full reset") : t("Reset all to default")}
-      </button>
+      </FocusButton>
 
       <div className="flex items-center gap-2">
-        <button
+        <FocusButton
           type="button"
           onClick={onDiscard}
           disabled={!dirty}
@@ -121,8 +122,8 @@ export function FooterBar({
         >
           <Undo2 size={12.5} strokeWidth={2.4} />
           {t("Discard changes")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={onSave}
           disabled={!dirty}
@@ -136,7 +137,7 @@ export function FooterBar({
         >
           <Save size={12.5} strokeWidth={2.4} />
           {justSaved ? t("Saved") : t("Save changes")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

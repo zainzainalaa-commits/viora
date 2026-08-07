@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PickCard } from "@/components/pick-card";
@@ -43,7 +44,7 @@ export function CollectionRow({
     <Row
       scrollKey={`collection-${collection.id}`}
       title={
-        <button
+        <FocusButton
           onClick={() => openCollection(collection.id)}
           className="group inline-flex items-center gap-1.5 text-start transition-colors hover:text-ink"
         >
@@ -53,7 +54,7 @@ export function CollectionRow({
             strokeWidth={2.4}
             className="dir-icon text-ink-subtle transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5"
           />
-        </button>
+        </FocusButton>
       }
     >
       {parts.map((m) => (

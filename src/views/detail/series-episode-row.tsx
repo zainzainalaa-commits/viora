@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Eye, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { EpisodeRatingBadge } from "./episode-rating-badge";
@@ -82,7 +83,7 @@ export function EpisodeRow({
       onMouseEnter={() => prefetchSegments(meta, playEpisode)}
       className="group flex gap-6 rounded-2xl px-4 py-5 transition-colors hover:bg-elevated/30"
     >
-      <button
+      <FocusButton
         onClick={() =>
           playEpisodeLocalAware({
             meta,
@@ -168,8 +169,8 @@ export function EpisodeRow({
             </p>
           )}
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta)}
         aria-label={t("Episode details")}
@@ -177,7 +178,7 @@ export function EpisodeRow({
         className="flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
       >
         <Eye size={18} strokeWidth={2} />
-      </button>
+      </FocusButton>
       <EpisodeDownloadButton meta={meta} episode={playEpisode} />
     </div>
   );

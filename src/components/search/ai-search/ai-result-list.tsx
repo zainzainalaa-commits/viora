@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Star } from "lucide-react";
 import type { AiResult } from "@/lib/ai-search";
 import { useLocalizedOverview } from "@/lib/use-localized-overview";
@@ -12,7 +13,7 @@ function AiResultRow({ result, onClose, index }: { result: AiResult; onClose: ()
   const description = useLocalizedOverview(meta);
   const isEpisode = season != null && episode != null;
   return (
-    <button
+    <FocusButton
       onClick={() => {
         openMeta(meta, isEpisode ? { episodeHint: { season, episode } } : undefined);
         onClose();
@@ -50,7 +51,7 @@ function AiResultRow({ result, onClose, index }: { result: AiResult; onClose: ()
           <span className="line-clamp-2 text-[12.5px] leading-snug text-ink-subtle">{description}</span>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

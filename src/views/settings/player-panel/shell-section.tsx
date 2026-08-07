@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { PLAYER_SHELLS } from "@/lib/player-shells/registry";
 import { useSettings } from "@/lib/settings";
 
@@ -8,7 +9,7 @@ export function ShellSection() {
       {PLAYER_SHELLS.map((shell) => {
         const selected = settings.playerShellId === shell.id;
         return (
-          <button
+          <FocusButton
             key={shell.id}
             type="button"
             onClick={() => update({ playerShellId: shell.id })}
@@ -29,7 +30,7 @@ export function ShellSection() {
               <span className="text-[15px] font-semibold text-ink">{shell.name}</span>
               <span className="text-[12.5px] leading-snug text-ink-muted">{shell.description}</span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>

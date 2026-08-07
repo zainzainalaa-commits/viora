@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { useView } from "@/lib/view";
 import type { SourceFolder } from "@/lib/custom-sources";
@@ -138,7 +139,7 @@ export function SourceFolderCard({
 
   return (
     <>
-      <button
+      <FocusButton
         type="button"
         onClick={handleClick}
         onMouseEnter={() => setHover(true)}
@@ -194,7 +195,7 @@ export function SourceFolderCard({
           </div>
         </div>
       )}
-    </button>
+    </FocusButton>
 
     {errorAddon && createPortal(
       <div
@@ -206,12 +207,12 @@ export function SourceFolderCard({
         <div className="flex w-full max-w-[420px] flex-col gap-6 rounded-[24px] border border-edge-soft bg-elevated/95 px-8 py-8 shadow-[0_30px_80px_-25px_rgba(0,0,0,0.85)] animate-in zoom-in-95 fade-in duration-200">
           <div className="flex items-start justify-between gap-4">
             <h2 className="text-[19px] font-medium tracking-tight text-ink">{t("Addon not installed")}</h2>
-            <button
+            <FocusButton
               onClick={() => setErrorAddon(null)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             >
               <X size={16} />
-            </button>
+            </FocusButton>
           </div>
           <div className="text-center text-ink-muted">
             <p className="mb-4 text-[15px]">
@@ -220,12 +221,12 @@ export function SourceFolderCard({
             <p className="mb-6 text-[15px] leading-relaxed">
               {t("You must install this addon in your Stremio account first so Harbor can fetch its works.")}
             </p>
-            <button
+            <FocusButton
               onClick={() => setErrorAddon(null)}
               className="w-full rounded-full bg-accent px-6 py-2.5 font-medium text-white shadow-sm transition-opacity hover:opacity-90"
             >
               {t("OK")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>,
@@ -242,12 +243,12 @@ export function SourceFolderCard({
         <div className="flex w-full max-w-[420px] flex-col gap-6 rounded-[24px] border border-edge-soft bg-elevated/95 px-8 py-8 shadow-[0_30px_80px_-25px_rgba(0,0,0,0.85)] animate-in zoom-in-95 fade-in duration-200">
           <div className="flex items-start justify-between gap-4">
             <h2 className="text-[19px] font-medium tracking-tight text-ink">{t("Missing TMDB Key")}</h2>
-            <button
+            <FocusButton
               onClick={() => setMissingTmdbKey(false)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             >
               <X size={16} />
-            </button>
+            </FocusButton>
           </div>
           <div className="text-center text-ink-muted">
             <p className="mb-4 text-[15px]">
@@ -256,12 +257,12 @@ export function SourceFolderCard({
             <p className="mb-6 text-[15px] leading-relaxed">
               {t("Please add your TMDB API key in the Library & Metadata settings to view this folder.")}
             </p>
-            <button
+            <FocusButton
               onClick={() => setMissingTmdbKey(false)}
               className="w-full rounded-full bg-accent px-6 py-2.5 font-medium text-white shadow-sm transition-opacity hover:opacity-90"
             >
               {t("OK")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>,

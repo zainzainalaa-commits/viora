@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { AI_MODELS, GROQ_MODELS, PROVIDER_NAME, providerForModel } from "@/lib/ai-models";
 import { ProviderLogo } from "@/components/ai-provider-logo";
@@ -64,7 +65,7 @@ export function AiModeButton({
   return (
     <div ref={wrapRef} className="relative shrink-0">
       <HoverTooltip label={t("Hold for more")} side="top" align="center">
-        <button
+        <FocusButton
           type="button"
           onMouseDown={onDown}
           onMouseUp={onUp}
@@ -77,7 +78,7 @@ export function AiModeButton({
           }`}
         >
           <ProviderLogo provider={provider} size={20} round />
-        </button>
+        </FocusButton>
       </HoverTooltip>
       {open && (
         <div className="animate-ai-entrance absolute end-0 top-12 z-[210] w-80 overflow-hidden rounded-2xl border border-edge-soft bg-canvas py-1.5 shadow-2xl">
@@ -88,7 +89,7 @@ export function AiModeButton({
             {ALL_MODELS.map((m) => {
               const on = m.id === currentModel;
               return (
-                <button
+                <FocusButton
                   key={m.id}
                   onClick={() => {
                     onSelectModel(m.id);
@@ -117,7 +118,7 @@ export function AiModeButton({
                       </span>
                     </span>
                   </span>
-                </button>
+                </FocusButton>
               );
             })}
           </div>

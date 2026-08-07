@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Languages, RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
@@ -107,7 +108,7 @@ export function AudioMenu(props: Props) {
   return (
     <div ref={wrap} className="relative">
       <Tooltip label={t("Audio tracks")}>
-        <button
+        <FocusButton
           type="button"
           onClick={handleClick}
           aria-label={t("Audio")}
@@ -116,7 +117,7 @@ export function AudioMenu(props: Props) {
           }`}
         >
           <Languages size={19} strokeWidth={2} />
-        </button>
+        </FocusButton>
       </Tooltip>
       {open && (forceInline || !useOverlay) && (
         <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex max-h-[400px] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>
@@ -143,13 +144,13 @@ function MenuBody(props: Props & { onClose: () => void }) {
             <span className="text-[11.5px] tabular-nums text-ink-subtle">{tracks.length}</span>
           )}
         </div>
-        <button
+        <FocusButton
           onClick={onClose}
           aria-label={t("Close")}
           className="flex h-7 w-7 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={13} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </header>
 
       <div className="flex-1 overflow-y-auto p-2">
@@ -197,7 +198,7 @@ function TrackSection({
       {tracks.map((t) => {
         const isSel = t.id === selectedId;
         return (
-          <button
+          <FocusButton
             key={t.id}
             onClick={() => onSelect(t.id)}
             className={`flex items-start gap-2.5 rounded-lg px-2.5 py-2 text-start transition-colors ${
@@ -225,7 +226,7 @@ function TrackSection({
                 {trackSubtitle(t, tr)}
               </span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -274,33 +275,33 @@ function DelayRow({
             {delay.toFixed(2)}s
           </span>
           {delay !== 0 && !disabled && (
-            <button
+            <FocusButton
               onClick={() => onDelay(0)}
               aria-label={tr("Reset sync")}
               className="flex h-6 w-6 items-center justify-center rounded-md bg-raised text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
             >
               <RotateCcw size={12} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
       
       <div className="flex items-stretch overflow-hidden rounded-lg bg-raised">
-        <button
+        <FocusButton
           disabled={disabled}
           onClick={() => onDelay(round(delay - 0.1))}
           className="flex-1 px-2 py-1.5 text-[12px] font-semibold tabular-nums text-ink-muted transition-colors hover:bg-elevated hover:text-ink active:scale-95 disabled:cursor-not-allowed"
         >
           −0.1s
-        </button>
+        </FocusButton>
         <div className="w-px bg-edge-soft/50" />
-        <button
+        <FocusButton
           disabled={disabled}
           onClick={() => onDelay(round(delay + 0.1))}
           className="flex-1 px-2 py-1.5 text-[12px] font-semibold tabular-nums text-ink-muted transition-colors hover:bg-elevated hover:text-ink active:scale-95 disabled:cursor-not-allowed"
         >
           +0.1s
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

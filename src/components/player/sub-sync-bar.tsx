@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 /**
  * SubSyncBar — شريط مزامنة الترجمة الحي
  * ينزل من أعلى الـ player مثل SubStyleBar
@@ -96,7 +97,7 @@ export function SubSyncBar({ delaySec, onDelay, onEnterSync, syncAvailable }: Pr
         {/* Left Side: Text Sync (Fixed width to center the middle section) */}
         <div className="flex w-[240px] items-center gap-1.5">
           {onEnterSync && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 closeSyncBar();
@@ -113,7 +114,7 @@ export function SubSyncBar({ delaySec, onDelay, onEnterSync, syncAvailable }: Pr
             >
               <Type size={15} strokeWidth={2} />
               <span className="hidden lg:inline">{t("Text Sync")}</span>
-            </button>
+            </FocusButton>
           )}
         </div>
 
@@ -147,7 +148,7 @@ export function SubSyncBar({ delaySec, onDelay, onEnterSync, syncAvailable }: Pr
         {/* Right Side: Save & Discard (Fixed width to match left side) */}
         <div className="flex w-[240px] items-center justify-end gap-1.5">
           {isDirty && (
-            <button
+            <FocusButton
               type="button"
               onClick={handleDiscard}
               title={t("Discard changes")}
@@ -155,10 +156,10 @@ export function SubSyncBar({ delaySec, onDelay, onEnterSync, syncAvailable }: Pr
               className="flex h-10 w-10 items-center justify-center rounded-xl text-ink-muted transition-colors hover:bg-raised hover:text-danger active:scale-95"
             >
               <RotateCcw size={16} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
 
-          <button
+          <FocusButton
             type="button"
             onClick={handleSave}
             aria-label={t("Save")}
@@ -166,16 +167,16 @@ export function SubSyncBar({ delaySec, onDelay, onEnterSync, syncAvailable }: Pr
           >
             <Check size={16} strokeWidth={2.6} />
             {t("Done")}
-          </button>
+          </FocusButton>
 
-          <button
+          <FocusButton
             type="button"
             onClick={closeSyncBar}
             aria-label={t("Close")}
             className="ms-1 flex h-10 w-10 items-center justify-center rounded-xl text-ink-muted transition-colors hover:bg-raised hover:text-ink active:scale-95"
           >
             <X size={18} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>
@@ -194,7 +195,7 @@ function StepBtn({
   wide?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex h-[36px] items-center justify-center rounded-[10px] font-mono text-[13px] font-bold tabular-nums text-ink-muted transition-colors hover:bg-elevated hover:text-ink active:scale-95 ${
@@ -202,7 +203,7 @@ function StepBtn({
       }`}
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -227,7 +228,7 @@ function DelayDisplay({
         {value.toFixed(2)}s
       </span>
       {nonZero && (
-        <button
+        <FocusButton
           type="button"
           onClick={onReset}
           aria-label={t("Reset sync")}
@@ -235,7 +236,7 @@ function DelayDisplay({
           className="absolute -end-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-raised text-ink-subtle shadow-sm transition-colors hover:bg-elevated hover:text-danger"
         >
           <RotateCcw size={10} strokeWidth={2.5} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

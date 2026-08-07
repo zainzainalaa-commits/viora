@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AwardLogo, laurelColorFor } from "@/components/icons/award-logo";
 import { Laurel } from "@/components/icons/laurel";
 import { useT } from "@/lib/i18n";
@@ -33,7 +34,7 @@ function AwardTile({ type, name, sub }: { type: AwardType; name: string; sub: st
   const t = useT();
   const tint = laurelColorFor(type);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => openAward(type)}
       className="group relative aspect-[5/4] w-full cursor-pointer overflow-hidden rounded-2xl border border-edge-soft text-start transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0.24,1)] hover:-translate-y-1"
@@ -72,6 +73,6 @@ function AwardTile({ type, name, sub }: { type: AwardType; name: string; sub: st
           ›
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }

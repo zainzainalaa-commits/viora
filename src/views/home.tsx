@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { HeroCarousel, type Slide } from "@/components/hero-carousel";
@@ -918,13 +919,13 @@ function PinnedRowControls({
         {label}
         {hidden && <span className="text-[11.5px] font-normal text-ink-subtle">{t("· currently hidden")}</span>}
       </span>
-      <button
+      <FocusButton
         type="button"
         onClick={onToggleHidden}
         className="h-8 rounded-md border border-edge-soft/60 bg-canvas/70 px-3 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
       >
         {hidden ? t("Show") : t("Hide")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

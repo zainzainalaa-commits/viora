@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { ArrowUpCircle, Check, Download, Loader2, RefreshCw, RotateCw, X } from "lucide-react";
 import {
@@ -56,13 +57,13 @@ export function UpdateCard() {
             )}
           </div>
           {u.status !== "installing" && u.status !== "downloading" && (
-            <button
+            <FocusButton
               onClick={closeUpdatePanel}
               aria-label="Close"
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
             >
               <X size={16} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
         </div>
 
@@ -142,22 +143,22 @@ export function UpdateCard() {
 
 function PrimaryButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className="flex h-11 items-center gap-2 rounded-xl bg-accent px-4 text-[14px] font-semibold text-[#1b1304] transition-[filter] hover:brightness-105"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
 function GhostButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className="flex h-11 items-center rounded-xl px-4 text-[14px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark, Check, Popcorn, RefreshCcw } from "lucide-react";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { awardSourceMeta, findTopAward, parseAwardYear, type AwardWin } from "@/lib/anime-awards";
@@ -426,7 +427,7 @@ export const PickCard = memo(function PickCard({
   }, [meta.id, meta.type, settings.tmdbKey, settings.omdbKey, settings.mdblistKey, wantMdblist, settings.rpdbKey, wantCinemetaRating]);
 
   return (
-    <button
+    <FocusButton
       ref={ref}
       onClick={() => openMeta(meta)}
       onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta })}
@@ -531,7 +532,7 @@ export const PickCard = memo(function PickCard({
           {translatedTitle || meta.name}
         </p>
       )}
-    </button>
+    </FocusButton>
   );
 });
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -26,7 +27,7 @@ function MultiPill({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-pressed={active}
@@ -42,7 +43,7 @@ function MultiPill({
         </span>
       )}
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -89,7 +90,7 @@ function ToggleSection({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => onChange(!value)}
       className="flex items-center justify-between gap-4 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3 text-start transition-colors hover:border-edge"
@@ -108,7 +109,7 @@ function ToggleSection({
           }`}
         />
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -213,14 +214,14 @@ export function FilterBuilder({
             </h2>
             <p className="truncate text-[12.5px] text-ink-muted">{summary}</p>
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label="Close"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={18} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex flex-col gap-5 overflow-y-auto px-6 py-5">
@@ -312,26 +313,26 @@ export function FilterBuilder({
 
         <div className="flex items-center justify-between gap-3 border-t border-edge-soft px-6 pb-6 pt-4">
           {isEdit && onDelete ? (
-            <button
+            <FocusButton
               type="button"
               onClick={() => onDelete(draft.id)}
               className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-semibold text-danger transition-colors hover:bg-danger/12"
             >
               <Trash2 size={15} />
               Delete
-            </button>
+            </FocusButton>
           ) : (
             <span />
           )}
           <div className="flex items-center gap-2.5">
-            <button
+            <FocusButton
               type="button"
               onClick={onClose}
               className="rounded-xl px-4 py-2.5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:text-ink"
             >
               Cancel
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={save}
               disabled={!canSave}
@@ -339,7 +340,7 @@ export function FilterBuilder({
             >
               <Check size={15} strokeWidth={2.6} />
               {isEdit ? "Save" : "Create"}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>

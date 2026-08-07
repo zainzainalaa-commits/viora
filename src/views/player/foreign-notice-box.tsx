@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useT } from "@/lib/i18n";
 
 export function ForeignNoticeBox(props: {
@@ -12,12 +13,12 @@ export function ForeignNoticeBox(props: {
         <span className="text-[14px] font-medium">{props.title ?? t("Something else")}</span>
         <span className="text-[12px] text-white/60">{t("Pick it from the home view to follow.")}</span>
       </div>
-      <button
+      <FocusButton
         onClick={props.onDismiss}
         className="rounded-full bg-white/12 px-3 py-1 text-[12px] hover:bg-white/22"
       >
         {t("Dismiss")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

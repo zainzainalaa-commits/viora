@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, ListVideo, RadioTower, RotateCcw } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -29,28 +30,28 @@ export function LiveChannelError({
           </p>
         </div>
         <div className="flex items-center gap-2.5 pt-2">
-          <button
+          <FocusButton
             onClick={onBack}
             className="flex h-11 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 text-[13px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
           >
             <ArrowLeft size={14} strokeWidth={2} className="dir-icon" />
             {t("Back")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onRetry}
             className="flex h-11 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 text-[13px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
           >
             <RotateCcw size={14} strokeWidth={2} />
             {t("Try again")}
-          </button>
+          </FocusButton>
           {onBrowse && (
-            <button
+            <FocusButton
               onClick={onBrowse}
               className="flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-[13px] font-semibold text-black transition-colors hover:bg-white/85"
             >
               <ListVideo size={15} strokeWidth={2.2} />
               {t("Browse channels")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>

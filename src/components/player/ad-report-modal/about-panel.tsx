@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -15,14 +16,14 @@ export function AboutPanel({ onBack }: { onBack: () => void }) {
           "Your report is sent for review before it ever skips anything for anyone. Nothing about the video is uploaded, just the timestamps you mark. It is off by default and you can turn it off anytime in Settings.",
         )}
       </p>
-      <button
+      <FocusButton
         type="button"
         onClick={onBack}
         className="inline-flex h-9 items-center gap-1.5 self-start rounded-lg border border-edge px-3 text-[13px] font-medium text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
       >
         <ArrowLeft size={14} strokeWidth={2} className="rtl:-scale-x-100" />
         {t("Back")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

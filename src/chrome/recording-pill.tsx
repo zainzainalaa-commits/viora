@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CircleStop, FolderOpen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDvr } from "@/lib/dvr/provider";
@@ -38,7 +39,7 @@ export function RecordingPill() {
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         aria-label={t("Recordings")}
         className={`relative flex h-11 items-center gap-2 rounded-xl px-3 transition-colors duration-150 ${
@@ -70,7 +71,7 @@ export function RecordingPill() {
             {Math.round(ratio * 100)}%
           </span>
         )}
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-[calc(100%+10px)] z-50 w-[min(360px,calc(100vw-32px))] overflow-hidden rounded-2xl border border-edge bg-elevated/97 shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)] animate-in fade-in zoom-in-95 duration-150">
           <div className="flex items-center justify-between border-b border-edge-soft px-4 py-3">
@@ -147,29 +148,29 @@ function SessionRow({
         <p className="text-[11.5px] text-amber-300">{session.error}</p>
       )}
       <div className="flex items-center gap-2">
-        <button
+        <FocusButton
           onClick={onReveal}
           className="flex h-7 items-center gap-1 rounded-md bg-raised px-2 text-[11.5px] font-semibold text-ink-muted transition-colors hover:bg-raised/70 hover:text-ink"
         >
           <FolderOpen size={12} strokeWidth={2.2} />
           {t("Show")}
-        </button>
+        </FocusButton>
         {isActive && onStop && (
-          <button
+          <FocusButton
             onClick={onStop}
             className="flex h-7 items-center gap-1 rounded-md bg-danger/85 px-2 text-[11.5px] font-semibold text-white transition-opacity hover:opacity-90"
           >
             <CircleStop size={12} strokeWidth={2.2} />
             {t("Stop")}
-          </button>
+          </FocusButton>
         )}
         {!isActive && onDismiss && (
-          <button
+          <FocusButton
             onClick={onDismiss}
             className="ms-auto text-[11px] font-semibold text-ink-subtle transition-colors hover:text-ink"
           >
             {t("Dismiss")}
-          </button>
+          </FocusButton>
         )}
       </div>
     </div>

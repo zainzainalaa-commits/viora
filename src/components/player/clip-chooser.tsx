@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Captions, CaptionsOff, Loader2, Scissors, X } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -30,32 +31,32 @@ export function ClipChooser({
         <div className="flex items-center gap-2">
           <Scissors size={15} strokeWidth={2.2} className="text-white/80" />
           <span className="text-[13.5px] font-semibold">{t("Save the last 30 seconds")}</span>
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label={t("Cancel")}
             className="ms-2 flex h-6 w-6 items-center justify-center rounded-full text-white/55 transition-colors hover:bg-white/10 hover:text-white"
           >
             <X size={13} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
         <div className="flex gap-2.5">
-          <button
+          <FocusButton
             type="button"
             onClick={() => onPick(true)}
             className="flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[13.5px] font-semibold text-black transition-transform hover:scale-[1.03] active:scale-[0.98]"
           >
             <Captions size={16} strokeWidth={2.2} />
             {t("With subtitles")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => onPick(false)}
             className="flex h-11 items-center gap-2 rounded-full bg-white/15 px-5 text-[13.5px] font-semibold text-white transition-colors hover:bg-white/25"
           >
             <CaptionsOff size={16} strokeWidth={2.2} />
             {t("Without subtitles")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

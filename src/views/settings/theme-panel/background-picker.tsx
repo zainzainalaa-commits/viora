@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertCircle, ImageDown, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { processBackgroundImage } from "./image-utils";
@@ -103,22 +104,22 @@ export function BackgroundPicker({
             void onFile(f);
           }}
         />
-        <button
+        <FocusButton
           onClick={() => inputRef.current?.click()}
           disabled={busy}
           className="flex items-center gap-2 rounded-full bg-ink px-5 py-2 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <ImageDown size={14} strokeWidth={2.2} />
           {busy ? "Compressing…" : imageData ? "Replace image" : "Choose image"}
-        </button>
+        </FocusButton>
         {imageData && !busy && (
-          <button
+          <FocusButton
             onClick={() => onImageChange(null)}
             className="flex items-center gap-2 rounded-full border border-edge-soft px-5 py-2 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <Trash2 size={13} strokeWidth={2.2} />
             Remove
-          </button>
+          </FocusButton>
         )}
         <p className="ms-auto text-[11.5px] text-ink-subtle">
           JPEG / PNG / WebP. Big files auto-compress to fit.

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Loader2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -87,7 +88,7 @@ export function GuideModal({ onClose }: { onClose: () => void }) {
             </select>
           )}
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={onClose}
           aria-label="Close guide"
@@ -95,7 +96,7 @@ export function GuideModal({ onClose }: { onClose: () => void }) {
         >
           <X size={14} strokeWidth={2.4} />
           Close
-        </button>
+        </FocusButton>
       </header>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-8 py-6">
         {!source && (

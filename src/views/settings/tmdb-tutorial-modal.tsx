@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, KeyRound, X } from "lucide-react";
 import { useEffect } from "react";
 import { openUrl } from "@/lib/window";
@@ -57,13 +58,13 @@ export function TmdbGuideModal({ open, onClose }: { open: boolean; onClose: () =
               <p className="text-[12.5px] text-ink-muted">About 30 seconds. No payment, ever.</p>
             </div>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             aria-label="Close"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={18} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
         <div className="flex flex-col gap-4 overflow-y-auto px-6 py-6">
           {STEPS.map((step, i) => (
@@ -89,19 +90,19 @@ export function TmdbGuideModal({ open, onClose }: { open: boolean; onClose: () =
           ))}
         </div>
         <div className="flex items-center justify-between gap-3 border-t border-edge-soft px-6 py-4">
-          <button
+          <FocusButton
             onClick={onClose}
             className="rounded-full px-4 py-2 text-[13.5px] font-semibold text-ink-muted transition-colors hover:text-ink"
           >
             Close
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={() => openUrl("https://www.themoviedb.org/settings/api")}
             className="flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
           >
             Open TMDB
             <ExternalLink size={14} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

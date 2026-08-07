@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RefreshCw } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { BackToTop } from "@/components/back-to-top";
@@ -38,14 +39,14 @@ export default function ListsView({ active }: { active: boolean }) {
           onEdit={editList}
           onRemove={removeList}
         />
-        <button
+        <FocusButton
           onClick={refresh}
           disabled={loading || !activeList}
           title={t("Refresh list")}
           className="flex h-11 w-11 items-center justify-center rounded-xl border border-edge-soft/55 bg-elevated text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-40"
         >
           <RefreshCw size={15} strokeWidth={2} className={loading ? "animate-spin" : ""} />
-        </button>
+        </FocusButton>
         {count != null && (
           <span className="ms-auto rounded-full bg-canvas/70 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-ink-muted">
             {t("{n} titles", { n: count.toLocaleString() })}
@@ -130,20 +131,20 @@ function Notice({
       <p className="max-w-[520px] text-[14.5px] leading-relaxed text-ink-muted">{text}</p>
       <div className="flex items-center gap-2">
         {onSettings && (
-          <button
+          <FocusButton
             onClick={onSettings}
             className="h-9 rounded-lg px-4 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink"
           >
             {t("Open Settings")}
-          </button>
+          </FocusButton>
         )}
         {onRetry && (
-          <button
+          <FocusButton
             onClick={onRetry}
             className="h-9 rounded-lg bg-elevated px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-raised"
           >
             {t("Retry")}
-          </button>
+          </FocusButton>
         )}
       </div>
     </div>

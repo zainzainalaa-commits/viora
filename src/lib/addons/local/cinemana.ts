@@ -1,6 +1,7 @@
 import { getUiLanguage } from "@/lib/i18n/store";
 import * as api from "./cinemana-api";
 import type { CinemanaItem } from "./cinemana-api";
+import { resolveToCinemanaId } from "./cinemana-resolve";
 import type { LocalAddon } from "./types";
 
 /**
@@ -58,14 +59,50 @@ function resolutionRank(file: api.CinemanaFile): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-async function subtitlesFor(item: CinemanaItem, arabic: boolean) {
-  const subs: Array<{ id: string; url: string; lang: string }> = [];
-  const ar = item.arTranslationFilePath;
-  const en = item.enTranslationFilePath;
-  if (ar) subs.push({ id: "cnm-ar", url: ar, lang: "ara" });
-  if (en) subs.push({ id: "cnm-en", url: en, lang: "eng" });
-  // Put the viewer's language first so the player's auto-select lands on it.
-  if (arabic) subs.reverse();
+const SUBTITLE_LANGS: Record<string, string> = { ar: "ara", en: "eng", sp: "spa" };
+
+/**
+ * Subtitles, read from the dedicated endpoint rather than off the video record.
+ *
+ * The record carries only two paths and, when a language is missing, sets it to
+ * `defaultImages/loading.gif` instead of leaving it blank. Trusting that put an
+ * "English" track on films that have none, pointing at an image. The endpoint
+ * returns a real list, so absence is expressed by absence.
+ *
+ * Each track is published as both .srt and .vtt; VTT is preferred because the
+ * HTML5 engine — the one that plays these streams on Android — renders it
+ * natively without a conversion step.
+ */
+async function subtitlesFor(nb: string, arabic: boolean, signal?: AbortSignal) {
+  const data = await api.translationFiles(nb, signal).catch(() => null);
+  if (!data) return [];
+
+  const best = new Map<string, { url: string; vtt: boolean }>();
+  for (const entry of data.translations ?? []) {
+    const lang = SUBTITLE_LANGS[String(entry.type ?? "").toLowerCase()];
+    if (!lang || !api.isRealSubtitleUrl(entry.file)) continue;
+    const vtt = String(entry.extention ?? "").toLowerCase() === "vtt";
+    const current = best.get(lang);
+    if (!current || (vtt && !current.vtt)) best.set(lang, { url: entry.file as string, vtt });
+  }
+
+  // Older records answer with the two flat paths and no list at all.
+  if (best.size === 0) {
+    for (const [lang, url] of [
+      ["ara", data.arTranslationFilePath],
+      ["eng", data.enTranslationFilePath],
+      ["spa", data.spTranslationFilePath],
+    ] as const) {
+      if (api.isRealSubtitleUrl(url)) best.set(lang, { url: url as string, vtt: false });
+    }
+  }
+
+  const subs = [...best].map(([lang, v]) => ({ id: `cnm-${lang}`, url: v.url, lang }));
+  // The viewer's language first, so the player's auto-select lands on it.
+  subs.sort((a, b) => {
+    const preferred = arabic ? "ara" : "eng";
+    return (a.lang === preferred ? -1 : 0) - (b.lang === preferred ? -1 : 0);
+  });
   return subs;
 }
 
@@ -84,8 +121,15 @@ export const cinemanaAddon: LocalAddon = {
     resources: [
       { name: "catalog", types: ["movie", "series"] },
       { name: "meta", types: ["movie", "series"], idPrefixes: [ID_PREFIX] },
-      { name: "stream", types: ["movie", "series"], idPrefixes: [ID_PREFIX] },
-      { name: "subtitles", types: ["movie", "series"], idPrefixes: [ID_PREFIX] },
+      // `tt` alongside its own prefix is what makes Cinemana a source for the
+      // whole library rather than only for its own catalogue rows. The stream
+      // pipeline reads these per-resource prefixes to decide who to ask, so
+      // without `tt` here it was never queried for a title opened from Cinemeta.
+      //
+      // Meta stays `cnm:` only on purpose: Cinemana should supply streams for
+      // another provider's title, not claim to describe it.
+      { name: "stream", types: ["movie", "series"], idPrefixes: [ID_PREFIX, "tt"] },
+      { name: "subtitles", types: ["movie", "series"], idPrefixes: [ID_PREFIX, "tt"] },
     ],
     catalogs: [
       {
@@ -110,8 +154,12 @@ export const cinemanaAddon: LocalAddon = {
     const kind = type === "series" ? api.KIND_SERIES : api.KIND_MOVIE;
 
     if (query) {
-      const results = await api.search(query, 0, signal);
       const wantSeries = type === "series";
+      const results = await api.search(
+        query,
+        { type: wantSeries ? "series" : "movie" },
+        signal,
+      );
       return {
         metas: results
           .filter((it) => api.isSeries(it) === wantSeries)
@@ -164,14 +212,13 @@ export const cinemanaAddon: LocalAddon = {
   },
 
   async stream({ id, signal }) {
-    const nb = fromStremioId(id);
+    const nb = await resolveToCinemanaId(id, signal);
     if (!nb) return { streams: [] };
     const arabic = arabicUi();
-    const [files, item] = await Promise.all([
+    const [files, subtitles] = await Promise.all([
       api.transcodedFiles(nb, signal),
-      api.videoInfo(nb, signal).catch(() => null),
+      subtitlesFor(nb, arabic, signal),
     ]);
-    const subtitles = item ? await subtitlesFor(item, arabic) : [];
 
     const streams = files
       .filter((f) => !!f.videoUrl)
@@ -196,10 +243,8 @@ export const cinemanaAddon: LocalAddon = {
   },
 
   async subtitles({ id, signal }) {
-    const nb = fromStremioId(id);
+    const nb = await resolveToCinemanaId(id, signal);
     if (!nb) return { subtitles: [] };
-    const item = await api.videoInfo(nb, signal).catch(() => null);
-    if (!item) return { subtitles: [] };
-    return { subtitles: await subtitlesFor(item, arabicUi()) };
+    return { subtitles: await subtitlesFor(nb, arabicUi(), signal) };
   },
 };

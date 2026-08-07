@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -44,13 +45,13 @@ export function RangeRow({
         <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
           {t("Ad {n}", { n: index + 1 })}
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={onRemove}
           className="text-[11.5px] font-medium text-ink-subtle transition-colors hover:text-danger"
         >
           {t("Remove")}
-        </button>
+        </FocusButton>
       </div>
       <div className="flex flex-col gap-2.5">
         <TimeField
@@ -118,7 +119,7 @@ function TimeField({
           danger ? "border-danger text-danger" : "border-edge text-ink"
         }`}
       />
-      <button
+      <FocusButton
         type="button"
         onClick={onUseNow}
         title={t("Set to where the video is right now")}
@@ -126,7 +127,7 @@ function TimeField({
       >
         <Clock size={14} strokeWidth={2.2} />
         {t("Now")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Plus, Search as SearchIcon, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -87,7 +88,7 @@ export function AddTitleSearch({ list }: { list: CustomList }) {
           className="h-12 w-full rounded-full bg-elevated/40 pl-11 pr-11 text-[14px] text-ink outline-none ring-1 ring-edge-soft/60 transition-shadow placeholder:text-ink-subtle focus:ring-edge"
         />
         {query && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => {
               setQuery("");
@@ -97,7 +98,7 @@ export function AddTitleSearch({ list }: { list: CustomList }) {
             className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={16} strokeWidth={2.3} />
-          </button>
+          </FocusButton>
         )}
       </div>
 
@@ -112,7 +113,7 @@ export function AddTitleSearch({ list }: { list: CustomList }) {
               {hits.map((m) => {
                 const inList = memberIds.has(m.id);
                 return (
-                  <button
+                  <FocusButton
                     key={m.id}
                     onClick={() => !inList && add(m)}
                     disabled={inList}
@@ -135,7 +136,7 @@ export function AddTitleSearch({ list }: { list: CustomList }) {
                     >
                       {inList ? <Check size={16} strokeWidth={2.6} /> : <Plus size={16} strokeWidth={2.2} />}
                     </span>
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>

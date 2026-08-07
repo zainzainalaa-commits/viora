@@ -1,3 +1,5 @@
+import { FocusSection, focusKeys, setFocusSafely } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resolveChromeTheme } from "@/lib/theme";
 import { useActiveKid } from "@/lib/profiles";
@@ -235,6 +237,17 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     setChromeHidden,
     keyboardPauseShowsControls: settings.keyboardPauseShowsControls,
   });
+
+  // The player covers everything, so focus has to come with it. Waking the
+  // chrome first means there are transport buttons to land on — a remote handed
+  // an empty stage has nowhere to go and no way to bring the controls back.
+  useEffect(() => {
+    if (!isDpadPrimary()) return;
+    wakeChrome();
+    const t = window.setTimeout(() => setFocusSafely(focusKeys.player), 120);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { adjacent, swappingEp, goToEpisode } = useEpisodeNavigation({
     src,
@@ -921,7 +934,13 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     onSyncPlayPause: playPauseToggle,
   };
   return (
-    <main
+    // A boundary, because nothing behind a playing video should be reachable:
+    // pressing left past the first transport button must not land the user on
+    // the sidebar of the page underneath.
+    <FocusSection
+      as="main"
+      isFocusBoundary
+      focusKey={focusKeys.player}
       ref={stageRef}
       data-harbor-player
       dir="ltr"
@@ -980,6 +999,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
           activity: wakeChrome,
         }}
       />
-    </main>
+    </FocusSection>
   );
 }

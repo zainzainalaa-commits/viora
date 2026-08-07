@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDragScroll } from "@/lib/use-drag-scroll";
@@ -119,7 +120,7 @@ function StripArrow({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
@@ -133,6 +134,6 @@ function StripArrow({
       ) : (
         <ChevronRight size={22} strokeWidth={2.4} className="dir-icon" />
       )}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw, RotateCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -86,7 +87,7 @@ export function SeekStepBtn({
   return (
     <div ref={wrapRef} className="relative">
       <Tooltip label={t("{word} {n}s · hold for options", { word, n: seconds })}>
-        <button
+        <FocusButton
           type="button"
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
@@ -105,7 +106,7 @@ export function SeekStepBtn({
           <span className="absolute font-mono text-[10.5px] font-bold tabular-nums leading-none">
             {seconds}
           </span>
-        </button>
+        </FocusButton>
       </Tooltip>
       {pickerOpen && (
         <div className="absolute bottom-[calc(100%+12px)] left-1/2 z-30 -translate-x-1/2 overflow-hidden rounded-2xl border border-edge bg-elevated p-1.5 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
@@ -116,7 +117,7 @@ export function SeekStepBtn({
             {SEEK_STEP_OPTIONS.map((s) => {
               const isSel = s === seconds;
               return (
-                <button
+                <FocusButton
                   key={s}
                   type="button"
                   onClick={() => commitChoice(s)}
@@ -128,7 +129,7 @@ export function SeekStepBtn({
                   aria-label={t("{word} {n} seconds", { word, n: s })}
                 >
                   {s}s
-                </button>
+                </FocusButton>
               );
             })}
           </div>

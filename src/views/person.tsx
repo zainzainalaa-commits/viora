@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { Poster } from "@/components/poster";
@@ -152,14 +153,14 @@ export function PersonView({ personId }: { personId: number }) {
                 </span>
               )}
               {personRank && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => openTopRank((person?.knownForDepartment as TopRankDept) ?? "Acting")}
                   className="flex items-center gap-1 rounded-md border border-accent/30 bg-accent/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent transition-all hover:scale-105 hover:border-accent/60 hover:bg-accent/20"
                   title={t("Open Top 100 {dept}", { dept: t(person?.knownForDepartment ?? "Actors") })}
                 >
                   {t("Top {n}", { n: personRank })}
-                </button>
+                </FocusButton>
               )}
             </div>
             <h1 className="font-display text-[88px] font-medium leading-[0.95] tracking-tight text-ink">

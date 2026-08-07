@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { Check, ClipboardCopy, FolderOpen, Loader2, RotateCcw, Trash2 } from "lucide-react";
 import { appCacheDir, join } from "@tauri-apps/api/path";
@@ -133,7 +134,7 @@ export function P2PAdvancedSection() {
           </p>
           <div className="flex flex-wrap gap-1.5">
             {RETENTIONS.map((r) => (
-              <button
+              <FocusButton
                 key={r.h}
                 type="button"
                 onClick={() => setRetention(r.h)}
@@ -144,7 +145,7 @@ export function P2PAdvancedSection() {
                 }`}
               >
                 {t(r.label)}
-              </button>
+              </FocusButton>
             ))}
           </div>
         </div>
@@ -156,7 +157,7 @@ export function P2PAdvancedSection() {
           </p>
           <div className="flex flex-wrap gap-1.5">
             {CACHE_LIMITS.map((c) => (
-              <button
+              <FocusButton
                 key={c.gb}
                 type="button"
                 onClick={() => setMaxGb(c.gb)}
@@ -167,7 +168,7 @@ export function P2PAdvancedSection() {
                 }`}
               >
                 {t(c.label)}
-              </button>
+              </FocusButton>
             ))}
           </div>
         </div>
@@ -187,25 +188,25 @@ export function P2PAdvancedSection() {
               {!customDir && <span className="ms-1.5 text-ink-subtle/70">({t("Default")})</span>}
             </p>
             <div className="flex flex-wrap gap-2">
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => void pickDir()}
                 className="flex h-10 items-center gap-2 rounded-lg border border-edge-soft px-4 text-[13px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 <FolderOpen size={14} strokeWidth={2.2} />
                 {t("Change…")}
-              </button>
+              </FocusButton>
               {!!customDir && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={resetDir}
                   className="flex h-10 items-center gap-2 rounded-lg border border-edge-soft px-4 text-[13px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
                 >
                   <RotateCcw size={14} strokeWidth={2.2} />
                   {t("Reset")}
-                </button>
+                </FocusButton>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => void clearCache()}
                 disabled={clearing}
@@ -222,7 +223,7 @@ export function P2PAdvancedSection() {
                   <Trash2 size={14} strokeWidth={2.2} />
                 )}
                 {clearing ? t("Clearing…") : confirmClear ? t("Confirm clear") : t("Clear cache now")}
-              </button>
+              </FocusButton>
             </div>
             <p className="text-[12px] leading-relaxed text-ink-subtle">
               {t("Changing the location restarts the engine. Clearing removes all cached stream files right away; anything you reopen will re-fetch.")}
@@ -250,7 +251,7 @@ export function P2PAdvancedSection() {
         />
 
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={() => void copyDiagnostics()}
             className="flex h-10 items-center gap-2 rounded-lg border border-edge-soft px-4 text-[13px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
@@ -261,9 +262,9 @@ export function P2PAdvancedSection() {
               <ClipboardCopy size={14} strokeWidth={2.2} />
             )}
             {copied ? t("Copied") : t("Copy diagnostics")}
-          </button>
+          </FocusButton>
           {isTauri && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => void revealEngineFolder()}
               disabled={opening}
@@ -275,7 +276,7 @@ export function P2PAdvancedSection() {
                 <FolderOpen size={14} strokeWidth={2.2} />
               )}
               {t("Reveal engine folder")}
-            </button>
+            </FocusButton>
           )}
         </div>
         <p className="text-[12px] leading-relaxed text-ink-subtle">

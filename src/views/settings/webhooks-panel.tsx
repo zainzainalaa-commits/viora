@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Globe, Library, Star } from "lucide-react";
 import { useRef, useState } from "react";
 import traktLogo from "@/assets/trakt.svg";
@@ -196,7 +197,7 @@ function SourceToggle({
   const disabled = blocker !== null;
   const effective = on && !disabled;
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => !disabled && onChange(!on)}
       disabled={disabled}
@@ -235,7 +236,7 @@ function SourceToggle({
           }`}
         />
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -250,13 +251,13 @@ function ChipToggle({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       onClick={() => onToggle(!on)}
       className={`rounded-full px-4 py-1.5 text-[12.5px] font-semibold transition-colors ${
         on ? "bg-ink text-canvas" : "border border-edge-soft text-ink-muted hover:border-edge hover:text-ink"
       }`}
     >
       {t(label)}
-    </button>
+    </FocusButton>
   );
 }

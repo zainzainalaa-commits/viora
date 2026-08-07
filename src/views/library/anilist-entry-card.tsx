@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Minus, Plus, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { AnchoredMenu } from "@/components/anchored-menu";
@@ -61,7 +62,7 @@ export function AnilistEntryCard({
 
   return (
     <div className="group relative flex flex-col gap-2 text-start">
-      <button
+      <FocusButton
         type="button"
         onClick={open}
         className="relative aspect-[2/3] overflow-hidden rounded-xl bg-elevated shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] transition-transform duration-200 group-hover:scale-[1.02]"
@@ -83,16 +84,16 @@ export function AnilistEntryCard({
         >
           <Trash2 size={13} />
         </span>
-      </button>
+      </FocusButton>
 
-      <button type="button" onClick={open} className="truncate text-start text-[13px] font-medium text-ink">
+      <FocusButton type="button" onClick={open} className="truncate text-start text-[13px] font-medium text-ink">
         {name}
-      </button>
+      </FocusButton>
 
       <StatusDropdown value={entry.status} disabled={busy} onChange={onStatus} />
 
       <div className="flex items-center justify-between rounded-lg bg-elevated/50 ring-1 ring-edge-soft">
-        <button
+        <FocusButton
           type="button"
           aria-label={t("Decrease progress")}
           disabled={busy || entry.progress <= 0}
@@ -100,12 +101,12 @@ export function AnilistEntryCard({
           className="flex h-11 w-11 items-center justify-center rounded-s-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-40"
         >
           <Minus size={15} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
         <span className="flex-1 text-center text-[12.5px] tabular-nums text-ink">
           {entry.progress}
           {total != null ? ` / ${total}` : ""}
         </span>
-        <button
+        <FocusButton
           type="button"
           aria-label={t("Increase progress")}
           disabled={busy || atCeiling}
@@ -113,7 +114,7 @@ export function AnilistEntryCard({
           className="flex h-11 w-11 items-center justify-center rounded-e-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-40"
         >
           <Plus size={15} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );
@@ -133,7 +134,7 @@ function StatusDropdown({
   const btnRef = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         type="button"
         disabled={disabled}
@@ -145,11 +146,11 @@ function StatusDropdown({
           size={14}
           className={`shrink-0 text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       <AnchoredMenu anchorRef={btnRef} open={open} onClose={() => setOpen(false)} width={168}>
         <div className="overflow-hidden rounded-xl border border-edge bg-raised py-1 shadow-[0_18px_44px_-18px_rgba(0,0,0,0.8)]">
           {STATUS_ORDER.map((s) => (
-            <button
+            <FocusButton
               key={s}
               type="button"
               onClick={() => {
@@ -162,7 +163,7 @@ function StatusDropdown({
             >
               {t(STATUS_LABELS[s])}
               {s === value && <Check size={13} className="text-ink" />}
-            </button>
+            </FocusButton>
           ))}
         </div>
       </AnchoredMenu>

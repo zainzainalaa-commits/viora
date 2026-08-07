@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
@@ -50,13 +51,13 @@ export function EditFolderImagesModal({
           <div className="flex flex-col gap-0.5">
             <h2 className="text-[19px] font-medium tracking-tight text-ink">{t("Edit Folder Images")}</h2>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -85,13 +86,13 @@ export function EditFolderImagesModal({
           </div>
 
           <div className="mt-2 flex justify-end gap-3">
-            <button
+            <FocusButton
               onClick={onClose}
               className="rounded-full border border-edge bg-transparent px-5 py-2 text-[13px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("Cancel")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={() => {
                 onSave(cover.trim(), gif.trim());
                 onClose();
@@ -99,7 +100,7 @@ export function EditFolderImagesModal({
               className="rounded-full bg-accent px-5 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {t("Save")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>

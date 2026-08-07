@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import { Poster, usePosterChain } from "@/components/poster";
@@ -49,13 +50,13 @@ export function DayModal({
                 : t("{n} titles", { n: items.length })}
             </span>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             aria-label={t("Close")}
             className="flex h-9 w-9 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </header>
         <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-3">
           {items.map((item) => (
@@ -89,7 +90,7 @@ function DayModalRow({
       ? "bg-amber-400/20 text-amber-200"
       : "bg-blue-400/20 text-blue-200";
   return (
-    <button
+    <FocusButton
       onClick={() => onOpen(item)}
       className="flex items-start gap-3 rounded-xl border border-edge-soft bg-canvas/40 p-3 text-start transition-colors hover:border-edge hover:bg-canvas/65"
     >
@@ -122,6 +123,6 @@ function DayModalRow({
           <p className="line-clamp-2 text-[12px] leading-relaxed text-ink-muted">{item.overview}</p>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }

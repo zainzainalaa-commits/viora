@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -349,15 +350,15 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
           onExpand={(t) => setPopoutTab(t)}
         />
         <footer className="flex shrink-0 items-center gap-2.5 border-t border-edge-soft bg-surface px-5 py-3.5">
-          <button
+          <FocusButton
             type="button"
             onClick={onExport}
             disabled={!canSave}
             className="flex h-12 flex-1 items-center justify-center rounded-lg border border-edge-soft text-[15px] font-semibold text-ink-muted transition-colors hover:border-edge hover:bg-white/[0.03] hover:text-ink disabled:opacity-40"
           >
             Export
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onSave}
             disabled={!canSave}
@@ -365,12 +366,12 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
             style={{ background: "var(--color-accent)" }}
           >
             Save theme
-          </button>
+          </FocusButton>
         </footer>
       </div>
 
       {inspectorHidden && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => setInspectorHidden(false)}
           style={STABLE_CHROME}
@@ -378,7 +379,7 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
         >
           <SlidersHorizontal size={15} strokeWidth={2.2} />
           Edit theme
-        </button>
+        </FocusButton>
       )}
 
       {popoutTab && (
@@ -416,7 +417,7 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
                 Your changes to this theme aren&apos;t saved yet. They&apos;ll be lost if you leave now.
               </p>
               <div className="mt-5 flex items-center justify-end gap-2.5">
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => {
                     setConfirmClose(false);
@@ -425,8 +426,8 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
                   className="h-10 rounded-lg px-4 text-[13.5px] font-semibold text-ink-subtle transition-colors hover:bg-danger/12 hover:text-danger"
                 >
                   Discard
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   type="button"
                   autoFocus
                   onClick={() => setConfirmClose(false)}
@@ -434,7 +435,7 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
                   style={{ background: "var(--color-accent)" }}
                 >
                   Keep editing
-                </button>
+                </FocusButton>
               </div>
             </div>
           </div>

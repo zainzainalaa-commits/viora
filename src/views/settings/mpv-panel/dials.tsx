@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw } from "lucide-react";
 import { Dropdown } from "@/components/dropdown";
 import { useSettings } from "@/lib/settings";
@@ -74,12 +75,12 @@ export function TweakSlider({
         {fmt ? fmt(value) : value}
       </span>
       {active ? (
-        <button
+        <FocusButton
           onClick={() => setTweak(mpvKey, null)}
           className="shrink-0 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
         >
           {t("Reset")}
-        </button>
+        </FocusButton>
       ) : (
         <span className={`shrink-0 ${compact ? "w-7" : "w-[34px]"}`} />
       )}
@@ -123,7 +124,7 @@ export function PictureDialsSection() {
     >
       <div className="flex flex-wrap gap-2">
         {PICTURE_TEMPLATES.map((tpl) => (
-          <button
+          <FocusButton
             key={tpl.label}
             type="button"
             title={t(tpl.sub)}
@@ -131,17 +132,17 @@ export function PictureDialsSection() {
             className="rounded-full border border-edge-soft bg-canvas/40 px-3.5 py-1.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {t(tpl.label)}
-          </button>
+          </FocusButton>
         ))}
         {anyActive && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => applyPatch(Object.fromEntries(PICTURE_KEYS.map((k) => [k, null])))}
             className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-semibold text-ink-subtle transition-colors hover:text-ink"
           >
             <RotateCcw size={12} strokeWidth={2.4} />
             {t("Reset picture")}
-          </button>
+          </FocusButton>
         )}
       </div>
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { REPO_URL } from "@/lib/brand";
 import { Angry, Frown, Github, Laugh, Meh, Smile, ThumbsUp } from "lucide-react";
 import { useRef, useState, type ComponentType } from "react";
@@ -79,27 +80,27 @@ export function BuildFeedback() {
           <p className="flex-1 text-[14px] font-medium text-ink">
             {t("You rated this build {label}.", { label: t(s.label) })}
           </p>
-          <button
+          <FocusButton
             type="button"
             onClick={() => setCommitted(null)}
             className="shrink-0 text-[12.5px] font-medium text-ink-subtle underline-offset-2 transition-colors hover:text-ink hover:underline"
           >
             {t("Change")}
-          </button>
+          </FocusButton>
         </div>
         {negative ? (
           <div className="flex flex-col items-start gap-2.5 rounded-lg border border-edge-soft bg-elevated/40 p-3.5">
             <p className="text-[13px] leading-relaxed text-ink-muted">
               {t("Sorry this one is not better. Tell us what went wrong and we will fix it for you.")}
             </p>
-            <button
+            <FocusButton
               type="button"
               onClick={() => openIssue(committed)}
               className="flex h-10 items-center gap-2 rounded-lg bg-ink px-4 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.98]"
             >
               <Github size={15} strokeWidth={2.2} />
               {t("Open a quick issue")}
-            </button>
+            </FocusButton>
           </div>
         ) : (
           <p className="flex items-center gap-2 text-[13px] text-ink-muted">
@@ -200,13 +201,13 @@ export function BuildFeedback() {
         </span>
       </div>
 
-      <button
+      <FocusButton
         type="button"
         onClick={commit}
         className="flex h-11 items-center justify-center gap-2 self-stretch rounded-xl bg-accent text-[14px] font-semibold text-[#1b1304] transition-[filter,transform] hover:brightness-105 active:scale-[0.99]"
       >
         {t("Send rating")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

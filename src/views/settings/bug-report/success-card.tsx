@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { REPO_URL } from "@/lib/brand";
 import { Check, GitPullRequest } from "lucide-react";
 import { openUrl } from "@/lib/window";
@@ -24,21 +25,21 @@ export function SuccessCard({
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2 pt-1">
-        <button
+        <FocusButton
           type="button"
           onClick={onAnother}
           className="h-10 rounded-xl bg-ink px-4 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
         >
           File another
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => REPO_URL && openUrl(`${REPO_URL}/pulls`)}
           className="flex h-10 items-center gap-2 rounded-xl border border-edge-soft bg-elevated px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           <GitPullRequest size={13} strokeWidth={1.9} />
           Pitch a fix as a PR
-        </button>
+        </FocusButton>
       </div>
     </section>
   );

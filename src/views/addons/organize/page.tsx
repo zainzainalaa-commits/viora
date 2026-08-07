@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, ChevronDown, History, Info, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getUserAddonsRaw, type Addon } from "@/lib/addons";
@@ -212,7 +213,7 @@ export function OrganizeAddonsPage({
         className="relative z-50 shrink-0 border-b border-edge-soft bg-canvas/85 backdrop-blur-xl"
       >
         <div className="mx-auto flex w-full max-w-[1160px] items-center gap-4 px-6 py-5 sm:px-10">
-          <button
+          <FocusButton
             onClick={onClose}
             disabled={saving}
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-raised hover:text-ink disabled:opacity-40"
@@ -220,7 +221,7 @@ export function OrganizeAddonsPage({
             title={t("Back to addons")}
           >
             <ArrowLeft size={18} strokeWidth={2.2} className="dir-icon" />
-          </button>
+          </FocusButton>
           <div className="flex min-w-0 flex-1 flex-col">
             <h1 className="truncate font-display text-[26px] font-medium tracking-tight text-ink sm:text-[30px]">
               {t("Organize addons")}
@@ -231,7 +232,7 @@ export function OrganizeAddonsPage({
           </div>
           {showBackups && (
             <div ref={backupsWrapRef} className="relative shrink-0">
-              <button
+              <FocusButton
                 onClick={() => setBackupsOpen((v) => !v)}
                 className={`flex h-11 items-center gap-2 rounded-full px-4 text-[13.5px] font-semibold ring-1 transition-colors ${
                   backupsOpen
@@ -251,7 +252,7 @@ export function OrganizeAddonsPage({
                   strokeWidth={2.4}
                   className={`transition-transform duration-200 ${backupsOpen ? "rotate-180" : ""}`}
                 />
-              </button>
+              </FocusButton>
               {backupsOpen && (
                 <div className="absolute end-0 top-[calc(100%+12px)] z-20 max-h-[64vh] w-[min(92vw,420px)] overflow-y-auto rounded-2xl border border-edge bg-elevated shadow-[0_28px_72px_-20px_rgba(0,0,0,0.7)] animate-popover-in">
                   <BackupsPanel
@@ -267,14 +268,14 @@ export function OrganizeAddonsPage({
           )}
           {phase.kind !== "loadError" && (
             <div className="flex shrink-0 items-center gap-2.5">
-              <button
+              <FocusButton
                 onClick={onClose}
                 disabled={saving}
                 className="flex h-11 items-center rounded-full bg-elevated px-5 text-[13.5px] font-semibold text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-raised hover:text-ink disabled:opacity-40"
               >
                 {t("Cancel")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={() => void handleSave()}
                 disabled={!dirty || phase.kind !== "ready"}
                 className={`flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 ${
@@ -289,7 +290,7 @@ export function OrganizeAddonsPage({
                 ) : (
                   t("Save order")
                 )}
-              </button>
+              </FocusButton>
             </div>
           )}
         </div>
@@ -303,18 +304,18 @@ export function OrganizeAddonsPage({
                 {t("Couldn't load your Stremio collection. Nothing can be reordered safely without it.")}
               </p>
               <div className="flex items-center gap-3">
-                <button
+                <FocusButton
                   onClick={() => void load()}
                   className="flex h-12 items-center rounded-full bg-ink px-6 text-[14.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
                 >
                   {t("Try again")}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   onClick={onClose}
                   className="flex h-12 items-center rounded-full bg-elevated px-6 text-[14.5px] font-semibold text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-raised hover:text-ink"
                 >
                   {t("Go back")}
-                </button>
+                </FocusButton>
               </div>
             </div>
           ) : (
@@ -332,20 +333,20 @@ export function OrganizeAddonsPage({
                     {(notice.retry || notice.reload) && (
                       <div className="flex items-center gap-2.5">
                         {notice.retry && (
-                          <button
+                          <FocusButton
                             onClick={() => void handleSave()}
                             className="rounded-full bg-raised px-4 py-1.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                           >
                             {t("Retry")}
-                          </button>
+                          </FocusButton>
                         )}
                         {notice.reload && (
-                          <button
+                          <FocusButton
                             onClick={() => void load()}
                             className="rounded-full bg-raised px-4 py-1.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                           >
                             {t("Reload list")}
-                          </button>
+                          </FocusButton>
                         )}
                       </div>
                     )}

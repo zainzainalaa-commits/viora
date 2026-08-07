@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState, useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -33,12 +34,12 @@ export function MatchDetailView({ game }: { game: SportsGame }) {
       {/* Header */}
       <div className="relative shrink-0 pb-10 pt-24">
         <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-brand/10 via-brand/5 to-transparent opacity-80" />
-        <button
+        <FocusButton
           onClick={goBack}
           className="absolute start-6 top-24 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-elevated/80 text-ink shadow-lg ring-1 ring-edge-soft/50 transition-colors hover:bg-elevated hover:text-ink-muted md:top-20"
         >
           <ArrowLeft size={20} className="dir-icon" />
-        </button>
+        </FocusButton>
         <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-8 px-6 pt-4">
           <div className="flex items-center gap-2 rounded-full border border-brand/20 bg-brand/10 px-4 py-1.5 text-[12px] font-bold uppercase tracking-widest text-brand">
             {game.state === "in" && (
@@ -95,7 +96,7 @@ export function MatchDetailView({ game }: { game: SportsGame }) {
       {/* Tabs */}
       <div className="mx-auto mt-8 flex w-full max-w-4xl shrink-0 gap-6 border-b border-edge-soft/50 px-6">
         {(isCombat ? ["summary", "profile", "stats"] as const : ["summary", "lineups", "stats"] as const).map((tId) => (
-          <button
+          <FocusButton
             key={tId}
             onClick={() => setTab(tId)}
             className={`relative pb-3 text-sm font-semibold capitalize transition-colors ${tab === tId ? "text-ink" : "text-ink-subtle hover:text-ink-muted"}`}
@@ -104,7 +105,7 @@ export function MatchDetailView({ game }: { game: SportsGame }) {
             {tab === tId && (
               <div className="absolute inset-x-0 bottom-0 h-0.5 rounded-t-full bg-brand" />
             )}
-          </button>
+          </FocusButton>
         ))}
       </div>
 

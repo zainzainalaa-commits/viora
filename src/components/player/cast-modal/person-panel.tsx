@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Loader2 } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -124,13 +125,13 @@ export function PersonPanel({
                 {bio}
               </p>
               {bioClamped && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => setExpanded((v) => !v)}
                   className="mt-1 text-[12.5px] font-semibold text-white/55 transition-colors hover:text-white/90"
                 >
                   {expanded ? t("Show less") : t("Read more")}
-                </button>
+                </FocusButton>
               )}
             </div>
           )}

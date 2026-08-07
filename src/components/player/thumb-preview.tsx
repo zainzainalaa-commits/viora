@@ -4,7 +4,13 @@ import { thumbCacheGet, thumbCacheNearest, thumbCacheSet, trickplayGet } from "@
 import { useSkipSegmentsView } from "@/lib/skip-intro/segment-store";
 import { useT } from "@/lib/i18n";
 
-const SEG_LABEL = { intro: "OP", outro: "ED", recap: "Recap", ad: "Ad" } as const;
+const SEG_LABEL = {
+  intro: "OP",
+  outro: "ED",
+  recap: "Recap",
+  ad: "Ad",
+  flagged: "Scene",
+} as const;
 const BUCKET_SECONDS = 2;
 const CARD_WIDTH = 192;
 const CARD_HEIGHT = 108;

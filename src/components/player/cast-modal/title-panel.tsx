@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, Loader2, Play } from "lucide-react";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -149,7 +150,7 @@ export function TitlePanel({
           {genrePills.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {genrePills.slice(0, 5).map((g) => (
-                <button
+                <FocusButton
                   key={g.name}
                   type="button"
                   onClick={() =>
@@ -159,44 +160,44 @@ export function TitlePanel({
                   className="rounded-full bg-white/[0.08] px-3 py-1.5 text-[13px] font-medium text-white/75 ring-1 ring-white/10 transition-colors enabled:hover:bg-white/[0.16] enabled:hover:text-white disabled:cursor-default"
                 >
                   {g.name}
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
           <div className="mt-1.5 flex flex-wrap items-center gap-2.5">
             {isSeries
               ? onOpenEpisodes && (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => onOpenEpisodes(meta, imdbId)}
                     className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[15px] font-semibold text-black transition-transform hover:scale-[1.03]"
                   >
                     <Play size={17} strokeWidth={2.4} fill="currentColor" />
                     {t("Episodes")}
-                  </button>
+                  </FocusButton>
                 )
               : onPlay &&
                 (upcoming ? (
                   <UpcomingCta detail={detail} onTry={() => onPlay(meta)} />
                 ) : (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => onPlay(meta)}
                     className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[15px] font-semibold text-black transition-transform hover:scale-[1.03]"
                   >
                     <Play size={17} strokeWidth={2.4} fill="currentColor" />
                     {t("Play")}
-                  </button>
+                  </FocusButton>
                 ))}
-            <button
+            <FocusButton
               type="button"
               onClick={() => onOpenDetail(meta)}
               className="inline-flex w-fit items-center gap-2 rounded-full bg-white/[0.12] px-5 py-2.5 text-[15px] font-semibold text-white ring-1 ring-white/15 transition-colors hover:bg-white/20"
             >
               {isSeries ? t("All episodes & details") : t("Full details")}
               <ArrowRight size={17} strokeWidth={2.4} />
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={() => queueToggle(meta)}
               className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold ring-1 transition-colors ${
@@ -207,7 +208,7 @@ export function TitlePanel({
             >
               {queued ? <Check size={17} strokeWidth={2.6} /> : <Plus size={17} strokeWidth={2.4} />}
               {queued ? t("Queued") : t("Queue")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>
@@ -221,13 +222,13 @@ export function TitlePanel({
             {overview}
           </p>
           {overviewClamped && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => setExpanded((v) => !v)}
               className="mt-1 text-[12.5px] font-semibold text-white/55 transition-colors hover:text-white/90"
             >
               {expanded ? t("Show less") : t("Read more")}
-            </button>
+            </FocusButton>
           )}
         </div>
       )}
@@ -242,14 +243,14 @@ export function TitlePanel({
               <span className="flex flex-wrap gap-x-1.5 text-white/85">
                 {g.people.map((p, i) => (
                   <span key={`${p.id}-${i}`}>
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => onOpenPerson(p.id, p.name)}
                       disabled={p.id <= 0 || !tmdbKey}
                       className="rounded transition-colors hover:text-white enabled:hover:underline disabled:cursor-default underline-offset-2"
                     >
                       {p.name}
-                    </button>
+                    </FocusButton>
                     {i < g.people.length - 1 && <span className="text-white/35">, </span>}
                   </span>
                 ))}

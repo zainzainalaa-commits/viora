@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { FormatBadge, streamBadges } from "@/components/format-badge";
 import type { ScoredStream } from "@/lib/streams/types";
 import { useT } from "@/lib/i18n";
@@ -17,7 +18,7 @@ export function StreamPill({
   const description = stream.title?.trim() || stream.description?.trim() || "";
   const badges = streamBadges(stream);
   return (
-    <button
+    <FocusButton
       onClick={onPick}
       className="group flex w-full items-start gap-3 rounded-xl bg-elevated/40 px-3 py-2.5 text-start ring-1 ring-edge-soft/40 transition-colors hover:bg-raised hover:ring-edge"
     >
@@ -36,6 +37,6 @@ export function StreamPill({
           </p>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }

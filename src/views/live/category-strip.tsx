@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { forwardRef, useEffect, useRef } from "react";
 import { useT } from "@/lib/i18n";
 
@@ -59,7 +60,7 @@ const Chip = forwardRef<
   { label: string; count: number; active: boolean; onClick: () => void }
 >(function Chip({ label, count, active, onClick }, ref) {
   return (
-    <button
+    <FocusButton
       ref={ref}
       onClick={onClick}
       className={`flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-[13px] font-medium transition-colors duration-150 ${
@@ -76,6 +77,6 @@ const Chip = forwardRef<
       >
         {count}
       </span>
-    </button>
+    </FocusButton>
   );
 });

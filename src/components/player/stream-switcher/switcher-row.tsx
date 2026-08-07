@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Loader2, Zap } from "lucide-react";
 import { AddonLogo } from "@/components/addon-logo";
 import { CopyLinkButton, resolveStreamLink } from "@/components/player/copy-link-button";
@@ -56,7 +57,7 @@ export function SwitcherRow({
 
   return (
     <li className={divider ? "border-t border-edge-soft/60" : ""}>
-      <button
+      <FocusButton
         onClick={onPick}
         disabled={resolving || isCurrent}
         className={`group flex w-full items-center gap-3.5 px-5 py-3 text-start transition-colors ${
@@ -120,7 +121,7 @@ export function SwitcherRow({
           {link && !resolving && <CopyLinkButton url={link} />}
           {resolving && <Loader2 size={13} className="animate-spin text-ink-muted" />}
         </div>
-      </button>
+      </FocusButton>
     </li>
   );
 }

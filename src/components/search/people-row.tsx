@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight, User } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -62,7 +63,7 @@ export function PeopleRow({ people, onClose }: { people: SearchPerson[]; onClose
           style={{ gap: `${GAP}px` }}
         >
           {people.map((p) => (
-            <button
+            <FocusButton
               key={p.id}
               onClick={() => {
                 openPerson(p.id);
@@ -91,7 +92,7 @@ export function PeopleRow({ people, onClose }: { people: SearchPerson[]; onClose
                 <span className="truncate text-[14px] font-semibold text-ink">{p.name}</span>
                 <span className="truncate text-[12px] text-ink-subtle">{p.knownFor}</span>
               </div>
-            </button>
+            </FocusButton>
           ))}
         </div>
         <ArrowButton side="left" visible={scrollState.canLeft} onClick={() => page(-1)} />
@@ -112,7 +113,7 @@ function ArrowButton({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       aria-label={t(side === "left" ? "Scroll left" : "Scroll right")}
       onClick={onClick}
@@ -129,7 +130,7 @@ function ArrowButton({
       ) : (
         <ChevronRight size={18} strokeWidth={2.4} className="dir-icon" />
       )}
-    </button>
+    </FocusButton>
   );
 }
 

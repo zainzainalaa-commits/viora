@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowBigUp, CornerDownLeft } from "lucide-react";
 import type { AiProvider } from "@/lib/ai-models";
 import { ProviderLogo } from "@/components/ai-provider-logo";
@@ -14,7 +15,7 @@ export function AiSuggestButton({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       onClick={onRun}
       className="group animate-ai-entrance relative flex h-16 w-full items-center gap-3 overflow-hidden rounded-2xl border border-accent/40 bg-accent/10 px-4 text-start transition-colors hover:bg-accent/15"
     >
@@ -39,6 +40,6 @@ export function AiSuggestButton({
           <CornerDownLeft size={12} strokeWidth={2} />
         </kbd>
       </span>
-    </button>
+    </FocusButton>
   );
 }

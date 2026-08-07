@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronLeft, ExternalLink, Loader2 } from "lucide-react";
 import { useState } from "react";
 import stremioLogo from "@/assets/stremio-wordmark.png";
@@ -81,14 +82,14 @@ export function StremioStep() {
   if (mode === "form") {
     return (
       <form key="form" onSubmit={submit} className={`flex flex-col gap-5 ${animClass}`}>
-        <button
+        <FocusButton
           type="button"
           onClick={goToIntro}
           className="flex w-fit items-center gap-1.5 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink-muted"
         >
           <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
           {t("Back")}
-        </button>
+        </FocusButton>
         <div className="flex justify-center">
           <img
             src={stremioLogo}
@@ -117,7 +118,7 @@ export function StremioStep() {
         {error && (
           <p className="rounded-lg bg-danger/15 px-3 py-2 text-[13px] text-danger">{error}</p>
         )}
-        <button
+        <FocusButton
           type="submit"
           disabled={busy || !email || !password}
           className="flex h-12 items-center justify-center gap-2 rounded-xl text-[15px] font-semibold text-white transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
@@ -134,8 +135,8 @@ export function StremioStep() {
           ) : (
             t("Sign in to Stremio")
           )}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => openUrl("https://www.stremio.com/register")}
           className="flex items-center justify-center gap-1.5 text-[12.5px] text-ink-subtle transition-colors hover:text-ink-muted"
@@ -143,7 +144,7 @@ export function StremioStep() {
           <span>{t("Don't have an account?")}</span>
           <span className="font-medium text-ink-muted">{t("Create one")}</span>
           <ExternalLink size={11} />
-        </button>
+        </FocusButton>
       </form>
     );
   }
@@ -164,7 +165,7 @@ export function StremioStep() {
         </p>
       </div>
       <div className="flex flex-col gap-2">
-        <button
+        <FocusButton
           onClick={goToForm}
           className="group flex h-14 items-center justify-center gap-3 rounded-2xl border border-edge bg-canvas/60 px-6 transition-all hover:border-ink-subtle/40 hover:bg-canvas"
         >
@@ -175,13 +176,13 @@ export function StremioStep() {
             className="h-7 opacity-90 transition-opacity group-hover:opacity-100"
             style={{ filter: "grayscale(1) invert(1)" }}
           />
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={() => openUrl("https://www.stremio.com/register")}
           className="text-center text-[12.5px] text-ink-subtle transition-colors hover:text-ink-muted"
         >
           {t("Don't have an account? Create one →")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Captions, CaptionsOff, Check, Languages, Loader2, Play } from "lucide-react";
 import { Flag } from "@/components/flag";
@@ -75,14 +76,14 @@ export function SubtitleSelectStep({
 
       <div className="relative mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col gap-6 px-10 pb-10 pt-24">
         <header className="flex items-start gap-4">
-          <button
+          <FocusButton
             type="button"
             onClick={onCancel}
             aria-label={t("Back")}
             className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated/70 text-ink-muted ring-1 ring-edge-soft backdrop-blur transition-colors hover:bg-raised hover:text-ink"
           >
             <ArrowLeft size={20} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
           <div className="flex min-w-0 flex-col gap-1">
             <div className="flex items-center gap-2.5">
               <Captions size={22} strokeWidth={2} className="shrink-0 text-accent" />
@@ -158,14 +159,14 @@ export function SubtitleSelectStep({
         </div>
 
         <div className="flex shrink-0 items-center justify-between gap-4">
-          <button
+          <FocusButton
             type="button"
             onClick={() => onStart(src)}
             className="h-12 rounded-full px-6 text-[15px] font-semibold text-ink-muted transition-colors hover:text-ink"
           >
             {t("Skip, let Harbor choose")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={start}
             disabled={loading}
@@ -173,7 +174,7 @@ export function SubtitleSelectStep({
           >
             <Play size={20} strokeWidth={2.6} fill="currentColor" />
             {t("Start playback")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </main>
@@ -202,7 +203,7 @@ function SidebarItem({
   dot?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex min-h-[44px] items-center gap-2.5 rounded-xl px-3 text-start text-[13.5px] transition-colors ${
         active ? "bg-elevated text-ink ring-1 ring-edge" : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
@@ -212,13 +213,13 @@ function SidebarItem({
       <span className="min-w-0 flex-1 truncate font-medium">{label}</span>
       {dot && <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />}
       <span className="shrink-0 text-[11.5px] tabular-nums text-ink-subtle">{count}</span>
-    </button>
+    </FocusButton>
   );
 }
 
 function OffRow({ selected, onPick, label }: { selected: boolean; onPick: () => void; label: string }) {
   return (
-    <button
+    <FocusButton
       onClick={onPick}
       className={`flex min-h-[52px] w-full items-center gap-3.5 rounded-2xl px-4 text-start transition-colors ${
         selected ? "bg-accent/12 ring-1 ring-accent/50" : "hover:bg-canvas/50"
@@ -227,7 +228,7 @@ function OffRow({ selected, onPick, label }: { selected: boolean; onPick: () => 
       <SelectDot selected={selected} />
       <CaptionsOff size={19} strokeWidth={2} className="shrink-0 text-ink-subtle" />
       <span className="text-[15px] font-medium text-ink">{label}</span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -245,7 +246,7 @@ function TrackRow({
   const t = useT();
   const title = result.title || languageName(result.lang);
   return (
-    <button
+    <FocusButton
       onClick={onPick}
       className={`flex min-h-[56px] w-full items-center gap-3.5 rounded-2xl px-4 py-2.5 text-start transition-colors ${
         selected ? "bg-accent/12 ring-1 ring-accent/50" : "hover:bg-canvas/50"
@@ -282,7 +283,7 @@ function TrackRow({
         </span>
       </div>
       <Flag language={languageName(result.lang)} size="md" showLabel={false} />
-    </button>
+    </FocusButton>
   );
 }
 

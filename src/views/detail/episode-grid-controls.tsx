@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDownUp, Check, CheckCheck, ChevronDown, EyeOff } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -46,7 +47,7 @@ function SortMenu({ sort, onSort }: { sort: Sort; onSort: (s: Sort) => void }) {
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className="flex h-10 items-center gap-2 rounded-full border border-edge-soft bg-canvas/90 ps-3.5 pe-3 text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
       >
@@ -56,11 +57,11 @@ function SortMenu({ sort, onSort }: { sort: Sort; onSort: (s: Sort) => void }) {
           size={14}
           className={`text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="animate-fade-in absolute end-0 top-full z-30 mt-2 w-40 overflow-hidden rounded-2xl border border-edge-soft bg-canvas py-1.5 shadow-2xl">
           {(["oldest", "newest"] as const).map((s) => (
-            <button
+            <FocusButton
               key={s}
               onClick={() => {
                 onSort(s);
@@ -72,7 +73,7 @@ function SortMenu({ sort, onSort }: { sort: Sort; onSort: (s: Sort) => void }) {
             >
               {s === "newest" ? t("Newest") : t("Oldest")}
               {sort === s && <Check size={14} strokeWidth={2.5} className="text-ink" />}
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
@@ -90,7 +91,7 @@ function OptionsMenu({
   const t = useT();
   const label = allWatched ? t("Mark season as unwatched") : t("Mark season as watched");
   return (
-    <button
+    <FocusButton
       aria-label={label}
       title={label}
       onClick={() => onMarkSeason(!allWatched)}
@@ -99,6 +100,6 @@ function OptionsMenu({
       }`}
     >
       {allWatched ? <EyeOff size={16} /> : <CheckCheck size={16} strokeWidth={2.2} />}
-    </button>
+    </FocusButton>
   );
 }

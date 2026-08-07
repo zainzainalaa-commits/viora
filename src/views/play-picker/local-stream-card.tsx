@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { HardDrive, Play } from "lucide-react";
 import type { LocalEntry } from "@/lib/local-library";
 import { episodeLabel } from "@/lib/local-library/player-src";
@@ -7,7 +8,7 @@ export function LocalStreamCard({ entry, onPlay }: { entry: LocalEntry; onPlay: 
   const t = useT();
   const ep = episodeLabel(entry);
   return (
-    <button
+    <FocusButton
       onClick={onPlay}
       className="group flex items-center gap-4 rounded-2xl border border-accent/40 bg-accent/10 px-5 py-4 text-start transition-colors hover:bg-accent/15"
     >
@@ -27,6 +28,6 @@ export function LocalStreamCard({ entry, onPlay }: { entry: LocalEntry; onPlay: 
         <Play size={15} fill="currentColor" />
         {t("Play")}
       </span>
-    </button>
+    </FocusButton>
   );
 }

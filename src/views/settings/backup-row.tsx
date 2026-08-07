@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Download, Upload } from "lucide-react";
 import { useRef, useState, type ChangeEvent } from "react";
 import { createPortal } from "react-dom";
@@ -68,7 +69,7 @@ export function BackupRow() {
             {t("Saves your whole Harbor setup to one file: theme, home layout, settings, addons, profiles, watchlist, player layouts, watch progress, and more. Your Stremio sign-in is left out on purpose.")}
           </span>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={doExport}
           className={`flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-3.5 text-[12.5px] font-semibold transition-all ${
@@ -79,7 +80,7 @@ export function BackupRow() {
         >
           {exported ? <Check size={14} strokeWidth={2.6} /> : <Download size={14} strokeWidth={2.4} />}
           {exported ? t("Saved") : t("Export")}
-        </button>
+        </FocusButton>
       </div>
 
       <div className="flex flex-col gap-3 rounded-xl border border-edge-soft bg-canvas/40 p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -89,14 +90,14 @@ export function BackupRow() {
             {t("Loads a backup file and replaces your current setup with it. Perfect for a new computer. Your Stremio sign-in on this device stays as is.")}
           </span>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={() => fileRef.current?.click()}
           className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-edge bg-elevated px-3.5 text-[12.5px] font-semibold text-ink transition-all hover:scale-[1.02] hover:border-ink active:scale-[0.97]"
         >
           <Upload size={14} strokeWidth={2.4} />
           {t("Restore")}
-        </button>
+        </FocusButton>
       </div>
 
       {error && <p className="px-1 text-[12px] text-danger">{error}</p>}
@@ -146,22 +147,22 @@ function RestoreConfirm({
           {t("Saved {when} from Harbor {app}.", { when, app: backup.app })}
         </p>
         <div className="mt-5 flex justify-end gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onCancel}
             disabled={applying}
             className="h-10 rounded-full px-4 text-[13px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-50"
           >
             {t("Cancel")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onConfirm}
             disabled={applying}
             className="h-10 rounded-full bg-accent px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {applying ? t("Restoring...") : t("Restore and reload")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>,

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { BackToTop } from "@/components/back-to-top";
@@ -118,13 +119,13 @@ export function GridView({ grid }: { grid: GridSpec }) {
         <div className="flex w-full flex-col gap-8 px-12 pb-24 pt-24">
           <div className="flex items-center gap-4">
             {!layoutHasGlobalBack() && (
-              <button
+              <FocusButton
                 onClick={goBack}
                 aria-label="Back"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink-muted transition-colors hover:text-ink"
               >
                 <ArrowLeft size={18} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             )}
             <h1 className="font-display text-[30px] font-medium leading-none tracking-tight text-ink">
               {grid.title}

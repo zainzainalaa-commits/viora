@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Blocks, Star } from "lucide-react";
 import type { AddonResultGroup } from "@/lib/search-addons";
 import type { Meta } from "@/lib/cinemeta";
@@ -58,7 +59,7 @@ function AddonResultRow({ meta, onClose }: { meta: Meta; onClose: () => void }) 
     meta.type === "series" ? "series" : "movie",
   );
   return (
-    <button
+    <FocusButton
       onClick={() => {
         openMeta(meta);
         onClose();
@@ -94,6 +95,6 @@ function AddonResultRow({ meta, onClose }: { meta: Meta; onClose: () => void }) 
           </span>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }

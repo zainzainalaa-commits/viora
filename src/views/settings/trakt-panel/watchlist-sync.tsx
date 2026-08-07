@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Download, Loader2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -136,7 +137,7 @@ export function WatchlistSync() {
           </p>
         )}
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             onClick={() =>
               phase.kind === "confirm-export" ? confirmExport(phase.plan) : confirmImport(phase.items)
             }
@@ -144,13 +145,13 @@ export function WatchlistSync() {
           >
             {isExport ? <Upload size={14} strokeWidth={2.2} /> : <Download size={14} strokeWidth={2.2} />}
             {t("Continue")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={() => setPhase({ kind: "idle" })}
             className="h-10 rounded-lg px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink"
           >
             {t("Cancel")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     );
@@ -178,12 +179,12 @@ export function WatchlistSync() {
           {phase.tone === "ok" && <Check size={15} strokeWidth={2.4} />}
           {phase.message}
         </div>
-        <button
+        <FocusButton
           onClick={() => setPhase({ kind: "idle" })}
           className="h-9 self-start rounded-lg px-2 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
         >
           {t("Done")}
-        </button>
+        </FocusButton>
       </div>
     );
   }
@@ -191,22 +192,22 @@ export function WatchlistSync() {
   const loadingDir = phase.kind === "loading" ? phase.dir : null;
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      <button
+      <FocusButton
         onClick={startExport}
         disabled={phase.kind === "loading"}
         className="flex h-11 items-center gap-2 rounded-xl bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97] disabled:opacity-50"
       >
         {loadingDir === "export" ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} strokeWidth={2.2} />}
         {t("Export to Trakt")}
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         onClick={startImport}
         disabled={phase.kind === "loading"}
         className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink disabled:opacity-50"
       >
         {loadingDir === "import" ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} strokeWidth={2.2} />}
         {t("Import from Trakt")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

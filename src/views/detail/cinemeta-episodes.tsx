@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Play } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
@@ -176,7 +177,7 @@ export function CinemetaEpisodeRow({
       onContextMenu={onContextMenu ? (e) => onContextMenu(e, season, epNumber, watched) : undefined}
       className="group flex items-center gap-4 rounded-2xl px-4 py-5 transition-colors hover:bg-elevated/30"
     >
-      <button
+      <FocusButton
         onClick={() =>
           playLocalAware({
             meta,
@@ -219,7 +220,7 @@ export function CinemetaEpisodeRow({
               .join("  ·  ")}
           </p>
         </div>
-      </button>
+      </FocusButton>
       <EpisodeDownloadButton meta={meta} episode={playEpisode} />
     </div>
   );
@@ -280,7 +281,7 @@ function SeasonDropdown({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => (menu ? setMenu(null) : openMenu())}
@@ -291,7 +292,7 @@ function SeasonDropdown({
           size={15}
           className={`text-ink-muted transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div
@@ -304,7 +305,7 @@ function SeasonDropdown({
               {seasons.map((s) => {
                 const isActive = s === active;
                 return (
-                  <button
+                  <FocusButton
                     key={s}
                     onClick={() => {
                       onChange(s);
@@ -317,7 +318,7 @@ function SeasonDropdown({
                     }`}
                   >
                     {seasonLabel(t, s)}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>

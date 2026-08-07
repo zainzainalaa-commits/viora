@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type Meta } from "@/lib/cinemeta";
@@ -92,7 +93,7 @@ export function HistoryEpisodeCard({
 
   return (
     <div className="group relative w-full min-w-0">
-      <button
+      <FocusButton
         ref={cardRef}
         onClick={open}
         onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta: entry.meta })}
@@ -150,9 +151,9 @@ export function HistoryEpisodeCard({
             <p className="text-[11px] text-ink-subtle">{formatShortDate(entry.watchedAt)}</p>
           )}
         </div>
-      </button>
+      </FocusButton>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex aspect-[16/9] items-center justify-center opacity-0 transition-opacity duration-[220ms] group-hover:opacity-100 group-focus-within:opacity-100">
-        <button
+        <FocusButton
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -163,7 +164,7 @@ export function HistoryEpisodeCard({
           className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-canvas ring-1 ring-white/15 shadow-[0_10px_28px_-8px_rgba(0,0,0,0.6)] transition-transform duration-150 hover:scale-[1.06]"
         >
           <Play size={20} fill="currentColor" className="ml-0.5 text-ink" />
-        </button>
+        </FocusButton>
       </div>
       {onRemove && entry.stremioId && (
         <RemoveButton onRemove={() => onRemove(entry.stremioId as string)} />
@@ -176,7 +177,7 @@ function RemoveButton({ onRemove }: { onRemove: () => void }) {
   const t = useT();
   const [confirm, setConfirm] = useState(false);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={(e) => {
         e.stopPropagation();
@@ -197,7 +198,7 @@ function RemoveButton({ onRemove }: { onRemove: () => void }) {
     >
       <Trash2 size={12} strokeWidth={2.2} />
       {confirm && t("Remove")}
-    </button>
+    </FocusButton>
   );
 }
 

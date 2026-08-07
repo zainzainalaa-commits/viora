@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight } from "lucide-react";
 import { Row } from "@/components/row";
 import { useT } from "@/lib/i18n";
@@ -32,7 +33,7 @@ function FranchiseTile({ franchise, tmdbKey }: { franchise: Franchise; tmdbKey: 
     });
   };
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={open}
       className="group relative block aspect-[16/10] w-full overflow-hidden rounded-[24px] ring-2 ring-white shadow-[0_14px_34px_-16px_rgba(20,40,60,0.5)] transition duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_22px_46px_-16px_rgba(20,40,60,0.6)] active:scale-[0.98]"
@@ -62,6 +63,6 @@ function FranchiseTile({ franchise, tmdbKey }: { franchise: Franchise; tmdbKey: 
           />
         </div>
       </div>
-    </button>
+    </FocusButton>
   );
 }

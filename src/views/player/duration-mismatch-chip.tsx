@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useState } from "react";
 import type { SourceDescriptor } from "@/lib/together/protocol";
@@ -36,21 +37,21 @@ export function DurationMismatchChip(props: {
           host: formatRuntime(hostDuration),
         })}
       </span>
-      <button
+      <FocusButton
         type="button"
         onClick={onFindCloser}
         className="whitespace-nowrap rounded-full px-2.5 py-1 font-semibold text-accent transition-colors hover:bg-accent/15"
       >
         {t("Find closer match")}
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => setDismissedKey(pairKey)}
         aria-label={t("Dismiss")}
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-raised hover:text-ink"
       >
         <X size={13} strokeWidth={2.2} />
-      </button>
+      </FocusButton>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Tooltip } from "./tooltip";
 
 export function PipIconBtn({
@@ -12,7 +13,7 @@ export function PipIconBtn({
   icon: React.ReactNode;
 }) {
   const btn = (
-    <button
+    <FocusButton
       type="button"
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
@@ -22,7 +23,7 @@ export function PipIconBtn({
       }`}
     >
       {icon}
-    </button>
+    </FocusButton>
   );
   if (disabled) return btn;
   return <Tooltip label={label}>{btn}</Tooltip>;
@@ -41,7 +42,7 @@ export function PipStepBtn({
 }) {
   return (
     <Tooltip label={label}>
-      <button
+      <FocusButton
         type="button"
         onClick={onClick}
         aria-label={label}
@@ -51,7 +52,7 @@ export function PipStepBtn({
         <span className="text-[8.5px] font-semibold uppercase leading-none tracking-[0.06em] text-white/70">
           {stepText}
         </span>
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }

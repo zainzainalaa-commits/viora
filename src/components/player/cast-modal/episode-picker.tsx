@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Play } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -37,18 +38,18 @@ function SeasonDropdown({
   const activeLabel = options.find((o) => o.key === activeKey)?.label ?? options[0]?.label ?? "";
   return (
     <div ref={ref} className="relative w-fit">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-full bg-white/[0.09] px-4 py-2 text-[14px] font-semibold text-white ring-1 ring-white/12 transition-colors hover:bg-white/15"
       >
         {activeLabel}
         <ChevronDown size={16} strokeWidth={2.4} className={`transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute left-0 top-full z-30 mt-1.5 max-h-72 w-56 overflow-y-auto rounded-xl bg-neutral-900/95 p-1.5 ring-1 ring-white/12 shadow-[0_24px_60px_-16px_rgba(0,0,0,0.9)] backdrop-blur-xl [scrollbar-width:thin]">
           {options.map((o) => (
-            <button
+            <FocusButton
               key={o.key}
               type="button"
               onClick={() => {
@@ -60,7 +61,7 @@ function SeasonDropdown({
               }`}
             >
               {o.label}
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
@@ -230,7 +231,7 @@ export function EpisodePicker({
               .filter(Boolean)
               .join(" · ");
             return (
-              <button
+              <FocusButton
                 key={`${ep.season}-${ep.episode}`}
                 type="button"
                 onClick={() => onPlayEpisode(ep)}
@@ -274,7 +275,7 @@ export function EpisodePicker({
                   </span>
                   {sub && <span className="text-[11.5px] text-white/45">{sub}</span>}
                 </div>
-              </button>
+              </FocusButton>
             );
           })}
         </div>

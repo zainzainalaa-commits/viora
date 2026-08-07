@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Tv } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -244,22 +245,22 @@ function Row({
             ))}
         </div>
         {canPrev && (
-          <button
+          <FocusButton
             aria-label={t("Scroll left")}
             onClick={() => scrollPage(-1)}
             className="absolute start-0 top-1/2 z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-edge-soft/55 bg-canvas/90 text-ink opacity-0 backdrop-blur transition-opacity duration-150 hover:bg-canvas group-hover/row:opacity-100 focus-visible:opacity-100 rtl:translate-x-1/2"
           >
             <ChevronLeft size={18} strokeWidth={2.2} className="dir-icon" />
-          </button>
+          </FocusButton>
         )}
         {canNext && (
-          <button
+          <FocusButton
             aria-label={t("Scroll right")}
             onClick={() => scrollPage(1)}
             className="absolute end-0 top-1/2 z-10 flex h-11 w-11 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-edge-soft/55 bg-canvas/90 text-ink opacity-0 backdrop-blur transition-opacity duration-150 hover:bg-canvas group-hover/row:opacity-100 focus-visible:opacity-100 rtl:-translate-x-1/2"
           >
             <ChevronRight size={18} strokeWidth={2.2} className="dir-icon" />
-          </button>
+          </FocusButton>
         )}
       </div>
     </section>
@@ -278,7 +279,7 @@ function NetworkCard({
   const [errored, setErrored] = useState(false);
   const showLogo = resolved.logoUrl && !errored;
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       title={resolved.def.displayName}
       style={{ width, height: CARD_HEIGHT, flex: `0 0 ${width}px` }}
@@ -306,6 +307,6 @@ function NetworkCard({
           {resolved.def.displayName}
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }

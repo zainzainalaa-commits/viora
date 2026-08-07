@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Star } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import { useLocalizedOverview } from "@/lib/use-localized-overview";
@@ -9,7 +10,7 @@ function MetaRow({ m, onClose, index }: { m: Meta; onClose: () => void; index?: 
   const description = useLocalizedOverview(m);
   const staggered = index != null;
   return (
-    <button
+    <FocusButton
       onClick={() => {
         openMeta(m);
         onClose();
@@ -42,7 +43,7 @@ function MetaRow({ m, onClose, index }: { m: Meta; onClose: () => void; index?: 
           </span>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

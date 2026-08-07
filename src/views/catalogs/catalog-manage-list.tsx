@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo, type ReactNode } from "react";
 import { ChevronDown, ChevronUp, Eye, EyeOff, Home, Pin, PinOff } from "lucide-react";
 import type { BrowseCatalog } from "@/lib/catalog-browse";
@@ -188,7 +189,7 @@ function IconBtn({
   active?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -199,6 +200,6 @@ function IconBtn({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

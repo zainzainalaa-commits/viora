@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 export function Dots({
   count,
   active,
@@ -10,7 +11,7 @@ export function Dots({
   return (
     <div className="flex items-center gap-2">
       {Array.from({ length: count }).map((_, i) => (
-        <button
+        <FocusButton
           key={i}
           onClick={() => onJump(i)}
           aria-label={`Step ${i + 1}`}

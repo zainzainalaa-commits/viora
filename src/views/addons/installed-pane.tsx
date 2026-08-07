@@ -1,8 +1,10 @@
-import { ArrowUpDown, Settings2 } from "lucide-react";
+import { FocusButton } from "@/lib/tv-focus";
+import { ArrowUpDown, Lock, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
+import { APP_NAME } from "@/lib/brand";
 import { HoverTooltip } from "@/components/hover-tooltip";
-import { isAddonEnabled, setAddonEnabled } from "@/lib/addon-store";
+import { isAddonEnabled, isBuiltInAddon, setAddonEnabled } from "@/lib/addon-store";
 import type { ResolvedAddon } from "@/lib/addons-store/store";
 import { useT } from "@/lib/i18n";
 import { addonKey, idOf, nameOf, subtitleFromManifest } from "./addons-utils";
@@ -56,14 +58,14 @@ export function InstalledPane({
     <div className="flex flex-col gap-3">
       {onReorder && (
         <div className="flex justify-end">
-          <button
+          <FocusButton
             onClick={onReorder}
             title={t("Change the order addons are tried in")}
             className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-edge-soft px-3 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:border-edge hover:text-ink-muted"
           >
             <ArrowUpDown size={13} strokeWidth={2.4} />
             {t("Reorder")}
-          </button>
+          </FocusButton>
         </div>
       )}
       <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
@@ -100,6 +102,7 @@ function InstalledRow({
     r.manifest?.behaviorHints?.configurable === true ||
     r.manifest?.behaviorHints?.configurationRequired === true;
   const transportUrl = r.transportUrl;
+  const builtIn = isBuiltInAddon(transportUrl);
 
   const handleUninstall = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -156,7 +159,7 @@ function InstalledRow({
           label={enabled ? t("Enabled") : t("Disabled")}
           sublabel={enabled ? t("Click to turn off") : t("Click to turn on")}
         >
-          <button
+          <FocusButton
             onClick={handleToggle}
             role="switch"
             aria-checked={enabled}
@@ -170,11 +173,11 @@ function InstalledRow({
                 enabled ? "translate-x-[18px] rtl:-translate-x-[18px]" : "translate-x-0"
               }`}
             />
-          </button>
+          </FocusButton>
         </HoverTooltip>
       )}
       {isConfigurable && transportUrl && onManage && !busy && (
-        <button
+        <FocusButton
           onClick={(e) => {
             e.stopPropagation();
             onManage(r);
@@ -184,26 +187,45 @@ function InstalledRow({
         >
           <Settings2 size={12} strokeWidth={2.2} />
           {t("Manage")}
-        </button>
+        </FocusButton>
       )}
-      <button
-        onClick={handleUninstall}
-        disabled={busy}
-        className={`group/pill flex shrink-0 items-center gap-1 rounded-full px-3.5 py-1.5 text-[12px] font-semibold ring-1 transition-colors ${
-          busy
-            ? "bg-danger/15 text-danger ring-danger/30"
-            : "bg-elevated/70 text-ink ring-edge-soft hover:bg-danger/15 hover:text-danger hover:ring-danger/30"
-        }`}
-      >
-        {busy ? (
-          <>
-            <span>{t("Uninstalling")}</span>
-            <DotsAnim />
-          </>
-        ) : (
-          t("Installed")
-        )}
-      </button>
+      {builtIn ? (
+        // No uninstall affordance at all, rather than a disabled one: this
+        // addon is part of the app, so offering a button that refuses would
+        // only invite the user to keep pressing it. The switch above is the
+        // real control.
+        <HoverTooltip
+          side="top"
+          align="center"
+          className="shrink-0"
+          label={t("Part of {app}", { app: APP_NAME })}
+          sublabel={t("Ships with the app. Turn it off if you don't want it.")}
+        >
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-elevated/70 px-3.5 py-1.5 text-[12px] font-semibold text-ink-muted ring-1 ring-edge-soft">
+            <Lock size={11} strokeWidth={2.4} />
+            {t("Built in")}
+          </span>
+        </HoverTooltip>
+      ) : (
+        <FocusButton
+          onClick={handleUninstall}
+          disabled={busy}
+          className={`group/pill flex shrink-0 items-center gap-1 rounded-full px-3.5 py-1.5 text-[12px] font-semibold ring-1 transition-colors ${
+            busy
+              ? "bg-danger/15 text-danger ring-danger/30"
+              : "bg-elevated/70 text-ink ring-edge-soft hover:bg-danger/15 hover:text-danger hover:ring-danger/30"
+          }`}
+        >
+          {busy ? (
+            <>
+              <span>{t("Uninstalling")}</span>
+              <DotsAnim />
+            </>
+          ) : (
+            t("Installed")
+          )}
+        </FocusButton>
+      )}
     </div>
   );
 }

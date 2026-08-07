@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Filter, Languages, MousePointerClick, RefreshCw, X, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { resolveAddonLogo } from "@/components/addon-logo";
@@ -298,14 +299,14 @@ export function StreamSwitcher({
         <header className="flex items-center justify-between gap-4 border-b border-edge-soft px-6 py-4">
           <div className="flex items-center gap-2.5">
             <Tooltip label={t("Refresh sources")} side="bottom">
-              <button
+              <FocusButton
                 onClick={() => refresh()}
                 disabled={refreshing}
                 className="flex h-9 w-9 items-center justify-center rounded-md bg-raised text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-default disabled:opacity-70"
                 aria-label={t("Refresh sources")}
               >
                 <RefreshCw size={15} strokeWidth={2.2} className={refreshing ? "animate-spin" : ""} />
-              </button>
+              </FocusButton>
             </Tooltip>
             <span className="text-[13px] font-semibold tracking-[0.01em] text-ink-muted whitespace-nowrap">
               {refreshing
@@ -318,7 +319,7 @@ export function StreamSwitcher({
           <div className="flex items-center gap-2">
             {rejectedStreams.length > 0 && (
               <Tooltip label={t("Show sources hidden by the trust filter")} side="bottom">
-                <button
+                <FocusButton
                   onClick={() => setShowFiltered((v) => !v)}
                   className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
                     showFiltered
@@ -329,11 +330,11 @@ export function StreamSwitcher({
                 >
                   <Filter size={11} strokeWidth={2.2} />
                   {showFiltered ? t("Flagged shown") : t("Flagged ({n})", { n: rejectedStreams.length })}
-                </button>
+                </FocusButton>
               </Tooltip>
             )}
             {debridSlugs.length > 0 && uncachedHidden > 0 && (
-              <button
+              <FocusButton
                 onClick={() => setCachedOnly((v) => !v)}
                 className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
                   cachedOnly
@@ -344,7 +345,7 @@ export function StreamSwitcher({
               >
                 <Zap size={11} fill={cachedOnly ? "currentColor" : "none"} strokeWidth={2.2} />
                 {cachedOnly ? t("Cached only ({n})", { n: uncachedHidden }) : t("Cached only")}
-              </button>
+              </FocusButton>
             )}
             {addonOptions.length > 1 && (
               <AddonFilterMenu
@@ -379,7 +380,7 @@ export function StreamSwitcher({
               />
             )}
             {preferredLangs.length > 0 && hiddenCount > 0 && (
-              <button
+              <FocusButton
                 onClick={() => setFilterToPreferred((v) => !v)}
                 className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
                   filterToPreferred
@@ -392,15 +393,15 @@ export function StreamSwitcher({
                 {filterToPreferred
                   ? t("{langs} only · {n} hidden", { langs: abbreviateLanguages(preferredLangs), n: hiddenCount })
                   : t("{langs} only", { langs: abbreviateLanguages(preferredLangs) })}
-              </button>
+              </FocusButton>
             )}
-            <button
+            <FocusButton
               onClick={onClose}
               className="flex h-9 w-9 items-center justify-center rounded-md bg-raised text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
               aria-label={t("Close")}
             >
               <X size={16} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         </header>
 
@@ -411,14 +412,14 @@ export function StreamSwitcher({
             <p className="text-[13.5px] text-ink-muted">
               {refreshing ? t("Looking for sources…") : t("No sources loaded for this title yet.")}
             </p>
-            <button
+            <FocusButton
               onClick={() => refresh()}
               disabled={refreshing}
               className="flex h-10 items-center gap-2 rounded-md bg-raised px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-elevated disabled:opacity-70"
             >
               <RefreshCw size={14} strokeWidth={2.2} className={refreshing ? "animate-spin" : ""} />
               {t("Refresh sources")}
-            </button>
+            </FocusButton>
           </div>
         ) : (
           <ul className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-ink/25 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-thumb:hover]:bg-ink/40">
@@ -436,7 +437,7 @@ export function StreamSwitcher({
             ))}
             {list.length > showCount && (
               <li className="border-t border-edge-soft/60 px-4 py-3">
-                <button
+                <FocusButton
                   onClick={() => setShowCount((n) => n + 80)}
                   className="flex w-full items-center justify-center gap-2 rounded-md bg-raised px-4 py-2.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                 >
@@ -444,7 +445,7 @@ export function StreamSwitcher({
                   <span className="text-[11px] tabular-nums text-ink-subtle">
                     {t("{n} hidden", { n: list.length - showCount })}
                   </span>
-                </button>
+                </FocusButton>
               </li>
             )}
           </ul>

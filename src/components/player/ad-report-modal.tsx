@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { HelpCircle, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { usePlaybackPosition } from "@/lib/player/playback-clock";
@@ -59,23 +60,23 @@ export function AdReportModal({
           </h2>
           <div className="flex items-center gap-1">
             {view === "report" && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setView("about")}
                 className="flex h-8 items-center gap-1.5 rounded-full bg-elevated px-3 text-[11.5px] font-semibold text-ink-muted transition-colors hover:bg-raised hover:text-ink"
               >
                 <HelpCircle size={13} strokeWidth={2} />
                 {t("What is this?")}
-              </button>
+              </FocusButton>
             )}
-            <button
+            <FocusButton
               type="button"
               onClick={onClose}
               aria-label={t("Close")}
               className="flex h-8 w-8 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
             >
               <X size={15} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         </header>
 
@@ -101,28 +102,28 @@ export function AdReportModal({
                   ))}
                 </div>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={addRange}
                 className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-dashed border-edge text-[13.5px] font-medium text-ink-muted transition-colors hover:border-ink-subtle hover:bg-elevated hover:text-ink"
               >
                 <Plus size={16} strokeWidth={2.2} />
                 {t("Add an ad starting at the current time")}
-              </button>
+              </FocusButton>
               {status === "error" && (
                 <p className="text-[12px] text-danger">{t("Could not send. Try again.")}</p>
               )}
               {status === "sent" && (
                 <p className="text-[12px] text-accent">{t("Thanks. Sent for review.")}</p>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={submit}
                 disabled={!valid || status === "sending"}
                 className="inline-flex h-11 items-center justify-center rounded-xl bg-ink text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.01] disabled:opacity-40 disabled:hover:scale-100"
               >
                 {status === "sending" ? t("Sending...") : t("Submit report")}
-              </button>
+              </FocusButton>
             </>
           )}
         </div>

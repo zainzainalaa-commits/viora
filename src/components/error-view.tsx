@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useCallback, useEffect, useRef, useState } from "react";
 import snip404 from "@/assets/snip404.svg";
@@ -175,15 +176,15 @@ export function ErrorView() {
         {error.detail && <TechnicalDetail content={buildReportBody(error)} />}
 
         <div className="mt-1 flex flex-wrap items-center gap-2.5">
-          <button
+          <FocusButton
             type="button"
             onClick={goBack}
             className="inline-flex h-11 items-center gap-2 rounded-full bg-accent px-5 text-[13.5px] font-semibold text-canvas transition-colors hover:bg-accent/90"
           >
             <ArrowLeftIcon className="dir-icon h-[16px] w-[16px]" />
             Take me back
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={reportBug}
             disabled={report.kind === "sending" || report.kind === "sent"}
@@ -207,15 +208,15 @@ export function ErrorView() {
                 : report.kind === "error"
                   ? "Try again"
                   : "Submit report"}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={reload}
             aria-label="Reload"
             className="inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <ReloadIcon className="h-[15px] w-[15px]" />
-          </button>
+          </FocusButton>
         </div>
 
         <p className="text-[11.5px] text-ink-subtle">
@@ -274,14 +275,14 @@ function TechnicalDetail({ content }: { content: string }) {
 
   return (
     <div className="flex flex-col">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="inline-flex w-fit items-center gap-2 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink"
       >
         <ChevronIcon className={`h-[10px] w-[10px] transition-transform duration-200 ${open ? "rotate-90" : ""}`} />
         Technical detail
-      </button>
+      </FocusButton>
 
       <div
         className={`grid transition-[grid-template-rows] duration-300 ease-out ${
@@ -290,7 +291,7 @@ function TechnicalDetail({ content }: { content: string }) {
       >
         <div className="min-h-0 overflow-hidden">
           <div className="relative rounded-xl border border-edge-soft/60 bg-canvas/40">
-            <button
+            <FocusButton
               type="button"
               onClick={onCopy}
               aria-label={copied ? "Copied" : "Copy to clipboard"}
@@ -313,7 +314,7 @@ function TechnicalDetail({ content }: { content: string }) {
                   }`}
                 />
               </span>
-            </button>
+            </FocusButton>
             <pre className="max-h-[300px] overflow-auto whitespace-pre-wrap break-words p-5 pe-14 font-mono text-[13.5px] leading-[1.6] text-ink">
               {content}
             </pre>

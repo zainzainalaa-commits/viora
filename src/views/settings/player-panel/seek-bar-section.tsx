@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw } from "lucide-react";
 import { useRef, useState } from "react";
 import seekPreviewBg from "@/assets/preview/seek-preview.png";
@@ -93,7 +94,7 @@ export function SeekBarPanel() {
             const isSel = (accent || "") === c;
             const isDefault = c === "";
             return (
-              <button
+              <FocusButton
                 key={c || "default"}
                 type="button"
                 onClick={() => update({ seekBarColor: c })}
@@ -117,14 +118,14 @@ export function SeekBarPanel() {
             highlighted={!!accent && !PRESET_COLORS.includes(accent)}
           />
           {accent && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => update({ seekBarColor: "" })}
               className="flex h-8 items-center gap-1 rounded-full bg-raised px-3 text-[11.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               <RotateCcw size={11} strokeWidth={2.4} />
               {t("Default")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </SubField>
@@ -233,7 +234,7 @@ function PickTile({
   sub: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-pressed={selected}
@@ -247,7 +248,7 @@ function PickTile({
       <span className={`text-[10.5px] leading-snug ${selected ? "text-ink-muted" : "text-ink-subtle"}`}>
         {sub}
       </span>
-    </button>
+    </FocusButton>
   );
 }
 

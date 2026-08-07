@@ -1,7 +1,9 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, Search, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { BackChrome } from "@/chrome/back-chrome";
+import { isDpadPrimary } from "@/lib/platform";
 import { HarborMark } from "@/components/icons/harbor-mark";
 import { TogetherPopover } from "@/components/together-modal";
 import { DownloadsButton } from "@/components/downloads-popover";
@@ -65,15 +67,15 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
               : `flex h-full min-w-0 items-center justify-start ${sidebarOffset}`
           }
         >
-          {onLiveRoot && (
-            <button
+          {onLiveRoot && !isDpadPrimary() && (
+            <FocusButton
               onClick={() => setView("home")}
               aria-label={t("common.back")}
               className="flex h-11 shrink-0 items-center gap-2 rounded-full border border-edge-soft/60 bg-canvas/85 ps-3 pe-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
             >
               <ArrowLeft size={15} strokeWidth={2.2} className="dir-icon" />
               {t("common.back")}
-            </button>
+            </FocusButton>
           )}
           {onLiveRoot && (
             <div className="flex items-center gap-1.5 text-ink">
@@ -155,19 +157,19 @@ function CloseConfirmKids({ onConfirm, onCancel }: { onConfirm: () => void; onCa
           {t("Ask a grown-up before you close.")}
         </p>
         <div className="relative mt-7 flex gap-4">
-          <button
+          <FocusButton
             onClick={onCancel}
             autoFocus
             className="h-16 flex-1 rounded-full bg-white text-[20px] font-extrabold text-[#0c4a6e] transition-transform hover:scale-105 active:scale-95"
           >
             {t("Stay")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onConfirm}
             className="h-16 flex-1 rounded-full bg-[#e5484d] text-[20px] font-extrabold text-white transition-transform hover:scale-105 active:scale-95"
           >
             {t("Close")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>,
@@ -238,7 +240,7 @@ export function TogetherButton({
 
   return (
     <div ref={wrapRef} className={`relative ${modalOpen && !above ? "harbor-wt-wrap flex flex-col self-stretch justify-end" : ""}`}>
-      <button
+      <FocusButton
         aria-label={t("chrome.watchTogether")}
         onClick={() => (modalOpen ? closeModal() : openModal())}
         className={`harbor-together-btn relative flex items-center transition-colors duration-150 ${modalOpen && !above ? "harbor-wt-tab" : ""} ${sizing} ${chrome}`}
@@ -292,7 +294,7 @@ export function TogetherButton({
         ) : (
           <Users size={17} strokeWidth={1.9} />
         )}
-      </button>
+      </FocusButton>
       {modalOpen && (
         <div
           className={`harbor-wt-modal absolute z-50 ${
@@ -330,7 +332,7 @@ function SearchPill() {
   }, [binding, setOpen]);
 
   return (
-    <button
+    <FocusButton
       type="button"
       data-tauri-drag-region="false"
       onClick={() => setOpen(true)}
@@ -341,7 +343,7 @@ function SearchPill() {
       <kbd className="hidden shrink-0 rounded-md border border-edge-soft bg-canvas/50 px-1.5 py-0.5 font-mono text-[10.5px] font-medium text-ink-subtle sm:inline">
         {formatBindingForDisplay(binding)}
       </kbd>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -357,7 +359,7 @@ function Control({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       aria-label={label}
       onClick={onClick}
       className={`harbor-win-control ${danger ? "harbor-win-close" : ""} flex h-11 w-12 items-center justify-center rounded-xl bg-elevated/70 text-ink-muted transition-colors duration-150 ${
@@ -365,6 +367,6 @@ function Control({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

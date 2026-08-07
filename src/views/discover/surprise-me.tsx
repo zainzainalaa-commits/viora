@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Dices } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { usePosterChain } from "@/components/poster";
@@ -39,7 +40,7 @@ export function SurpriseMe({ pool }: { pool: Meta[] }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-3">
       <h2 className="text-[15px] font-semibold tracking-tight text-ink">{t("Can't decide?")}</h2>
-      <button
+      <FocusButton
         onClick={surprise}
         className="group relative flex min-h-[56px] flex-1 items-center overflow-hidden rounded-2xl ring-1 ring-edge-soft/50"
       >
@@ -58,7 +59,7 @@ export function SurpriseMe({ pool }: { pool: Meta[] }) {
             <span className="text-[11.5px] text-ink-muted">{t("Pick a random title")}</span>
           </span>
         </div>
-      </button>
+      </FocusButton>
     </div>
   );
 }

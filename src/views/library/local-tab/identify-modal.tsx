@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Loader2, Search, X } from "lucide-react";
@@ -163,18 +164,18 @@ export function IdentifyModal({
                 : head.filename}
             </p>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex items-center gap-1.5">
           {(["movie", "tv"] as const).map((k) => (
-            <button
+            <FocusButton
               key={k}
               type="button"
               onClick={() => setKind(k)}
@@ -183,7 +184,7 @@ export function IdentifyModal({
               }`}
             >
               {k === "movie" ? t("Movie") : t("Series")}
-            </button>
+            </FocusButton>
           ))}
         </div>
 
@@ -209,7 +210,7 @@ export function IdentifyModal({
               <p className="px-1 py-6 text-center text-[13px] text-ink-muted">{t("No matches. Try a different search.")}</p>
             )}
             {results.map((c) => (
-              <button
+              <FocusButton
                 key={c.tmdbId}
                 type="button"
                 disabled={picking != null}
@@ -229,7 +230,7 @@ export function IdentifyModal({
                   </span>
                   {c.overview && <span className="line-clamp-2 text-[11.5px] leading-snug text-ink-muted">{c.overview}</span>}
                 </div>
-              </button>
+              </FocusButton>
             ))}
           </div>
         )}

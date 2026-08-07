@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronLeft, ChevronRight, Play, Tv } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -87,7 +88,7 @@ function SeasonPicker({
     return (
       <div className="flex flex-wrap gap-2">
         {seasons.map((s) => (
-          <button
+          <FocusButton
             key={s.seasonNumber}
             type="button"
             onClick={() => setSeason(s.seasonNumber)}
@@ -98,7 +99,7 @@ function SeasonPicker({
             }`}
           >
             {t("Season {n}", { n: s.seasonNumber })}
-          </button>
+          </FocusButton>
         ))}
       </div>
     );
@@ -113,14 +114,14 @@ function SeasonPicker({
       <Step onClick={() => go(-1)} disabled={idx <= 0}>
         <ChevronLeft size={26} strokeWidth={2.6} className="dir-icon" />
       </Step>
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex h-12 min-w-[180px] items-center justify-center gap-2 rounded-2xl bg-[#1f8f88] px-6 text-[17px] font-extrabold text-white shadow-[0_8px_20px_-8px_rgba(20,90,90,0.6)]"
       >
         {t("Season {n}", { n: season })}
         <ChevronDown size={20} strokeWidth={2.8} className={`transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      </FocusButton>
       <Step onClick={() => go(1)} disabled={idx >= seasons.length - 1}>
         <ChevronRight size={26} strokeWidth={2.6} className="dir-icon" />
       </Step>
@@ -129,7 +130,7 @@ function SeasonPicker({
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="absolute start-14 top-14 z-20 grid max-h-[260px] w-[320px] grid-cols-5 gap-2 overflow-y-auto rounded-2xl bg-white p-3 shadow-[0_20px_50px_-16px_rgba(20,60,70,0.5)] ring-1 ring-[#1f8f88]/20">
             {seasons.map((s) => (
-              <button
+              <FocusButton
                 key={s.seasonNumber}
                 type="button"
                 onClick={() => {
@@ -143,7 +144,7 @@ function SeasonPicker({
                 }`}
               >
                 {s.seasonNumber}
-              </button>
+              </FocusButton>
             ))}
           </div>
         </>
@@ -162,14 +163,14 @@ function Step({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
       className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 text-[#1f8f88] ring-1 ring-white/70 transition hover:bg-white disabled:opacity-30"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -185,7 +186,7 @@ function EpisodeCard({
   const still = ep.stillPath ? `${STILL}${ep.stillPath}` : undefined;
   const rating = ep.voteAverage && ep.voteAverage > 0 ? ep.voteAverage.toFixed(1) : undefined;
   return (
-    <button type="button" onClick={onPlay} className="group flex flex-col gap-2 text-start">
+    <FocusButton type="button" onClick={onPlay} className="group flex flex-col gap-2 text-start">
       <div className="relative aspect-video overflow-hidden rounded-2xl bg-surface shadow-[0_12px_28px_-14px_rgba(20,40,60,0.45)] ring-2 ring-white transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_18px_36px_-14px_rgba(20,40,60,0.55)]">
         {still && (
           <img src={still} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover" />
@@ -209,6 +210,6 @@ function EpisodeCard({
         </span>
       </div>
       <p className="line-clamp-1 text-[15px] font-bold text-[#0e3a43]">{ep.name}</p>
-    </button>
+    </FocusButton>
   );
 }

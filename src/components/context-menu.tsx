@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark, BookmarkCheck, CheckCheck, ClipboardPaste, Copy, Download, EyeOff, Info, ListChecks, ListPlus, Maximize, Navigation, RotateCcw, Star, UserPlus, Wallpaper } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useActiveAddon } from "@/lib/active-addon";
@@ -501,7 +502,7 @@ function Item({
   disabled?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       role="menuitem"
       onClick={onClick}
       disabled={disabled}
@@ -525,7 +526,7 @@ function Item({
         {icon}
       </span>
       {label}
-    </button>
+    </FocusButton>
   );
 }
 

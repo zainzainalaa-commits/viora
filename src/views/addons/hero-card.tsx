@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight } from "lucide-react";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
 import { AddonStarBadge } from "@/components/addon-star-badge";
@@ -67,7 +68,7 @@ export function HeroCard({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             onClick={(e) => {
               e.stopPropagation();
               installed ? onUninstall() : onInstall();
@@ -79,7 +80,7 @@ export function HeroCard({
             }`}
           >
             {installed ? t("Installed") : t("Get")}
-          </button>
+          </FocusButton>
           <span className="inline-flex h-9 items-center gap-1 rounded-full px-4 text-[12.5px] font-medium text-ink-muted transition-colors group-hover:text-ink">
             {t("View details")}
             <ChevronRight size={13} strokeWidth={2.4} className="transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100" />

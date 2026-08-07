@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useDebridClients } from "@/lib/debrid/registry";
@@ -33,7 +34,7 @@ export function SourceDiagnostic({
   const sourceWord = counts.length === 1 ? "source" : "sources";
   return (
     <div className="flex flex-col gap-2">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setExpanded((v) => !v)}
         className="flex items-center gap-2 self-start text-[12px] text-ink-subtle/80 transition-colors hover:text-ink-muted"
@@ -46,7 +47,7 @@ export function SourceDiagnostic({
           strokeWidth={2}
           className={`transition-transform ${expanded ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {expanded && (
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 ps-1 text-[11px] text-ink-subtle/70">
           <span>{result.picker.all.length} kept after dedupe</span>

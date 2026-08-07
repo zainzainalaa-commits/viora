@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Popcorn } from "lucide-react";
 import type { ReactNode } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
@@ -33,13 +34,13 @@ function ScoreItem({
   return (
     <HoverTooltip label={label} sublabel={sublabel} side="top" align="center">
       {onClick ? (
-        <button
+        <FocusButton
           type="button"
           onClick={onClick}
           className="flex items-center rounded-full transition-colors hover:bg-canvas/90"
         >
           {inner}
-        </button>
+        </FocusButton>
       ) : (
         inner
       )}

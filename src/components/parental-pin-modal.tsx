@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Delete, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -165,7 +166,7 @@ export function ParentalPinModal({
             </h2>
             <p className={`text-[12.5px] leading-relaxed ${kids ? "text-white/85" : "text-ink-muted"}`}>{headerSub}</p>
           </div>
-          <button
+          <FocusButton
             onClick={mode.onCancel}
             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
               kids
@@ -175,11 +176,11 @@ export function ParentalPinModal({
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="relative flex flex-col items-center gap-5">
-          <button
+          <FocusButton
             type="button"
             onClick={focus}
             aria-label={t("Focus PIN entry")}
@@ -216,7 +217,7 @@ export function ParentalPinModal({
                 }`}
               />
             ))}
-          </button>
+          </FocusButton>
           {error && (
             <p className={`text-[12.5px] font-medium ${kids ? "text-amber-200" : "text-red-300"}`}>{error}</p>
           )}
@@ -268,7 +269,7 @@ function PinKey({
   "aria-label"?: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -280,6 +281,6 @@ function PinKey({
       {...rest}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

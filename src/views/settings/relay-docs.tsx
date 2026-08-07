@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { DownloadMenu, SavePill } from "./relay-docs-export";
 import { useT } from "@/lib/i18n";
@@ -14,7 +15,7 @@ export function RelayDocs({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between gap-4 rounded-2xl border border-edge-soft bg-canvas/40 p-3">
-        <button
+        <FocusButton
           onClick={onBack}
           className="flex h-12 items-center gap-2.5 rounded-xl bg-elevated px-5 text-[14px] font-semibold text-ink shadow-[inset_0_0_0_1px_var(--color-edge-soft)] transition-all hover:bg-raised hover:shadow-[inset_0_0_0_1px_var(--color-edge)]"
         >
@@ -28,7 +29,7 @@ export function RelayDocs({ onBack }: { onBack: () => void }) {
             />
           </svg>
           {t("Back to relay")}
-        </button>
+        </FocusButton>
         <div className="flex items-center gap-3">
           <DownloadMenu docsRef={docsRef} onSaved={setSavedPath} />
           <span className="text-[11.5px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">

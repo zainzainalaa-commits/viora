@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
@@ -152,7 +153,7 @@ export function PeekHero({ slides }: { slides: Meta[] }) {
       {slides.length > 1 && (
         <div className="flex justify-center gap-2 pt-1">
           {slides.map((_, i) => (
-            <button
+            <FocusButton
               key={i}
               onClick={() => setActive(i)}
               aria-label={t("Slide {n}", { n: i + 1 })}
@@ -289,7 +290,7 @@ function PeekSlide({
               )}
             </div>
             <div className="flex items-center gap-2.5 pt-1">
-              <button
+              <FocusButton
                 onClick={(e) => {
                   e.stopPropagation();
                   openPicker(meta, smartPlayEpisode(meta), { autoPlay: settings.instantPlay });
@@ -298,8 +299,8 @@ function PeekSlide({
               >
                 <Play size={14} fill="currentColor" />
                 {t("Play")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={(e) => {
                   e.stopPropagation();
                   openMeta(meta);
@@ -307,7 +308,7 @@ function PeekSlide({
                 className="flex h-10 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 text-[13px] font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
               >
                 {t("Episodes")}
-              </button>
+              </FocusButton>
             </div>
           </>
         )}

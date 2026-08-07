@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Layers, Plus } from "lucide-react";
 import { useState } from "react";
 import { MAX_LISTS, useCustomLists } from "@/lib/custom-lists";
@@ -25,7 +26,7 @@ export function MyListsTab() {
           <span className="text-[12px] tabular-nums text-ink-muted">
             {t("{n} / {max} lists", { n: lists.length, max: MAX_LISTS })}
           </span>
-          <button
+          <FocusButton
             type="button"
             disabled={atMax}
             onClick={() => setCreating(true)}
@@ -33,7 +34,7 @@ export function MyListsTab() {
           >
             <Plus size={16} strokeWidth={2.2} />
             {t("Create new list")}
-          </button>
+          </FocusButton>
         </div>
       )}
 
@@ -73,14 +74,14 @@ function EmptyLists({ onCreate }: { onCreate: () => void }) {
           {t("Group the movies and shows you love. Rewatch shelf, weekend picks, whatever keeps them close.")}
         </p>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onCreate}
         className="mt-1 flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
       >
         <Plus size={17} strokeWidth={2.2} />
         {t("New list")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

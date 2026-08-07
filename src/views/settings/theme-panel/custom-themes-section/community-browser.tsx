@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { AlertCircle, Check, Download, Loader2, Search, Star, Upload } from "lucide-react";
 import { browseThemes, downloadTheme, rateTheme, type StoreTheme } from "@/lib/theme-store";
@@ -42,7 +43,7 @@ export function CommunityPane() {
     <section className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2">
         {SORTS.map((s) => (
-          <button
+          <FocusButton
             key={s.id}
             onClick={() => setSort(s.id)}
             className={`h-8 rounded-full border px-3.5 text-[12px] font-semibold transition-colors ${
@@ -50,14 +51,14 @@ export function CommunityPane() {
             }`}
           >
             {s.label}
-          </button>
+          </FocusButton>
         ))}
-        <button
+        <FocusButton
           onClick={() => setUploadOpen(true)}
           className="ms-auto flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
         >
           <Upload size={14} strokeWidth={2.2} /> Share a theme
-        </button>
+        </FocusButton>
         <div className="flex h-9 items-center gap-2 rounded-full border border-edge-soft bg-elevated/40 px-3.5">
           <Search size={15} className="text-ink-subtle" />
           <input
@@ -155,12 +156,12 @@ function CommunityCard({ theme, onOpen }: { theme: StoreTheme; onOpen: () => voi
         <div className="absolute inset-0 flex flex-col justify-end gap-2 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <div className="flex items-center justify-center gap-0.5" role="group" aria-label="Rate this theme">
             {[1, 2, 3, 4, 5].map((n) => (
-              <button key={n} onClick={(e) => rate(e, n)} aria-label={`Rate ${n} stars`} className="p-0.5">
+              <FocusButton key={n} onClick={(e) => rate(e, n)} aria-label={`Rate ${n} stars`} className="p-0.5">
                 <Star size={15} className={n <= shownRating ? "fill-amber-300 text-amber-300" : "text-white/60"} />
-              </button>
+              </FocusButton>
             ))}
           </div>
-          <button
+          <FocusButton
             onClick={download}
             disabled={state === "loading"}
             className={`flex h-9 items-center justify-center gap-1.5 rounded-lg text-[12.5px] font-semibold transition-colors disabled:opacity-80 ${
@@ -181,7 +182,7 @@ function CommunityCard({ theme, onOpen }: { theme: StoreTheme; onOpen: () => voi
               <Download size={14} />
             )}
             {state === "done" ? "Added to library" : state === "error" ? "Failed" : state === "loading" ? "Downloading" : "Download"}
-          </button>
+          </FocusButton>
         </div>
         <div className="absolute bottom-0 left-0 right-0 flex h-1.5">
           {t.swatch.map((c, i) => (

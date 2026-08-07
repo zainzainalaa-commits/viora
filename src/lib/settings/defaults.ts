@@ -255,6 +255,7 @@ export const DEFAULT: Settings = {
   nextEpisodeLeadSec: -1,
   autoPlayNextEpisode: true,
   keyboardPauseShowsControls: true,
+  skipFlaggedScenes: false,
   hideWatchedInCatalogs: false,
   hideUnreleased: false,
   localEpisodeSortDesc: false,

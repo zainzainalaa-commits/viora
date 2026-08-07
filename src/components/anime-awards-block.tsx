@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight } from "lucide-react";
 import {
   awardSourceMeta,
@@ -42,16 +43,16 @@ function SourceGroup({ source, wins }: { source: AwardSourceId; wins: AwardWin[]
   return (
     <section className="grid gap-7 lg:grid-cols-[240px_1fr] lg:gap-14">
       <header className="flex flex-row items-center gap-5 lg:flex-col lg:items-start lg:gap-5">
-        <button
+        <FocusButton
           type="button"
           onClick={() => openAnimeAward(source)}
           className="shrink-0 rounded-md transition-opacity hover:opacity-80"
           aria-label={`Open ${meta.name} winners`}
         >
           <img src={meta.icon} alt={meta.name} className={logoClass} draggable={false} />
-        </button>
+        </FocusButton>
         <div className="flex flex-col gap-1.5">
-          <button
+          <FocusButton
             type="button"
             onClick={() => openAnimeAward(source)}
             className="group flex items-center gap-1.5 text-start text-[18px] font-medium tracking-tight text-ink transition-colors hover:text-accent"
@@ -62,7 +63,7 @@ function SourceGroup({ source, wins }: { source: AwardSourceId; wins: AwardWin[]
               strokeWidth={2.4}
               className="opacity-0 transition-opacity group-hover:opacity-100"
             />
-          </button>
+          </FocusButton>
           <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
             <span className="text-accent">{wins.length}</span> {wins.length === 1 ? "Win" : "Wins"}
           </p>
@@ -71,13 +72,13 @@ function SourceGroup({ source, wins }: { source: AwardSourceId; wins: AwardWin[]
               {formatYearSpan(years)}
             </p>
           )}
-          <button
+          <FocusButton
             type="button"
             onClick={() => openAnimeAward(source)}
             className="mt-1 w-fit text-[11.5px] font-semibold uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-80"
           >
             See all winners →
-          </button>
+          </FocusButton>
         </div>
       </header>
       <div className="flex min-w-0 flex-col gap-5">

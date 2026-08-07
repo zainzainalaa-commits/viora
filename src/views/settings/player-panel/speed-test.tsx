@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import cloudflareLogo from "@/assets/cloudflare.webp";
@@ -41,7 +42,7 @@ function SpeedResultBadge({ value }: { value: string }) {
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         type="button"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -57,7 +58,7 @@ function SpeedResultBadge({ value }: { value: string }) {
           className="h-3.5 w-3.5 shrink-0 object-contain"
         />
         {value}
-      </button>
+      </FocusButton>
       {pinned && (
         <div
           className="fixed inset-0 z-20"
@@ -207,30 +208,30 @@ function SpeedTestButtonInner() {
   }
   if (state === "error") {
     return (
-      <button
+      <FocusButton
         type="button"
         onClick={run}
         className="flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-danger/40 px-3 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-danger transition-colors hover:bg-danger/10"
       >
         Retry
-      </button>
+      </FocusButton>
     );
   }
   if (state === "idle") {
     return (
-      <button
+      <FocusButton
         type="button"
         onClick={run}
         className="flex h-8 shrink-0 items-center rounded-full border border-edge-soft px-3 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-ink-muted transition-colors hover:border-edge hover:text-ink"
       >
         Run speed test
-      </button>
+      </FocusButton>
     );
   }
   return (
     <div className="flex shrink-0 items-center gap-2.5">
       <SpeedResultBadge value={mbps != null ? formatMbps(mbps) : ""} />
-      <button
+      <FocusButton
         type="button"
         onClick={run}
         disabled={cooling}
@@ -254,7 +255,7 @@ function SpeedTestButtonInner() {
             />
           </svg>
         )}
-      </button>
+      </FocusButton>
     </div>
   );
 }

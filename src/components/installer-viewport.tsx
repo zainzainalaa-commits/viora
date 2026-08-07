@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, ClipboardCopy, ExternalLink, RotateCw, Sparkles, X } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -261,7 +262,7 @@ function InstallerViewport({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={reload}
             aria-label="Reload"
@@ -276,16 +277,16 @@ function InstallerViewport({
               }}
             />
             Reload
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => openUrl(url)}
             className="flex h-9 items-center gap-1.5 rounded-full border border-edge-soft px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <ExternalLink size={12} strokeWidth={2.4} />
             Open in browser
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label="Close"
@@ -293,7 +294,7 @@ function InstallerViewport({
             className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated/60 hover:text-ink disabled:opacity-40"
           >
             <X size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       </header>
 
@@ -312,14 +313,14 @@ function InstallerViewport({
               Open it in a regular browser, set it up there, then come back and paste the install
               link below.
             </p>
-            <button
+            <FocusButton
               type="button"
               onClick={() => openUrl(url)}
               className="flex h-10 items-center gap-1.5 rounded-full bg-ink px-4 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
             >
               <ArrowUpRight size={13} strokeWidth={2.4} />
               Open in browser
-            </button>
+            </FocusButton>
           </div>
         )}
         <iframe
@@ -367,7 +368,7 @@ function InstallerViewport({
             autoCorrect="off"
             disabled={phase.kind === "installing" || phase.kind === "success"}
           />
-          <button
+          <FocusButton
             type="button"
             onClick={() => void readClipboard()}
             disabled={phase.kind === "installing" || phase.kind === "success"}
@@ -375,26 +376,26 @@ function InstallerViewport({
           >
             <ClipboardCopy size={13} strokeWidth={2.2} />
             From clipboard
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="submit"
             disabled={!pasteValue.trim() || phase.kind === "installing" || phase.kind === "success"}
             className="flex h-10 items-center gap-1.5 rounded-full bg-accent px-4 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Sparkles size={13} strokeWidth={2.4} />
             Install
-          </button>
+          </FocusButton>
         </form>
         {phase.kind === "error" && (
           <div className="flex items-start gap-2 rounded-xl border border-danger/40 bg-danger/10 px-3 py-2 text-[12px] text-danger">
             <span className="flex-1">{phase.message}</span>
-            <button
+            <FocusButton
               type="button"
               onClick={dismissError}
               className="font-semibold uppercase tracking-wider opacity-70 hover:opacity-100"
             >
               Dismiss
-            </button>
+            </FocusButton>
           </div>
         )}
       </footer>

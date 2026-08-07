@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import fanartLogo from "@/assets/addon-logos/fanarttv.svg";
 import mdblistLogo from "@/assets/addon-logos/mdblist.png";
@@ -304,7 +305,7 @@ export function LibraryPanel({
                   { v: "side", label: t("To the side") },
                 ] as const
               ).map((o) => (
-                <button
+                <FocusButton
                   key={o.v}
                   type="button"
                   onClick={() => update({ hoverPreviewPlacement: o.v })}
@@ -315,7 +316,7 @@ export function LibraryPanel({
                   }`}
                 >
                   {o.label}
-                </button>
+                </FocusButton>
               ))}
             </div>
               </div>
@@ -370,14 +371,14 @@ export function LibraryPanel({
               align="center"
               label={t("TMDB asks for an app URL when you create the key. Put any URL at all, like https://harbor.app. The only thing you need back is the API key.")}
             >
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setTmdbGuide(true)}
                 className="flex items-center gap-1 rounded-full px-2 py-1 text-[11.5px] font-semibold text-accent transition-colors hover:bg-accent/10"
               >
                 <HelpCircle size={13} strokeWidth={2.4} />
                 {t("How to get this")}
-              </button>
+              </FocusButton>
             </HoverTooltip>
           }
           help={
@@ -536,14 +537,14 @@ export function LibraryPanel({
               align="center"
               label={t("The free tier is $0 for personal use. Just pick the first option, no payment needed.")}
             >
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setTvdbGuide(true)}
                 className="flex items-center gap-1 rounded-full px-2 py-1 text-[11.5px] font-semibold text-accent transition-colors hover:bg-accent/10"
               >
                 <HelpCircle size={13} strokeWidth={2.4} />
                 {t("How to get this")}
-              </button>
+              </FocusButton>
             </HoverTooltip>
           }
           help={
@@ -704,7 +705,7 @@ export function LibraryPanel({
                       { id: "imdb", label: t("IMDb") },
                     ] as const
                   ).map((s) => (
-                    <button
+                    <FocusButton
                       key={s.id}
                       type="button"
                       onClick={() => update({ animeCardRating: s.id })}
@@ -716,7 +717,7 @@ export function LibraryPanel({
                       }`}
                     >
                       {s.label}
-                    </button>
+                    </FocusButton>
                   ))}
                 </div>
               </div>
@@ -787,7 +788,7 @@ export function LibraryPanel({
               const disabled = n > maxN;
               const effLimit = Math.min(settings.cardBadgeLimit, maxN);
               return (
-                <button
+                <FocusButton
                   key={n}
                   type="button"
                   disabled={disabled}
@@ -801,7 +802,7 @@ export function LibraryPanel({
                   }`}
                 >
                   {n}
-                </button>
+                </FocusButton>
               );
             })}
           </div>
@@ -821,7 +822,7 @@ export function LibraryPanel({
                 { v: "bottomEnd", label: t("Bottom right") },
               ] as const
             ).map((o) => (
-              <button
+              <FocusButton
                 key={o.v}
                 type="button"
                 onClick={() => update({ watchlistBadge: o.v })}
@@ -832,7 +833,7 @@ export function LibraryPanel({
                 }`}
               >
                 {o.label}
-              </button>
+              </FocusButton>
             ))}
           </div>
         </div>
@@ -1256,7 +1257,7 @@ function HomeModePicker({
       {options.map((opt) => {
         const selected = value === opt.id;
         return (
-          <button
+          <FocusButton
             key={opt.id}
             type="button"
             onClick={() => onChange(opt.id)}
@@ -1307,7 +1308,7 @@ function HomeModePicker({
                 {opt.sub}
               </span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -1338,7 +1339,7 @@ function RetentionPicker({
         {options.map((opt) => {
           const selected = value === opt.days;
           return (
-            <button
+            <FocusButton
               key={opt.days}
               type="button"
               onClick={() => onChange(opt.days)}
@@ -1349,7 +1350,7 @@ function RetentionPicker({
               }`}
             >
               {opt.label}
-            </button>
+            </FocusButton>
           );
         })}
       </div>
@@ -1385,7 +1386,7 @@ function ClearSnapshotsButton() {
             : "No frames stored yet. They'll appear here as you watch things."}
         </p>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onClick}
         disabled={count === 0 && !confirming}
@@ -1396,7 +1397,7 @@ function ClearSnapshotsButton() {
         }`}
       >
         {confirming ? "Confirm clear" : "Clear all"}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -1437,7 +1438,7 @@ function PlacementPicker({
       {options.map((opt) => {
         const selected = effective === opt.id;
         return (
-          <button
+          <FocusButton
             key={opt.id}
             type="button"
             onClick={() => onChange(opt.id)}
@@ -1471,7 +1472,7 @@ function PlacementPicker({
                 {selected && <span className="h-2.5 w-2.5 rounded-full bg-ink" />}
               </span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>

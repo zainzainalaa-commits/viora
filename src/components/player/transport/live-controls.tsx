@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useRef, useState } from "react";
 import { useSettings } from "@/lib/settings";
 import {
@@ -38,7 +39,7 @@ export function GoToLive({
   const secondsBehind = Math.floor(offset % 60);
   const behindLabel = minutesBehind > 0 ? `${minutesBehind}m ${secondsBehind}s` : `${secondsBehind}s`;
   return (
-    <button
+    <FocusButton
       onClick={() => onSeek(Math.max(0, durationSec - LIVE_EDGE_PAD_SEC))}
       className="shrink-0 text-[12px] font-semibold uppercase tracking-[0.2em] text-white/85 transition-colors hover:text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
       title={t("Jump to live edge")}
@@ -47,7 +48,7 @@ export function GoToLive({
       <span className="ms-0.5 font-mono lowercase tracking-normal text-white/55">
         · {behindLabel}
       </span>
-    </button>
+    </FocusButton>
   );
 }
 

@@ -1,9 +1,10 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { CastMember } from "./types";
 import { profileUrl } from "./utils";
 
 export function CastChip({ member, onClick }: { member: CastMember; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={`Open ${member.name}`}
@@ -27,6 +28,6 @@ export function CastChip({ member, onClick }: { member: CastMember; onClick: () 
       <span className="line-clamp-1 w-full text-center text-[10.5px] text-ink transition-colors group-hover/chip:text-ink">
         {member.name.split(" ")[0]}
       </span>
-    </button>
+    </FocusButton>
   );
 }

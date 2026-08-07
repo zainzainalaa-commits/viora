@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Play, X } from "lucide-react";
 import simklLogo from "@/assets/simkl.png";
@@ -263,7 +264,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
 
   return (
     <div className="group relative w-full min-w-0">
-      <button
+      <FocusButton
         ref={cardRef}
         onClick={onClick}
         onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta })}
@@ -370,9 +371,9 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
       <p className="truncate text-[13px] font-medium text-ink">
         {hydratedMeta?.name?.trim() || item.name}
       </p>
-      </button>
+      </FocusButton>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex aspect-[16/9] items-center justify-center opacity-0 transition-opacity duration-[220ms] group-hover:opacity-100 group-focus-within:opacity-100">
-        <button
+        <FocusButton
           type="button"
           onClick={onPlay}
           aria-label={t("Play")}
@@ -380,10 +381,10 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
           className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-canvas ring-1 ring-white/15 shadow-[0_10px_28px_-8px_rgba(0,0,0,0.6)] transition-transform duration-150 hover:scale-[1.06]"
         >
           <Play size={22} fill="currentColor" className="ml-0.5 text-ink" />
-        </button>
+        </FocusButton>
       </div>
       {onDismiss && (
-        <button
+        <FocusButton
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -395,7 +396,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-canvas/85 text-ink-muted ring-1 ring-white/12 backdrop-blur-sm transition-colors group-hover/x:bg-canvas group-hover/x:text-ink">
             <X size={20} strokeWidth={2.4} />
           </span>
-        </button>
+        </FocusButton>
       )}
     </div>
   );

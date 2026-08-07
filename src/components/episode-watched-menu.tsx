@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -131,13 +132,13 @@ function Item({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       role="menuitem"
       onClick={onClick}
       className="flex h-9 items-center gap-2.5 rounded-lg px-3 text-start text-[13px] text-ink transition-colors hover:bg-raised"
     >
       <span className="text-ink-muted">{icon}</span>
       {label}
-    </button>
+    </FocusButton>
   );
 }

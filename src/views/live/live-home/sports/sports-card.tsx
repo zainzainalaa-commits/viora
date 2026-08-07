@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { useT, useUiLanguage } from "@/lib/i18n";
 import type { SportsGame, SportsSide } from "@/lib/sports/espn";
@@ -27,7 +28,7 @@ export function SportsCard({ game, onSelect }: { game: SportsGame; onSelect: (g:
 
   return (
     <SportsHoverPreview game={game} onSelect={() => onSelect(game)}>
-      <button
+      <FocusButton
         type="button"
         className="flex h-24 w-[260px] shrink-0 flex-col justify-between rounded-xl border border-edge-soft/55 bg-elevated p-3 text-start transition-colors duration-150 hover:border-edge"
       >
@@ -39,7 +40,7 @@ export function SportsCard({ game, onSelect }: { game: SportsGame; onSelect: (g:
         </div>
         <SideRow side={game.away} active={live || finalGame} dim={finalGame && !game.away.winner} showWinner={showWinIndicator} />
         <SideRow side={game.home} active={live || finalGame} dim={finalGame && !game.home.winner} showWinner={showWinIndicator} />
-      </button>
+      </FocusButton>
     </SportsHoverPreview>
   );
 }

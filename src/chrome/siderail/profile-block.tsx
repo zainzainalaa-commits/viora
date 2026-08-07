@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { LogOut, Pencil, Settings as SettingsIcon, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
@@ -31,7 +32,7 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-start transition-colors hover:bg-elevated/50"
@@ -52,7 +53,7 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
           )}
         </span>
         <span className="truncate text-[13px] text-ink">{name}</span>
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute bottom-full start-0 end-0 mb-2 overflow-hidden rounded-xl border border-edge bg-[#1a1d28] shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)]">
           <div className="border-b border-white/10 px-4 py-3">
@@ -64,7 +65,7 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
           {otherProfiles.length > 0 && (
             <div className="flex flex-col gap-0.5 border-b border-white/10 p-1.5">
               {otherProfiles.map((p) => (
-                <button
+                <FocusButton
                   key={p.id}
                   type="button"
                   onClick={() => {
@@ -84,12 +85,12 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
                     {p.name.slice(0, 1).toUpperCase()}
                   </span>
                   <span className="truncate text-[12.5px] text-ink">{p.name}</span>
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
           <div className="flex flex-col">
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 openPicker({ kind: "list" });
@@ -98,9 +99,9 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
               className="flex items-center gap-2.5 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
             >
               <Users size={13} strokeWidth={2.2} /> {t("profile.whoWatching")}
-            </button>
+            </FocusButton>
             {activeProfile && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => {
                   openPicker({ kind: "edit", profileId: activeProfile.id });
@@ -109,9 +110,9 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
                 className="flex items-center gap-2.5 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
               >
                 <Pencil size={13} strokeWidth={2.2} /> {t("Edit profile")}
-              </button>
+              </FocusButton>
             )}
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 onOpenSettings();
@@ -120,9 +121,9 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
               className="flex items-center gap-2.5 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
             >
               <SettingsIcon size={13} strokeWidth={2.2} /> {t("nav.settings")}
-            </button>
+            </FocusButton>
             {user && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => {
                   signOut();
@@ -131,7 +132,7 @@ export function ProfileBlock({ onOpenSettings }: { onOpenSettings: () => void })
                 className="flex items-center gap-2.5 border-t border-white/10 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
               >
                 <LogOut size={13} strokeWidth={2.2} /> {t("Sign out")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>

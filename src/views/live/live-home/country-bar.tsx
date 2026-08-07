@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Globe } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -57,7 +58,7 @@ function Chip({
   count?: number;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex h-10 shrink-0 items-center gap-2.5 rounded-full border ps-2 pe-4 text-[13.5px] font-medium transition-colors ${
         active
@@ -82,7 +83,7 @@ function Chip({
           {count.toLocaleString()}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

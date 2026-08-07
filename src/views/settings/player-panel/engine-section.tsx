@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { isWindowsDesktop } from "@/lib/platform";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -42,7 +43,7 @@ export function PlayerEnginePanel() {
             {choices.map((c) => {
               const selected = settings.playerEngine === c.id;
               return (
-                <button
+                <FocusButton
                   key={c.id}
                   type="button"
                   onClick={() => update({ playerEngine: c.id })}
@@ -70,7 +71,7 @@ export function PlayerEnginePanel() {
                     </div>
                     <span className="text-[12.5px] leading-snug text-ink-muted">{c.sub}</span>
                   </div>
-                </button>
+                </FocusButton>
               );
             })}
           </div>

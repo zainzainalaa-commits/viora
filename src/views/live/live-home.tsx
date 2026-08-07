@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { Row } from "@/components/row";
@@ -195,7 +196,7 @@ function RailRow({
     }, [items]),
   );
   const title = rail.group ? (
-    <button
+    <FocusButton
       onClick={() => onOpenCategory(rail.group!)}
       className="group/see inline-flex items-center gap-2 text-ink transition-colors hover:text-ink-muted"
     >
@@ -206,7 +207,7 @@ function RailRow({
         strokeWidth={2.4}
         className="dir-icon text-ink-subtle transition-transform duration-200 group-hover/see:translate-x-0.5 rtl:group-hover/see:-translate-x-0.5"
       />
-    </button>
+    </FocusButton>
   ) : (
     rail.title
   );

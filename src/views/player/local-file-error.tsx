@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, FileX } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -40,19 +41,19 @@ export function LocalFileError({
           </p>
         )}
         <div className="flex items-center gap-2.5 pt-2">
-          <button
+          <FocusButton
             onClick={onBack}
             className="flex h-11 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 text-[13px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
           >
             <ArrowLeft size={14} strokeWidth={2} className="dir-icon" />
             {t("Back to library")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onRetry}
             className="flex h-11 items-center rounded-xl bg-white px-5 text-[13px] font-semibold text-black transition-colors hover:bg-white/85"
           >
             {t("Try again")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

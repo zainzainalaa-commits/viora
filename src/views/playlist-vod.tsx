@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Film, Search, Tv } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -134,9 +135,9 @@ export function PlaylistVodView({ active }: { active: boolean }) {
             className="flex-1 bg-transparent text-[14px] text-ink placeholder:text-ink-subtle focus:outline-none"
           />
           {query && (
-            <button onClick={() => setQuery("")} className="text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink">
+            <FocusButton onClick={() => setQuery("")} className="text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink">
               {t("Clear")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </header>
@@ -224,7 +225,7 @@ function vodMeta(id: string, type: "movie" | "series", name: string, logo: strin
 
 function TabButton({ active, onClick, icon, label, count }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string; count: number }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex h-full items-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold transition-colors ${
         active ? "bg-ink text-canvas" : "text-ink-muted hover:bg-raised hover:text-ink"
@@ -237,7 +238,7 @@ function TabButton({ active, onClick, icon, label, count }: { active: boolean; o
           {count.toLocaleString()}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -263,9 +264,9 @@ function Notice({ text, onRetry }: { text: string; onRetry?: () => void }) {
     <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-edge px-6 py-16 text-center">
       <p className="max-w-[520px] text-[14.5px] leading-relaxed text-ink-muted">{text}</p>
       {onRetry && (
-        <button onClick={onRetry} className="h-9 rounded-lg bg-elevated px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-raised">
+        <FocusButton onClick={onRetry} className="h-9 rounded-lg bg-elevated px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-raised">
           {t("Try again")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Tooltip } from "./tooltip";
 
 export function BigButton({
@@ -16,7 +17,7 @@ export function BigButton({
   disabled?: boolean;
 }) {
   const btn = (
-    <button
+    <FocusButton
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
@@ -29,7 +30,7 @@ export function BigButton({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
   if (!tooltip) return btn;
   return <Tooltip label={tooltip}>{btn}</Tooltip>;

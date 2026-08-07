@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { PickCard } from "@/components/pick-card";
 import { Row } from "@/components/row";
@@ -192,7 +193,7 @@ export function SpotlightSection({
 
   return (
     <Row title={title}>
-      <button
+      <FocusButton
         type="button"
         onClick={() => personId != null && openPerson(personId)}
         disabled={personId == null}
@@ -227,7 +228,7 @@ export function SpotlightSection({
             {spotlight.name}
           </span>
         </div>
-      </button>
+      </FocusButton>
       {items
         ? items.map((m) => (
             <div key={m.id} className="w-36 shrink-0">

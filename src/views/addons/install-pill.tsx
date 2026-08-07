@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Loader2, Plus, Settings2, X } from "lucide-react";
 import { useState } from "react";
 import type { ResolvedAddon } from "@/lib/addons-store/store";
@@ -46,19 +47,19 @@ export function InstallPill({
 
   if (busy) {
     return (
-      <button
+      <FocusButton
         disabled
         className="flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-full bg-ink/80 px-5 text-[13.5px] font-semibold text-canvas transition-transform duration-150"
       >
         <Loader2 size={14} strokeWidth={2.4} className="animate-spin" />
         {t("Installing")}
-      </button>
+      </FocusButton>
     );
   }
 
   if (installed) {
     return (
-      <button
+      <FocusButton
         onClick={runUninstall}
         className="group/pill flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-full bg-elevated/70 px-5 text-[13.5px] font-semibold text-ink ring-1 ring-edge-soft transition-all duration-150 ease-out hover:bg-danger/15 hover:text-danger hover:ring-danger/30 active:scale-[0.96]"
       >
@@ -66,14 +67,14 @@ export function InstallPill({
         <X size={14} strokeWidth={2.6} className="hidden group-hover/pill:block" />
         <span className="block group-hover/pill:hidden">{t("Installed")}</span>
         <span className="hidden group-hover/pill:block">{t("Remove")}</span>
-      </button>
+      </FocusButton>
     );
   }
   const hints = resolved.manifest?.behaviorHints;
   const needsConfigure = hints?.configurable === true || hints?.configurationRequired === true;
   if (needsConfigure) {
     return (
-      <button
+      <FocusButton
         onClick={(e) => {
           e.stopPropagation();
           onOpen();
@@ -82,16 +83,16 @@ export function InstallPill({
       >
         <Settings2 size={14} strokeWidth={2.2} />
         {t("Set up")}
-      </button>
+      </FocusButton>
     );
   }
   return (
-    <button
+    <FocusButton
       onClick={runInstall}
       className="flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-all duration-150 ease-out hover:opacity-90 active:scale-[0.96]"
     >
       <Plus size={14} strokeWidth={2.6} />
       {t("Install")}
-    </button>
+    </FocusButton>
   );
 }

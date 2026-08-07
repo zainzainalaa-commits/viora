@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Play, Tv } from "lucide-react";
 import type { EpgProgram, IptvChannel } from "@/lib/iptv/types";
@@ -24,7 +25,7 @@ export function OverlayChannelRow({
       ? Math.max(0, Math.min(1, (now - current.startMs) / (current.endMs - current.startMs)))
       : null;
   return (
-    <button
+    <FocusButton
       onClick={() => onPlay(channel)}
       className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-start transition-colors duration-150 ${
         isCurrent
@@ -79,6 +80,6 @@ export function OverlayChannelRow({
           <Play size={14} fill="currentColor" />
         </div>
       </div>
-    </button>
+    </FocusButton>
   );
 }

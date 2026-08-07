@@ -2,6 +2,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "@/App";
+import { TVFocusProvider } from "@/lib/tv-focus";
 import { formFactor, isDpadPrimary, isTouchPrimary, platformOS } from "@/lib/platform";
 import { ModalOverlayApp } from "@/views/modal-overlay-app";
 import { HdrOverlayApp } from "@/views/hdr-overlay-app";
@@ -64,7 +65,9 @@ if (import.meta.env.DEV && !isPip && !isModal && !isHdrOverlay) {
 }
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {isHdrOverlay ? <HdrOverlayApp /> : isModal ? <ModalOverlayApp /> : isPip ? <PipApp /> : <App />}
+    <TVFocusProvider>
+      {isHdrOverlay ? <HdrOverlayApp /> : isModal ? <ModalOverlayApp /> : isPip ? <PipApp /> : <App />}
+    </TVFocusProvider>
   </StrictMode>,
 );
 

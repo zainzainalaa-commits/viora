@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ExternalLink, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -27,7 +28,7 @@ export function StremioWebButton({ onDone, disabled }: { onDone: () => void; dis
 
   return (
     <div className="flex flex-col gap-2">
-      <button
+      <FocusButton
         type="button"
         onClick={start}
         disabled={busy || disabled}
@@ -44,7 +45,7 @@ export function StremioWebButton({ onDone, disabled }: { onDone: () => void; dis
             <ExternalLink size={14} />
           </>
         )}
-      </button>
+      </FocusButton>
       <p className="text-center text-[11.5px] leading-snug text-ink-subtle">
         {t("Opens Stremio in your browser. Works with email, Facebook, and Apple accounts.")}
       </p>

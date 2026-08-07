@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { LazyMount } from "@/components/lazy-mount";
@@ -29,7 +30,7 @@ function RowTitle({ row, kids = false }: { row: CatalogRow; kids?: boolean }) {
   const { openGrid } = useView();
   if (!row.fetcher) return <>{t(row.title)}</>;
   return (
-    <button
+    <FocusButton
       onClick={() => openGrid({ title: t(row.title), fetcher: row.fetcher!, initial: row.metas })}
       className={`group/see inline-flex items-center gap-1.5 transition-colors ${
         kids ? "text-[#0e3a43] hover:text-[#1f8f88]" : "text-ink hover:text-ink-muted"
@@ -40,7 +41,7 @@ function RowTitle({ row, kids = false }: { row: CatalogRow; kids?: boolean }) {
         {t("See all")}
         <ChevronRight size={14} strokeWidth={2.4} className="dir-icon" />
       </span>
-    </button>
+    </FocusButton>
   );
 }
 

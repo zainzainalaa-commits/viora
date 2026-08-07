@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertTriangle, CheckSquare, FolderPlus, HardDrive, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -369,7 +370,7 @@ export function LocalTab() {
               sortDir={sortDir}
               setSortDir={setSortDir}
             />
-            <button
+            <FocusButton
               type="button"
               onClick={() => (selectMode ? exitSelect() : setSelectMode(true))}
               className={`flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[12.5px] font-semibold transition-colors ${
@@ -380,8 +381,8 @@ export function LocalTab() {
             >
               <CheckSquare size={13} strokeWidth={2.2} />
               {selectMode ? t("Done") : t("Select")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={onAddFolder}
               disabled={busy}
@@ -393,7 +394,7 @@ export function LocalTab() {
                 <FolderPlus size={13} strokeWidth={2.2} />
               )}
               {busy ? scanLabel(progress, t) : t("Add folder")}
-            </button>
+            </FocusButton>
           </div>
         }
       />
@@ -408,7 +409,7 @@ export function LocalTab() {
           onCancel={exitSelect}
         />
       ) : reviewCount > 0 ? (
-        <button
+        <FocusButton
           type="button"
           onClick={openFirstReview}
           className="flex items-center gap-2.5 rounded-xl bg-amber-500/12 px-3.5 py-2.5 text-start ring-1 ring-amber-500/30 transition-colors hover:bg-amber-500/20"
@@ -422,7 +423,7 @@ export function LocalTab() {
           <span className="ms-auto rounded-full bg-amber-500 px-3 py-1 text-[11.5px] font-semibold text-black">
             {t("Review")}
           </span>
-        </button>
+        </FocusButton>
       ) : null}
       <span className="text-[12px] text-ink-muted">
         {items.length === 1
@@ -479,7 +480,7 @@ function EmptyOwned({
           {t("Point Harbor at a folder. We scan it for movies and shows, parse titles from filenames, and enrich them with TMDB so they look the same as everything else here. We just remember the path; nothing is copied or moved.")}
         </p>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onAddFolder}
         disabled={busy}
@@ -487,7 +488,7 @@ function EmptyOwned({
       >
         {busy ? <Loader2 size={15} className="animate-spin" /> : <FolderPlus size={15} strokeWidth={2.2} />}
         {busy ? scanLabel(progress, t) : t("Choose folder")}
-      </button>
+      </FocusButton>
       {error && (
         <p className="rounded-lg bg-danger/15 px-3 py-2 text-[12px] text-danger ring-1 ring-danger/30">
           {error}

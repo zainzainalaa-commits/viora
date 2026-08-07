@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { TriangleAlert, X } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -50,7 +51,7 @@ export function TogetherRelayBanner() {
             : "Redeploy it to get the latest Watch Together fixes. Harbor's public relay updates on its own."}
         </span>
         {!pub && (
-          <button
+          <FocusButton
             onClick={() => {
               closeModal();
               openSettings("relay");
@@ -58,17 +59,17 @@ export function TogetherRelayBanner() {
             className="mt-1 w-fit rounded-lg border border-edge px-2.5 py-1 text-[11.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
           >
             Open relay settings
-          </button>
+          </FocusButton>
         )}
       </div>
       {pub && (
-        <button
+        <FocusButton
           onClick={dismiss}
           aria-label={t("Dismiss")}
           className="-me-1 -mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={13} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

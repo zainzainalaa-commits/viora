@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Plus } from "lucide-react";
 import { useState, type RefObject } from "react";
 import {
@@ -53,7 +54,7 @@ export function AddToListMenu({
             {lists.map((l) => {
               const inList = containing.has(l.id);
               return (
-                <button
+                <FocusButton
                   key={l.id}
                   onClick={() => toggle(l.id, l.name)}
                   className="flex w-full items-center gap-3 px-3.5 py-2.5 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
@@ -69,12 +70,12 @@ export function AddToListMenu({
                   <span className="shrink-0 text-[11px] tabular-nums text-ink-subtle">
                     {l.items.length}
                   </span>
-                </button>
+                </FocusButton>
               );
             })}
           </div>
           <div className="border-t border-edge-soft/55 p-1.5">
-            <button
+            <FocusButton
               onClick={() => setCreating(true)}
               className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-start text-[13px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
             >
@@ -82,7 +83,7 @@ export function AddToListMenu({
                 <Plus size={15} strokeWidth={2} />
               </span>
               {t("Create new list")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </AnchoredMenu>

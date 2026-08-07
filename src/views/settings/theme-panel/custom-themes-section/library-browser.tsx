@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, Check, Copy, Download, ImagePlus, Loader2, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -63,14 +64,14 @@ export function LibraryBrowser({
     >
       <header data-tauri-drag-region className="flex shrink-0 items-center justify-between gap-4 border-b border-edge-soft bg-surface/40 px-10 py-5">
         <div className="flex items-center gap-4">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-11 items-center gap-2 rounded-full border border-edge-soft bg-canvas/60 px-4 text-[13px] font-semibold text-ink-muted transition-all hover:-translate-x-0.5 rtl:hover:translate-x-0.5 hover:border-edge hover:text-ink"
           >
             <ArrowLeft size={15} strokeWidth={2.2} className="dir-icon" />
             Back to settings
-          </button>
+          </FocusButton>
           <div data-tauri-drag-region className="flex flex-col">
             <h1 className="pointer-events-none text-[24px] font-semibold tracking-tight text-ink">Theme Library</h1>
             <p className="pointer-events-none text-[13px] text-ink-subtle">
@@ -78,14 +79,14 @@ export function LibraryBrowser({
             </p>
           </div>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={onClose}
           aria-label="Close"
           className="flex h-10 w-10 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
         >
           <X size={18} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </header>
 
       <div className="flex shrink-0 items-center gap-2 border-b border-edge-soft bg-surface/20 px-10 py-3">
@@ -184,7 +185,7 @@ export function LibraryBrowser({
 
 function TabBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`inline-flex h-9 items-center rounded-full px-4 text-[13px] font-semibold transition-colors ${
@@ -192,7 +193,7 @@ function TabBtn({ active, onClick, children }: { active: boolean; onClick: () =>
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -316,7 +317,7 @@ function BrowserCard({
           ))}
         </div>
         {removable && !hasImage && (
-          <button
+          <FocusButton
             type="button"
             onClick={addImage}
             disabled={busy}
@@ -324,7 +325,7 @@ function BrowserCard({
           >
             {busy ? <Loader2 size={18} className="animate-spin" /> : <ImagePlus size={18} strokeWidth={1.9} />}
             {busy ? "Adding" : "Add image"}
-          </button>
+          </FocusButton>
         )}
       </div>
       <div className="flex flex-col gap-3 p-4">
@@ -335,7 +336,7 @@ function BrowserCard({
           )}
         </div>
         <div className="flex items-center gap-1.5">
-          <button
+          <FocusButton
             type="button"
             onClick={onActivate}
             disabled={active}
@@ -346,7 +347,7 @@ function BrowserCard({
             }`}
           >
             {active ? "Active" : "Apply"}
-          </button>
+          </FocusButton>
           <IconButton label="Copy theme" onClick={onExport}>
             <Copy size={14} strokeWidth={2.2} />
           </IconButton>
@@ -376,7 +377,7 @@ function IconButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       aria-label={label}
       title={label}
@@ -386,6 +387,6 @@ function IconButton({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

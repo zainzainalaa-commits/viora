@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { useT, useUiLanguage } from "@/lib/i18n";
 
@@ -600,7 +601,7 @@ export function AgeGateModal({
                     const picked = picks[qi] === oi;
                     const wasWrong = submitted && picked && oi !== q.correct;
                     return (
-                      <button
+                      <FocusButton
                         key={oi}
                         onClick={() => {
                           if (submitted) return;
@@ -626,7 +627,7 @@ export function AgeGateModal({
                           {picked && <span className="h-1.5 w-1.5 rounded-full bg-canvas" />}
                         </span>
                         {opt}
-                      </button>
+                      </FocusButton>
                     );
                   })}
                 </div>
@@ -637,13 +638,13 @@ export function AgeGateModal({
 
         <footer className="shrink-0 border-t border-edge-soft bg-elevated/30 px-7 py-5">
           <div className="flex items-center justify-end gap-2">
-            <button
+            <FocusButton
               onClick={onClose}
               className="rounded-full border border-edge-soft px-5 py-2 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {t("Cancel")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={handleSubmit}
               disabled={!allAnswered}
               className={`whitespace-nowrap rounded-full px-6 py-2 text-[12.5px] font-semibold leading-none transition-opacity ${
@@ -653,7 +654,7 @@ export function AgeGateModal({
               }`}
             >
               {t("Continue")}
-            </button>
+            </FocusButton>
           </div>
           {submitted && !allCorrect && (
             <p className="mt-3 text-center text-[12px] font-medium text-rose-200">

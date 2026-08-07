@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useLayoutEffect, useRef, useState } from "react";
 import { AwardLogo, laurelColorFor } from "@/components/icons/award-logo";
 import { Laurel } from "@/components/icons/laurel";
@@ -109,7 +110,7 @@ export function HeroAwardsCorner({
   }
 
   return (
-    <button
+    <FocusButton
       ref={ref}
       type="button"
       data-hero-awards
@@ -120,7 +121,7 @@ export function HeroAwardsCorner({
       className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-end transition-all duration-200 hover:-translate-y-0.5 hover:bg-canvas/45 ${positionCls}`}
     >
       {content}
-    </button>
+    </FocusButton>
   );
 }
 

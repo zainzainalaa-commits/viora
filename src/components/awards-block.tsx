@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Fragment, useState } from "react";
 import { tmdbPersonIdByName, tmdbPersonIdCached } from "@/lib/providers/tmdb";
 import { useSettings } from "@/lib/settings";
@@ -93,13 +94,13 @@ function AwardGroup({ type, entries }: { type: AwardType; entries: AwardEntry[] 
             {type === "other" ? (
               TYPE_TITLE[type]
             ) : (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => openAward(type)}
                 className="rounded-sm text-start transition-colors hover:text-accent"
               >
                 {TYPE_TITLE[type]}
-              </button>
+              </FocusButton>
             )}
           </h4>
           <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
@@ -236,7 +237,7 @@ function PersonLink({ name }: { name: string }) {
   }
 
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       disabled={busy}
       className={`inline rounded-sm transition-colors hover:text-ink ${
@@ -244,7 +245,7 @@ function PersonLink({ name }: { name: string }) {
       } ${busy ? "opacity-60" : ""}`}
     >
       {name}
-    </button>
+    </FocusButton>
   );
 }
 

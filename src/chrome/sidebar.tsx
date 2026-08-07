@@ -1,3 +1,5 @@
+import { APP_NAME } from "@/lib/brand";
+import { VioraSignature } from "@/components/icons/viora-wordmark";
 import { ChevronDown, Lock } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -12,6 +14,7 @@ import { useView, type View } from "@/lib/view";
 import { KidsSidebarDoodles } from "./kids-sidebar-doodles";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
 import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-items";
+import { FocusSection, focusKeys, useFocusableControl } from "@/lib/tv-focus";
 
 const PRIMARY_IDS = new Set(["home", "discover", "catalogs", "movies", "shows", "kids", "anime", "live", "vod"]);
 
@@ -31,11 +34,18 @@ export function Sidebar() {
 
   return (
     <>
-      <aside
+      {/* The sidebar is one place to the D-pad: leaving it for the content and
+          coming back returns to the item you left, not the top of the list. */}
+      <FocusSection
+        as="aside"
+        focusKey={focusKeys.sidebar}
+        // Hidden chrome is faded to zero opacity rather than unmounted, so
+        // without this the remote can still walk into an invisible sidebar.
+        inert={chromeHidden}
         aria-hidden={chromeHidden}
         data-harbor-sidebar
         className={`relative z-[60] flex w-[72px] shrink-0 flex-col border-e border-edge-soft bg-canvas transition-[opacity,transform,width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width] ${
-          collapsed ? "" : "lg:w-60"
+          collapsed ? "" : "lg:w-52"
         } ${
           chromeHidden
             ? "pointer-events-none -translate-x-2 rtl:translate-x-2 opacity-0"
@@ -75,7 +85,7 @@ export function Sidebar() {
                   transform: "translateY(1px)",
                 }}
               >
-                Harb
+                Vi
                 <img
                   src="/kids/wheel.png"
                   alt="o"
@@ -83,24 +93,20 @@ export function Sidebar() {
                   className="inline-block h-[0.92em] w-auto"
                   style={{ transform: "translateY(0.08em)", marginLeft: "-5px", marginRight: "-5px" }}
                 />
-                r
+                ra
               </span>
             ) : (
               <span
-                className="hidden whitespace-nowrap text-[44px] font-medium leading-none tracking-tight lg:inline"
-                style={{
-                  fontFamily: '"Fraunces", "Iowan Old Style", "Georgia", serif',
-                  transform: "translateY(2px)",
-                }}
+                className="hidden flex-col whitespace-nowrap leading-none lg:inline-flex"
+                style={{ transform: "translateY(2px)" }}
               >
-                Harb
                 <span
-                  className="inline-block"
-                  style={{ transform: "rotate(7deg)", transformOrigin: "50% 65%" }}
+                  className="text-[44px] font-medium leading-none tracking-tight"
+                  style={{ fontFamily: '"Fraunces", "Iowan Old Style", "Georgia", serif' }}
                 >
-                  o
+                  {APP_NAME}
                 </span>
-                r
+                <VioraSignature className="mt-1 ps-0.5 text-[15px]" />
               </span>
             ))}
         </div>
@@ -142,7 +148,7 @@ export function Sidebar() {
             <ProfileChip collapsed={collapsed} />
           )}
         </div>
-      </aside>
+      </FocusSection>
       {pendingPinView && (
         <ParentalPinModal
           mode={{
@@ -225,7 +231,10 @@ function ScrollableNav({
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
-      <div
+      {/* `scrolls` lets a focused item below the fold pull the column up on its
+          own; the chevron below stays a mouse affordance and is never focused. */}
+      <FocusSection
+        scrolls
         ref={ref}
         className="flex flex-1 flex-col overflow-y-auto px-4 pt-3 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
@@ -260,7 +269,7 @@ function ScrollableNav({
           })}
         </div>
         <div data-tauri-drag-region className="flex-1 min-h-2" />
-      </div>
+      </FocusSection>
       {overflow.top && (
         <div className="pointer-events-none absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-canvas to-transparent" />
       )}
@@ -303,11 +312,17 @@ function NavItem({
   const t = useT();
   const text = t(label);
   const [hovered, setHovered] = useState(false);
+  // Opting in here is what makes this reachable by the remote. The chevron and
+  // the section divider above never call this, so they simply do not exist as
+  // far as the D-pad is concerned.
+  const { ref, focusProps } = useFocusableControl({ onSelect: onClick });
   return (
     <button
+      ref={ref as React.Ref<HTMLButtonElement>}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      {...focusProps}
       data-harbor-nav={view}
       data-active={active ? "" : undefined}
       aria-label={gated ? t("chrome.lockedRequiresPin", { label: text }) : text}

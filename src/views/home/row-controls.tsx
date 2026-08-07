@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDown, ArrowUp, Check, Eye, EyeOff, ListOrdered, Pencil, Sparkles, X, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -102,23 +103,23 @@ export function RowControls({
 
   return (
     <div className="mb-2 flex items-center gap-1.5 rounded-xl border border-edge-soft bg-canvas/60 px-2 py-1.5 text-[12px]">
-      <button
+      <FocusButton
         onClick={onMoveUp}
         disabled={!canMoveUp}
         title={t("Move up")}
         className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-muted"
       >
         <ArrowUp size={14} strokeWidth={2.2} />
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         onClick={onMoveDown}
         disabled={!canMoveDown}
         title={t("Move down")}
         className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-muted"
       >
         <ArrowDown size={14} strokeWidth={2.2} />
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         onClick={onToggleHidden}
         title={hidden ? t("Show row") : t("Hide row")}
         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
@@ -126,9 +127,9 @@ export function RowControls({
         }`}
       >
         {hidden ? <EyeOff size={14} strokeWidth={2.2} /> : <Eye size={14} strokeWidth={2.2} />}
-      </button>
+      </FocusButton>
       {onToggleNumerals && (
-        <button
+        <FocusButton
           onClick={onToggleNumerals}
           disabled={!canNumerals && !numeralsActive}
           title={
@@ -145,10 +146,10 @@ export function RowControls({
           }`}
         >
           <ListOrdered size={14} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       )}
       {onToggleHero && (
-        <button
+        <FocusButton
           onClick={onToggleHero}
           disabled={!canHero && !heroActive}
           title={
@@ -165,16 +166,16 @@ export function RowControls({
           }`}
         >
           <Sparkles size={14} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       )}
       {onDelete && (
-        <button
+        <FocusButton
           onClick={onDelete}
           title={t("Delete custom source")}
           className="flex h-7 w-7 items-center justify-center rounded-lg text-danger/80 transition-colors hover:bg-danger/15 hover:text-danger"
         >
           <Trash2 size={14} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       )}
       <div className="mx-1 h-5 w-px bg-edge-soft" />
       {editing ? (
@@ -189,40 +190,40 @@ export function RowControls({
             }}
             className="flex-1 rounded-md border border-edge bg-elevated px-2 py-1 text-[13px] font-medium text-ink outline-none focus:border-ink-subtle"
           />
-          <button
+          <FocusButton
             onClick={commit}
             title={t("Save")}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-accent transition-colors hover:bg-raised"
           >
             <Check size={14} strokeWidth={2.4} />
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={() => setEditing(false)}
             title={t("Cancel")}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={14} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </>
       ) : (
         <>
           <span className="flex-1 truncate text-[13px] font-medium text-ink">{name}</span>
           {isRenamed && (
-            <button
+            <FocusButton
               onClick={onResetName}
               title={t("Reset to original name")}
               className="rounded-md bg-accent/15 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-accent transition-colors hover:bg-accent/25"
             >
               {t("Renamed")}
-            </button>
+            </FocusButton>
           )}
-          <button
+          <FocusButton
             onClick={() => setEditing(true)}
             title={t("Rename row")}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink"
           >
             <Pencil size={13} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </>
       )}
     </div>
@@ -245,7 +246,7 @@ function KidCtrl({
   primary?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       disabled={disabled}
       className={`flex h-12 shrink-0 items-center gap-1.5 rounded-xl px-4 text-[14px] font-extrabold transition active:scale-95 disabled:opacity-30 ${
@@ -258,6 +259,6 @@ function KidCtrl({
     >
       {icon}
       <span>{label}</span>
-    </button>
+    </FocusButton>
   );
 }

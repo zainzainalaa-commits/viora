@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   ArrowDownUp,
   ArrowDownWideNarrow,
@@ -85,7 +86,7 @@ export function SortMenu({
   return (
     <div className="flex items-center gap-1.5">
       <div ref={ref} className="relative">
-        <button
+        <FocusButton
           type="button"
           onClick={() => setOpen((v) => !v)}
           className="flex h-9 items-center gap-1.5 rounded-full bg-raised px-3.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
@@ -93,11 +94,11 @@ export function SortMenu({
           <ArrowDownUp size={13} strokeWidth={2.2} />
           {activeLabel}
           <ChevronDown size={13} className={`transition-transform ${open ? "rotate-180" : ""}`} />
-        </button>
+        </FocusButton>
         {open && (
           <div className="absolute end-0 top-[calc(100%+6px)] z-50 w-44 rounded-xl border border-edge bg-elevated p-1 shadow-[0_18px_50px_-15px_rgba(0,0,0,0.7)] animate-popover-in">
             {options.map(([k, label]) => (
-              <button
+              <FocusButton
                 key={k}
                 type="button"
                 onClick={() => {
@@ -110,12 +111,12 @@ export function SortMenu({
               >
                 <span>{label}</span>
                 {sortKey === k && <Check size={14} strokeWidth={2.4} className="text-accent" />}
-              </button>
+              </FocusButton>
             ))}
           </div>
         )}
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
         title={dirLabel}
@@ -127,7 +128,7 @@ export function SortMenu({
         ) : (
           <ArrowDownWideNarrow size={15} strokeWidth={2.2} />
         )}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -155,24 +156,24 @@ export function BulkBar({
       <span className="text-[12.5px] font-semibold text-ink">
         {count === 1 ? t("1 selected") : t("{n} selected", { n: count })}
       </span>
-      <button
+      <FocusButton
         type="button"
         onClick={onSelectAll}
         className="flex h-8 items-center gap-1.5 rounded-full bg-raised px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
       >
         <CheckSquare size={13} strokeWidth={2.2} />
         {allSelected ? t("Deselect all") : t("Select all")}
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={onInvert}
         className="flex h-8 items-center gap-1.5 rounded-full bg-raised px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
       >
         <FlipHorizontal2 size={13} strokeWidth={2.2} />
         {t("Invert")}
-      </button>
+      </FocusButton>
       <div className="ms-auto flex items-center gap-2">
-        <button
+        <FocusButton
           type="button"
           onClick={onExport}
           disabled={count === 0}
@@ -180,8 +181,8 @@ export function BulkBar({
         >
           <Download size={13} strokeWidth={2.2} />
           {t("Export")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={onDelete}
           disabled={count === 0}
@@ -189,14 +190,14 @@ export function BulkBar({
         >
           <Trash2 size={13} strokeWidth={2.2} />
           {t("Remove")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={onCancel}
           className="flex h-8 items-center rounded-full px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:text-ink"
         >
           {t("Cancel")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

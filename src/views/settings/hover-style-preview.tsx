@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Pencil, Play, Plus, Star } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { topMovies, type Meta } from "@/lib/cinemeta";
@@ -66,7 +67,7 @@ export function HoverStyleGallery({
             meta={sample}
           />
         ))}
-        <button
+        <FocusButton
           type="button"
           onClick={() => setEditing("new")}
           className="flex aspect-[2/3] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-edge-soft bg-canvas/40 text-ink-subtle transition-colors hover:border-edge hover:text-ink"
@@ -75,7 +76,7 @@ export function HoverStyleGallery({
             <Plus size={18} strokeWidth={2.4} />
           </span>
           <span className="text-[12px] font-semibold">{t("Custom")}</span>
-        </button>
+        </FocusButton>
       </div>
       {editing && (
         <CustomHoverEditor
@@ -108,7 +109,7 @@ function Tile({
 }) {
   const inCard = style === "elegant" || style === "frosted" || style === "cinema" || style === "spotlight";
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-pressed={selected}
@@ -139,7 +140,7 @@ function Tile({
         <span className={`text-[12px] font-semibold ${selected ? "text-accent" : "text-ink"}`}>{label}</span>
         <span className="hidden text-[10px] text-ink-subtle sm:inline">{sub}</span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -174,7 +175,7 @@ function CustomTile({
           <img src={meta.poster} alt="" draggable={false} className="absolute inset-0 h-full w-full rounded-lg object-cover" />
         )}
         {meta && <CustomHoverOverlay config={config} meta={meta} onPlay={() => {}} preview />}
-        <button
+        <FocusButton
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -184,7 +185,7 @@ function CustomTile({
           className="absolute end-1.5 top-1.5 z-30 flex h-6 w-6 items-center justify-center rounded-md bg-black/55 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover/tile:opacity-100"
         >
           <Pencil size={12} />
-        </button>
+        </FocusButton>
       </div>
       <div className="flex items-center justify-between px-0.5">
         <span className={`line-clamp-1 text-[12px] font-semibold ${selected ? "text-accent" : "text-ink"}`}>{config.name}</span>

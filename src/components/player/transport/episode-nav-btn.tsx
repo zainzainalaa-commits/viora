@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 export function EpisodeNavBtn({
@@ -15,7 +16,7 @@ export function EpisodeNavBtn({
 }) {
   const Icon = direction === "prev" ? ChevronsLeft : ChevronsRight;
   return (
-    <button
+    <FocusButton
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-label={label}
@@ -31,6 +32,6 @@ export function EpisodeNavBtn({
       {direction === "prev" && <Icon size={iconOnly ? 22 : 20} strokeWidth={2.2} />}
       {!iconOnly && <span className="text-[14px] font-medium">{label}</span>}
       {direction === "next" && <Icon size={iconOnly ? 22 : 20} strokeWidth={2.2} />}
-    </button>
+    </FocusButton>
   );
 }

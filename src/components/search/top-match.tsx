@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play, Star } from "lucide-react";
 import type { SearchResults } from "@/lib/search";
 import { ResultPoster } from "./result-poster";
@@ -38,7 +39,7 @@ export function TopMatch({
       )}
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-canvas/95 via-canvas/85 to-canvas/55 rtl:bg-gradient-to-l" />
 
-      <button
+      <FocusButton
         type="button"
         onClick={handleOpen}
         className="group flex w-full items-stretch gap-7 p-7 text-start transition-transform duration-200 hover:scale-[1.005] active:scale-[0.995]"
@@ -89,7 +90,7 @@ export function TopMatch({
             Open
           </div>
         </div>
-      </button>
+      </FocusButton>
     </section>
   );
 }

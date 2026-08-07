@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Home } from "lucide-react";
 import { togglePinnedCatalog, useIsPinned, type PinnedSource } from "@/lib/pinned-catalogs";
 import { useT } from "@/lib/i18n";
@@ -16,7 +17,7 @@ export function PinHomeButton({
   const t = useT();
   const pinned = useIsPinned(id);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => togglePinnedCatalog({ id, source, name, params })}
       aria-pressed={pinned}
@@ -29,6 +30,6 @@ export function PinHomeButton({
       }`}
     >
       <Home size={14} strokeWidth={2.2} />
-    </button>
+    </FocusButton>
   );
 }

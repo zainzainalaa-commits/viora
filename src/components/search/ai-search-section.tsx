@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect } from "react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -54,7 +55,7 @@ export function AiSearchSection({
       {status === "loading" && <AiThinking provider={provider} label={label} phrases={thinkingPhrases} />}
 
       {status === "error" && (
-        <button
+        <FocusButton
           onClick={run}
           className="animate-ai-entrance flex w-full flex-col gap-1 rounded-2xl border border-danger/40 bg-danger/10 px-5 py-3 text-start transition-colors hover:bg-danger/15"
         >
@@ -62,7 +63,7 @@ export function AiSearchSection({
             {t("AI search failed. Tap to retry.")}
           </span>
           <span className="line-clamp-2 text-[12px] text-ink-muted">{error}</span>
-        </button>
+        </FocusButton>
       )}
 
       {status === "done" &&

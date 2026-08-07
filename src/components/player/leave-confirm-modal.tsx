@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useT } from "@/lib/i18n";
 import {
@@ -65,19 +66,19 @@ export function LeaveConfirmModal() {
           {t("Don't ask me again")}
         </label>
         <div className="mt-6 flex gap-3">
-          <button
+          <FocusButton
             onClick={closeLeaveConfirm}
             className="h-12 flex-1 rounded-xl bg-elevated text-[16px] font-semibold text-ink transition-colors hover:bg-raised"
           >
             {t("Keep watching")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={leave}
             autoFocus
             className="h-12 flex-1 rounded-xl bg-ink text-[16px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
           >
             {t("Leave")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

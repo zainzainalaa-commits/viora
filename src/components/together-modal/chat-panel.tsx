@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ChatMessage } from "@/lib/together/provider";
@@ -68,14 +69,14 @@ export function ChatPanel({
           placeholder={t("Message")}
           className="h-9 flex-1 rounded-lg border border-edge bg-canvas px-2.5 text-[12.5px] text-ink focus:border-accent"
         />
-        <button
+        <FocusButton
           onClick={send}
           disabled={!draft.trim()}
           className="flex h-9 w-9 items-center justify-center rounded-lg bg-ink text-canvas transition-transform hover:scale-[1.05] disabled:opacity-40 disabled:hover:scale-100"
           aria-label={t("Send")}
         >
           <Send size={13} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

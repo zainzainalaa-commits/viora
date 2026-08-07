@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Subtitles as SubsIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
@@ -114,7 +115,7 @@ export function SubtitleMenu(props: Props) {
   return (
     <div ref={wrap} className="relative">
       <Tooltip label={t("Subtitles")}>
-        <button
+        <FocusButton
           type="button"
           onClick={handleClick}
           aria-label={t("Subtitles")}
@@ -126,7 +127,7 @@ export function SubtitleMenu(props: Props) {
           {subSelected && (
             <span className="absolute end-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-emerald-400" />
           )}
-        </button>
+        </FocusButton>
       </Tooltip>
       {open && (forceInline || !useOverlay) && (
         <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex h-[400px] max-h-[72vh] w-[500px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>

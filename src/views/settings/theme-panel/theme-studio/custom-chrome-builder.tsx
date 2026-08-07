@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronUp, Code2, PanelLeft, PanelTop, Plus, RotateCcw, Shapes, X } from "lucide-react";
 import { useState } from "react";
 import type { ChromeConfig, ChromeNavId } from "@/lib/theme";
@@ -102,7 +103,7 @@ export function CustomChromeBuilder({
         {available.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-2">
             {available.map((id) => (
-              <button
+              <FocusButton
                 key={id}
                 type="button"
                 onClick={() => onChange({ ...config, items: [...enabled, id] })}
@@ -110,7 +111,7 @@ export function CustomChromeBuilder({
               >
                 <Plus size={12} strokeWidth={2.4} />
                 {NAV_LABELS[id]}
-              </button>
+              </FocusButton>
             ))}
           </div>
         )}
@@ -118,24 +119,24 @@ export function CustomChromeBuilder({
         </>
       )}
 
-      <button
+      <FocusButton
         type="button"
         onClick={onOpenCode}
         className="flex h-12 items-center justify-center gap-2 rounded-lg border border-edge-soft text-[15px] font-semibold text-ink-muted transition-colors hover:border-edge hover:bg-white/[0.03] hover:text-ink"
       >
         <Code2 size={16} strokeWidth={2.2} />
         Edit the HTML and CSS by hand
-      </button>
+      </FocusButton>
 
       {dirty && (
-        <button
+        <FocusButton
           type="button"
           onClick={onRegenerate}
           className="flex h-8 items-center justify-center gap-1.5 text-[12px] font-medium text-ink-subtle transition-colors hover:text-ink-muted"
         >
           <RotateCcw size={12} strokeWidth={2.2} />
           Rebuild from the visual builder
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -170,7 +171,7 @@ function MenuItemRow({
   return (
     <div className="flex flex-col rounded-lg border border-edge-soft bg-canvas/50">
       <div className="flex items-center gap-1 px-2.5 py-2">
-        <button
+        <FocusButton
           type="button"
           onClick={() => setPicking((v) => !v)}
           aria-label="Choose icon"
@@ -189,7 +190,7 @@ function MenuItemRow({
           ) : (
             <Shapes size={15} strokeWidth={2} />
           )}
-        </button>
+        </FocusButton>
         <input
           value={label}
           onChange={(e) => onRename(e.target.value)}
@@ -242,7 +243,7 @@ function PosButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex h-16 flex-col items-center justify-center gap-1.5 rounded-lg border text-[13px] font-semibold transition-all ${
@@ -253,7 +254,7 @@ function PosButton({
     >
       {icon}
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -269,7 +270,7 @@ function IconBtn({
   disabled?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -277,6 +278,6 @@ function IconBtn({
       className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-raised hover:text-ink disabled:opacity-25 disabled:hover:bg-transparent"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import { useT } from "@/lib/i18n";
@@ -52,7 +53,7 @@ function HoldStepButton({
   useEffect(() => stop, [stop]);
 
   return (
-    <button
+    <FocusButton
       type="button"
       onPointerDown={(e) => {
         if (e.button !== 0) return;
@@ -66,7 +67,7 @@ function HoldStepButton({
       className="flex h-10 w-10 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors duration-200 hover:bg-elevated hover:text-ink"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -83,7 +84,7 @@ export function Dots({
   return (
     <div className="flex justify-center gap-1.5">
       {Array.from({ length: count }).map((_, i) => (
-        <button
+        <FocusButton
           key={i}
           type="button"
           onClick={() => onJump(i)}

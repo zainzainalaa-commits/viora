@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 ﻿import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { Meta } from "@/lib/cinemeta";
 import { scrollToDataEp } from "@/lib/episode-scroll";
@@ -308,12 +309,12 @@ export function AnimeEpisodes({
           {filteredEpisodes && filteredEpisodes.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-20 text-center">
               <p className="text-[14px] text-ink-muted">{t("No episodes match your search")}</p>
-              <button
+              <FocusButton
                 onClick={() => setQuery("")}
                 className="text-[13px] font-medium text-accent transition-opacity hover:opacity-80"
               >
                 {t("Clear search")}
-              </button>
+              </FocusButton>
             </div>
           ) : settings.episodeLayout === "list" ? (
             <div className="flex flex-col gap-1">

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
@@ -129,13 +130,13 @@ export function CollectionsView() {
       <div className="mx-auto flex w-full max-w-[1700px] flex-col px-12 pb-24">
         <div className="flex items-center gap-5 pt-24">
           {!layoutHasGlobalBack() && (
-            <button
+            <FocusButton
               onClick={goBack}
               aria-label={t("Back")}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-edge-soft bg-elevated/60 text-ink transition-colors hover:bg-raised"
             >
               <ArrowLeft size={19} strokeWidth={2.2} className="dir-icon" />
-            </button>
+            </FocusButton>
           )}
           <div className="flex flex-col">
             <h1 className="font-display text-[44px] font-medium leading-[1.02] tracking-tight text-ink">
@@ -176,20 +177,20 @@ export function CollectionsView() {
                 className="h-11 w-full rounded-full border border-edge bg-elevated/50 ps-11 pe-10 text-[14px] text-ink placeholder:text-ink-subtle transition-colors focus:border-ink-subtle focus:outline-none"
               />
               {query && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => setQuery("")}
                   aria-label={t("Clear search")}
                   className="absolute end-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
                 >
                   <X size={14} strokeWidth={2.2} />
-                </button>
+                </FocusButton>
               )}
             </div>
             {!searchActive && (
               <div className="flex flex-wrap items-center gap-1.5">
                 {["All", ...COLLECTION_CATEGORIES].map((c) => (
-                  <button
+                  <FocusButton
                     key={c}
                     type="button"
                     onClick={() => setCategory(c)}
@@ -200,7 +201,7 @@ export function CollectionsView() {
                     }`}
                   >
                     {t(c)}
-                  </button>
+                  </FocusButton>
                 ))}
               </div>
             )}

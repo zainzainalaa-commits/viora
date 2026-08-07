@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -40,7 +41,7 @@ function GenreSelect({
   const active = Boolean(value);
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium ring-1 transition-colors ${
@@ -56,13 +57,13 @@ function GenreSelect({
           strokeWidth={2.3}
           className={`text-white/45 transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute left-0 top-[calc(100%+6px)] z-40 max-h-64 w-max min-w-[132px] overflow-y-auto rounded-xl bg-neutral-900 p-1 ring-1 ring-white/12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.85)] [scrollbar-width:thin]">
           {options.map((o) => {
             const selected = o.value === value;
             return (
-              <button
+              <FocusButton
                 key={o.value}
                 type="button"
                 onClick={() => {
@@ -76,7 +77,7 @@ function GenreSelect({
                 }`}
               >
                 {t(o.label)}
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -96,7 +97,7 @@ function MediaToggle({
   return (
     <div className="inline-flex shrink-0 gap-0.5 rounded-full bg-white/[0.06] p-1 ring-1 ring-white/10">
       {(["movie", "tv"] as const).map((m) => (
-        <button
+        <FocusButton
           key={m}
           type="button"
           onClick={() => onMediaType(m)}
@@ -105,7 +106,7 @@ function MediaToggle({
           }`}
         >
           {m === "movie" ? t("Movies") : t("Shows")}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );
@@ -126,7 +127,7 @@ function GenreChips({
       {genreNamesFor(mediaType).map((name) => {
         const active = name === genreName;
         return (
-          <button
+          <FocusButton
             key={name}
             type="button"
             onClick={() => onGenre(name)}
@@ -137,7 +138,7 @@ function GenreChips({
             }`}
           >
             {t(name)}
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -220,14 +221,14 @@ export function GenreToolbar({
           onChange={(v) => onFilters({ sort: v })}
         />
         {dirty && (
-          <button
+          <FocusButton
             type="button"
             onClick={onClear}
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[12.5px] font-medium text-white/55 transition-colors hover:bg-white/10 hover:text-white"
           >
             <X size={13} strokeWidth={2.4} />
             {t("Clear")}
-          </button>
+          </FocusButton>
         )}
       </div>
     </div>

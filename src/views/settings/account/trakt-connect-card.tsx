@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, Check, Copy, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import traktLogo from "@/assets/trakt.png";
@@ -158,29 +159,29 @@ export function TraktConnectCard() {
           <span className="font-mono text-[28px] font-bold tracking-[0.4em] text-ink">
             {code?.user_code ?? ""}
           </span>
-          <button
+          <FocusButton
             onClick={copy}
             className="flex h-9 items-center gap-1.5 rounded-lg border border-edge-soft px-3 text-[12px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {copied ? <Check size={13} /> : <Copy size={13} />}
             {copied ? t("Copied") : t("Copy")}
-          </button>
+          </FocusButton>
         </div>
         <div className="flex items-center justify-between gap-2">
-          <button
+          <FocusButton
             onClick={cancel}
             className="flex h-10 items-center rounded-xl border border-edge-soft px-4 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {t("Cancel")}
-          </button>
+          </FocusButton>
           {phase === "awaiting" ? (
-            <button
+            <FocusButton
               onClick={() => setPhase("polling")}
               className="flex h-10 items-center gap-1.5 rounded-xl bg-ink px-4 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
             >
               {t("I authorized it")}
               <ArrowRight size={13} strokeWidth={2.2} className="dir-icon" />
-            </button>
+            </FocusButton>
           ) : (
             <span className="flex h-10 items-center gap-2 px-3 text-[12.5px] text-ink-muted">
               <Loader2 size={13} className="animate-spin" />
@@ -207,14 +208,14 @@ export function TraktConnectCard() {
           </span>
         </div>
         {connected ? (
-          <button
+          <FocusButton
             onClick={disconnect}
             className="flex h-10 shrink-0 items-center rounded-xl border border-edge-soft px-4 text-[12.5px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:text-danger"
           >
             {t("Disconnect")}
-          </button>
+          </FocusButton>
         ) : hasCreds ? (
-          <button
+          <FocusButton
             onClick={start}
             disabled={phase === "starting"}
             className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-ink px-4 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02] disabled:opacity-60"
@@ -222,14 +223,14 @@ export function TraktConnectCard() {
             {phase === "starting" ? <Loader2 size={13} className="animate-spin" /> : null}
             {phase === "starting" ? t("Starting…") : t("Connect")}
             {phase !== "starting" && <ExternalLink size={13} strokeWidth={2.2} />}
-          </button>
+          </FocusButton>
         ) : (
-          <button
+          <FocusButton
             onClick={() => setPhase(phase === "configuring" ? "idle" : "configuring")}
             className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-edge-soft px-4 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {phase === "configuring" ? t("Hide") : t("Set up")}
-          </button>
+          </FocusButton>
         )}
       </div>
       {error && (
@@ -262,7 +263,7 @@ export function TraktConnectCard() {
               placeholder={t("Client secret")}
               className="h-11 rounded-xl border border-edge bg-canvas px-3.5 font-mono text-[13px] text-ink outline-none focus:border-ink"
             />
-            <button
+            <FocusButton
               onClick={() => {
                 update({
                   traktClientId: clientIdDraft.trim(),
@@ -274,7 +275,7 @@ export function TraktConnectCard() {
               className="flex h-10 items-center justify-center rounded-xl bg-ink text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.01] disabled:opacity-50 disabled:hover:scale-100"
             >
               {t("Save credentials")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       )}

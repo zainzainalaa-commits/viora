@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { PauseCircle, PlayCircle } from "lucide-react";
 import type { PlayerSnapshot } from "@/lib/player/bridge";
 import { useT } from "@/lib/i18n";
@@ -78,7 +79,7 @@ export function PipChrome({
           )}
         </div>
         <Tooltip label={t("Return to full window")} side="bottom">
-          <button
+          <FocusButton
             onClick={onExitPip}
             className="pointer-events-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/95 backdrop-blur-md transition-colors hover:bg-black/85"
             aria-label={t("Exit Picture in Picture")}
@@ -90,7 +91,7 @@ export function PipChrome({
               <path d="M21 15v4a2 2 0 0 1-2 2h-4" />
             </svg>
             {t("Exit PiP")}
-          </button>
+          </FocusButton>
         </Tooltip>
       </div>
 
@@ -124,7 +125,7 @@ export function PipChrome({
             }
           />
           <Tooltip label={playing ? t("Pause") : t("Play")}>
-            <button
+            <FocusButton
               type="button"
               onClick={onPlayPause}
               aria-label={playing ? t("Pause") : t("Play")}
@@ -135,7 +136,7 @@ export function PipChrome({
               ) : (
                 <PlayCircle size={26} strokeWidth={1.5} />
               )}
-            </button>
+            </FocusButton>
           </Tooltip>
           <PipStepBtn
             label={t("Forward 30 seconds")}

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Star } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -14,7 +15,7 @@ export function FavoriteButton({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -41,6 +42,6 @@ export function FavoriteButton({
         strokeWidth={active ? 0 : 1.9}
         fill={active ? "currentColor" : "none"}
       />
-    </button>
+    </FocusButton>
   );
 }

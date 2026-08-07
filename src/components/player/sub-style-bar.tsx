@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useEffect } from "react";
 import { useSettings } from "@/lib/settings";
@@ -74,14 +75,14 @@ export function SubStyleBar() {
 
         <AdvancedMenu />
 
-        <button
+        <FocusButton
           type="button"
           onClick={closeStyleBar}
           aria-label={t("Done")}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={18} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

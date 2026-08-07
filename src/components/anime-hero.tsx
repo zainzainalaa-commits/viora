@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { awardSourceMeta, findTopAward, parseAwardYear } from "@/lib/anime-awards";
@@ -184,15 +185,15 @@ export function AnimeHero({
             </p>
           )}
           <div className="mt-1 flex items-center gap-3">
-            <button
+            <FocusButton
               type="button"
               onClick={() => openMeta(current)}
               className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-canvas transition-colors duration-150 hover:bg-accent/90"
             >
               <Play size={17} fill="currentColor" />
               {t("Start Watching")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={() => {
                 toggleSaved(current.id);
@@ -203,7 +204,7 @@ export function AnimeHero({
               className="flex h-12 w-12 items-center justify-center rounded-md border border-edge bg-elevated/45 text-ink transition-colors duration-150 hover:bg-elevated"
             >
               {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
-            </button>
+            </FocusButton>
             <span className="ms-1 hidden items-center gap-1.5 text-[13px] text-ink-muted sm:inline-flex">
               {malRating && (
                 <>
@@ -218,22 +219,22 @@ export function AnimeHero({
 
       {slides.length > 1 && (
         <>
-          <button
+          <FocusButton
             type="button"
             onClick={prev}
             aria-label={t("Previous")}
             className="absolute start-3 top-[260px] z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/35 text-ink-muted transition-colors duration-150 hover:bg-canvas/65 hover:text-ink"
           >
             <ChevronLeft size={26} className="dir-icon" />
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={next}
             aria-label={t("Next")}
             className="absolute end-3 top-[260px] z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/35 text-ink-muted transition-colors duration-150 hover:bg-canvas/65 hover:text-ink"
           >
             <ChevronRight size={26} className="dir-icon" />
-          </button>
+          </FocusButton>
         </>
       )}
 
@@ -243,7 +244,7 @@ export function AnimeHero({
           {slides.length > 1 && (
             <div className="flex gap-1.5">
               {slides.map((_, i) => (
-                <button
+                <FocusButton
                   key={i}
                   type="button"
                   onClick={() => setActive(i)}

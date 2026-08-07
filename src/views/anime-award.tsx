@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, Search, Trophy, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
@@ -76,7 +77,7 @@ export function AnimeAwardView({ sourceId }: { sourceId: AwardSourceId }) {
             {noResults && (
               <p className="rounded-2xl border border-edge-soft bg-elevated/30 p-5 text-[13.5px] text-ink-muted">
                 {t("No winners match these filters.")}{" "}
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => {
                     setYear(null);
@@ -85,7 +86,7 @@ export function AnimeAwardView({ sourceId }: { sourceId: AwardSourceId }) {
                   className="text-ink underline-offset-4 hover:underline"
                 >
                   {t("Clear filters")}
-                </button>
+                </FocusButton>
               </p>
             )}
 
@@ -193,14 +194,14 @@ function FilterBar({
           className="min-w-0 flex-1 bg-transparent text-[13.5px] text-ink placeholder:text-ink-subtle focus:outline-none"
         />
         {query && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => onQuery("")}
             className="flex h-6 w-6 items-center justify-center rounded-full text-ink-subtle hover:text-ink"
             aria-label={t("Clear search")}
           >
             <X size={13} />
-          </button>
+          </FocusButton>
         )}
       </div>
       <div className="flex max-w-full flex-wrap gap-1.5">
@@ -229,7 +230,7 @@ function YearChip({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex h-8 items-center rounded-full px-3 text-[12px] font-semibold transition-colors ${
@@ -241,7 +242,7 @@ function YearChip({
       }}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -306,7 +307,7 @@ function WinnerRow({ year, title, tint }: { year: number; title: string; tint: s
         {year}
       </span>
       {clickable ? (
-        <button
+        <FocusButton
           type="button"
           onClick={onClick}
           disabled={resolving}
@@ -318,7 +319,7 @@ function WinnerRow({ year, title, tint }: { year: number; title: string; tint: s
             className="dir-icon shrink-0 text-ink-subtle opacity-0 transition-opacity group-hover:opacity-100"
             strokeWidth={2.2}
           />
-        </button>
+        </FocusButton>
       ) : (
         <span className="flex-1 text-ink">{title}</span>
       )}

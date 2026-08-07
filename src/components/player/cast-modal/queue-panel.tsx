@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Clock, Moon, Play, Plus, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -64,7 +65,7 @@ function CwSuggestionRow({
   const epLabel = episode ? `S${episode.season} · E${String(episode.episode).padStart(2, "0")}` : null;
   return (
     <div className="group flex items-center gap-3 rounded-xl bg-white/[0.04] p-2 transition-colors hover:bg-white/[0.07]">
-      <button
+      <FocusButton
         type="button"
         onClick={() => onPlay(meta, episode)}
         className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-white/[0.06]"
@@ -78,14 +79,14 @@ function CwSuggestionRow({
             <span className="block h-full bg-white" style={{ width: `${pct}%` }} />
           </span>
         )}
-      </button>
+      </FocusButton>
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="line-clamp-1 text-[14.5px] font-semibold text-white">{card.name}</span>
         <span className="text-[12.5px] text-white/45">
           {[epLabel, pct > 0 ? t("{pct}% watched", { pct }) : null].filter(Boolean).join(" · ")}
         </span>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={() => queueToggle(meta, episode)}
         aria-label={queued ? t("Remove from queue") : t("Add to queue")}
@@ -96,7 +97,7 @@ function CwSuggestionRow({
         }`}
       >
         {queued ? <Check size={17} strokeWidth={2.5} /> : <Plus size={18} strokeWidth={2.3} />}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -157,7 +158,7 @@ export function QueuePanel({
             </h3>
             <div className="flex flex-col gap-2">
               {upcoming.map((ep) => (
-                <button
+                <FocusButton
                   key={`${ep.season}-${ep.episode}`}
                   type="button"
                   onClick={() => onPlay(currentMeta, ep)}
@@ -173,7 +174,7 @@ export function QueuePanel({
                     <span className="text-[12px] text-white/45">{episodeLabel(ep)}</span>
                   </div>
                   <Play size={16} className="shrink-0 text-white/40 group-hover:text-white" fill="currentColor" />
-                </button>
+                </FocusButton>
               ))}
             </div>
           </section>
@@ -207,7 +208,7 @@ export function QueuePanel({
           {totalMins <= 0 && <span>{t("{count} in queue", { count: queue.length })}</span>}
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={() => setSleepAtEnd(!sleepAtEnd)}
             className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors ${
@@ -216,15 +217,15 @@ export function QueuePanel({
           >
             <Moon size={15} strokeWidth={2.3} />
             {t("Sleep at end")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={queueClear}
             className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-3.5 py-2 text-[13px] font-semibold text-white/70 ring-1 ring-white/12 transition-colors hover:bg-white/15"
           >
             <Trash2 size={15} strokeWidth={2.2} />
             {t("Clear")}
-          </button>
+          </FocusButton>
         </div>
       </div>
 
@@ -253,22 +254,22 @@ export function QueuePanel({
                   {[epLabel, mins > 0 ? `${mins}m` : null].filter(Boolean).join(" · ")}
                 </span>
               </div>
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => onPlay(item.meta, item.episode)}
                 aria-label={t("Play")}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform hover:scale-105"
               >
                 <Play size={17} fill="currentColor" className="ml-0.5" />
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 type="button"
                 onClick={() => queueRemove(item.id)}
                 aria-label={t("Remove from queue")}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white/45 transition-colors hover:bg-white/10 hover:text-white"
               >
                 <X size={18} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             </div>
           );
         })}

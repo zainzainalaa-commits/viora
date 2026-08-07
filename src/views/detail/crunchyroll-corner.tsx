@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   awardSourceMeta,
   findAnyAwardWins,
@@ -34,7 +35,7 @@ export function CrunchyrollAwardsCorner({
   const tooltip = wins.map((w) => `${awardSourceMeta(w.source).shortName} ${w.year} ${w.categoryName}`).join("\n");
 
   return (
-    <button
+    <FocusButton
       type="button"
       data-hero-awards
       onClick={(e) => {
@@ -89,7 +90,7 @@ export function CrunchyrollAwardsCorner({
           })}
         </div>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

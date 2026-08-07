@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PickCard } from "@/components/pick-card";
@@ -92,7 +93,7 @@ export function KidsDetailView({
               <Chip key={g}>{t(g)}</Chip>
             ))}
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={onPlay}
             className="group inline-flex h-16 items-center gap-3 rounded-full bg-[#1f8f88] ps-6 pe-9 text-white shadow-[0_18px_40px_-14px_rgba(20,90,90,0.7)] transition-transform duration-200 hover:scale-[1.05] active:scale-[0.97]"
@@ -101,7 +102,7 @@ export function KidsDetailView({
               <Play size={26} strokeWidth={0} fill="currentColor" className="ms-0.5" />
             </span>
             <span className="font-display text-[22px] font-extrabold tracking-tight">{t("Play")}</span>
-          </button>
+          </FocusButton>
         </div>
       </section>
 

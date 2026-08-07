@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { AudioLines } from "lucide-react";
 import { useSettings } from "@/lib/settings";
@@ -30,7 +31,7 @@ export function IdentifySongButton({
 
   return (
     <Tooltip label="Identify song">
-      <button
+      <FocusButton
         type="button"
         onClick={onClick}
         disabled={pending}
@@ -45,7 +46,7 @@ export function IdentifySongButton({
           strokeWidth={1.9}
           className={pending ? "animate-pulse" : undefined}
         />
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }

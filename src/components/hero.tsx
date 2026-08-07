@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { memo, useEffect, useRef, useState } from "react";
 import { Check, Play, Plus, TrendingUp } from "lucide-react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
@@ -251,7 +252,7 @@ export const Hero = memo(function Hero({
             onMouseEnter={() => setOverControls(true)}
             onMouseLeave={() => setOverControls(false)}
           >
-            <button
+            <FocusButton
               onClick={(e) => {
                 e.stopPropagation();
                 openMeta({ ...meta, logo: logo ?? meta.logo });
@@ -260,8 +261,8 @@ export const Hero = memo(function Hero({
             >
               <Play size={18} fill="currentColor" />
               {t("Play")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={(e) => {
                 e.stopPropagation();
                 toggleWatchlist({
@@ -276,7 +277,7 @@ export const Hero = memo(function Hero({
             >
               {inWatchlist ? <Check size={18} strokeWidth={2.4} /> : <Plus size={18} strokeWidth={2} />}
               {inWatchlist ? t("In Watchlist") : t("Add to Watchlist")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>

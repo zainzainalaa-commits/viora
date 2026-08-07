@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Download, ExternalLink, Loader2, Play, Zap } from "lucide-react";
 import { Flag } from "@/components/flag";
 import { CopyLinkButton, resolveStreamLink } from "@/components/player/copy-link-button";
@@ -202,15 +203,15 @@ export function PrimaryCard({
 
           <div className="flex flex-wrap items-center gap-5">
             {externalOnly ? (
-              <button
+              <FocusButton
                 onClick={onPlay}
                 className="group flex h-14 items-center gap-3 rounded-full border border-ink/30 bg-ink/[0.04] px-7 text-[14.5px] font-semibold tracking-[0.04em] text-ink transition-[transform,background-color,opacity] duration-200 hover:scale-[1.02] hover:bg-ink/[0.08] active:scale-[0.98]"
               >
                 <ExternalLink size={18} strokeWidth={2.2} />
                 Open in browser
-              </button>
+              </FocusButton>
             ) : isCached ? (
-              <button
+              <FocusButton
                 onClick={onPlay}
                 disabled={resolving}
                 className="group flex h-14 items-center gap-3 rounded-full bg-ink px-9 text-[15px] font-semibold tracking-[0.04em] text-canvas shadow-[0_12px_36px_rgba(0,0,0,0.45)] transition-[transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
@@ -226,17 +227,17 @@ export function PrimaryCard({
                   />
                 )}
                 {resolving ? "Connecting" : inSession ? "Play Together" : "Play"}
-              </button>
+              </FocusButton>
             ) : queued ? (
-              <button
+              <FocusButton
                 disabled
                 className="flex h-14 items-center gap-3 rounded-full bg-emerald-400/15 px-7 text-[14px] font-semibold tracking-[0.04em] text-emerald-300 ring-1 ring-emerald-400/40"
               >
                 <Check size={18} strokeWidth={2.5} />
                 Queued on {queueTarget?.name ?? "debrid"}
-              </button>
+              </FocusButton>
             ) : queueTarget ? (
-              <button
+              <FocusButton
                 onClick={onCache}
                 disabled={resolving}
                 className="group flex h-14 items-center gap-3 rounded-full border border-accent/55 bg-accent/12 px-7 text-[14.5px] font-semibold tracking-[0.04em] text-accent transition-[transform,background-color,opacity] duration-200 hover:scale-[1.02] hover:bg-accent/20 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
@@ -247,9 +248,9 @@ export function PrimaryCard({
                   <Download size={18} strokeWidth={2.4} />
                 )}
                 {resolving ? "Sending to TorBox" : `Cache on ${queueTarget.name}`}
-              </button>
+              </FocusButton>
             ) : canStream ? (
-              <button
+              <FocusButton
                 onClick={onPlay}
                 disabled={resolving}
                 className="group flex h-14 items-center gap-3 rounded-full bg-ink px-9 text-[15px] font-semibold tracking-[0.04em] text-canvas shadow-[0_12px_36px_rgba(0,0,0,0.45)] transition-[transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
@@ -265,14 +266,14 @@ export function PrimaryCard({
                   />
                 )}
                 {resolving ? "Connecting" : inSession ? "Stream Together" : "Stream"}
-              </button>
+              </FocusButton>
             ) : (
-              <button
+              <FocusButton
                 disabled
                 className="flex h-14 items-center gap-3 rounded-full bg-canvas/60 px-7 text-[14px] font-semibold tracking-[0.04em] text-ink-subtle ring-1 ring-edge-soft"
               >
                 Not cached
-              </button>
+              </FocusButton>
             )}
             <PlayProvenance stream={stream} debrids={debrids} isCached={isCached} addonLogo={addonLogo} />
             {link && (

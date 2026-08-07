@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Row } from "@/components/row";
 import { ServiceLogo } from "@/components/service-logo";
 import { useT } from "@/lib/i18n";
@@ -26,11 +27,11 @@ function ServiceTile({
   onOpen: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onOpen}
       className="harbor-service-tile group flex h-20 w-full items-center justify-center rounded-xl bg-elevated/40 transition-colors duration-200 hover:bg-elevated"
     >
       <ServiceLogo service={service} height={26} />
-    </button>
+    </FocusButton>
   );
 }

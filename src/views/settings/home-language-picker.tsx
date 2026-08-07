@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Globe } from "lucide-react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -49,12 +50,12 @@ export function HomeLanguagePicker() {
           )}
         </span>
         {count > 0 && (
-          <button
+          <FocusButton
             onClick={() => update({ homeLanguages: [] })}
             className="ms-auto rounded-md px-2 py-1 text-[11.5px] font-medium text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
           >
             {t("Clear")}
-          </button>
+          </FocusButton>
         )}
       </div>
 
@@ -62,7 +63,7 @@ export function HomeLanguagePicker() {
         {LANGS.map(({ code, native, name, flags }) => {
           const on = selected.includes(code);
           return (
-            <button
+            <FocusButton
               key={code}
               onClick={() => toggle(code)}
               className={`group relative flex flex-col items-start gap-0.5 rounded-xl border px-3 py-2.5 text-start transition-all ${
@@ -89,7 +90,7 @@ export function HomeLanguagePicker() {
                 <LangFlags codes={flags} />
                 <span className="truncate text-[11px] text-ink-subtle">{t(name)}</span>
               </span>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

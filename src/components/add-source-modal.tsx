@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
@@ -73,32 +74,32 @@ export function AddSourceModal({
             <h2 className="text-[19px] font-medium tracking-tight text-ink">{t("Add Custom Source")}</h2>
             <p className="text-[12.5px] leading-relaxed text-ink-muted">{t("Provide a JSON link or paste it directly.")}</p>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex gap-2 rounded-lg bg-surface-muted p-1">
-          <button
+          <FocusButton
             onClick={() => setMode("url")}
             className={`flex-1 rounded-md py-1.5 text-[13px] font-medium transition-colors ${
               mode === "url" ? "bg-surface text-ink shadow-sm" : "text-ink-subtle hover:text-ink"
             }`}
           >
             {t("JSON URL")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={() => setMode("json")}
             className={`flex-1 rounded-md py-1.5 text-[13px] font-medium transition-colors ${
               mode === "json" ? "bg-surface text-ink shadow-sm" : "text-ink-subtle hover:text-ink"
             }`}
           >
             {t("Paste JSON")}
-          </button>
+          </FocusButton>
         </div>
 
         {mode === "url" ? (
@@ -121,20 +122,20 @@ export function AddSourceModal({
         {error && <p className="text-[12.5px] font-medium text-red-400">{error}</p>}
 
         <div className="mt-2 flex justify-end gap-3">
-          <button
+          <FocusButton
             onClick={onClose}
             disabled={loading}
             className="rounded-full border border-edge bg-transparent px-5 py-2 text-[13px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             {t("Cancel")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={handleSave}
             disabled={loading}
             className="rounded-full bg-accent px-5 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {loading ? t("Loading...") : t("Add Source")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>,

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronsRight, FastForward, Play, X } from "lucide-react";
 import { AdSkipIcon } from "@/components/icons/adskip-icon";
 import { useEffect, useState } from "react";
@@ -74,9 +75,13 @@ export function SkipPill({
       ? t("Skip Intro")
       : mounted.kind === "recap"
         ? t("Skip Recap")
-        : isOutroNext
-          ? t("Next Episode")
-          : t("Skip Credits");
+        : mounted.kind === "flagged"
+          ? // Named for what it is, not for what it might contain: the source
+            // marks the scene without saying why.
+            t("Skip Scene")
+          : isOutroNext
+            ? t("Next Episode")
+            : t("Skip Credits");
   const action = isOutroNext ? onNextEpisode : onSkip;
   const Icon = isOutroNext ? ChevronsRight : FastForward;
 
@@ -88,7 +93,7 @@ export function SkipPill({
           : "bottom-40 opacity-0 translate-y-2"
       }`}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={action}
         className={`pointer-events-auto inline-flex items-center gap-2 rounded-full border bg-black/75 px-5 py-2.5 text-[14px] font-semibold text-white shadow-[0_18px_50px_-15px_rgba(0,0,0,0.85)] backdrop-blur-md transition-[background-color,transform] hover:bg-black/90 active:scale-[0.97] ${
@@ -97,9 +102,9 @@ export function SkipPill({
       >
         {isAd ? <AdSkipIcon className="h-[18px] w-[18px]" /> : <Icon size={18} strokeWidth={2.2} />}
         {label}
-      </button>
+      </FocusButton>
       {onDismiss && !isOutroNext && (
-        <button
+        <FocusButton
           type="button"
           onClick={onDismiss}
           aria-label={t("Hide this Skip button")}
@@ -107,7 +112,7 @@ export function SkipPill({
           className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/75 text-white/70 shadow-[0_18px_50px_-15px_rgba(0,0,0,0.85)] backdrop-blur-md transition-colors hover:bg-black/90 hover:text-white active:scale-[0.97]"
         >
           <X size={16} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -179,24 +184,24 @@ function UpNextCard({
               )}
             </div>
             {onCancel && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={onCancel}
                 aria-label={t("Cancel autoplay")}
                 className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
               >
                 <X size={13} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             )}
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={onPlay}
             className="mt-auto inline-flex h-9 items-center justify-center gap-1.5 self-start rounded-full bg-white px-4 text-[12.5px] font-semibold text-black transition-opacity hover:opacity-90"
           >
             <Play size={12} strokeWidth={2.4} className="fill-current" />
             {t("Play now")}
-          </button>
+          </FocusButton>
         </div>
         <div className="absolute inset-x-0 bottom-0 h-[3px] bg-white/15">
           <div

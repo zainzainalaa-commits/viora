@@ -1,3 +1,5 @@
+import { isDpadPrimary } from "@/lib/platform";
+import { FocusButton, FocusSection } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Check, HardDrive, Layers, Pencil, Play, Plus, RotateCcw, Star } from "lucide-react";
 import { animeDetails, franchiseTags, type FranchiseEntry } from "@/lib/providers/anime-detail";
@@ -1008,7 +1010,11 @@ export function DetailView({
       : t("Play");
 
   return (
-    <main
+    // `scrolls` makes this the vertical half of the reveal chain, so a control
+    // or a row further down the page brings the page to it.
+    <FocusSection
+      as="main"
+      scrolls
       ref={scrollRef}
       className="absolute inset-0 z-30 overflow-y-auto bg-canvas"
     >
@@ -1048,7 +1054,13 @@ export function DetailView({
                 </p>
               )}
               <TitlePlate title={title} logo={logo} loading={loading} />
-              <div className="mt-6 flex flex-wrap items-center gap-3 text-[13px] font-medium text-ink-muted">
+              {/* Each pill opens a filter, which is a fine mouse target but a
+                  poor one for a remote: four stops between the title and Play.
+                  Excluded from D-pad traversal only — still clickable. */}
+              <div
+                data-nav-skip={isDpadPrimary() ? "true" : undefined}
+                className="mt-6 flex flex-wrap items-center gap-3 text-[13px] font-medium text-ink-muted"
+              >
                 {year && (
                   <Pill
                     onClick={() => {
@@ -1099,7 +1111,7 @@ export function DetailView({
                   </Pill>
                 )}
                 {showSeasonPill && (
-                  <button
+                  <FocusButton
                     onClick={() => {
                       document
                         .querySelector('[data-anime-episodes]')
@@ -1108,7 +1120,7 @@ export function DetailView({
                     className="flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/12 px-3 py-1 text-[12.5px] font-semibold text-accent transition-colors hover:bg-accent/20"
                   >
                     {seasonPillLabel}
-                  </button>
+                  </FocusButton>
                 )}
                 {meta.addonOrigin ? (
                   <span className="flex items-center gap-2 rounded-full border border-edge bg-canvas/80 py-1 ps-1.5 pe-3 text-[12.5px] font-medium text-ink-muted">
@@ -1152,8 +1164,14 @@ export function DetailView({
                   <UpcomingCta detail={detail} onTry={() => smartPlay()} />
                 ) : (
                   <PlayModeHint>
-                  <button
+                  <FocusButton
+                    // The first thing you can do on this page, so it is where
+                    // focus lands when the page opens.
+                    autoFocus
                     onClick={() => smartPlay(false)}
+                    // Right-click opens the source picker on desktop; holding OK
+                    // is the same gesture on a remote.
+                    onLongPress={() => void smartPlay(true)}
                     onContextMenu={(e) => {
                       e.preventDefault();
                       void smartPlay(true);
@@ -1162,11 +1180,11 @@ export function DetailView({
                   >
                     <Play size={18} fill="currentColor" />
                     {smartPlayLabel}
-                  </button>
+                  </FocusButton>
                   </PlayModeHint>
                 )}
                 {actionStage < 2 && (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() =>
                       toggleWatchlist({
@@ -1195,7 +1213,7 @@ export function DetailView({
                         {t("Add to Watchlist")}
                       </>
                     )}
-                  </button>
+                  </FocusButton>
                 )}
                 {actionStage < 2 && isAnime && (
                   <AddToAnilistButton
@@ -1254,7 +1272,7 @@ export function DetailView({
                   />
                 ) : (
                   <>
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() =>
                         toggleFavorite({
@@ -1273,8 +1291,8 @@ export function DetailView({
                       }`}
                     >
                       <Star size={20} strokeWidth={isFav ? 0 : 1.9} fill={isFav ? "currentColor" : "none"} />
-                    </button>
-                    <button
+                    </FocusButton>
+                    <FocusButton
                       ref={addToListRef}
                       type="button"
                       onClick={() => setAddToListOpen((v) => !v)}
@@ -1283,7 +1301,7 @@ export function DetailView({
                       className="group flex h-12 w-12 items-center justify-center rounded-full border border-edge bg-canvas/80 text-ink transition-[transform,background-color,border-color] duration-200 hover:border-ink-subtle hover:bg-canvas/95 active:scale-[0.94]"
                     >
                       <Layers size={20} strokeWidth={1.9} />
-                    </button>
+                    </FocusButton>
                     <AddToListMenu
                       item={listSeed}
                       anchorRef={addToListRef}
@@ -1291,7 +1309,7 @@ export function DetailView({
                       onClose={() => setAddToListOpen(false)}
                     />
                     {settings.showWatchedButton && meta.type === "movie" && (
-                      <button
+                      <FocusButton
                         type="button"
                         onClick={markThisMovieWatched}
                         aria-label={t("Mark watched")}
@@ -1303,10 +1321,10 @@ export function DetailView({
                         }`}
                       >
                         <Check size={20} strokeWidth={2.4} />
-                      </button>
+                      </FocusButton>
                     )}
                     {trailerCandidate && (
-                      <button
+                      <FocusButton
                         type="button"
                         onClick={() => setTrailerOpen(true)}
                         aria-label={t("Watch trailer")}
@@ -1314,7 +1332,7 @@ export function DetailView({
                         className="group flex h-12 w-12 items-center justify-center rounded-full border border-edge bg-canvas/80 text-ink transition-[transform,background-color,border-color] duration-200 hover:border-ink-subtle hover:bg-canvas/95 active:scale-[0.94]"
                       >
                         <PreviewIcon size={20} />
-                      </button>
+                      </FocusButton>
                     )}
                     {meta.type === "movie" && <EpisodeDownloadButton meta={meta} variant="bar" />}
                     {(isSeries || isAnime) && (
@@ -1328,7 +1346,7 @@ export function DetailView({
                   </>
                 )}
                 {liveContext && (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={promoteMetaToRoot}
                     className="flex h-12 items-center gap-2 rounded-full border border-edge bg-canvas/80 px-5 text-[14px] font-medium text-ink-muted transition-colors hover:border-ink-subtle hover:bg-canvas/95 hover:text-ink"
@@ -1338,7 +1356,7 @@ export function DetailView({
                       : meta.type === "anime"
                         ? t("Open in Anime")
                         : t("Open in Movies")}
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             </div>
@@ -1581,15 +1599,15 @@ export function DetailView({
             <>
               <div className="flex items-center justify-end gap-2">
                 {layoutEdit && hasChanges && (
-                  <button
+                  <FocusButton
                     onClick={() => persist(resetDetailCustomization())}
                     className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/80 px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
                   >
                     <RotateCcw size={12} strokeWidth={2.2} />
                     {t("Reset")}
-                  </button>
+                  </FocusButton>
                 )}
-                <button
+                <FocusButton
                   onClick={() => setLayoutEdit((v) => !v)}
                   className={`flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-[12px] font-medium transition-colors ${
                     layoutEdit
@@ -1599,7 +1617,7 @@ export function DetailView({
                 >
                   <Pencil size={12} strokeWidth={2.4} />
                   {layoutEdit ? t("Done editing") : t("Customize layout")}
-                </button>
+                </FocusButton>
               </div>
               <FadeInUp>
               <ContentRails
@@ -1629,6 +1647,6 @@ export function DetailView({
           onClose={() => setTrailerOpen(false)}
         />
       )}
-    </main>
+    </FocusSection>
   );
 }

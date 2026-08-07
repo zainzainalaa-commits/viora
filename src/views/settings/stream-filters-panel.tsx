@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Filter, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -43,7 +44,7 @@ export function StreamFiltersPanel() {
             <Filter size={11} strokeWidth={2.3} />
             {t("YOUR FILTERS")}
           </span>
-          <button
+          <FocusButton
             type="button"
             onClick={() => {
               setEditing(null);
@@ -53,7 +54,7 @@ export function StreamFiltersPanel() {
           >
             <Plus size={13} strokeWidth={2.4} />
             {t("New filter")}
-          </button>
+          </FocusButton>
         </div>
 
         {filters.length === 0 ? (
@@ -81,7 +82,7 @@ export function StreamFiltersPanel() {
                     {summarizeFilter(f)}
                   </span>
                 </div>
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => {
                     setBuilding(false);
@@ -92,15 +93,15 @@ export function StreamFiltersPanel() {
                 >
                   <Pencil size={12} strokeWidth={2} />
                   {t("Edit")}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   type="button"
                   onClick={() => remove(f.id)}
                   aria-label={t("Delete filter")}
                   className="flex h-7 w-7 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-danger/15 hover:text-danger"
                 >
                   <Trash2 size={12} strokeWidth={1.9} />
-                </button>
+                </FocusButton>
               </li>
             ))}
           </ul>

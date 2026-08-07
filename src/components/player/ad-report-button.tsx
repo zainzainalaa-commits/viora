@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { AdSkipIcon } from "@/components/icons/adskip-icon";
 import { useSettings } from "@/lib/settings";
@@ -76,7 +77,7 @@ export function AdReportButton({
       >
         <div className="relative">
           {!settings.adReportFirstSeen && <AdReportFirstTip onDismiss={dismissTip} />}
-          <button
+          <FocusButton
             type="button"
             onClick={openModal}
             aria-label={t("Report an injected ad")}
@@ -84,7 +85,7 @@ export function AdReportButton({
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white/90 shadow-[0_14px_40px_-15px_rgba(0,0,0,0.85)] backdrop-blur-md transition-colors hover:bg-black/85 hover:text-white"
           >
             <AdSkipIcon className="h-[18px] w-[18px]" />
-          </button>
+          </FocusButton>
         </div>
       </div>
       <AdReportModal open={open} onClose={() => setOpen(false)} onSubmit={onSubmit} />

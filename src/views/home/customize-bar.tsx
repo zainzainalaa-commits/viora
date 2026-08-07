@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Pencil, RotateCcw, Plus } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import type { HomeRowCustomization } from "@/lib/home-customization";
@@ -23,24 +24,24 @@ export function CustomizeBar({
   return (
     <div className="flex items-center justify-end gap-2">
       {editMode && hasChanges && (
-        <button
+        <FocusButton
           onClick={onReset}
           className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/80 px-2.5 text-[12px] font-medium text-ink-muted backdrop-blur-md transition-colors hover:bg-canvas hover:text-ink"
         >
           <RotateCcw size={12} strokeWidth={2.2} />
           {t("Reset")}
-        </button>
+        </FocusButton>
       )}
       {editMode && onAddSource && (
-        <button
+        <FocusButton
           onClick={onAddSource}
           className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/80 px-2.5 text-[12px] font-medium text-ink-muted backdrop-blur-md transition-colors hover:bg-canvas hover:text-ink"
         >
           <Plus size={12} strokeWidth={2.2} />
           {t("Add Source")}
-        </button>
+        </FocusButton>
       )}
-      <button
+      <FocusButton
         onClick={onToggleEdit}
         className={`flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-[12px] font-medium backdrop-blur-md transition-colors ${
           editMode
@@ -50,7 +51,7 @@ export function CustomizeBar({
       >
         <Pencil size={12} strokeWidth={2.4} />
         {editMode ? t("Done editing") : t("Customize home")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

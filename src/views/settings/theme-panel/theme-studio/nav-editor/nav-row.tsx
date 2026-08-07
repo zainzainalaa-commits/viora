@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Eye, EyeOff, GripVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { NavItem } from "@/chrome/nav-items";
@@ -104,16 +105,16 @@ export function NavRow({
         </span>
       )}
       {renamable && isRenamed && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => onRename("")}
           title="Reset to default name"
           className="shrink-0 rounded-md bg-accent/15 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-accent transition-colors hover:bg-accent/25"
         >
           Renamed
-        </button>
+        </FocusButton>
       )}
-      <button
+      <FocusButton
         type="button"
         onClick={onToggleHidden}
         title={hidden ? "Show in nav" : "Hide from nav"}
@@ -125,7 +126,7 @@ export function NavRow({
         }`}
       >
         {hidden ? <EyeOff size={15} strokeWidth={2.2} /> : <Eye size={15} strokeWidth={2.2} />}
-      </button>
+      </FocusButton>
     </div>
   );
 }

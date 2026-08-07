@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Loader2, Wifi, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -109,13 +110,13 @@ export function RemoteServerSection() {
           className="h-11 flex-1 rounded-xl border border-edge bg-canvas px-3.5 font-mono text-[13px] text-ink transition-colors focus:border-accent"
         />
         {saved && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => update({ remoteStreamServerUrl: "" })}
             className="h-11 shrink-0 rounded-xl border border-edge px-4 text-[13px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             {t("Forget")}
-          </button>
+          </FocusButton>
         )}
       </div>
 
@@ -134,7 +135,7 @@ export function RemoteServerSection() {
                 {t("Probes the server's settings endpoint from this device.")}
               </span>
             </div>
-            <button
+            <FocusButton
               type="button"
               onClick={() => void test()}
               disabled={testing}
@@ -142,7 +143,7 @@ export function RemoteServerSection() {
             >
               {testing ? <Loader2 size={13} strokeWidth={1.9} className="animate-spin" /> : <Wifi size={13} strokeWidth={1.9} />}
               {testing ? t("Testing") : t("Run test")}
-            </button>
+            </FocusButton>
           </div>
           {result && (
             <div className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 ${result.ok ? "border-accent/40 bg-accent/10" : "border-danger/40 bg-danger/10"}`}>

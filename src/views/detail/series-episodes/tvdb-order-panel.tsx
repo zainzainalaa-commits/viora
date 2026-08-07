@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -104,7 +105,7 @@ export function TvdbOrderPanel({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => (menu ? setMenu(null) : openMenu())}
@@ -115,7 +116,7 @@ export function TvdbOrderPanel({
           size={15}
           className={`text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div
@@ -130,7 +131,7 @@ export function TvdbOrderPanel({
                   const on =
                     o.value === activeType || (activeType === "official" && o.value === "aired");
                   return (
-                    <button
+                    <FocusButton
                       key={o.value}
                       onClick={() => onSelectType(o.value)}
                       className={`h-8 rounded-full px-3 text-[12.5px] font-medium transition-colors ${
@@ -138,7 +139,7 @@ export function TvdbOrderPanel({
                       }`}
                     >
                       {o.label}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>
@@ -189,7 +190,7 @@ function OrderRow({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`grid w-full grid-cols-[1fr_auto] items-center gap-x-3 px-4 py-2.5 text-start transition-colors ${
         active ? "bg-ink/10 text-ink" : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
@@ -208,6 +209,6 @@ function OrderRow({
         {sub && <span className="text-[11.5px] text-ink-subtle">{sub}</span>}
       </span>
       <span className="tabular-nums text-[12.5px] text-ink-subtle">{count}</span>
-    </button>
+    </FocusButton>
   );
 }

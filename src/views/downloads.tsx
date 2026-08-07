@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo, type ReactNode } from "react";
 import { Check, Download as DownloadIcon, FolderOpen, Pause, Play, Trash2, X } from "lucide-react";
 import { Poster, usePosterChain } from "@/components/poster";
@@ -310,7 +311,7 @@ function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?: boolea
 
 function RowBtn({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -318,6 +319,6 @@ function RowBtn({ label, onClick, children }: { label: string; onClick: () => vo
       className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-ink/10 hover:text-ink"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

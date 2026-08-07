@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect } from "react";
 import { Tv } from "lucide-react";
 import { useView } from "@/lib/view";
@@ -39,20 +40,20 @@ export function TogetherLeaveForLiveModal() {
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-2.5">
-          <button
+          <FocusButton
             type="button"
             onClick={cancelLeavePartyForLive}
             className="inline-flex h-11 items-center rounded-xl border border-edge px-5 text-[14px] font-semibold text-ink-muted transition-colors hover:text-ink"
           >
             Stay in party
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={confirmLeavePartyForLive}
             className="inline-flex h-11 items-center rounded-xl bg-ink px-5 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.98]"
           >
             Leave & watch live
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronLeft, RefreshCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -21,7 +22,7 @@ export function PickerHeader({
   return (
     <header className="flex flex-col gap-3">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <button
+        <FocusButton
           type="button"
           onClick={onBack}
           className="group/back -ms-1 flex w-fit items-center gap-3 rounded-full py-1.5 pe-6 ps-1.5 text-[17px] font-semibold text-ink-muted transition-colors hover:text-ink"
@@ -30,9 +31,9 @@ export function PickerHeader({
             <ChevronLeft size={26} strokeWidth={2.4} className="dir-icon" />
           </span>
           Back
-        </button>
+        </FocusButton>
         {onRefresh && (
-          <button
+          <FocusButton
             type="button"
             onClick={onRefresh}
             disabled={refreshing}
@@ -42,7 +43,7 @@ export function PickerHeader({
           >
             <RefreshCw size={17} strokeWidth={2.4} className={refreshing ? "animate-spin" : ""} />
             {t("Refresh")}
-          </button>
+          </FocusButton>
         )}
       </div>
       {episode ? (
@@ -94,7 +95,7 @@ function CollapsibleOverview({ text }: { text: string }) {
         {text}
       </p>
       {(truncated || expanded) && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => setExpanded((v) => !v)}
           className="mt-1.5 inline-flex items-center gap-1 text-[13px] font-semibold text-ink-subtle transition-colors hover:text-ink"
@@ -105,7 +106,7 @@ function CollapsibleOverview({ text }: { text: string }) {
             strokeWidth={2.4}
             className={`transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
           />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

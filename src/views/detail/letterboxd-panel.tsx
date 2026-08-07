@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from "react";
 import { Bookmark, Eye, ExternalLink, Heart, Loader2, Star, X } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -213,13 +214,13 @@ function LetterboxdPanelInner({ meta, imdbId }: { meta: Meta; imdbId: string | n
           <h3 className="text-[15px] font-semibold tracking-tight text-ink">{t("Letterboxd")}</h3>
         </div>
         {filmUrl && (
-          <button
+          <FocusButton
             onClick={() => openUrl(filmUrl)}
             className="flex items-center gap-1.5 rounded-lg border border-edge-soft px-3 py-1.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {t("Open on Letterboxd")}
             <ExternalLink size={11} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         )}
       </div>
 
@@ -286,13 +287,13 @@ function LetterboxdPanelInner({ meta, imdbId }: { meta: Meta; imdbId: string | n
             <div className="flex flex-col gap-4 rounded-xl border border-edge-soft bg-canvas/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-medium text-ink">{t("Rate this film")}</span>
-                <button
+                <FocusButton
                   onClick={() => { setShowRater(false); setPendingRating(yourRating); }}
                   className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-canvas/40 hover:text-ink"
                   aria-label={t("Close")}
                 >
                   <X size={14} />
-                </button>
+                </FocusButton>
               </div>
 
               {/* Stars — each star is split into left (half) and right (full) zones */}
@@ -306,7 +307,7 @@ function LetterboxdPanelInner({ meta, imdbId }: { meta: Meta; imdbId: string | n
                   const isHalf = starIndex - 0.5 === effective;
                   const isDim = starIndex > effective + 0.5;
                   return (
-                    <button
+                    <FocusButton
                       key={starIndex}
                       onClick={() => {
                         const target = pendingRating ?? starIndex;
@@ -342,7 +343,7 @@ function LetterboxdPanelInner({ meta, imdbId }: { meta: Meta; imdbId: string | n
                           style={{ transition: "color 0.15s" }}
                         />
                       )}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>
@@ -357,22 +358,22 @@ function LetterboxdPanelInner({ meta, imdbId }: { meta: Meta; imdbId: string | n
                 </div>
                 <div className="flex items-center gap-2">
                   {yourRating != null && (
-                    <button
+                    <FocusButton
                       onClick={() => performRate("remove")}
                       disabled={!!actionBusy}
                       className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-subtle transition-colors hover:text-red-300 disabled:opacity-50"
                     >
                       {t("Remove rating")}
-                    </button>
+                    </FocusButton>
                   )}
-                  <button
+                  <FocusButton
                     onClick={() => pendingRating != null && performRate(pendingRating)}
                     disabled={!!actionBusy || pendingRating == null}
                     className="flex items-center gap-1.5 rounded-lg bg-amber-400/90 px-4 py-2 text-[12.5px] font-semibold text-canvas transition-all hover:bg-amber-400 active:scale-95 disabled:opacity-40"
                   >
                     {actionBusy === "rate" ? <Loader2 size={13} className="animate-spin" /> : <Star size={13} fill="currentColor" />}
                     {t("Submit")}
-                  </button>
+                  </FocusButton>
                 </div>
               </div>
             </div>
@@ -430,13 +431,13 @@ function ActionButton({
           ? "border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20"
           : "border-edge-soft bg-canvas/40 text-ink-muted hover:border-edge hover:text-ink";
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       disabled={busy}
       className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-[12.5px] font-medium transition-colors disabled:opacity-50 ${toneClass}`}
     >
       {busy ? <Loader2 size={14} className="animate-spin" /> : icon}
       {label}
-    </button>
+    </FocusButton>
   );
 }

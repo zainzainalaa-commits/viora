@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import { FormatBadge, type BadgeKind } from "@/components/format-badge";
@@ -62,7 +63,7 @@ export function FacetMenuRow({
           onEdit={() => onEditFilter(f)}
         />
       ))}
-      <button
+      <FocusButton
         type="button"
         onClick={onNewFilter}
         title={filters.length > 0 ? "New filter" : "Create a custom filter"}
@@ -70,15 +71,15 @@ export function FacetMenuRow({
       >
         <Plus size={13} strokeWidth={2.6} />
         {filters.length === 0 && "Filter"}
-      </button>
+      </FocusButton>
       {narrowed && (
-        <button
+        <FocusButton
           type="button"
           onClick={reset}
           className="px-2 py-1.5 text-[11.5px] font-semibold text-ink-subtle transition-colors hover:text-ink"
         >
           Reset
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -101,7 +102,7 @@ function FacetMenu({
   const badgeSlot = entry.options.some((o) => facetBadge(entry.dim.key, o.key) !== null);
   return (
     <div className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={onToggle}
         aria-expanded={open}
@@ -119,10 +120,10 @@ function FacetMenu({
             active ? "text-canvas/70" : "text-ink-subtle"
           }`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <>
-          <button
+          <FocusButton
             type="button"
             aria-label="Close menu"
             onClick={onClose}
@@ -171,7 +172,7 @@ function MenuItem({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-start text-[13px] transition-colors hover:bg-raised ${
@@ -190,7 +191,7 @@ function MenuItem({
         strokeWidth={2.6}
         className={selected ? "text-ink" : "invisible"}
       />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -213,7 +214,7 @@ function SavedChip({
           : "bg-elevated/50 text-ink-muted ring-1 ring-edge-soft/60 hover:bg-elevated hover:text-ink"
       }`}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={onToggle}
         aria-pressed={active}
@@ -221,8 +222,8 @@ function SavedChip({
         className="max-w-[180px] truncate py-1.5 pe-1 ps-3"
       >
         {filter.name}
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={onEdit}
         aria-label={`Edit ${filter.name}`}
@@ -231,7 +232,7 @@ function SavedChip({
         }`}
       >
         <Pencil size={12} strokeWidth={2.2} />
-      </button>
+      </FocusButton>
     </span>
   );
 }

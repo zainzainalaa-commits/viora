@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useMemo, useState } from "react";
 import { Check } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -81,7 +82,7 @@ export function MediaGallery({ detail, title, logo }: { detail: TmdbDetail; titl
         <h3 className="text-[17px] font-medium tracking-tight text-ink">{t("Media")}</h3>
         <div className="flex flex-wrap items-center gap-1.5">
           {tabs.map((tab) => (
-            <button
+            <FocusButton
               key={tab.id}
               type="button"
               onClick={() => setActive(tab.id)}
@@ -93,7 +94,7 @@ export function MediaGallery({ detail, title, logo }: { detail: TmdbDetail; titl
             >
               {tab.label}
               <span className="text-[11px] tabular-nums text-ink-subtle">{tab.count}</span>
-            </button>
+            </FocusButton>
           ))}
         </div>
       </div>

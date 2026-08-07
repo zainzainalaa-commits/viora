@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Info, Plus, Search, X } from "lucide-react";
 import { AVATAR_CATALOG, avatarUrl } from "@/lib/avatars/catalog";
@@ -97,14 +98,14 @@ export function AvatarCatalogModal({
               className="h-10 w-56 rounded-xl border border-edge bg-canvas ps-9 pe-3 text-[13.5px] text-ink outline-none transition-colors focus:border-ink-subtle"
             />
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             type="button"
             aria-label={t("common.close")}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             <X size={18} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="relative border-y border-edge-soft">
@@ -135,7 +136,7 @@ export function AvatarCatalogModal({
                 const url = avatarUrl(it.id);
                 const selected = current === url;
                 return (
-                  <button
+                  <FocusButton
                     key={it.id}
                     type="button"
                     onClick={() => onPick(it.id)}
@@ -163,7 +164,7 @@ export function AvatarCatalogModal({
                     >
                       {it.name}
                     </span>
-                  </button>
+                  </FocusButton>
                 );
               })}
               {franchise === null && !query && (
@@ -194,7 +195,7 @@ function Disclaimer() {
   const show = hover || pinned;
   return (
     <span className="relative inline-flex">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setPinned((v) => !v)}
         onMouseEnter={() => setHover(true)}
@@ -207,7 +208,7 @@ function Disclaimer() {
         }`}
       >
         <Info size={13} strokeWidth={2.2} />
-      </button>
+      </FocusButton>
       {show && (
         <div className="animate-popover-in absolute start-0 top-full z-20 mt-1.5 w-[290px] rounded-xl border border-edge-soft bg-elevated/97 px-3.5 py-3 text-start shadow-[0_18px_50px_-15px_rgba(0,0,0,0.7)] backdrop-blur-md">
           <p className="text-[12px] leading-relaxed text-ink-muted">
@@ -229,7 +230,7 @@ function ScrollEdge({ side, onClick }: { side: "start" | "end"; onClick: () => v
         side === "start" ? "start-0 bg-gradient-to-r ps-3 pe-10" : "end-0 bg-gradient-to-l pe-3 ps-10"
       }`}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={onClick}
         aria-label={side === "start" ? t("Scroll left") : t("Scroll right")}
@@ -240,7 +241,7 @@ function ScrollEdge({ side, onClick }: { side: "start" | "end"; onClick: () => v
         ) : (
           <ChevronRight size={15} strokeWidth={2.4} className="dir-icon" />
         )}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -255,7 +256,7 @@ function FilterChip({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${
@@ -265,6 +266,6 @@ function FilterChip({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

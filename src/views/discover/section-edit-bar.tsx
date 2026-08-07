@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Eye, EyeOff } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -13,7 +14,7 @@ export function SectionEditBar({
   const t = useT();
   return (
     <div className="mb-2 flex items-center gap-1.5 rounded-xl border border-edge-soft bg-canvas/60 px-2 py-1.5">
-      <button
+      <FocusButton
         onClick={onToggle}
         title={hidden ? t("Show section") : t("Hide section")}
         className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
@@ -21,7 +22,7 @@ export function SectionEditBar({
         }`}
       >
         {hidden ? <EyeOff size={14} strokeWidth={2.2} /> : <Eye size={14} strokeWidth={2.2} />}
-      </button>
+      </FocusButton>
       <span className="flex-1 truncate text-[13px] font-medium text-ink">{name}</span>
       {hidden && (
         <span className="rounded-md bg-danger/15 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-danger">

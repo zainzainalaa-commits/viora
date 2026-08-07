@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, FilePlus2, Palette, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { ThemePreset } from "@/lib/theme";
@@ -45,7 +46,7 @@ export function LibraryGrid({
 
 function CreateTile({ onCreate }: { onCreate: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onCreate}
       className="group relative flex h-full min-h-[252px] flex-col items-start justify-between overflow-hidden rounded-2xl border border-accent/30 p-5 text-start transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_18px_40px_-22px_var(--color-accent-soft)]"
@@ -80,7 +81,7 @@ function CreateTile({ onCreate }: { onCreate: () => void }) {
           Open studio →
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -97,7 +98,7 @@ function ImportTile({ onUpload }: { onUpload: (file: File) => void }) {
     input.click();
   };
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={pick}
       onDragOver={(e) => {
@@ -143,7 +144,7 @@ function ImportTile({ onUpload }: { onUpload: (file: File) => void }) {
           Browse files →
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -204,7 +205,7 @@ function LibraryCard({
           )}
         </div>
         <div className="flex items-center justify-between gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onActivate}
             className={`h-8 flex-1 rounded-lg text-[12px] font-semibold transition-opacity ${
@@ -214,7 +215,7 @@ function LibraryCard({
             }`}
           >
             {active ? "Active" : "Apply"}
-          </button>
+          </FocusButton>
           <ActionBtn label="Copy" onClick={onExport}>
             <Copy size={12} strokeWidth={2.2} />
           </ActionBtn>
@@ -272,7 +273,7 @@ function ActionBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       aria-label={label}
       title={label}
@@ -282,6 +283,6 @@ function ActionBtn({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

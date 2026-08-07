@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { REPO_URL } from "@/lib/brand";
 import { GitPullRequest, Github } from "lucide-react";
 import { openUrl } from "@/lib/window";
@@ -20,22 +21,22 @@ export function ContributorCard() {
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        {REPO && <button
+        {REPO && <FocusButton
           type="button"
           onClick={() => openUrl(REPO)}
           className="flex h-9 items-center gap-2 rounded-lg border border-edge-soft bg-elevated px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           <Github size={13} strokeWidth={1.9} />
           Open repo on GitHub
-        </button>}
-        <button
+        </FocusButton>}
+        <FocusButton
           type="button"
           onClick={() => openUrl(`${REPO}/pulls`)}
           className="flex h-9 items-center gap-2 rounded-lg border border-edge-soft bg-elevated px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           <GitPullRequest size={13} strokeWidth={1.9} />
           Browse pull requests
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

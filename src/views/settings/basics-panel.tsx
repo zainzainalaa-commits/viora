@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight, Eye, EyeOff, Languages, LogIn, MonitorPlay, Palette, Zap } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
@@ -102,7 +103,7 @@ function SignInRow({
 
   if (!signedIn) {
     return (
-      <button
+      <FocusButton
         type="button"
         onClick={onManage}
         className="group flex items-center gap-4 rounded-2xl border border-edge-soft bg-elevated/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-elevated/60"
@@ -123,7 +124,7 @@ function SignInRow({
           size={18}
           className="shrink-0 text-ink-subtle transition-transform group-hover:translate-x-0.5"
         />
-      </button>
+      </FocusButton>
     );
   }
 
@@ -139,25 +140,25 @@ function SignInRow({
             {email ? (reveal ? email : maskEmail(email)) : t("Your library and watch progress sync here.")}
           </span>
           {email && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => setReveal((r) => !r)}
               aria-label={reveal ? t("Hide email") : t("Show email")}
               className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-ink-subtle transition-colors hover:bg-canvas/50 hover:text-ink"
             >
               {reveal ? <EyeOff size={14} /> : <Eye size={14} />}
-            </button>
+            </FocusButton>
           )}
         </span>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onManage}
         className="group flex shrink-0 items-center gap-1 rounded-full bg-canvas/70 px-3 py-1.5 text-[12px] font-semibold text-ink-muted transition-colors hover:text-ink"
       >
         {t("Manage")}
         <ChevronRight size={15} className="transition-transform group-hover:translate-x-0.5" />
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -178,7 +179,7 @@ function LaunchRow({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className="group flex items-center gap-4 rounded-2xl border border-edge-soft bg-elevated/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-elevated/60"
@@ -207,6 +208,6 @@ function LaunchRow({
         size={18}
         className="shrink-0 text-ink-subtle transition-transform group-hover:translate-x-0.5"
       />
-    </button>
+    </FocusButton>
   );
 }

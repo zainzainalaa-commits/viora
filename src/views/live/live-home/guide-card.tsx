@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Tv } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -12,7 +13,7 @@ export function GuideCard({ item, onPlay }: { item: NowItem; onPlay: (ch: IptvCh
   const logo = channel.logo && !err ? channel.logo : null;
   const chno = channelNumber(channel.attrs);
   return (
-    <button
+    <FocusButton
       type="button"
       data-art={current?.iconUrl || channel.logo || ""}
       onClick={() => onPlay(channel)}
@@ -63,6 +64,6 @@ export function GuideCard({ item, onPlay }: { item: NowItem; onPlay: (ch: IptvCh
           <span className="text-ink-subtle/70">{channel.group ?? t("Live")}</span>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }

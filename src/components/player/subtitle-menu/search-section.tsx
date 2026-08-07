@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Loader2, Plus, Save, Search as SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Flag } from "@/components/flag";
@@ -150,13 +151,13 @@ export function SearchSection(props: SubtitleMenuProps) {
             className="h-9 w-full rounded-lg border border-edge-soft bg-canvas/60 ps-9 pe-3 text-[13.5px] text-ink placeholder:text-ink-subtle focus:border-edge focus:outline-none"
           />
         </div>
-        <button
+        <FocusButton
           onClick={() => void run()}
           disabled={loading || (!metaImdbId && !query.trim())}
           className="flex h-9 items-center gap-1.5 rounded-lg bg-elevated px-4 text-[13px] font-semibold text-ink ring-1 ring-edge transition-colors hover:bg-raised disabled:opacity-40"
         >
           {loading ? <Loader2 size={13} className="animate-spin" /> : t("Search")}
-        </button>
+        </FocusButton>
       </div>
 
       {results && results.length > 0 && (
@@ -217,7 +218,7 @@ function LangGroup({
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-t border-edge-soft/60">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-2 bg-canvas/40 px-4 py-2 text-start transition-colors hover:bg-canvas/60"
@@ -232,7 +233,7 @@ function LangGroup({
           strokeWidth={2.4}
           className={`ms-auto shrink-0 text-ink-subtle transition-transform duration-200 ${open ? "" : "-rotate-90"}`}
         />
-      </button>
+      </FocusButton>
       {open &&
         items.slice(0, 30).map((r) => (
           <ResultRow key={r.id} result={r} lang={lang} onAdd={() => onAdd(r)} />
@@ -321,7 +322,7 @@ function ResultRow({
         added ? "bg-emerald-400/12" : "hover:bg-canvas/60"
       }`}
     >
-      <button onClick={handleAdd} className="flex min-w-0 flex-1 items-start gap-3 text-start">
+      <FocusButton onClick={handleAdd} className="flex min-w-0 flex-1 items-start gap-3 text-start">
         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
           {adding ? (
             <Loader2 size={14} className="animate-spin text-ink-subtle" />
@@ -374,7 +375,7 @@ function ResultRow({
             )}
           </span>
         </div>
-      </button>
+      </FocusButton>
       <span
         role="button"
         tabIndex={0}
@@ -416,7 +417,7 @@ function FilterChip({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex h-7 items-center rounded-full px-2.5 text-[11.5px] font-semibold transition-colors ${active
           ? "bg-elevated text-ink ring-1 ring-edge"
@@ -424,7 +425,7 @@ function FilterChip({
         }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

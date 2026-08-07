@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, Check, Copy, ImagePlus, Loader2, Plus, Sparkles, Trash2, X } from "lucide-react";
@@ -95,9 +96,9 @@ export function ThemeUploadFlow({ onClose }: { onClose: () => void }) {
             <p className="pointer-events-none text-[12.5px] text-ink-subtle">It goes to a quick review, then it's live for everyone.</p>
           </div>
         </div>
-        <button onClick={onClose} aria-label="Close" className="flex h-10 w-10 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
+        <FocusButton onClick={onClose} aria-label="Close" className="flex h-10 w-10 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
           <X size={18} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </header>
 
       {result ? (
@@ -139,29 +140,29 @@ export function ThemeUploadFlow({ onClose }: { onClose: () => void }) {
 
       {!result && (
         <footer className="flex shrink-0 items-center justify-between gap-4 border-t border-edge-soft bg-surface/40 px-10 py-4">
-          <button
+          <FocusButton
             onClick={() => (step === 0 ? onClose() : setStep((s) => s - 1))}
             className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <ArrowLeft size={15} className="dir-icon" /> {step === 0 ? "Cancel" : "Back"}
-          </button>
+          </FocusButton>
           {step < STEPS.length - 1 ? (
-            <button
+            <FocusButton
               onClick={() => canAdvance && setStep((s) => s + 1)}
               disabled={!canAdvance}
               className="flex h-11 items-center gap-2 rounded-xl bg-ink px-6 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
             >
               Continue <ArrowRight size={15} className="dir-icon" />
-            </button>
+            </FocusButton>
           ) : (
-            <button
+            <FocusButton
               onClick={submit}
               disabled={submitting || !theme || !coverBlob || !name.trim()}
               className="flex h-11 items-center gap-2 rounded-xl bg-accent px-6 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
             >
               {submitting ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
               {submitting ? "Submitting…" : "Submit for review"}
-            </button>
+            </FocusButton>
           )}
         </footer>
       )}
@@ -212,7 +213,7 @@ function ThemeStep({ themes, selected, onSelect }: { themes: CustomTheme[]; sele
         {themes.map((t) => {
           const active = selected?.id === t.id;
           return (
-            <button
+            <FocusButton
               key={t.id}
               onClick={() => onSelect(t)}
               className={`flex flex-col overflow-hidden rounded-2xl border text-start transition-all ${
@@ -225,7 +226,7 @@ function ThemeStep({ themes, selected, onSelect }: { themes: CustomTheme[]; sele
                 ))}
               </div>
               <span className="truncate px-3.5 py-2.5 text-[13.5px] font-semibold text-ink">{t.name}</span>
-            </button>
+            </FocusButton>
           );
         })}
       </div>
@@ -241,23 +242,23 @@ function ShotsStep({ shots, onAdd, onRemove }: { shots: { url: string }[]; onAdd
         {shots.map((s, i) => (
           <div key={i} className="group relative aspect-video overflow-hidden rounded-xl border border-edge-soft">
             <img src={s.url} alt="" className="h-full w-full object-cover" />
-            <button
+            <FocusButton
               onClick={() => onRemove(i)}
               aria-label="Remove"
               className="absolute end-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/55 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/75 group-hover:opacity-100"
             >
               <Trash2 size={13} />
-            </button>
+            </FocusButton>
           </div>
         ))}
         {shots.length < 6 && (
-          <button
+          <FocusButton
             onClick={onAdd}
             className="flex aspect-video flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-edge text-ink-subtle transition-colors hover:border-accent hover:text-ink"
           >
             {shots.length === 0 ? <ImagePlus size={24} strokeWidth={1.6} /> : <Plus size={22} strokeWidth={1.8} />}
             <span className="text-[12.5px] font-medium">Add screenshot</span>
-          </button>
+          </FocusButton>
         )}
       </div>
     </div>
@@ -316,13 +317,13 @@ function SuccessView({ share, copied, onCopy, onDone }: { share: string; copied:
       </div>
       <div className="flex items-center gap-2 rounded-xl border border-edge-soft bg-elevated/40 px-3 py-2">
         <span className="max-w-[280px] truncate text-[12.5px] text-ink-muted">{share}</span>
-        <button onClick={onCopy} className="flex h-8 items-center gap-1.5 rounded-lg bg-ink px-3 text-[12px] font-semibold text-canvas">
+        <FocusButton onClick={onCopy} className="flex h-8 items-center gap-1.5 rounded-lg bg-ink px-3 text-[12px] font-semibold text-canvas">
           {copied ? <Check size={13} /> : <Copy size={13} />} {copied ? "Copied" : "Copy link"}
-        </button>
+        </FocusButton>
       </div>
-      <button onClick={onDone} className="mt-2 h-11 rounded-xl bg-accent px-8 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90">
+      <FocusButton onClick={onDone} className="mt-2 h-11 rounded-xl bg-accent px-8 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90">
         Done
-      </button>
+      </FocusButton>
     </div>
   );
 }

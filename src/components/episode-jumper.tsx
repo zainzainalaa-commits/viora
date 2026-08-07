@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Hash } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -82,37 +83,37 @@ export function EpisodeJumper({
               placeholder={`1 – ${totalEpisodes}`}
               className="h-9 flex-1 rounded-lg border border-edge-soft bg-canvas px-3 text-[13px] text-ink outline-none transition-colors focus:border-ink-subtle"
             />
-            <button
+            <FocusButton
               type="submit"
               disabled={!draft.trim()}
               className="h-9 rounded-lg bg-ink px-3.5 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
             >
               Jump
-            </button>
+            </FocusButton>
           </form>
           {ranges.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {ranges.map(([start, end]) => (
-                <button
+                <FocusButton
                   key={start}
                   onClick={() => jumpToEpisode(start)}
                   className="rounded-md border border-edge-soft/70 bg-elevated/60 px-2 py-1 text-[11.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:bg-elevated hover:text-ink"
                 >
                   {start}–{end}
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
         </div>
       )}
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         aria-label="Jump to episode"
         className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/90 px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
       >
         <Hash size={12} strokeWidth={2.2} />
         <span>Jump</span>
-      </button>
+      </FocusButton>
     </div>,
     document.body,
   );

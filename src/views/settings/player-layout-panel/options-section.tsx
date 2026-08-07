@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { PlayerChromeConfig, TimeFormat, VolumeStyle } from "@/lib/player-chrome";
 import { useT } from "@/lib/i18n";
 
@@ -71,7 +72,7 @@ function OptionCard<T extends string>({
         {options.map((opt) => {
           const selected = value === opt.id;
           return (
-            <button
+            <FocusButton
               key={opt.id}
               type="button"
               onClick={() => onChange(opt.id)}
@@ -92,7 +93,7 @@ function OptionCard<T extends string>({
                 <span className="text-[13px] font-semibold text-ink">{opt.label}</span>
                 <span className="text-[11.5px] leading-snug text-ink-subtle">{opt.sub}</span>
               </div>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

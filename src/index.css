@@ -1782,9 +1782,18 @@ html[data-input="dpad"] [data-focusable="true"]:focus {
 
 /* Lift the focused tile so it separates from its row at a distance. */
 html[data-input="dpad"] [data-focusable="true"]:focus,
+html[data-input="dpad"] [data-tv-focused="true"],
 html[data-input="dpad"] [role="gridcell"]:focus {
   transform: scale(1.06);
   transition: transform 120ms ease-out;
+}
+
+/* Scroll snapping exists so a dragged row settles on a card boundary. A D-pad
+   never drags: focus decides where the row should sit, and the browser then
+   re-snapping to its own nearest boundary drags the focused card back out of
+   view. Precision beats settling here. */
+html[data-input="dpad"] .harbor-row-track {
+  scroll-snap-type: none;
 }
 
 /* The TV deliberately renders at the same scale as the desktop. An earlier
@@ -1869,4 +1878,44 @@ html[data-input="dpad"] [data-harbor-player] [role="slider"] {
 html[data-form-factor="tv"] ::-webkit-scrollbar,
 html[data-input="touch"] ::-webkit-scrollbar {
   display: none;
+}
+
+/* The focused control's `title`, made visible. A remote cannot hover, so the
+   browser's own tooltip never appears; this is the same text, positioned by the
+   focus engine and sized to be read from a sofa. */
+#viora-tv-tooltip {
+  position: fixed;
+  z-index: 2147483000;
+  max-width: min(48ch, 60vw);
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-edge-soft);
+  background: var(--color-elevated);
+  color: var(--color-ink);
+  font-size: 15px;
+  line-height: 1.35;
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+#viora-tv-tooltip[hidden] { display: none; }
+
+/* Ten-foot spacing.
+   A desktop layout leaves room for a cursor to rest and for windows to sit side
+   by side; a TV has neither, and the same gutters read as wasted screen from a
+   sofa. These are deliberately small trims -- the type scale and the grid are
+   untouched, so nothing gets harder to read; the content simply reaches closer
+   to the edges it already respected. Scoped to D-pad input so the desktop build
+   keeps its original proportions. */
+html[data-input="dpad"] main > .mx-auto,
+html[data-input="dpad"] main > div > .mx-auto {
+  max-width: min(100%, 1600px);
+}
+
+html[data-input="dpad"] main {
+  padding-inline: clamp(1rem, 2.2vw, 2rem);
+}
+
+/* Section headings above rows carry desktop-sized breathing room. */
+html[data-input="dpad"] main section + section {
+  margin-block-start: clamp(1rem, 2vw, 1.75rem);
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Pencil, Search, Settings as SettingsIcon, Users } from "lucide-react";
@@ -60,7 +61,7 @@ export function TopDock() {
         active,
         onSelect: () => navigate(item),
         node: (
-          <button
+          <FocusButton
             type="button"
             onClick={() => navigate(item)}
             className={`relative h-9 whitespace-nowrap rounded-full px-3 text-[12.5px] font-medium transition-colors ${
@@ -74,7 +75,7 @@ export function TopDock() {
               />
             )}
             {label}
-          </button>
+          </FocusButton>
         ),
       };
     });
@@ -91,7 +92,7 @@ export function TopDock() {
           data-tauri-drag-region
           className="pointer-events-auto flex h-14 w-full items-center gap-2 rounded-full border border-white/20 bg-black/55 ps-4 pe-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_18px_60px_-20px_rgba(0,0,0,0.75)] backdrop-blur-md"
         >
-          <button
+          <FocusButton
             type="button"
             onClick={() => setView("home")}
             className="flex shrink-0 items-center gap-2 text-ink"
@@ -107,7 +108,7 @@ export function TopDock() {
                 {APP_NAME}
               </span>
             )}
-          </button>
+          </FocusButton>
 
           <div className="mx-1 h-6 w-px shrink-0 bg-white/15" />
 
@@ -182,7 +183,7 @@ function IconBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -194,7 +195,7 @@ function IconBtn({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -208,7 +209,7 @@ function WinBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -218,7 +219,7 @@ function WinBtn({
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
         {children}
       </svg>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -253,7 +254,7 @@ function ProfileChipCompact({
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((o) => !o)}
         data-open={String(open)}
@@ -272,7 +273,7 @@ function ProfileChipCompact({
           )}
         </span>
         <span className="hidden max-w-[8rem] truncate sm:inline">{name}</span>
-      </button>
+      </FocusButton>
       {open && (
         <div className="harbor-profile-dropdown absolute end-0 top-[calc(100%+8px)] z-40 w-60 overflow-hidden rounded-2xl border border-white/15 bg-canvas/95 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
           <div className="border-b border-white/10 px-4 py-3">
@@ -287,7 +288,7 @@ function ProfileChipCompact({
                 {t("profile.switch")}
               </span>
               {otherProfiles.map((p) => (
-                <button
+                <FocusButton
                   key={p.id}
                   type="button"
                   onClick={() => {
@@ -311,12 +312,12 @@ function ProfileChipCompact({
                     )}
                   </span>
                   <span className="truncate text-[12.5px] text-ink">{p.name}</span>
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
           <div className="flex flex-col">
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 openPicker({ kind: "list" });
@@ -325,9 +326,9 @@ function ProfileChipCompact({
               className="flex items-center gap-2.5 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
             >
               <Users size={13} strokeWidth={2.2} /> {t("profile.whoWatching")}
-            </button>
+            </FocusButton>
             {activeProfile && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => {
                   openPicker({ kind: "edit", profileId: activeProfile.id });
@@ -336,9 +337,9 @@ function ProfileChipCompact({
                 className="flex items-center gap-2.5 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
               >
                 <Pencil size={13} strokeWidth={2.2} /> {t("Edit profile")}
-              </button>
+              </FocusButton>
             )}
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 onOpenSettings();
@@ -349,9 +350,9 @@ function ProfileChipCompact({
               }`}
             >
               <SettingsIcon size={13} strokeWidth={2.2} /> {t("nav.settings")}
-            </button>
+            </FocusButton>
             {user && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => {
                   signOut();
@@ -360,7 +361,7 @@ function ProfileChipCompact({
                 className="flex items-center gap-2.5 border-t border-white/10 px-4 py-2.5 text-start text-[13px] text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
               >
                 <LogOut size={13} strokeWidth={2.2} /> {t("Sign out")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>

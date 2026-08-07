@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -81,15 +82,15 @@ export function MemoryHud() {
           </span>
         </div>
         <div className="flex items-center gap-1">
-          <button
+          <FocusButton
             type="button"
             onClick={() => api.reset()}
             className="rounded px-2 py-0.5 text-[10px] text-ink-muted hover:bg-elevated hover:text-ink"
             title="Reset baseline"
           >
             reset
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => {
               const r = api.dumpReport();
@@ -102,16 +103,16 @@ export function MemoryHud() {
             title="Download full report as a .txt file"
           >
             dump
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => setCollapsed((c) => !c)}
             className="rounded p-0.5 text-ink-muted hover:bg-elevated hover:text-ink"
             title={collapsed ? "Expand" : "Collapse"}
           >
             {collapsed ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => {
               setOpen(false);
@@ -123,7 +124,7 @@ export function MemoryHud() {
             title="Close (Ctrl+Shift+M to reopen)"
           >
             <X size={12} />
-          </button>
+          </FocusButton>
         </div>
       </div>
 

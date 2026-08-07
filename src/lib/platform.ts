@@ -125,9 +125,29 @@ export function isAndroidTV(): boolean {
 
 let cachedFormFactor: FormFactor | null = null;
 
+/**
+ * `?formFactor=tv` forces the TV build on a desktop browser.
+ *
+ * D-pad navigation is the one part of the app that cannot be judged from the
+ * desktop it was written on, and a full APK cycle is a poor feedback loop for
+ * something you need to try a hundred times. This makes a laptop with arrow keys
+ * an honest test rig. It only reads a URL parameter, so nothing about a real
+ * device changes.
+ */
+function forcedFormFactor(): FormFactor | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const want = new URLSearchParams(window.location.search).get("formFactor");
+    if (want === "tv" || want === "phone" || want === "tablet" || want === "desktop") return want;
+  } catch {
+    /* opaque location */
+  }
+  return null;
+}
+
 export function formFactor(): FormFactor {
   if (cachedFormFactor) return cachedFormFactor;
-  cachedFormFactor = detectFormFactor();
+  cachedFormFactor = forcedFormFactor() ?? detectFormFactor();
   return cachedFormFactor;
 }
 

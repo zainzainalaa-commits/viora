@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import type { IptvChannel } from "@/lib/iptv/types";
 
@@ -21,7 +22,7 @@ export function NetworkTiles({
 function Tile({ channel, onPlay }: { channel: IptvChannel; onPlay: (ch: IptvChannel) => void }) {
   const [err, setErr] = useState(false);
   return (
-    <button
+    <FocusButton
       data-art={channel.logo || ""}
       onClick={() => onPlay(channel)}
       title={channel.name}
@@ -39,6 +40,6 @@ function Tile({ channel, onPlay }: { channel: IptvChannel; onPlay: (ch: IptvChan
       ) : (
         <span className="truncate text-[13px] font-semibold text-ink">{channel.name}</span>
       )}
-    </button>
+    </FocusButton>
   );
 }

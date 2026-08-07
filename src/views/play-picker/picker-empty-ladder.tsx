@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo } from "react";
 import type { Meta } from "@/lib/cinemeta";
 import { EmptyState, FilteredOutState, NoSourcesState, TheatresEmptyState } from "./empty-states";
@@ -118,12 +119,12 @@ export function PickerEmptyLadder({
             </p>
           </div>
           {rawCount - allCount > 0 && !forceShowAll && (
-            <button
+            <FocusButton
               onClick={onShowAll}
               className="shrink-0 rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-[12.5px] font-semibold text-amber-100 transition-[transform,background-color] hover:scale-[1.02] hover:bg-amber-300/20 active:scale-[0.98]"
             >
               Show everything anyway
-            </button>
+            </FocusButton>
           )}
         </div>
       )}

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -56,7 +57,7 @@ function RailArrow({ side, visible, onClick }: { side: "start" | "end"; visible:
   const sideClass = side === "start" ? "start-0 justify-start" : "end-0 justify-end";
   return (
     <div className={`pointer-events-none absolute inset-y-0 z-20 flex w-14 items-center ${sideClass}`}>
-      <button
+      <FocusButton
         type="button"
         onClick={onClick}
         aria-label={side === "start" ? t("Scroll left") : t("Scroll right")}
@@ -72,7 +73,7 @@ function RailArrow({ side, visible, onClick }: { side: "start" | "end"; visible:
         ) : (
           <ChevronRight size={22} strokeWidth={2.2} className="dir-icon" />
         )}
-      </button>
+      </FocusButton>
     </div>
   );
 }

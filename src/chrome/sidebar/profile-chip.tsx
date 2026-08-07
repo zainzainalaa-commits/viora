@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Lock, LogIn, LogOut, Pencil, Plus, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AuthModal } from "@/components/auth-modal";
@@ -53,7 +54,7 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         onClick={() => setMenuOpen((o) => !o)}
         aria-label={activeProfile?.name ?? user?.email ?? t("profile.fallback")}
         className={`flex w-full items-center justify-center gap-3.5 rounded-xl py-2.5 text-start transition-colors hover:bg-elevated/60 ${
@@ -69,7 +70,7 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
             <SubtitleText active={activeProfile} profiles={profiles} user={user} />
           </div>
         </div>
-      </button>
+      </FocusButton>
 
       {menuOpen && (
         <div
@@ -83,7 +84,7 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
                 {t("profile.switch")}
               </span>
               {otherProfiles.map((p) => (
-                <button
+                <FocusButton
                   key={p.id}
                   onClick={() => requestSwitch(p)}
                   className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-start transition-colors hover:bg-raised"
@@ -107,13 +108,13 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
                       </span>
                     )}
                   </div>
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
           {!kid && (
           <div className="flex flex-col">
-            <button
+            <FocusButton
               onClick={() => {
                 openPicker({ kind: "list" });
                 setMenuOpen(false);
@@ -122,9 +123,9 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
             >
               <Users size={14} strokeWidth={2.2} />
               {t("profile.whoWatching")}
-            </button>
+            </FocusButton>
             {activeProfile && (
-              <button
+              <FocusButton
                 onClick={() => {
                   openPicker({ kind: "edit", profileId: activeProfile.id });
                   setMenuOpen(false);
@@ -133,10 +134,10 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
               >
                 <Pencil size={14} strokeWidth={2.2} />
                 {t("profile.editThis")}
-              </button>
+              </FocusButton>
             )}
             {activeProfile?.isPrimary && (
-              <button
+              <FocusButton
                 onClick={() => {
                   openPicker({ kind: "create" });
                   setMenuOpen(false);
@@ -145,10 +146,10 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
               >
                 <Plus size={14} strokeWidth={2.2} />
                 {t("profile.new")}
-              </button>
+              </FocusButton>
             )}
             {user ? (
-              <button
+              <FocusButton
                 onClick={() => {
                   signOut();
                   setMenuOpen(false);
@@ -157,9 +158,9 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
               >
                 <LogOut size={14} strokeWidth={2.2} />
                 {t("profile.signOut")}
-              </button>
+              </FocusButton>
             ) : (
-              <button
+              <FocusButton
                 onClick={() => {
                   setAuthOpen(true);
                   setMenuOpen(false);
@@ -168,7 +169,7 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
               >
                 <LogIn size={14} strokeWidth={2.2} />
                 {t("profile.signIn")}
-              </button>
+              </FocusButton>
             )}
           </div>
           )}

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { Building2, Calendar, ChevronDown, Clock, Globe, Languages, Tag, Tv } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -41,7 +42,7 @@ function MediaTypeToggle({ filter }: { filter: MetaFilter }) {
   return (
     <div className="mt-5 inline-flex gap-1 rounded-full bg-elevated/50 p-1 ring-1 ring-edge-soft/60">
       {(["tv", "movie"] as const).map((m) => (
-        <button
+        <FocusButton
           key={m}
           type="button"
           onClick={() => set(m)}
@@ -52,7 +53,7 @@ function MediaTypeToggle({ filter }: { filter: MetaFilter }) {
           }`}
         >
           {m === "tv" ? t("Shows") : t("Movies")}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );
@@ -80,7 +81,7 @@ function GenreSwitcher({
   const names = Object.keys(MOVIE_GENRES);
   return (
     <div ref={wrapRef} className="relative mt-3 inline-flex">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="group inline-flex items-center gap-3 text-start transition-colors"
@@ -95,13 +96,13 @@ function GenreSwitcher({
         >
           <ChevronDown size={18} strokeWidth={2.2} />
         </span>
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute start-0 top-[calc(100%+12px)] z-30 grid max-h-[420px] w-[440px] grid-cols-2 gap-1 overflow-y-auto rounded-2xl border border-edge bg-surface/98 p-1.5 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)] backdrop-blur-xl">
           {names.map((name) => {
             const isActive = name === activeName;
             return (
-              <button
+              <FocusButton
                 key={name}
                 type="button"
                 onClick={() => {
@@ -115,7 +116,7 @@ function GenreSwitcher({
                 }`}
               >
                 {t(name)}
-              </button>
+              </FocusButton>
             );
           })}
         </div>

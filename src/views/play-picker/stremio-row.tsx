@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDownToLine, Play } from "lucide-react";
 import { AddonLogo } from "@/components/addon-logo";
 import { CopyLinkButton, resolveStreamLink } from "@/components/player/copy-link-button";
@@ -68,7 +69,7 @@ export function StremioRow({
       </div>
       <div className="flex shrink-0 items-center gap-2 self-center">
         {link && <CopyLinkButton url={link} size={16} className="h-9 w-9" />}
-        <button
+        <FocusButton
           onClick={onPlay}
           aria-label={download ? "Download" : "Play"}
           className="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-canvas transition-transform active:scale-95 hover:opacity-90"
@@ -78,7 +79,7 @@ export function StremioRow({
           ) : (
             <Play size={26} fill="currentColor" className="ml-0.5" />
           )}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

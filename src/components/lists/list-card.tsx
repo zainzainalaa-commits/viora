@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Layers } from "lucide-react";
 import type { CustomList } from "@/lib/custom-lists";
 import { relativeTime } from "@/lib/dates";
@@ -16,7 +17,7 @@ export function ListCard({
   const count = list.items.length;
 
   return (
-    <button
+    <FocusButton
       onClick={() => onOpen?.(list.id)}
       className="group flex w-full flex-col overflow-hidden rounded-[20px] border border-edge-soft bg-surface text-start transition-colors hover:bg-elevated"
     >
@@ -54,7 +55,7 @@ export function ListCard({
             ` · ${t("Updated {when}", { when: relativeTime(list.updatedAt) })}`}
         </p>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, FileDown, Library, Palette } from "lucide-react";
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -62,7 +63,7 @@ function HeroCard({
   badge?: string | null;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`group relative flex h-full min-h-[200px] flex-col items-start justify-between overflow-hidden rounded-2xl border p-6 text-start transition-all hover:-translate-y-0.5 ${
@@ -107,7 +108,7 @@ function HeroCard({
         {cta}
         <ArrowRight size={14} strokeWidth={2.2} className="dir-icon" />
       </span>
-    </button>
+    </FocusButton>
   );
 }
 

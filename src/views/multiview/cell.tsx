@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertTriangle, Loader2, Plus, RefreshCw, Repeat2, Volume2, VolumeX, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { SlotChannel } from "@/lib/multiview/store";
@@ -48,7 +49,7 @@ export function Cell({
 
   if (!channel) {
     return (
-      <button
+      <FocusButton
         onClick={onPick}
         className="group flex h-full w-full flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-edge-soft bg-elevated/20 transition-colors hover:border-edge hover:bg-elevated/40"
       >
@@ -56,7 +57,7 @@ export function Cell({
           <Plus size={22} strokeWidth={2.2} />
         </span>
         <span className="text-[13px] font-medium text-ink-muted">Add a channel</span>
-      </button>
+      </FocusButton>
     );
   }
 
@@ -109,7 +110,7 @@ export function Cell({
       <div className="flex h-9 shrink-0 items-center gap-2 border-b border-edge-soft/60 px-3">
         <span className="truncate text-[12px] font-medium text-ink">{channel.name}</span>
         <div className="ml-auto flex items-center gap-1">
-          <button
+          <FocusButton
             onClick={(e) => {
               e.stopPropagation();
               onPick();
@@ -119,8 +120,8 @@ export function Cell({
             className="flex h-6 w-6 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
           >
             <Repeat2 size={13} />
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={(e) => {
               e.stopPropagation();
               if (focused) onMute();
@@ -133,8 +134,8 @@ export function Cell({
             }`}
           >
             {focused ? <Volume2 size={13} /> : <VolumeX size={13} />}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={(e) => {
               e.stopPropagation();
               onClose();
@@ -143,7 +144,7 @@ export function Cell({
             className="flex h-6 w-6 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-danger/20 hover:text-danger"
           >
             <X size={13} />
-          </button>
+          </FocusButton>
         </div>
       </div>
       <div className="relative min-h-0 flex-1">
@@ -168,7 +169,7 @@ export function Cell({
                     connections.
                   </p>
                 )}
-                <button
+                <FocusButton
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -178,7 +179,7 @@ export function Cell({
                 >
                   <RefreshCw size={11} strokeWidth={2.4} />
                   Retry
-                </button>
+                </FocusButton>
               </>
             ) : (
               <>

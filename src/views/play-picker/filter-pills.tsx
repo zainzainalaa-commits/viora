@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Languages, Zap } from "lucide-react";
 import { abbreviateLanguages, normalizeLangCode } from "./picker-utils";
 
@@ -11,7 +12,7 @@ export function CachedFilterPill({
   onToggle: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onToggle}
       className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] transition-colors ${
         on
@@ -22,7 +23,7 @@ export function CachedFilterPill({
     >
       <Zap size={11} fill={on ? "currentColor" : "none"} strokeWidth={2.2} />
       {on ? `Cached only · +${hiddenCount}` : `Show all sources`}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -44,7 +45,7 @@ export function LanguageFilterPill({
     : languages.filter((l) => normalizeLangCode(l) !== "ja");
   const label = abbreviateLanguages(display);
   return (
-    <button
+    <FocusButton
       onClick={onToggle}
       className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] transition-colors ${
         on
@@ -55,6 +56,6 @@ export function LanguageFilterPill({
     >
       <Languages size={11} strokeWidth={2.2} />
       {on ? `${label} only · +${hiddenCount}` : `Show ${label} only`}
-    </button>
+    </FocusButton>
   );
 }

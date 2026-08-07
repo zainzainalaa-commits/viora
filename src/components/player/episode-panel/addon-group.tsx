@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { AddonLogo } from "@/components/addon-logo";
@@ -27,7 +28,7 @@ export function AddonGroup({
   const cachedCount = streams.filter(isCached).length;
   return (
     <div className="overflow-hidden rounded-2xl bg-elevated/30 ring-1 ring-edge-soft">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-3 px-3 py-3 text-start transition-colors hover:bg-elevated/60"
       >
@@ -48,7 +49,7 @@ export function AddonGroup({
             open ? "rotate-180" : ""
           }`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="flex flex-col gap-2 px-3 pb-3">
           {streams.map((s, i) => (

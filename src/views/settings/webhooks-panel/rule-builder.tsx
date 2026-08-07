@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Plus, Trash2, X, Zap } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -158,7 +159,7 @@ export function RuleBuilder({
             {t("Each rule fires independently. Define what triggers a ping and where it goes.")}
           </p>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={startNew}
           disabled={!canDiscord && !canTelegram}
@@ -166,7 +167,7 @@ export function RuleBuilder({
         >
           <Plus size={13} strokeWidth={2.4} />
           {t("New rule")}
-        </button>
+        </FocusButton>
       </div>
       {!canDiscord && !canTelegram && (
         <div className="rounded-lg border border-amber-200/30 bg-amber-200/5 px-3 py-2 text-[11.5px] text-amber-200/85">
@@ -186,7 +187,7 @@ export function RuleBuilder({
                 r.enabled ? "border-edge-soft bg-elevated/40" : "border-edge-soft/40 bg-canvas/20 opacity-60"
               }`}
             >
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => toggleEnabled(r.id)}
                 aria-label={r.enabled ? "Disable rule" : "Enable rule"}
@@ -203,7 +204,7 @@ export function RuleBuilder({
                     }`}
                   />
                 </span>
-              </button>
+              </FocusButton>
               <div className="flex min-w-0 flex-1 flex-col">
                 <span className="truncate text-[13px] font-semibold text-ink">
                   {r.name || EVENT_LABELS[r.trigger.event]}
@@ -215,21 +216,21 @@ export function RuleBuilder({
                     .join(" + ") || "no channel"}
                 </span>
               </div>
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setEditing(r)}
                 className="rounded-full px-2.5 py-1 text-[11.5px] font-medium text-ink-muted hover:bg-canvas/60 hover:text-ink"
               >
                 Edit
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 type="button"
                 onClick={() => remove(r.id)}
                 aria-label="Delete rule"
                 className="flex h-7 w-7 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-danger/15 hover:text-danger"
               >
                 <Trash2 size={12} strokeWidth={1.9} />
-              </button>
+              </FocusButton>
             </li>
           ))}
         </ul>
@@ -277,14 +278,14 @@ function RuleEditor({
           <h2 className="text-[18px] font-semibold text-ink">
             {rule.name ? "Edit rule" : "New rule"}
           </h2>
-          <button
+          <FocusButton
             type="button"
             onClick={onCancel}
             aria-label="Close"
             className="flex h-8 w-8 items-center justify-center rounded-full text-ink-subtle hover:bg-canvas/70 hover:text-ink"
           >
             <X size={14} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
 
         <Field label="Name">
@@ -469,21 +470,21 @@ function RuleEditor({
         </Field>
 
         <div className="flex items-center justify-end gap-2 pt-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onCancel}
             className="h-10 rounded-xl px-4 text-[13px] font-medium text-ink-muted hover:text-ink"
           >
             Cancel
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => onSave(draft)}
             disabled={!draft.channels.discord && !draft.channels.telegram}
             className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             Save rule
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>
@@ -550,7 +551,7 @@ function SubChips({
       <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">{label}</span>
       <div className="flex flex-wrap gap-1.5">
         {items.map((it) => (
-          <button
+          <FocusButton
             key={it.key}
             type="button"
             onClick={it.onToggle}
@@ -561,7 +562,7 @@ function SubChips({
             }`}
           >
             {it.label}
-          </button>
+          </FocusButton>
         ))}
       </div>
     </div>
@@ -580,7 +581,7 @@ function ChannelToggle({
   onToggle: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => !disabled && onToggle()}
       disabled={disabled}
@@ -594,6 +595,6 @@ function ChannelToggle({
       title={disabled ? "Configure URL above first" : undefined}
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }

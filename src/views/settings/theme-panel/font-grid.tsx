@@ -1,3 +1,5 @@
+import { FocusButton } from "@/lib/tv-focus";
+import { APP_NAME } from "@/lib/brand";
 import { Check } from "lucide-react";
 import { FONT_PAIRS, type FontPairId } from "@/lib/theme";
 import { CustomFontTiles } from "./custom-font-tiles";
@@ -18,7 +20,7 @@ export function FontGrid({
       {Object.values(FONT_PAIRS).map((p) => {
         const active = p.id === pairValue && !customValue;
         return (
-          <button
+          <FocusButton
             key={p.id}
             onClick={() => onPickPair(p.id)}
             className={`flex flex-col gap-3 rounded-2xl border p-5 text-start transition-colors ${
@@ -38,14 +40,14 @@ export function FontGrid({
                 className="text-[28px] font-medium leading-none tracking-tight text-ink"
                 style={{ fontFamily: p.display }}
               >
-                Harbor
+                {APP_NAME}
               </span>
               <span className="text-[13px] text-ink-muted" style={{ fontFamily: p.sans }}>
                 The quick brown fox jumps over the lazy dog
               </span>
             </div>
             <p className="text-[11.5px] text-ink-subtle">{p.blurb}</p>
-          </button>
+          </FocusButton>
         );
       })}
 

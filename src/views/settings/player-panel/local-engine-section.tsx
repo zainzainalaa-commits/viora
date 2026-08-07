@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertTriangle, Check, Eraser, Loader2, Play, RotateCw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -156,7 +157,7 @@ export function LocalEngineSection() {
       />
 
       <div className="flex items-center gap-2">
-        <button
+        <FocusButton
           type="button"
           onClick={() => void runTest()}
           disabled={busy || strictRemote}
@@ -168,8 +169,8 @@ export function LocalEngineSection() {
             <Play size={14} strokeWidth={2.4} />
           )}
           {running ? t("Running self-test") : t("Run self-test")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => void restart()}
           disabled={busy}
@@ -181,8 +182,8 @@ export function LocalEngineSection() {
             <RotateCw size={14} strokeWidth={2.4} />
           )}
           {restarting ? t("Restarting") : t("Restart engine")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => void clearAll()}
           disabled={busy}
@@ -194,7 +195,7 @@ export function LocalEngineSection() {
             <Eraser size={14} strokeWidth={2.4} />
           )}
           {clearing ? t("Clearing") : t("Clear & restart")}
-        </button>
+        </FocusButton>
       </div>
 
       {strictRemote && (

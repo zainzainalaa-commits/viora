@@ -1,3 +1,4 @@
+import { FocusButton, FocusSection } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { observe, usePageVisible } from "@/lib/visibility";
 import { isRtl, useT, useUiLanguage } from "@/lib/i18n";
@@ -153,8 +154,16 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
             const distance = Math.abs(i - active);
             const shouldMount = distance <= 1 || dragging;
             return (
-              <div
+              // `inert` is what keeps the remote on the slide the viewer is
+              // looking at. The slides sit side by side, so the ones that are
+              // not active are off the edge of the screen — already excluded
+              // from the mouse by `pointer-events: none` and from screen
+              // readers by `aria-hidden`, but the focus engine reads neither,
+              // and would happily move to a Play button nobody can see.
+              <FocusSection
                 key={`${s.meta.id}-${i}`}
+                inert={!isActive}
+                rememberChild={false}
                 dir={rtl ? "rtl" : "ltr"}
                 aria-hidden={!isActive}
                 className="w-full shrink-0"
@@ -177,7 +186,7 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
                 ) : (
                   <div className={`w-full bg-elevated/30 ${full ? "h-[clamp(560px,82vh,920px)] rounded-none" : "h-[560px] rounded-[28px]"}`} />
                 )}
-              </div>
+              </FocusSection>
             );
           })}
         </div>
@@ -189,7 +198,7 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
           }`}
         >
           {slides.map((_, i) => (
-            <button
+            <FocusButton
               key={i}
               onClick={() => setActive(i)}
               aria-label={t("Slide {n}", { n: i + 1 })}

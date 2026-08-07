@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -124,7 +125,7 @@ function MoreMenu({ entries, buttonClassName }: { entries: NavEntry[]; buttonCla
       {open && (
         <div className="absolute start-0 top-[calc(100%+8px)] z-50 flex min-w-[184px] flex-col overflow-hidden rounded-xl border border-edge bg-canvas/95 p-1 shadow-[0_18px_50px_-15px_rgba(0,0,0,0.7)] backdrop-blur-2xl">
           {entries.map((e) => (
-            <button
+            <FocusButton
               key={e.key}
               type="button"
               onClick={() => {
@@ -136,7 +137,7 @@ function MoreMenu({ entries, buttonClassName }: { entries: NavEntry[]; buttonCla
               }`}
             >
               {e.label}
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
@@ -157,7 +158,7 @@ function MoreButton({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-haspopup="menu"
@@ -166,6 +167,6 @@ function MoreButton({
     >
       {t("common.more")}
       <ChevronDown size={14} strokeWidth={2.2} className={`transition-transform ${open ? "rotate-180" : ""}`} />
-    </button>
+    </FocusButton>
   );
 }

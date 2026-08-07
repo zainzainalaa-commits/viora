@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -64,20 +65,20 @@ export function AnimeGenrePicker({
 
   return createPortal(
     <div className="fixed inset-0 z-[210] flex items-center justify-center px-4 py-10">
-      <button
+      <FocusButton
         aria-label={t("Close")}
         onClick={onClose}
         className="absolute inset-0 -z-10 cursor-default bg-canvas/88"
       />
       <div className="relative flex max-h-full w-full max-w-xl flex-col overflow-hidden rounded-[26px] border border-edge-soft/70 bg-elevated shadow-[0_40px_120px_-30px_rgba(0,0,0,0.85)]">
-        <button
+        <FocusButton
           type="button"
           aria-label={t("Close")}
           onClick={onClose}
           className="absolute end-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
         >
           <X size={16} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
 
         <div className="flex flex-col gap-1.5 px-8 pt-8">
           <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-ink-subtle">
@@ -96,7 +97,7 @@ export function AnimeGenrePicker({
             {OPTIONS.map((opt) => {
               const on = selected.has(opt.id);
               return (
-                <button
+                <FocusButton
                   key={opt.id}
                   type="button"
                   onClick={() => toggle(opt.id)}
@@ -107,14 +108,14 @@ export function AnimeGenrePicker({
                   }`}
                 >
                   {opt.label}
-                </button>
+                </FocusButton>
               );
             })}
           </div>
         </div>
 
         <div className="flex items-center justify-between gap-3 border-t border-edge-soft/45 px-8 py-5">
-          <button
+          <FocusButton
             type="button"
             onClick={() => setSelected(new Set())}
             className={`text-[12.5px] font-medium transition-colors ${
@@ -122,18 +123,18 @@ export function AnimeGenrePicker({
             }`}
           >
             {t("Clear all")}
-          </button>
+          </FocusButton>
           <div className="flex items-center gap-4">
             <span className="text-[12.5px] tabular-nums text-ink-subtle">
               {selected.size > 0 ? t("{count} selected", { count: selected.size }) : t("None yet")}
             </span>
-            <button
+            <FocusButton
               type="button"
               onClick={save}
               className="h-11 rounded-full bg-ink px-7 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.98]"
             >
               {t("Done")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>

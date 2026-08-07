@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Minus, Plus, Settings2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -53,7 +54,7 @@ export function AdvancedMenu() {
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onClick={() => setOpen((v) => !v)}
         aria-label={t("More subtitle options")}
@@ -64,7 +65,7 @@ export function AdvancedMenu() {
         }`}
       >
         <Settings2 size={18} strokeWidth={2} />
-      </button>
+      </FocusButton>
       {open &&
         pos &&
         createPortal(
@@ -122,7 +123,7 @@ export function AdvancedMenu() {
                 />
               </Row>
               <div className="my-1.5 h-px bg-edge-soft" />
-              <button
+              <FocusButton
                 onClick={() => update({ subAssOverride: overrideOn ? "no" : "force" })}
                 className="flex w-full items-start gap-3 rounded-[10px] p-2 text-start transition-colors hover:bg-raised"
               >
@@ -140,7 +141,7 @@ export function AdvancedMenu() {
                 >
                   <span className={`h-4 w-4 rounded-full bg-white transition-transform ${overrideOn ? "translate-x-4" : ""}`} />
                 </span>
-              </button>
+              </FocusButton>
             </div>
           </>,
           document.body,
@@ -170,7 +171,7 @@ function Segmented({
   return (
     <div className="flex items-center rounded-[9px] bg-raised p-0.5">
       {options.map((o) => (
-        <button
+        <FocusButton
           key={o.id}
           onClick={() => onChange(o.id)}
           className={`rounded-[7px] px-2.5 py-1 text-[12.5px] font-semibold capitalize transition-colors ${
@@ -178,7 +179,7 @@ function Segmented({
           }`}
         >
           {o.label}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );
@@ -200,12 +201,12 @@ function Stepper({ value, onDec, onInc }: { value: number; onDec: () => void; on
 
 function IconBtn({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button
+    <FocusButton
       aria-label={label}
       onClick={onClick}
       className="flex h-8 w-8 items-center justify-center rounded-[8px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

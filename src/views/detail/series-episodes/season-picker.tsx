@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -68,7 +69,7 @@ export function SeasonPicker({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => (menu ? setMenu(null) : openMenu())}
@@ -86,7 +87,7 @@ export function SeasonPicker({
             <span className="relative h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-canvas" />
           </span>
         )}
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div
@@ -99,7 +100,7 @@ export function SeasonPicker({
               {seasons.map((s) => {
                 const isActive = s.seasonNumber === active;
                 return (
-                  <button
+                  <FocusButton
                     key={s.id}
                     onClick={() => {
                       onChange(s.seasonNumber);
@@ -121,7 +122,7 @@ export function SeasonPicker({
                         {s.airDate && ` · ${s.airDate.slice(0, 4)}`}
                       </span>
                     </div>
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>

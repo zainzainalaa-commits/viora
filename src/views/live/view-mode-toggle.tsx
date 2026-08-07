@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Grid2x2, Home, LayoutGrid, ListTree } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { isWindowsDesktop } from "@/lib/platform";
@@ -50,7 +51,7 @@ function ToggleButton({
   label: string;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex h-full items-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold transition-colors ${
         active ? "bg-ink text-canvas" : "text-ink-muted hover:bg-raised hover:text-ink"
@@ -58,6 +59,6 @@ function ToggleButton({
     >
       {icon}
       {label}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 
@@ -40,7 +41,7 @@ export function PlayModePanel() {
       {choices.map((c) => {
         const selected = mode === c.id;
         return (
-          <button
+          <FocusButton
             key={c.id}
             type="button"
             onClick={() => selectMode(c.id)}
@@ -68,10 +69,10 @@ export function PlayModePanel() {
               </div>
               <span className="text-[12.5px] leading-snug text-ink-muted">{c.sub}</span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
-      <button
+      <FocusButton
         type="button"
         id="set-remember-last-stream"
         onClick={() => update({ rememberLastStream: !settings.rememberLastStream })}
@@ -90,8 +91,8 @@ export function PlayModePanel() {
             {t("When you resume something you were watching, replay the exact stream you last used (same addon and source) instead of opening the picker again. Turn off to always choose fresh.")}
           </span>
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => update({ resumePrompt: !settings.resumePrompt })}
         className="flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -109,8 +110,8 @@ export function PlayModePanel() {
             {t("When you hit Play on something you've partly watched, show a prompt to resume from where you left off or start over. Also covers items synced from Stremio or Trakt.")}
           </span>
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => update({ resumePlayback: !settings.resumePlayback })}
         className="flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -128,8 +129,8 @@ export function PlayModePanel() {
             {t("Pick up partly-watched episodes and movies at your saved spot. Anything watched past 80% always restarts. Turn this off to always start from the beginning, handy if you rewatch shows.")}
           </span>
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => update({ keepSourceNextEpisode: !settings.keepSourceNextEpisode })}
         className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -147,8 +148,8 @@ export function PlayModePanel() {
             {t("When auto-playing the next episode, keep the same release/source you were just watching instead of Harbor's top-ranked stream. Falls back to the best stream if that source isn't available.")}
           </span>
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => update({ keepFullscreenOnExit: !settings.keepFullscreenOnExit })}
         className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -166,8 +167,8 @@ export function PlayModePanel() {
             {t("When you exit playback, keep the window fullscreen instead of dropping back to a window. Turn off to leave fullscreen automatically whenever the player closes.")}
           </span>
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => update({ fullscreenRestorePosition: !settings.fullscreenRestorePosition })}
         className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -185,8 +186,8 @@ export function PlayModePanel() {
             {t("When you exit fullscreen, return the window to exactly where it was. Turn off to center it on screen instead.")}
           </span>
         </div>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => update({ playerVolumeHud: !settings.playerVolumeHud })}
         className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -204,7 +205,7 @@ export function PlayModePanel() {
             {t("Show a quick volume overlay when you change volume with the player controls hidden, so keyboard and scroll wheel changes are always visible.")}
           </span>
         </div>
-      </button>
+      </FocusButton>
       {settings.playerVolumeHud && (
         <div className="flex items-center justify-between gap-4 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4">
           <div className="flex min-w-0 flex-col gap-1">
@@ -222,7 +223,7 @@ export function PlayModePanel() {
                 { id: "top-right", label: t("Top right") },
               ] as const
             ).map((p) => (
-              <button
+              <FocusButton
                 key={p.id}
                 type="button"
                 onClick={() => update({ playerVolumeHudPosition: p.id })}
@@ -234,7 +235,7 @@ export function PlayModePanel() {
                 }`}
               >
                 {p.label}
-              </button>
+              </FocusButton>
             ))}
           </div>
         </div>

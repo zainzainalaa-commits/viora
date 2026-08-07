@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { MalLogo } from "@/components/icons/mal-logo";
 import { useT } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
@@ -23,7 +24,7 @@ export function MalRowControls() {
       {ROWS.map((r) => {
         const on = !hidden.includes(r.key);
         return (
-          <button
+          <FocusButton
             key={r.key}
             type="button"
             onClick={() => toggle(r.key)}
@@ -35,7 +36,7 @@ export function MalRowControls() {
             }`}
           >
             {t(r.label)}
-          </button>
+          </FocusButton>
         );
       })}
     </div>

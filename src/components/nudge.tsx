@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, X } from "lucide-react";
 import tmdbLogo from "@/assets/addon-logos/tmdb.png";
 import { useT } from "@/lib/i18n";
@@ -29,20 +30,20 @@ export function TmdbNudge({ suppress }: { suppress?: boolean } = {}) {
           {t("Free key unlocks Trending, In Theaters, and per-service catalogs. 60 seconds.")}
         </p>
       </div>
-      <button
+      <FocusButton
         onClick={() => openSettings("library")}
         className="flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.03] active:scale-[0.97]"
       >
         {t("Set up")}
         <ArrowRight size={13} strokeWidth={2.6} className="dir-icon" />
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         onClick={() => dismiss(KEY)}
         aria-label={t("Dismiss")}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
       >
         <X size={15} />
-      </button>
+      </FocusButton>
     </div>
   );
 }

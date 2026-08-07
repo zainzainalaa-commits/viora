@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Search, X, Loader2, CornerDownLeft, CalendarRange, Tag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -102,7 +103,7 @@ export function SearchOverlay() {
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex flex-col" role="dialog" aria-modal="true" aria-label={t("Search")}>
-      <button
+      <FocusButton
         aria-label={t("Close search")}
         onClick={close}
         data-tauri-drag-region
@@ -182,14 +183,14 @@ export function SearchOverlay() {
             />
           )}
           {query && (
-            <button
+            <FocusButton
               type="button"
               aria-label={t("Clear")}
               onClick={clear}
               className="flex h-10 w-10 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             >
               <X size={18} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
         </div>
 
@@ -209,7 +210,7 @@ export function SearchOverlay() {
           )}
 
           {trimmed && !directInput && results?.intent && (
-            <button
+            <FocusButton
               onClick={onIntent}
               className="mb-5 flex h-14 w-full items-center gap-3 rounded-2xl border border-accent/40 bg-accent/10 px-5 text-start transition-colors hover:bg-accent/15"
             >
@@ -227,7 +228,7 @@ export function SearchOverlay() {
                 <span className="text-[15px] font-semibold text-ink">{results.intent.label}</span>
               </span>
               <CornerDownLeft size={15} className="ms-auto text-ink-subtle" />
-            </button>
+            </FocusButton>
           )}
 
           {trimmed && !directInput && (

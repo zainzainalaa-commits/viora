@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { Check, Loader2, RotateCcw, Scissors, Search, X } from "lucide-react";
 import { findActiveCue } from "@/lib/subtitles/parser";
@@ -69,13 +70,13 @@ export function TextSyncOverlay({
               {sectionMode ? t("Fix one section") : t("Sync to the audio")}
             </h2>
           </div>
-          <button
+          <FocusButton
             aria-label={t("Close")}
             onClick={api.discard}
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated text-ink-muted transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={18} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </header>
 
         {api.syncMode === "loading" ? (
@@ -88,12 +89,12 @@ export function TextSyncOverlay({
             <span className="text-[14px] leading-relaxed text-ink-muted">
               {t("Could not read this subtitle track. Pick a different subtitle, then try again.")}
             </span>
-            <button
+            <FocusButton
               onClick={api.discard}
               className="rounded-full bg-elevated px-5 py-2.5 text-[13px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-raised"
             >
               {t("Close")}
-            </button>
+            </FocusButton>
           </div>
         ) : (
           <>
@@ -109,13 +110,13 @@ export function TextSyncOverlay({
                   className="h-11 flex-1 bg-transparent text-[14.5px] text-ink outline-none placeholder:text-ink-subtle"
                 />
                 {query && (
-                  <button
+                  <FocusButton
                     onClick={() => setQuery("")}
                     aria-label={t("Clear search")}
                     className="shrink-0 text-ink-subtle transition-colors hover:text-ink"
                   >
                     <X size={15} />
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             </div>
@@ -149,7 +150,7 @@ export function TextSyncOverlay({
                 </div>
                 <StepBtn label="+0.1" onClick={() => api.nudgeBy(0.1)} />
               </div>
-              <button
+              <FocusButton
                 onClick={() => {
                   setSectionMode((v) => !v);
                   api.clearRange();
@@ -162,11 +163,11 @@ export function TextSyncOverlay({
               >
                 <Scissors size={15} />
                 {t("Fix a section")}
-              </button>
+              </FocusButton>
             </div>
 
             {api.dirty && (
-              <button
+              <FocusButton
                 onClick={api.reset}
                 className="flex items-center gap-1.5 border-t border-edge-soft/50 px-6 py-2.5 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
               >
@@ -174,24 +175,24 @@ export function TextSyncOverlay({
                 {api.segments.length > 0
                   ? t("{n} section fixes. Reset all", { n: api.segments.length })
                   : t("Reset")}
-              </button>
+              </FocusButton>
             )}
 
             <footer className="flex items-center gap-2.5 border-t border-edge-soft/60 px-5 py-4">
-              <button
+              <FocusButton
                 onClick={onPlayPause}
                 className="flex h-12 flex-1 items-center justify-center rounded-2xl bg-elevated text-[14px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-raised"
               >
                 {playing ? t("Pause") : t("Play")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={() => void api.save()}
                 disabled={!api.dirty}
                 className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent px-4 text-[14px] font-semibold text-canvas transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-40"
               >
                 <Check size={16} strokeWidth={2.6} />
                 {t("Save")}
-              </button>
+              </FocusButton>
             </footer>
           </>
         )}
@@ -202,11 +203,11 @@ export function TextSyncOverlay({
 
 function StepBtn({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className="flex h-11 w-12 items-center justify-center rounded-xl bg-elevated text-[14px] font-semibold tabular-nums text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-raised hover:text-ink active:scale-95"
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }

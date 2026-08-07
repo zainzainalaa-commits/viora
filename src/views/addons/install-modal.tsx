@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Loader2, Settings2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -94,11 +95,27 @@ export function AddonInstallModal({
     }
   };
 
+  // Re-read whenever the URL being installed changes, not merely on mount.
+  //
+  // `pasted` was seeded through useState, which only takes on the first render,
+  // and the resolve was guarded by `!resolved`. Opening the sheet a second time
+  // with a different link therefore left the previous addon on screen — name,
+  // version, resources and all — with the earlier URL still in the field.
+  // Confirming from there installs what is shown rather than what was asked for.
+  //
+  // Keying the effect to the URL makes every new link start clean, without the
+  // parent having to discard the component and build a fresh one.
+  const requestedUrl = mode.kind === "install" ? mode.url : null;
   useEffect(() => {
-    if (mode.kind === "install" && mode.url && !resolved && !loading && !error) {
-      void tryResolve(mode.url);
-    }
-  }, [mode]);
+    if (!requestedUrl) return;
+    setPasted(requestedUrl);
+    setResolved(null);
+    setError(null);
+    setDone(null);
+    setInstallStage(null);
+    void tryResolve(requestedUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedUrl]);
 
   const onSubmit = async () => {
     if (!resolved) {
@@ -167,14 +184,14 @@ export function AddonInstallModal({
               </span>
             </div>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             disabled={!!installStage && !done}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-raised text-ink-muted transition-colors hover:bg-canvas/55 hover:text-ink disabled:opacity-40 disabled:hover:bg-raised disabled:hover:text-ink-muted"
             aria-label={t("Close")}
           >
             <X size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </header>
 
         <div className="flex-1 overflow-y-auto px-6 py-5">
@@ -235,13 +252,13 @@ export function AddonInstallModal({
 
         {!done && !installStage && (
           <footer className="flex items-center justify-end gap-2 border-t border-edge-soft px-6 py-4">
-            <button
+            <FocusButton
               onClick={onClose}
               className="flex h-10 items-center gap-1.5 rounded-full bg-raised px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-canvas/55 hover:text-ink"
             >
               {t("Cancel")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={onSubmit}
               disabled={(!resolved && !pasted.trim()) || loading}
               className="flex h-10 items-center gap-1.5 rounded-full bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
@@ -253,7 +270,7 @@ export function AddonInstallModal({
                 : isUpdate
                   ? t("Update")
                   : t("Install")}
-            </button>
+            </FocusButton>
           </footer>
         )}
       </div>
@@ -288,14 +305,14 @@ function ManageStep1({
           ? t("Click below to open {name}'s setup page. Pick your options, then copy the install link it gives you and paste it below to update the addon.", { name })
           : t("Click below to open {name}'s setup page in Harbor's built-in browser. Pick your options. When you click Install on their page, Harbor catches the link automatically and updates the addon.", { name })}
       </p>
-      <button
+      <FocusButton
         type="button"
         onClick={onOpenSetup}
         className="ms-7 flex h-9 w-fit items-center gap-1.5 rounded-full bg-raised px-3.5 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
       >
         <Settings2 size={12} strokeWidth={2.2} />
         {t("Open setup page")}
-      </button>
+      </FocusButton>
       <p className="mt-1 ps-7 text-[11.5px] leading-relaxed text-ink-subtle">
         {t("Heads-up: a few addons (like AIOStatus) don't pre-fill from the URL. If the form loads blank, paste the existing manifest URL into their \"Import from URL\" field to restore your settings.")}
       </p>
@@ -346,7 +363,7 @@ function PasteRow({
             className="flex-1 bg-transparent text-[13.5px] text-ink placeholder:text-ink-subtle outline-none"
           />
           {value.trim().length > 0 && (
-            <button
+            <FocusButton
               type="button"
               onClick={onResolve}
               disabled={loading}
@@ -354,7 +371,7 @@ function PasteRow({
             >
               {loading ? <Loader2 size={11} className="animate-spin" /> : null}
               {loading ? "" : t("Read")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
@@ -521,13 +538,13 @@ function SuccessPane({
           </p>
         )}
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onClose}
         className="mt-2 flex h-10 items-center gap-1.5 rounded-full bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
       >
         {t("Done")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

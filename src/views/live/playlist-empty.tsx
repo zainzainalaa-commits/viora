@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -51,7 +52,7 @@ function Intro({ onContinue }: { onContinue: () => void }) {
             )}
           </p>
           <div className="pt-2">
-            <button
+            <FocusButton
               onClick={onContinue}
               className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-ink ps-6 pe-5 text-[14.5px] font-semibold text-canvas transition-all duration-150 ease-out hover:opacity-90 active:scale-[0.97]"
             >
@@ -61,7 +62,7 @@ function Intro({ onContinue }: { onContinue: () => void }) {
                 strokeWidth={2.4}
                 className="dir-icon transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5"
               />
-            </button>
+            </FocusButton>
           </div>
         </header>
 
@@ -203,7 +204,7 @@ function Form({
   return (
     <div className="relative flex min-h-full flex-col px-12 py-20">
       <div className="mx-auto flex w-full max-w-[640px] flex-1 flex-col justify-center gap-8">
-        <button
+        <FocusButton
           onClick={onBack}
           className="group inline-flex h-11 items-center gap-2 self-start rounded-full border border-edge-soft bg-elevated/60 ps-3.5 pe-5 text-[14px] font-semibold text-ink-muted transition-all duration-150 ease-out hover:border-edge hover:bg-elevated hover:text-ink active:scale-[0.97]"
         >
@@ -213,7 +214,7 @@ function Form({
             className="dir-icon transition-transform group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5"
           />
           {t("Back")}
-        </button>
+        </FocusButton>
         <header className="flex flex-col gap-3">
           <h2
             className="font-display text-[38px] font-medium leading-[1.05] tracking-tight text-ink"
@@ -230,7 +231,7 @@ function Form({
           {KIND_META.map((k) => {
             const selected = kind === k.id;
             return (
-              <button
+              <FocusButton
                 key={k.id}
                 type="button"
                 onClick={() => setKind(k.id)}
@@ -261,7 +262,7 @@ function Form({
                     <span className="block h-full w-full rounded-full border-2 border-canvas" />
                   )}
                 </span>
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -365,20 +366,20 @@ function Form({
           )}
 
           <div className="flex items-center justify-end gap-3 pt-2">
-            <button
+            <FocusButton
               onClick={onBack}
               className="h-12 rounded-full px-5 text-[13.5px] font-medium text-ink-muted transition-colors hover:text-ink"
             >
               {t("Cancel")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               disabled={!canSave}
               onClick={submit}
               className="flex h-12 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-all duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-30"
             >
               {t("Save and continue")}
               <ArrowRight size={15} strokeWidth={2.4} className="dir-icon" />
-            </button>
+            </FocusButton>
           </div>
         </div>
 

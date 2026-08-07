@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { HarborMark } from "@/components/icons/harbor-mark";
@@ -136,13 +137,13 @@ function CurfewLockdown({
         </p>
       )}
 
-      <button
+      <FocusButton
         type="button"
         onClick={onSwitch}
         className="relative mt-7 h-11 rounded-full bg-white/15 px-6 text-[14px] font-bold text-white ring-1 ring-white/30 transition-colors hover:bg-white/25"
       >
         {t("Switch profile")}
-      </button>
+      </FocusButton>
     </div>,
     document.body,
   );

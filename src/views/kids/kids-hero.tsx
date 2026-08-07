@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { meta as fetchMeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
@@ -86,7 +87,7 @@ function KidsHeroCard({
   }, [meta.id, meta.type, logo, settings.tmdbKey]);
 
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onOpen}
       style={{ animationDelay: `${index * 70}ms` }}
@@ -113,7 +114,7 @@ function KidsHeroCard({
           {meta.name}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, Bookmark, BookmarkCheck, Play, Star } from "lucide-react";
 import { useMemo, type ReactNode } from "react";
 import type { PreviewData } from "@/lib/hover-preview/preview-data";
@@ -48,7 +49,7 @@ function WatchlistToggle({ data }: { data: PreviewData }) {
   const altIds = useMemo(() => [alt ?? undefined], [alt]);
   const active = useInWatchlist(meta.id, altIds);
   return (
-    <button
+    <FocusButton
       type="button"
       tabIndex={-1}
       title={active ? "In watchlist" : "Add to watchlist"}
@@ -65,7 +66,7 @@ function WatchlistToggle({ data }: { data: PreviewData }) {
       ) : (
         <Bookmark size={14} strokeWidth={2.6} />
       )}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -97,7 +98,7 @@ export function PreviewBlock({ data, onDetails }: { data: PreviewData; onDetails
           {verb}
         </span>
         {inProgress ? (
-          <button
+          <FocusButton
             type="button"
             tabIndex={-1}
             onPointerDown={(e) => e.stopPropagation()}
@@ -108,7 +109,7 @@ export function PreviewBlock({ data, onDetails }: { data: PreviewData; onDetails
             className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle transition-colors duration-150 hover:text-ink"
           >
             Details
-          </button>
+          </FocusButton>
         ) : (
           <WatchlistToggle data={data} />
         )}

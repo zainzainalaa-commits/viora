@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
@@ -46,7 +47,7 @@ export function Dropdown({
 
   return (
     <div ref={ref} className={`relative ${className}`}>
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
@@ -63,7 +64,7 @@ export function Dropdown({
           strokeWidth={2}
           className={`shrink-0 text-ink-subtle transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div
           ref={listRef}
@@ -73,7 +74,7 @@ export function Dropdown({
           {options.map((o) => {
             const active = o.value === value;
             return (
-              <button
+              <FocusButton
                 key={o.value}
                 type="button"
                 role="option"
@@ -89,7 +90,7 @@ export function Dropdown({
               >
                 <span className="truncate">{o.label}</span>
                 {active && <Check size={15} strokeWidth={2.4} className="shrink-0 text-accent" />}
-              </button>
+              </FocusButton>
             );
           })}
         </div>

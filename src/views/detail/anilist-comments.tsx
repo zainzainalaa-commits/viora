@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -184,7 +185,7 @@ function CommentRow({
         </div>
         <HtmlContent html={comment.commentHtml} className="mt-1.5 text-[13px] leading-relaxed text-ink" />
         <div className="mt-2 flex items-center gap-3 text-[12px] text-ink-muted">
-          <button
+          <FocusButton
             onClick={handleLike}
             disabled={liking || !connected}
             className={`flex items-center gap-1 transition-colors ${
@@ -193,9 +194,9 @@ function CommentRow({
           >
             {liking ? <Loader2 size={12} className="animate-spin" /> : <Heart size={12} fill={liked ? "currentColor" : "none"} />}
             {likeCount}
-          </button>
+          </FocusButton>
           {comment.user.id === ownerId && (
-            <button
+            <FocusButton
               onClick={async () => {
                 if (deleting) return;
                 setDeleting(true);
@@ -210,7 +211,7 @@ function CommentRow({
               className="flex items-center gap-1 text-ink-muted transition-colors hover:text-red-400 disabled:opacity-50"
             >
               {deleting ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
@@ -226,7 +227,7 @@ function ThreadRow({
   onOpen: (thread: AnilistThread) => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={() => onOpen(thread)}
       className="flex w-full items-center gap-3 rounded-xl bg-elevated p-4 text-left ring-1 ring-edge transition-colors hover:bg-raised"
     >
@@ -247,7 +248,7 @@ function ThreadRow({
         </div>
       </div>
       <ChevronRight size={16} className="shrink-0 text-ink-muted" />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -429,13 +430,13 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
             {t("Connect your AniList account to see forum threads and comments.")}
           </p>
           <p className="mt-3">
-            <button
+            <FocusButton
               onClick={() => openSettings("anilist")}
               className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
             >
               <Settings size={14} strokeWidth={2.2} />
               {t("Connect AniList")}
-            </button>
+            </FocusButton>
           </p>
         </div>
       </section>
@@ -458,22 +459,22 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-[20px] font-bold text-ink">{t("AniList Comments")}</h2>
         {mediaId && !activeThread && (
-          <button
+          <FocusButton
             onClick={() => setShowNewThread(!showNewThread)}
             className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-muted ring-1 ring-edge transition-colors hover:bg-elevated hover:text-ink"
           >
             <Plus size={12} />
             {t("New thread")}
-          </button>
+          </FocusButton>
         )}
         {activeThread && (
-          <button
+          <FocusButton
             onClick={backToThreads}
             className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-muted ring-1 ring-edge transition-colors hover:bg-elevated hover:text-ink"
           >
             <ArrowLeft size={12} />
             {t("Back to threads")}
-          </button>
+          </FocusButton>
         )}
       </div>
 
@@ -486,12 +487,12 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
                 "linear-gradient(to bottom, color-mix(in srgb, var(--color-canvas) 5%, transparent) 0%, color-mix(in srgb, var(--color-canvas) 78%, transparent) 40%, color-mix(in srgb, var(--color-canvas) 95%, transparent) 100%)",
             }}
           >
-            <button
+            <FocusButton
               onClick={() => setBlurred(false)}
               className="rounded-xl bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.97]"
             >
               {t("Reveal comments")}
-            </button>
+            </FocusButton>
             <span className="text-[11px] text-ink-muted/60">{t("Comments are hidden")}</span>
           </div>
         )}
@@ -514,7 +515,7 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
               <p className="mb-2 text-[12px] text-red-400">{threadError}</p>
             )}
             <div className="flex gap-2">
-              <button
+              <FocusButton
                 onClick={handleCreateThread}
                 disabled={!threadTitle.trim() || creatingThread}
                 className={`flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-[13px] font-semibold transition-all ${
@@ -525,13 +526,13 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
               >
                 {creatingThread ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 {t("Create thread")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={() => { setShowNewThread(false); setThreadTitle(""); setThreadBody(""); setThreadError(null); }}
                 className="rounded-lg px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink"
               >
                 {t("Cancel")}
-              </button>
+              </FocusButton>
             </div>
           </div>
         )}
@@ -551,12 +552,12 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
                 {activeThread.siteUrl && (
                   <>
                     <span>·</span>
-                    <button
+                    <FocusButton
                       onClick={() => openUrl(activeThread.siteUrl!)}
                       className="text-ink-muted underline transition-colors hover:text-ink"
                     >
                       {t("Open on AniList")}
-                    </button>
+                    </FocusButton>
                   </>
                 )}
               </div>
@@ -579,7 +580,7 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
                         el.style.height = `${Math.min(el.scrollHeight, 128)}px`;
                       }}
                     />
-                    <button
+                    <FocusButton
                       onClick={handlePostComment}
                       disabled={!commentText.trim() || posting}
                       className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-[13px] font-semibold transition-all ${
@@ -589,7 +590,7 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
                       }`}
                     >
                       {posting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                    </button>
+                    </FocusButton>
                   </div>
                 </div>
                 {postError && (
@@ -667,7 +668,7 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
                   <ThreadRow key={th.id} thread={th} onOpen={openThread} />
                 ))}
                 {hasMore && (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => void loadMore()}
                     disabled={loadingMore}
@@ -675,7 +676,7 @@ export function AnilistComments({ harborId }: { harborId: string | null }) {
                   >
                     {loadingMore && <Loader2 size={15} className="animate-spin" />}
                     {loadingMore ? t("Loading more") : t("Load more threads")}
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             )}

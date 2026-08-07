@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { t as translate } from "@/lib/i18n";
 import { Camera, ChevronLeft, Info, Maximize, Minimize, PauseCircle, PictureInPicture2, PlayCircle, Replace, Tv } from "lucide-react";
 import type { ReactNode } from "react";
@@ -145,13 +146,13 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       if (!ctx.onBack) return null;
       return (
         <Tooltip label={t("Back")} side="bottom">
-          <button
+          <FocusButton
             onClick={ctx.onBack}
             aria-label={t("Back")}
             className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-colors hover:bg-black/80"
           >
             <ChevronLeft size={26} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }
@@ -189,7 +190,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
       if (ctx.titleClickable && ctx.onTitleClick) {
         return (
-          <button
+          <FocusButton
             type="button"
             onClick={ctx.onTitleClick}
             className="pointer-events-auto group inline-flex items-center gap-2 rounded-lg px-2 py-0.5 text-start transition-colors hover:bg-white/10"
@@ -201,7 +202,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
               strokeWidth={2.2}
               className="opacity-50 transition-opacity group-hover:opacity-95"
             />
-          </button>
+          </FocusButton>
         );
       }
       return (
@@ -282,7 +283,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
     case "play-pause": {
       return (
         <Tooltip label={ctx.playing ? t("Pause") : t("Play")}>
-          <button
+          <FocusButton
             onClick={ctx.onPlayPause}
             className={`flex items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-[background-color,transform] hover:bg-white/22 active:scale-95 ${
               ctx.tight ? "h-12 w-12" : ctx.compact ? "h-14 w-14" : "h-16 w-16"
@@ -294,7 +295,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
             ) : (
               <PlayCircle size={ctx.tight ? 28 : ctx.compact ? 32 : 36} strokeWidth={1.5} />
             )}
-          </button>
+          </FocusButton>
         </Tooltip>
       );
     }

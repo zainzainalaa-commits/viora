@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Cast, Loader2, Subtitles, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { discoverCastDevices, type CastDeviceInfo } from "@/lib/cast";
@@ -78,17 +79,17 @@ export function CastMenu({
           <Cast size={13} strokeWidth={2.4} />
           {t("Cast to TV or speaker")}
         </span>
-        <button
+        <FocusButton
           onClick={onClose}
           aria-label={t("Close")}
           className="flex h-6 w-6 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={13} />
-        </button>
+        </FocusButton>
       </div>
       {hasActiveSub && (
         <>
-          <button
+          <FocusButton
             type="button"
             role="switch"
             aria-checked={burnSubsOnTv}
@@ -121,7 +122,7 @@ export function CastMenu({
                   : t("Subtitles may not appear on the TV.")}
               </span>
             </span>
-          </button>
+          </FocusButton>
           <div className="mb-2 h-px bg-edge-soft" />
         </>
       )}
@@ -135,17 +136,17 @@ export function CastMenu({
           <p className="text-[12.5px] text-ink-muted">
             {t("No Chromecast, DLNA, or Roku devices found. Make sure your TV is on, woken up, and on the same Wi-Fi.")}
           </p>
-          <button
+          <FocusButton
             onClick={() => setScanCount((c) => c + 1)}
             className="self-start rounded-md border border-edge-soft px-2 py-1 text-[11.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {t("Scan again")}
-          </button>
+          </FocusButton>
         </div>
       ) : (
         <div className="flex flex-col gap-1">
           {devices.map((d) => (
-            <button
+            <FocusButton
               key={d.id}
               onClick={() => onPick(d)}
               className="flex items-center gap-3 rounded-lg px-2.5 py-2 text-start transition-colors hover:bg-canvas/65"
@@ -166,14 +167,14 @@ export function CastMenu({
                   {d.kind === "dlna" ? d.model ?? t("DLNA TV") : d.model || `${d.host}:${d.port}`}
                 </span>
               </div>
-            </button>
+            </FocusButton>
           ))}
-          <button
+          <FocusButton
             onClick={() => setScanCount((c) => c + 1)}
             className="mt-1 self-start rounded-md px-2 py-1 text-[11px] font-medium text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             {t("Rescan")}
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>

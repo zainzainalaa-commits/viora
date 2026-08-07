@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -169,30 +170,30 @@ export function CalendarView() {
             </h1>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <button
+            <FocusButton
               onClick={goPrev}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors hover:border-edge hover:text-ink"
               aria-label={t("Previous month")}
             >
               <ChevronLeft size={16} strokeWidth={2.2} className="dir-icon" />
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={goToday}
               className="h-10 rounded-full border border-edge-soft px-4 text-[13px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {t("Today")}
-            </button>
+            </FocusButton>
             <div className="flex h-10 min-w-[150px] items-center justify-center gap-2 rounded-full border border-edge-soft px-5 text-[14px] font-semibold text-ink">
               <CalendarIcon size={14} strokeWidth={2} className="text-ink-subtle" />
               {t(MONTH_NAMES[month])} {year}
             </div>
-            <button
+            <FocusButton
               onClick={goNext}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors hover:border-edge hover:text-ink"
               aria-label={t("Next month")}
             >
               <ChevronRight size={16} strokeWidth={2.2} className="dir-icon" />
-            </button>
+            </FocusButton>
           </div>
         </div>
         <nav className="mt-6 flex flex-wrap items-center gap-3">
@@ -202,7 +203,7 @@ export function CalendarView() {
             traktConnected={traktConnected}
             simklConnected={simklConnected}
           />
-          <button
+          <FocusButton
             onClick={() => update({ weekStartsMonday: !settings.weekStartsMonday })}
             className={`rounded-full px-4 py-1.5 text-[12.5px] font-semibold transition-colors ${
               settings.weekStartsMonday
@@ -211,7 +212,7 @@ export function CalendarView() {
             }`}
           >
             {t("Start week on Monday")}
-          </button>
+          </FocusButton>
           {source === "custom" && (
             <CustomCalendarBar
               tmdbKey={settings.tmdbKey}
@@ -231,7 +232,7 @@ export function CalendarView() {
                       ? filtered.length
                       : applyCalendarFilter(items, f.id).length;
                   return (
-                    <button
+                    <FocusButton
                       key={f.id}
                       onClick={() => setFilter(f.id)}
                       className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
@@ -248,10 +249,10 @@ export function CalendarView() {
                       >
                         {count}
                       </span>
-                    </button>
+                    </FocusButton>
                   );
                 })}
-                <button
+                <FocusButton
                   onClick={() => authKey && setWatchlistOnly((v) => !v)}
                   disabled={!authKey}
                   title={!authKey ? t("Sign in to filter by your library") : undefined}
@@ -267,7 +268,7 @@ export function CalendarView() {
                     className={watchlistOnly ? "fill-canvas" : ""}
                   />
                   {t("Watchlist only")}
-                </button>
+                </FocusButton>
               </div>
             </>
           )}
@@ -280,7 +281,7 @@ export function CalendarView() {
                   const count =
                     f.id === "all" ? items.length : applyCalendarFilter(items, f.id).length;
                   return (
-                    <button
+                    <FocusButton
                       key={f.id}
                       onClick={() => setFilter(f.id)}
                       className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
@@ -297,7 +298,7 @@ export function CalendarView() {
                       >
                         {count}
                       </span>
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>

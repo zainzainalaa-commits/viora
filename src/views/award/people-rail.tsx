@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Poster } from "@/components/poster";
 import { Row } from "@/components/row";
 import type { AwardPerson } from "@/lib/awards/award-page";
@@ -30,7 +31,7 @@ function PersonCard({ person, tint }: { person: AwardPerson; tint: string }) {
   const t = useT();
   const { openPerson } = useView();
   return (
-    <button
+    <FocusButton
       onClick={() => openPerson(person.id)}
       className="group flex w-full min-w-0 flex-col gap-2.5 text-start"
     >
@@ -57,7 +58,7 @@ function PersonCard({ person, tint }: { person: AwardPerson; tint: string }) {
           <span className="line-clamp-1 text-[11.5px] text-ink-subtle">{person.work}</span>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

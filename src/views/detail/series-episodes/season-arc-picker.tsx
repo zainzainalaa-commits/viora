@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -81,7 +82,7 @@ export function SeasonArcPicker({
   const renderRow = (item: PickerItem) => {
     const isActive = item.key === activeKey;
     return (
-      <button
+      <FocusButton
         key={item.key}
         onClick={() => {
           onSelect(item.key);
@@ -103,13 +104,13 @@ export function SeasonArcPicker({
             {item.year && ` · ${item.year}`}
           </span>
         </div>
-      </button>
+      </FocusButton>
     );
   };
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => (menu ? setMenu(null) : openMenu())}
@@ -127,7 +128,7 @@ export function SeasonArcPicker({
             <span className="relative h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-canvas" />
           </span>
         )}
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div
@@ -139,7 +140,7 @@ export function SeasonArcPicker({
             {mode && onModeChange && (
               <div className="flex items-center gap-1 border-b border-edge-soft/60 px-2 pb-2 pt-1">
                 {(["seasons", "arcs"] as const).map((m) => (
-                  <button
+                  <FocusButton
                     key={m}
                     onClick={() => onModeChange(m)}
                     className={`h-8 flex-1 rounded-full px-3 text-[13px] font-medium transition-colors ${
@@ -147,7 +148,7 @@ export function SeasonArcPicker({
                     }`}
                   >
                     {m === "seasons" ? t("Seasons") : t("Arcs")}
-                  </button>
+                  </FocusButton>
                 ))}
               </div>
             )}

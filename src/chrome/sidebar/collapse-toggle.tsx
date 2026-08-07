@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
@@ -7,7 +8,7 @@ export function CollapseToggle({ collapsed }: { collapsed: boolean }) {
   const t = useT();
   const label = collapsed ? t("Expand sidebar") : t("Collapse sidebar");
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => update({ sidebarCollapsed: !collapsed })}
       aria-label={label}
@@ -23,6 +24,6 @@ export function CollapseToggle({ collapsed }: { collapsed: boolean }) {
         <PanelLeftClose size={17} strokeWidth={1.8} className="dir-icon" />
       )}
       {!collapsed && <span className="hidden text-[13px] font-medium lg:inline">{t("Collapse")}</span>}
-    </button>
+    </FocusButton>
   );
 }

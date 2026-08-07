@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Download, FolderOpen, Pause, Play, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -53,7 +54,7 @@ export function DownloadsButton() {
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         aria-label={t("Downloads")}
         onClick={() => setOpen((v) => !v)}
         className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-elevated/70 text-ink-muted transition-colors duration-150 hover:bg-elevated hover:text-ink"
@@ -64,12 +65,12 @@ export function DownloadsButton() {
             {activeCount}
           </span>
         )}
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-[calc(100%+8px)] z-50 w-[20rem] overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_18px_50px_-15px_rgba(0,0,0,0.7)] animate-popover-in">
           <div className="flex items-center justify-between px-4 pb-2 pt-3">
             <span className="text-[13.5px] font-semibold text-ink">{t("Downloads")}</span>
-            <button
+            <FocusButton
               onClick={() => {
                 setOpen(false);
                 setView("downloads");
@@ -77,7 +78,7 @@ export function DownloadsButton() {
               className="text-[12px] font-medium text-ink-subtle transition-colors hover:text-ink"
             >
               {t("See all")}
-            </button>
+            </FocusButton>
           </div>
           <div className="flex max-h-[min(60vh,420px)] flex-col gap-0.5 overflow-y-auto px-2 pb-2">
             {downloads.slice(0, 8).map((d) => (
@@ -97,7 +98,7 @@ function DownloadRow({ d, t, onOpen }: { d: DownloadItem; t: T; onOpen: () => vo
   const active = d.status === "downloading" || d.status === "paused";
   return (
     <div className="group flex items-center gap-2.5 rounded-xl px-2 py-2 transition-colors hover:bg-raised/50">
-      <button
+      <FocusButton
         onClick={onOpen}
         title={t("Go to show")}
         className="flex min-w-0 flex-1 items-center gap-3 text-start"
@@ -137,7 +138,7 @@ function DownloadRow({ d, t, onOpen }: { d: DownloadItem; t: T; onOpen: () => vo
             </span>
           )}
         </span>
-      </button>
+      </FocusButton>
       <div className="flex shrink-0 items-center gap-0.5">
         {d.status === "downloading" && (
           <>
@@ -184,13 +185,13 @@ function RowBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       aria-label={label}
       title={label}
       onClick={onClick}
       className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-subtle opacity-0 transition-all hover:bg-canvas/60 hover:text-ink focus-visible:opacity-100 group-hover:opacity-100"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

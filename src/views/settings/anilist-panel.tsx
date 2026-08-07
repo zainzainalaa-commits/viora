@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Link2, LogOut, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { AnilistConnectModal } from "@/components/anilist/anilist-connect-modal";
@@ -27,20 +28,20 @@ export function AnilistPanel() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button
+            <FocusButton
               onClick={() => setModalOpen(true)}
               className="flex h-11 items-center gap-2.5 rounded-xl bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
             >
               <Link2 size={15} strokeWidth={2.2} />
               {t("Connect AniList")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={() => openUrl("https://anilist.co")}
               className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {t("About AniList")}
               <ExternalLink size={13} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         </section>
       ) : (
@@ -71,7 +72,7 @@ export function AnilistPanel() {
               </div>
             </div>
             {userName && (
-              <button
+              <FocusButton
                 onClick={() =>
                   openUrl(`https://anilist.co/user/${encodeURIComponent(userName)}`)
                 }
@@ -79,7 +80,7 @@ export function AnilistPanel() {
               >
                 {t("Open profile")}
                 <ExternalLink size={11} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             )}
           </div>
           <ToggleRow
@@ -107,26 +108,26 @@ export function AnilistPanel() {
             onChange={(on) => update({ anilistBlurComments: on })}
           />
           {!confirmDisconnect ? (
-            <button
+            <FocusButton
               onClick={() => setConfirmDisconnect(true)}
               className="flex items-center gap-2 self-start rounded-lg px-2 py-1.5 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-red-300"
             >
               <Trash2 size={12} />
               {t("Disconnect from AniList")}
-            </button>
+            </FocusButton>
           ) : (
             <div className="flex items-center justify-between gap-3 rounded-lg border border-red-400/30 bg-red-400/5 p-3">
               <span className="text-[12.5px] text-red-200">
                 {t("Disconnect AniList? Your lists will stop showing on the Anime page until you reconnect.")}
               </span>
               <div className="flex items-center gap-2">
-                <button
+                <FocusButton
                   onClick={() => setConfirmDisconnect(false)}
                   className="rounded-md px-2.5 py-1 text-[12px] text-ink-muted hover:text-ink"
                 >
                   {t("Cancel")}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   onClick={() => {
                     disconnect();
                     setConfirmDisconnect(false);
@@ -135,7 +136,7 @@ export function AnilistPanel() {
                 >
                   <LogOut size={11} strokeWidth={2.4} />
                   {t("Disconnect")}
-                </button>
+                </FocusButton>
               </div>
             </div>
           )}

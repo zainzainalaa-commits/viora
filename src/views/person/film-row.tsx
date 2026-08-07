@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo } from "react";
 import { Poster, usePosterChain } from "@/components/poster";
 import { Row } from "@/components/row";
@@ -37,7 +38,7 @@ function FilmCard({ credit, showRole }: { credit: PersonCredit; showRole: boolea
     credit.mediaType === "tv" ? "series" : "movie",
   );
   return (
-    <button
+    <FocusButton
       onClick={() => openMeta(meta)}
       onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta })}
       className="group flex w-full min-w-0 flex-col gap-2.5 text-start"
@@ -60,6 +61,6 @@ function FilmCard({ credit, showRole }: { credit: PersonCredit; showRole: boolea
           <p className="text-[11.5px] text-ink-subtle">{credit.releaseInfo}</p>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }

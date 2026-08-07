@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, ExternalLink, Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -55,13 +56,13 @@ export function SimklDeviceModal({ onClose }: { onClose: () => void }) {
               {connectState.kind === "success" ? t("Connected") : t("Authorize Harbor on Simkl")}
             </h2>
           </div>
-          <button
+          <FocusButton
             onClick={onCancel}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         {(connectState.kind === "starting" || connectState.kind === "idle") && (
@@ -74,7 +75,7 @@ export function SimklDeviceModal({ onClose }: { onClose: () => void }) {
               <span className="text-[12px] font-medium uppercase tracking-[0.16em] text-ink-subtle">
                 {t("Step 1 · Open Simkl")}
               </span>
-              <button
+              <FocusButton
                 onClick={() => openUrl(connectState.pin.deepLinkUrl)}
                 className="flex h-12 items-center justify-between gap-3 rounded-xl border border-edge bg-canvas/40 px-4 text-[14px] font-medium text-ink transition-colors hover:bg-canvas/60"
               >
@@ -82,13 +83,13 @@ export function SimklDeviceModal({ onClose }: { onClose: () => void }) {
                   {connectState.pin.verificationUrl}
                 </span>
                 <ExternalLink size={15} strokeWidth={2.2} className="shrink-0 text-ink-subtle" />
-              </button>
+              </FocusButton>
             </div>
             <div className="flex flex-col gap-2.5">
               <span className="text-[12px] font-medium uppercase tracking-[0.16em] text-ink-subtle">
                 {t("Step 2 · Enter this code")}
               </span>
-              <button
+              <FocusButton
                 onClick={onCopy}
                 className="group flex h-16 items-center justify-between gap-4 rounded-xl border border-edge-soft bg-canvas/55 px-5 transition-colors hover:bg-canvas/75"
               >
@@ -108,7 +109,7 @@ export function SimklDeviceModal({ onClose }: { onClose: () => void }) {
                     </>
                   )}
                 </span>
-              </button>
+              </FocusButton>
             </div>
             <p className="flex items-center gap-2 text-[12.5px] text-ink-subtle">
               <Loader2 size={12} className="animate-spin" />
@@ -169,12 +170,12 @@ function ErrorBox({
         <span className="text-[14px] font-medium text-ink">{title}</span>
         <span className="text-[12.5px] text-ink-muted">{message}</span>
       </div>
-      <button
+      <FocusButton
         onClick={onRetry}
         className="self-start rounded-lg bg-ink px-3.5 py-1.5 text-[12.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
       >
         {t("Try again")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

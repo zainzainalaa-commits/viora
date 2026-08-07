@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, Check, Play } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -141,7 +142,7 @@ export function TextSyncList({
                 rowRefs.current[i] = el;
               }}
             >
-              <button
+              <FocusButton
                 onClick={() => handleRowClick(i)}
                 dir="auto"
                 className={`flex w-full items-start gap-4 border-b border-edge-soft/40 px-5 py-3.5 text-start transition-colors ${
@@ -182,10 +183,10 @@ export function TextSyncList({
                     <Check size={15} className="text-accent/70" />
                   ) : null}
                 </div>
-              </button>
+              </FocusButton>
               {isSelected && (
                 <div className="flex items-center gap-2.5 bg-elevated/50 px-5 py-3">
-                  <button
+                  <FocusButton
                     onClick={() => {
                       onSyncHere(i);
                       setSelected(null);
@@ -194,14 +195,14 @@ export function TextSyncList({
                   >
                     <Check size={15} strokeWidth={2.6} />
                     {t("Sync from here")}
-                  </button>
-                  <button
+                  </FocusButton>
+                  <FocusButton
                     onClick={() => onSeek(i)}
                     className="flex items-center gap-2 rounded-xl bg-raised px-4 py-2 text-[13.5px] font-medium text-ink-muted transition-colors hover:text-ink"
                   >
                     <Play size={13} />
                     {t("Jump here")}
-                  </button>
+                  </FocusButton>
                 </div>
               )}
             </div>
@@ -209,13 +210,13 @@ export function TextSyncList({
         })}
       </div>
       {!following && !searching && activeIndex != null && (
-        <button
+        <FocusButton
           onClick={jumpToNow}
           className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-semibold text-canvas shadow-[0_10px_28px_-6px_rgba(0,0,0,0.6)] transition-transform active:scale-95"
         >
           <ArrowDown size={14} strokeWidth={2.6} />
           {t("Jump to now")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );

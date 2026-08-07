@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { REPO_URL } from "@/lib/brand";
 import { ArrowDownToLine, Check } from "lucide-react";
 import { useState } from "react";
@@ -20,7 +21,7 @@ export function VersionItem({ entry, isCurrent }: { entry: VersionEntry; isCurre
         isCurrent ? "bg-accent/[0.07]" : "transition-colors hover:bg-raised/40"
       }`}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen(true)}
         title={t("Show the full notes for this build")}
@@ -39,7 +40,7 @@ export function VersionItem({ entry, isCurrent }: { entry: VersionEntry; isCurre
         {entry.notes && (
           <span className="line-clamp-2 text-[11.5px] leading-snug text-ink-subtle">{entry.notes}</span>
         )}
-      </button>
+      </FocusButton>
 
       {isCurrent ? (
         <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-accent/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-accent">
@@ -47,7 +48,7 @@ export function VersionItem({ entry, isCurrent }: { entry: VersionEntry; isCurre
           {t("Current")}
         </span>
       ) : url ? (
-        <button
+        <FocusButton
           type="button"
           title={t("Download this build's installer, then run it over your current copy")}
           onClick={() => openUrl(url)}
@@ -55,15 +56,15 @@ export function VersionItem({ entry, isCurrent }: { entry: VersionEntry; isCurre
         >
           <ArrowDownToLine size={13} strokeWidth={2.4} />
           {t("Download")}
-        </button>
+        </FocusButton>
       ) : (
-        RELEASES_URL && <button
+        RELEASES_URL && <FocusButton
           type="button"
           onClick={() => openUrl(RELEASES_URL)}
           className="shrink-0 text-[11.5px] font-semibold text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
         >
           {t("Releases")}
-        </button>
+        </FocusButton>
       )}
       {open && <VersionNotesModal entry={entry} isCurrent={isCurrent} onClose={() => setOpen(false)} />}
     </div>

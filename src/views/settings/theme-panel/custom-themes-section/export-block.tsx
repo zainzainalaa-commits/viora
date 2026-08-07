@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, X } from "lucide-react";
 import { useState } from "react";
 
@@ -25,21 +26,21 @@ export function ExportBlock({
           Theme code
         </span>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={copy}
             className="flex h-9 items-center gap-1.5 rounded-lg bg-ink px-3.5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
           >
             {copied ? <Check size={12} strokeWidth={2.6} /> : <Copy size={12} strokeWidth={2.2} />}
             {copied ? "Copied" : "Copy"}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-subtle hover:text-ink"
           >
             <X size={14} />
-          </button>
+          </FocusButton>
         </div>
       </div>
       <pre className="max-h-[320px] overflow-auto rounded-lg bg-canvas px-3 py-2 font-mono text-[11px] leading-relaxed text-ink-muted">

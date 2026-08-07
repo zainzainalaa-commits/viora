@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { applyCustomColorsPreview, CustomColors, type FontPairId } from "@/lib/theme";
@@ -45,36 +46,36 @@ export function CustomEditor({
   return (
     <div className="animate-fade-in flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
-        <button
+        <FocusButton
           onClick={() => onSave(draft)}
           className="flex items-center gap-2 rounded-full border border-edge-soft px-4 py-2 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
         >
           <ArrowLeft size={13} strokeWidth={2.4} className="dir-icon" />
           {t("Done")}
-        </button>
+        </FocusButton>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             onClick={() => setDraft(seed)}
             className="flex items-center gap-2 rounded-full border border-edge-soft px-4 py-2 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <RotateCcw size={13} strokeWidth={2.2} />
             {t("Reset")}
-          </button>
+          </FocusButton>
           {canDelete && (
-            <button
+            <FocusButton
               onClick={onDelete}
               className="flex items-center gap-2 rounded-full border border-rose-300/30 bg-rose-400/10 px-4 py-2 text-[12.5px] font-semibold text-rose-200 transition-colors hover:bg-rose-400/15"
             >
               <Trash2 size={13} strokeWidth={2.2} />
               {t("Delete")}
-            </button>
+            </FocusButton>
           )}
-          <button
+          <FocusButton
             onClick={() => onSave(draft)}
             className="rounded-full bg-ink px-5 py-2 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
           >
             {t("Save")}
-          </button>
+          </FocusButton>
         </div>
       </div>
 

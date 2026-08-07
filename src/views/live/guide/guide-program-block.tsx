@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -102,7 +103,7 @@ export function GuideProgramBlock({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={ref}
         onClick={onClick}
         onMouseEnter={onEnter}
@@ -150,7 +151,7 @@ export function GuideProgramBlock({
             </div>
           )}
         </div>
-      </button>
+      </FocusButton>
       {hovering && pos && (
         <ProgramTooltip
           program={program}

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -96,9 +97,9 @@ export function CustomHoverEditor({
         <div className="flex flex-1 flex-col overflow-y-auto p-5 [scrollbar-width:thin]">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-[17px] font-semibold text-ink">{initial ? t("Edit hover style") : t("New hover style")}</h2>
-            <button onClick={onClose} aria-label={t("Close")} className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-raised hover:text-ink">
+            <FocusButton onClick={onClose} aria-label={t("Close")} className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-raised hover:text-ink">
               <X size={18} />
-            </button>
+            </FocusButton>
           </div>
 
           <input
@@ -145,7 +146,7 @@ export function CustomHoverEditor({
 
           <div className="mt-5 flex items-center justify-between gap-2 border-t border-edge-soft pt-4">
             {initial ? (
-              <button
+              <FocusButton
                 onClick={() => {
                   deleteCustomHover(initial.id);
                   onDeleted();
@@ -155,17 +156,17 @@ export function CustomHoverEditor({
               >
                 <Trash2 size={14} />
                 {t("Delete")}
-              </button>
+              </FocusButton>
             ) : (
               <span />
             )}
             <div className="flex items-center gap-2">
-              <button onClick={onClose} className="h-9 rounded-lg px-3.5 text-[13px] font-semibold text-ink-muted transition-colors hover:bg-raised hover:text-ink">
+              <FocusButton onClick={onClose} className="h-9 rounded-lg px-3.5 text-[13px] font-semibold text-ink-muted transition-colors hover:bg-raised hover:text-ink">
                 {t("Cancel")}
-              </button>
-              <button onClick={save} className="h-9 rounded-lg bg-accent px-4 text-[13px] font-bold text-canvas transition-[filter] hover:brightness-110">
+              </FocusButton>
+              <FocusButton onClick={save} className="h-9 rounded-lg bg-accent px-4 text-[13px] font-bold text-canvas transition-[filter] hover:brightness-110">
                 {t("Save")}
-              </button>
+              </FocusButton>
             </div>
           </div>
         </div>
@@ -213,12 +214,12 @@ function Slider({
 
 function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
-    <button type="button" onClick={() => onChange(!value)} className="flex items-center justify-between text-start">
+    <FocusButton type="button" onClick={() => onChange(!value)} className="flex items-center justify-between text-start">
       <span className="text-[13px] text-ink">{label}</span>
       <span className={`flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors ${value ? "bg-accent" : "bg-edge"}`}>
         <span className={`h-4 w-4 rounded-full bg-white transition-transform ${value ? "translate-x-4" : ""}`} />
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -238,7 +239,7 @@ function Segmented({
       <span className="text-[13px] text-ink">{label}</span>
       <div className="flex items-center rounded-lg bg-raised p-0.5">
         {options.map((o) => (
-          <button
+          <FocusButton
             key={o.v}
             type="button"
             onClick={() => onChange(o.v)}
@@ -247,7 +248,7 @@ function Segmented({
             }`}
           >
             {o.label}
-          </button>
+          </FocusButton>
         ))}
       </div>
     </div>

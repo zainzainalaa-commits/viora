@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Download, ImagePlus, X } from "lucide-react";
 import { t } from "@/lib/i18n";
@@ -52,7 +53,7 @@ export function MediaLightbox({
           "background-color 320ms cubic-bezier(0.32,0.72,0.24,1), backdrop-filter 320ms cubic-bezier(0.32,0.72,0.24,1)",
       }}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -62,12 +63,12 @@ export function MediaLightbox({
         className="absolute end-7 top-16 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-colors hover:bg-canvas active:scale-[0.94]"
       >
         <X size={18} strokeWidth={2.4} />
-      </button>
+      </FocusButton>
 
       {(onDownload || onSetBackdrop) && (
         <div className="absolute start-7 top-16 z-10 flex items-center gap-2">
           {onSetBackdrop && (
-            <button
+            <FocusButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -78,10 +79,10 @@ export function MediaLightbox({
               className="flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-colors hover:bg-canvas active:scale-[0.94]"
             >
               <ImagePlus size={18} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
           {onDownload && (
-            <button
+            <FocusButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -92,13 +93,13 @@ export function MediaLightbox({
               className="flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-colors hover:bg-canvas active:scale-[0.94]"
             >
               <Download size={18} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
         </div>
       )}
 
       {multi && (
-        <button
+        <FocusButton
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -108,7 +109,7 @@ export function MediaLightbox({
           className="absolute start-7 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/85 text-ink backdrop-blur-md transition-transform hover:scale-105 active:scale-95"
         >
           <ChevronLeft size={24} strokeWidth={2.2} className="dir-icon" />
-        </button>
+        </FocusButton>
       )}
 
       <img
@@ -125,7 +126,7 @@ export function MediaLightbox({
       />
 
       {multi && (
-        <button
+        <FocusButton
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -135,7 +136,7 @@ export function MediaLightbox({
           className="absolute end-7 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/85 text-ink backdrop-blur-md transition-transform hover:scale-105 active:scale-95"
         >
           <ChevronRight size={24} strokeWidth={2.2} className="dir-icon" />
-        </button>
+        </FocusButton>
       )}
 
       {multi && (

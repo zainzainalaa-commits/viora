@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, LogOut, Pencil, Search, Settings as SettingsIcon, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
@@ -35,7 +36,7 @@ export function FloatingTop() {
       data-tauri-drag-region
       className={`fixed inset-x-0 top-0 z-[55] flex h-14 items-center gap-2 px-5 transition-opacity duration-300 ${chromeHidden ? "pointer-events-none opacity-0" : "opacity-100"}`}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={() => setView("home")}
         className="harbor-minui-mark flex shrink-0 items-center gap-2 rounded-full px-1.5 py-1 text-ink transition-colors"
@@ -46,9 +47,9 @@ export function FloatingTop() {
         ) : (
           <HarborMark className="h-8 w-8" />
         )}
-      </button>
+      </FocusButton>
       {showBack && (
-        <button
+        <FocusButton
           type="button"
           onClick={onBack}
           aria-label={t("common.back")}
@@ -56,7 +57,7 @@ export function FloatingTop() {
         >
           <ArrowLeft size={15} strokeWidth={2.2} className="dir-icon" />
           {t("common.back")}
-        </button>
+        </FocusButton>
       )}
       <div className="flex flex-1" data-tauri-drag-region />
       <div className="pointer-events-auto flex shrink-0 items-center gap-1.5">
@@ -95,7 +96,7 @@ function PillBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -103,7 +104,7 @@ function PillBtn({
       className="flex h-10 items-center gap-2 rounded-full border border-edge-soft bg-surface px-3.5 text-[13px] font-semibold text-ink-muted shadow-[0_2px_8px_-4px_rgba(15,15,18,0.18)] transition-all hover:-translate-y-px hover:border-edge hover:text-ink hover:shadow-[0_4px_12px_-4px_rgba(15,15,18,0.22)]"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -119,7 +120,7 @@ function WinBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -129,7 +130,7 @@ function WinBtn({
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
         {children}
       </svg>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -164,7 +165,7 @@ function ProfilePill({
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex h-10 items-center gap-2 rounded-full border border-edge-soft bg-surface ps-1.5 pe-3 text-[13px] font-semibold text-ink-muted shadow-[0_2px_8px_-4px_rgba(15,15,18,0.18)] transition-all hover:-translate-y-px hover:border-edge hover:text-ink hover:shadow-[0_4px_12px_-4px_rgba(15,15,18,0.22)]"
@@ -180,7 +181,7 @@ function ProfilePill({
           )}
         </span>
         <span className="hidden max-w-[9rem] truncate sm:inline">{name}</span>
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-[calc(100%+10px)] z-50 w-64 overflow-hidden rounded-2xl border border-edge bg-surface shadow-[0_24px_60px_-20px_rgba(15,15,18,0.35)]">
           <div className="border-b border-edge-soft px-4 py-3">
@@ -195,7 +196,7 @@ function ProfilePill({
                 {t("profile.switch")}
               </span>
               {otherProfiles.map((p) => (
-                <button
+                <FocusButton
                   key={p.id}
                   type="button"
                   onClick={() => {
@@ -212,7 +213,7 @@ function ProfilePill({
                     {p.name.slice(0, 1).toUpperCase()}
                   </span>
                   <span className="truncate text-[12.5px] text-ink">{p.name}</span>
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
@@ -280,12 +281,12 @@ function MenuRow({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex items-center gap-2.5 px-4 py-2.5 text-start text-[13.5px] font-medium transition-colors hover:bg-raised ${active ? "text-ink" : "text-ink-muted hover:text-ink"} ${separator ? "border-t border-edge-soft" : ""}`}
     >
       {icon} {children}
-    </button>
+    </FocusButton>
   );
 }

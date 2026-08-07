@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Download, Folder } from "lucide-react";
 import type { CodeLang } from "@/components/code-editor";
 import { IDE, type ThemeFile } from "./files";
@@ -52,7 +53,7 @@ export function FileTree({
                   style={{ background: IDE.accent }}
                 />
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => onSelect(f.id)}
                 className="flex h-11 w-full items-center gap-2.5 rounded-lg ps-6 pe-2.5 text-start transition-colors hover:bg-white/[0.04]"
@@ -73,8 +74,8 @@ export function FileTree({
                     {len.toLocaleString()}
                   </span>
                 )}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 type="button"
                 onClick={() => onDownload(f.id)}
                 aria-label={`Download ${f.name}`}
@@ -82,7 +83,7 @@ export function FileTree({
                 style={{ color: IDE.textDim }}
               >
                 <Download size={16} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             </div>
           );
         })}

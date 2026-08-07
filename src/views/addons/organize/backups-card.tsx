@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArchiveRestore } from "lucide-react";
 import { useMemo } from "react";
 import { loadBackups, type AddonOrderBackup } from "@/lib/addons-store/reorder";
@@ -37,14 +38,14 @@ export function BackupsPanel({
       <p className="text-[12.5px] leading-relaxed text-ink-muted">
         {t("A safety copy of your addon order. One is saved automatically before Harbor writes any change, and you can save one yourself any time. The five most recent are kept.")}
       </p>
-      <button
+      <FocusButton
         onClick={onBackupNow}
         disabled={!canBackup || busy}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-ink text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ArchiveRestore size={16} strokeWidth={2.2} />
         {t("Back up current order")}
-      </button>
+      </FocusButton>
       {backups.length === 0 ? (
         <p className="rounded-xl border border-dashed border-edge-soft bg-canvas/30 px-4 py-3 text-[13px] text-ink-subtle">
           {t("No backups yet. Press the button above to save your first one.")}
@@ -67,13 +68,13 @@ export function BackupsPanel({
                   {previewNames(b.names, t)}
                 </span>
               </div>
-              <button
+              <FocusButton
                 onClick={() => onRestore(b)}
                 disabled={busy}
                 className="shrink-0 rounded-full bg-ink px-4 py-2 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-40"
               >
                 {t("Restore")}
-              </button>
+              </FocusButton>
             </div>
           ))}
         </div>

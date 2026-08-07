@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { REPO_URL } from "@/lib/brand";
 import { ArrowDownToLine, Check, X } from "lucide-react";
 import { useEffect } from "react";
@@ -47,14 +48,14 @@ export function VersionNotesModal({
             )}
             {entry.date && <span className="text-[12px] text-ink-subtle">{entry.date}</span>}
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label={t("Close")}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={17} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
@@ -68,20 +69,20 @@ export function VersionNotesModal({
         </div>
 
         <div className="flex items-center justify-between gap-3 border-t border-edge-soft px-5 py-3.5">
-          {RELEASES_URL && <button
+          {RELEASES_URL && <FocusButton
             type="button"
             onClick={() => openUrl(RELEASES_URL)}
             className="text-[12px] font-semibold text-ink-subtle underline-offset-2 transition-colors hover:text-ink hover:underline"
           >
             {t("All releases on GitHub")}
-          </button>}
+          </FocusButton>}
           {isCurrent ? (
             <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-accent/15 px-3 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-accent">
               <Check size={13} strokeWidth={2.8} />
               {t("Current")}
             </span>
           ) : url ? (
-            <button
+            <FocusButton
               type="button"
               title={t("Download this build's installer, then run it over your current copy")}
               onClick={() => openUrl(url)}
@@ -89,7 +90,7 @@ export function VersionNotesModal({
             >
               <ArrowDownToLine size={14} strokeWidth={2.4} />
               {t("Download this build")}
-            </button>
+            </FocusButton>
           ) : null}
         </div>
       </div>

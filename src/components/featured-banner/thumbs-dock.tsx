@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -86,7 +87,7 @@ function ThumbsHint({ onDismiss }: { onDismiss: () => void }) {
             {t("Thumbs down hides this title from Featured. Thumbs up helps surface similar picks.")}
           </p>
         </div>
-        <button
+        <FocusButton
           onClick={(e) => {
             e.stopPropagation();
             onDismiss();
@@ -95,7 +96,7 @@ function ThumbsHint({ onDismiss }: { onDismiss: () => void }) {
           className="-me-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={13} />
-        </button>
+        </FocusButton>
         <div className="absolute bottom-0 end-6 -mb-1.5 h-3 w-3 rotate-45 border-b border-e border-edge-soft bg-elevated/95" />
       </div>
     </div>
@@ -120,7 +121,7 @@ function ThumbButton({
       ? "border-emerald-400/60 bg-emerald-400/15 text-emerald-300"
       : "border-rose-400/60 bg-rose-400/15 text-rose-300";
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
@@ -133,6 +134,6 @@ function ThumbButton({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo, useState } from "react";
 import { AlertTriangle, Check, ChevronDown, ChevronUp, Copy, Tv } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -117,28 +118,28 @@ export function ErrorBlock({ message, onRetry }: { message: string; onRetry: () 
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <button
+        <FocusButton
           onClick={onRetry}
           className="flex h-10 items-center rounded-xl bg-ink px-4 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
         >
           {t("Try again")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={copy}
           className="flex h-10 items-center gap-1.5 rounded-xl border border-edge-soft/55 bg-canvas/40 px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           {copied ? <Check size={13} strokeWidth={2.2} /> : <Copy size={13} strokeWidth={1.9} />}
           {copied ? t("Copied") : t("Copy error")}
-        </button>
+        </FocusButton>
       </div>
       <div className="border-t border-edge-soft/50 pt-3">
-        <button
+        <FocusButton
           onClick={() => setExpanded((v) => !v)}
           className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:text-ink-muted"
         >
           {expanded ? <ChevronUp size={12} strokeWidth={2.2} /> : <ChevronDown size={12} strokeWidth={2.2} />}
           {t("Technical details")}
-        </button>
+        </FocusButton>
         {expanded && (
           <pre className="mt-2.5 max-h-[200px] overflow-auto whitespace-pre-wrap break-words rounded-lg bg-canvas/70 p-3 font-mono text-[10.5px] leading-relaxed text-ink-subtle">
             {classified.raw}
@@ -289,12 +290,12 @@ export function EmptyResult({ onClear }: { onClear: () => void }) {
       <Tv size={26} strokeWidth={1.6} className="text-ink-subtle" />
       <h2 className="text-[16.5px] font-semibold text-ink">{t("No channels match")}</h2>
       <p className="text-[13.5px] text-ink-muted">{t("Try a different category or clear your filters.")}</p>
-      <button
+      <FocusButton
         onClick={onClear}
         className="mt-1 flex h-10 items-center rounded-xl border border-edge-soft bg-elevated px-3.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
       >
         {t("Reset filters")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ListChecks } from "lucide-react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -7,7 +8,7 @@ export function GuestPickToggle() {
   const t = useT();
   const on = settings.togetherGuestsPick;
   return (
-    <button
+    <FocusButton
       onClick={() => update({ togetherGuestsPick: !on })}
       className="flex h-12 items-center justify-between gap-2 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
       aria-pressed={on}
@@ -33,6 +34,6 @@ export function GuestPickToggle() {
           }`}
         />
       </span>
-    </button>
+    </FocusButton>
   );
 }

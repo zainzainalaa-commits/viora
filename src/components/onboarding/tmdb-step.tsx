@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Key, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import tmdbLogo from "@/assets/addon-logos/tmdb.png";
@@ -51,12 +52,12 @@ export function TmdbStep() {
           )}
         </p>
       </div>
-      <button
+      <FocusButton
         onClick={() => openUrl("https://www.themoviedb.org/settings/api")}
         className="inline-flex w-fit items-center gap-1.5 text-[14px] text-ink underline-offset-4 hover:underline"
       >
         {t("Get a free key at themoviedb.org")} <ExternalLink size={13} />
-      </button>
+      </FocusButton>
       <div className="flex items-center gap-2.5">
         <div
           key={`pulse-${pulseKey}`}
@@ -89,7 +90,7 @@ export function TmdbStep() {
           )}
           {status === "bad" && <X size={16} strokeWidth={2.5} className="animate-done-pop text-danger" />}
         </div>
-        <button
+        <FocusButton
           onClick={validate}
           disabled={!draft.trim() || status === "checking" || status === "ok"}
           className={`flex h-12 min-w-[112px] items-center justify-center gap-1.5 rounded-xl px-5 text-[14px] font-semibold transition-all duration-300 ${
@@ -111,7 +112,7 @@ export function TmdbStep() {
           ) : (
             t("Verify")
           )}
-        </button>
+        </FocusButton>
       </div>
       <p className="text-[13px] text-ink-subtle">
         {t("Skip if you'd rather just use Cinemeta. Harbor still works, you'll just see fewer rails.")}

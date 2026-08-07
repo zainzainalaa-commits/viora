@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertTriangle, ChevronDown, Eraser } from "lucide-react";
 import { useState } from "react";
 import { useSettings, type Settings } from "@/lib/settings";
@@ -47,7 +48,7 @@ export function CustomCodeCard() {
       id={settingsAnchor("Custom code")}
       className="scroll-mt-28 flex flex-col gap-4 rounded-2xl border border-edge-soft bg-elevated/40 p-7"
     >
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
@@ -66,7 +67,7 @@ export function CustomCodeCard() {
             className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           />
         </span>
-      </button>
+      </FocusButton>
       {open && <CustomCodePanel />}
     </section>
   );
@@ -102,14 +103,14 @@ export function CustomCodePanel() {
           <div className="flex items-center justify-between">
             <span className="text-[11px] leading-snug text-ink-subtle">{t(f.hint)}</span>
             {settings[f.id] && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => update({ [f.id]: "" } as Partial<Settings>)}
                 className="flex h-7 items-center gap-1 rounded-full bg-raised px-2.5 text-[11px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
               >
                 <Eraser size={11} strokeWidth={2.4} />
                 {t("Clear")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </SubField>

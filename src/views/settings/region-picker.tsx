@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -196,7 +197,7 @@ export function RegionPicker({
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={`flex h-14 w-full items-center gap-3.5 rounded-2xl border bg-elevated px-4 text-start transition-all ${
@@ -217,7 +218,7 @@ export function RegionPicker({
           strokeWidth={2}
           className={`text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <>
           <div
@@ -251,7 +252,7 @@ export function RegionPicker({
               filtered.map((r) => {
                 const selected = r.code === current.code;
                 return (
-                  <button
+                  <FocusButton
                     key={r.code}
                     onClick={() => {
                       onChange(r.code);
@@ -267,7 +268,7 @@ export function RegionPicker({
                       {r.code}
                     </span>
                     {selected && <Check size={14} strokeWidth={2.4} className="ms-1 text-ink" />}
-                  </button>
+                  </FocusButton>
                 );
               })
             )}

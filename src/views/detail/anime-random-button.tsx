@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Shuffle } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import type { KitsuEpisode } from "@/lib/providers/kitsu";
@@ -32,7 +33,7 @@ export function AnimeRandomButton({ meta, episodes }: { meta: Meta; episodes: Ki
     );
   };
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={t("Play a random episode")}
@@ -40,6 +41,6 @@ export function AnimeRandomButton({ meta, episodes }: { meta: Meta; episodes: Ki
       className="flex h-9 w-9 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
     >
       <Shuffle size={17} strokeWidth={2} />
-    </button>
+    </FocusButton>
   );
 }

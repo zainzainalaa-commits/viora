@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronLeft, Loader2, Lock, Link2, ShieldCheck, Trash2, Unlock, User as UserIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import traktLogo from "@/assets/trakt.svg";
@@ -352,15 +353,15 @@ export function EditorView({
               className="h-12 rounded-xl border border-edge bg-canvas px-4 text-[15.5px] font-medium text-ink outline-none transition-colors focus:border-ink-subtle"
             />
             <div className="flex flex-wrap items-center gap-2">
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 className="h-8 rounded-lg border border-edge-soft px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 {t("Upload photo")}
-              </button>
+              </FocusButton>
               {traktConnected && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => void onUseTraktAvatar()}
                   disabled={loadingTraktAvatar}
@@ -372,10 +373,10 @@ export function EditorView({
                     <img src={traktLogo} alt="" className="h-3 w-3 object-contain" />
                   )}
                   {t("Use Trakt avatar")}
-                </button>
+                </FocusButton>
               )}
               {anilistConnected && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => void onUseAnilistAvatar()}
                   disabled={loadingAnilistAvatar}
@@ -389,10 +390,10 @@ export function EditorView({
                     <Link2 size={12} />
                   )}
                   {t("Use AniList avatar")}
-                </button>
+                </FocusButton>
               )}
               {simklConnected && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => void onUseSimklAvatar()}
                   disabled={loadingSimklAvatar}
@@ -404,10 +405,10 @@ export function EditorView({
                     <img src={simklLogo} alt="" className="h-3 w-3 object-contain" />
                   )}
                   {t("Use Simkl avatar")}
-                </button>
+                </FocusButton>
               )}
               {avatar && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => {
                     setAvatar(null);
@@ -416,7 +417,7 @@ export function EditorView({
                   className="h-8 rounded-lg border border-edge-soft px-2.5 text-[12px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:text-danger"
                 >
                   {t("common.remove")}
-                </button>
+                </FocusButton>
               )}
             </div>
             <AvatarFan
@@ -493,34 +494,34 @@ export function EditorView({
 
       <div className="flex items-center justify-between gap-3 pt-1">
         <div className="flex items-center gap-3">
-          <button
+          <FocusButton
             type="button"
             onClick={onCancel}
             className="h-10 rounded-xl border border-edge-soft px-4 text-[13px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             {t("common.cancel")}
-          </button>
+          </FocusButton>
           {editing && !isPrimary && canEditAdvanced && (
             !confirmingDelete ? (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setConfirmingDelete(true)}
                 className="flex items-center gap-1.5 text-[12px] font-medium text-ink-subtle transition-colors hover:text-red-300"
               >
                 <Trash2 size={12} />
                 {t("Delete profile")}
-              </button>
+              </FocusButton>
             ) : (
               <div className="flex items-center gap-2 text-[12px]">
                 <span className="text-red-200">{t("Delete this profile?")}</span>
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => setConfirmingDelete(false)}
                   className="text-ink-muted hover:text-ink"
                 >
                   {t("common.cancel")}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   type="button"
                   onClick={() => {
                     deleteProfile(editing.id);
@@ -529,19 +530,19 @@ export function EditorView({
                   className="rounded-md bg-red-400/20 px-2 py-0.5 font-semibold text-red-200 hover:bg-red-400/30"
                 >
                   {t("common.confirm")}
-                </button>
+                </FocusButton>
               </div>
             )
           )}
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={() => void submit()}
           disabled={!canSave}
           className="flex h-10 items-center gap-1.5 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {editing ? t("Save changes") : t("Create profile")}
-        </button>
+        </FocusButton>
       </div>
       {avatarPickerOpen && (
         <AvatarCatalogModal
@@ -565,13 +566,13 @@ function BlockedView({ onBack }: { onBack: () => void }) {
       <p className="text-[14px] text-ink-muted">
         {t("Only the primary profile can edit other profiles.")}
       </p>
-      <button
+      <FocusButton
         type="button"
         onClick={onBack}
         className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas"
       >
         {t("common.back")}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -591,7 +592,7 @@ function SecurityRow({
   const tabsLabel =
     lockedCount === 0 ? t("no tab locks") : t("{n} tabs locked", { n: lockedCount });
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onOpen}
       className="flex items-center justify-between gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3.5 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -618,7 +619,7 @@ function SecurityRow({
         </div>
       </div>
       <ChevronLeft size={14} strokeWidth={2.2} className="rotate-180 rtl:rotate-0 text-ink-subtle" />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -646,14 +647,14 @@ function SecurityView({
   return (
     <div className="flex w-full max-w-[560px] flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
       <div className="flex items-center justify-between gap-3">
-        <button
+        <FocusButton
           type="button"
           onClick={onBack}
           className="flex h-9 items-center gap-1.5 rounded-lg px-2 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-elevated/40 hover:text-ink"
         >
           <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
           {t("common.back")}
-        </button>
+        </FocusButton>
       </div>
       <div className="flex flex-col items-center gap-2">
         <span className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
@@ -693,36 +694,36 @@ function SecurityView({
             </div>
             <div className="flex items-center gap-2">
               {!locked ? (
-                <button
+                <FocusButton
                   type="button"
                   onClick={onSetPin}
                   className="h-9 rounded-lg bg-ink px-3.5 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
                 >
                   {t("Set PIN")}
-                </button>
+                </FocusButton>
               ) : (
                 <>
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={onChangePin}
                     className="h-9 rounded-lg border border-edge-soft px-3.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
                   >
                     {t("Change")}
-                  </button>
-                  <button
+                  </FocusButton>
+                  <FocusButton
                     type="button"
                     onClick={onRemovePin}
                     className="h-9 rounded-lg border border-edge-soft px-3.5 text-[12.5px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:text-danger"
                   >
                     {editing ? t("common.remove") : t("Clear")}
-                  </button>
+                  </FocusButton>
                 </>
               )}
             </div>
           </div>
         </div>
 
-        <button
+        <FocusButton
           type="button"
           onClick={onOpenTabs}
           className="flex items-center justify-between gap-3 rounded-xl border border-edge-soft bg-canvas/40 p-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
@@ -747,7 +748,7 @@ function SecurityView({
             </div>
           </div>
           <ChevronLeft size={14} strokeWidth={2.2} className="rotate-180 rtl:rotate-0 text-ink-subtle" />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );
@@ -767,7 +768,7 @@ function ShareOption({
   sub: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex items-start gap-3 rounded-xl border px-3.5 py-3 text-start transition-colors ${
@@ -788,7 +789,7 @@ function ShareOption({
         <span className="text-[13.5px] font-semibold text-ink">{title}</span>
         <span className="text-[12px] leading-snug text-ink-subtle">{sub}</span>
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -831,14 +832,14 @@ function TabsView({
   return (
     <div className="flex h-full max-h-[calc(100vh-7rem)] w-full max-w-[560px] flex-col gap-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
       <div className="flex items-center justify-between gap-3">
-        <button
+        <FocusButton
           type="button"
           onClick={onBack}
           className="flex h-9 items-center gap-1.5 rounded-lg px-2 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-elevated/40 hover:text-ink"
         >
           <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
           {t("common.back")}
-        </button>
+        </FocusButton>
       </div>
       <div className="flex flex-col items-center gap-1">
         <span className="text-[10.5px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
@@ -853,7 +854,7 @@ function TabsView({
       </div>
       <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto pe-1">
         {LOCKABLE_TABS.map((tab) => (
-          <button
+          <FocusButton
             key={tab.key}
             type="button"
             onClick={() => toggle(tab.key)}
@@ -881,20 +882,20 @@ function TabsView({
               <span className="text-[13.5px] font-medium text-ink">{t(tab.label)}</span>
             </div>
             {tabs[tab.key] && <Lock size={13} strokeWidth={2.2} className="text-ink-muted" />}
-          </button>
+          </FocusButton>
         ))}
       </div>
       <div className="flex items-center justify-between gap-3">
         <span className="text-[12.5px] text-ink-subtle">
           {count === 0 ? t("No tabs selected") : t("{n} tabs locked", { n: count })}
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={() => onSave(tabs)}
           className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
         >
           {t("common.save")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

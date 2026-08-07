@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState, type ReactNode } from "react";
 
 export function DockButton({
@@ -32,7 +33,7 @@ export function DockButton({
         transition: "width 140ms cubic-bezier(0.34, 1.56, 0.64, 1)",
       }}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={handleClick}
         aria-label={label}
@@ -55,7 +56,7 @@ export function DockButton({
         }}
       >
         {children}
-      </button>
+      </FocusButton>
       <span
         aria-hidden
         className="absolute bottom-[-10px] h-1.5 w-1.5 rounded-full"

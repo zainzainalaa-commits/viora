@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { Section, ToggleRow } from "./shared";
 
@@ -38,7 +39,7 @@ export function SongCardStylePicker() {
           {options.map((o) => {
             const active = value === o.v;
             return (
-              <button
+              <FocusButton
                 key={o.v}
                 type="button"
                 aria-pressed={active}
@@ -61,7 +62,7 @@ export function SongCardStylePicker() {
                   <span className="text-[13px] font-semibold text-ink">{o.label}</span>
                 </div>
                 <span className="text-[12px] leading-snug text-ink-muted">{o.desc}</span>
-              </button>
+              </FocusButton>
             );
           })}
         </div>

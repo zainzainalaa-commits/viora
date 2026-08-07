@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight, ExternalLink, Quote, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -77,14 +78,14 @@ export function OverviewModal({
         onClick={(e) => e.stopPropagation()}
         className="relative flex max-h-[80vh] w-full max-w-[640px] flex-col gap-5 overflow-hidden rounded-2xl border border-edge-soft bg-surface p-8"
       >
-        <button
+        <FocusButton
           type="button"
           onClick={onClose}
           aria-label={t("Close overview")}
           className="absolute end-5 top-5 flex h-9 w-9 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors duration-150 hover:bg-elevated hover:text-ink"
         >
           <X size={18} />
-        </button>
+        </FocusButton>
         <div className="flex flex-col gap-1.5">
           <span className="text-[11.5px] uppercase tracking-[0.2em] text-ink-subtle">
             {review ? t("Reader review") : t("Synopsis")}
@@ -112,35 +113,35 @@ export function OverviewModal({
               <div className="flex shrink-0 items-center gap-2.5">
                 {!!reviewCount && reviewCount > 1 && onNavReview && (
                   <div className="flex items-center gap-1">
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => onNavReview(-1)}
                       aria-label={t("Previous review")}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                     >
                       <ChevronLeft size={15} strokeWidth={2.2} className="dir-icon" />
-                    </button>
+                    </FocusButton>
                     <span className="min-w-[2.75rem] text-center text-[11.5px] tabular-nums text-ink-subtle">
                       {(reviewIndex ?? 0) + 1} / {reviewCount}
                     </span>
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => onNavReview(1)}
                       aria-label={t("Next review")}
                       className="flex h-7 w-7 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                     >
                       <ChevronRight size={15} strokeWidth={2.2} className="dir-icon" />
-                    </button>
+                    </FocusButton>
                   </div>
                 )}
                 {review.url && (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => openUrl(review.url!)}
                     className="inline-flex items-center gap-1.5 rounded-full border border-edge px-3 py-1 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                   >
                     {t("Source")} <ExternalLink size={11} strokeWidth={2} />
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             </div>

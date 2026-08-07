@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { ArrowDownWideNarrow, ArrowUpNarrowWide, Play, Wifi, X } from "lucide-react";
@@ -213,14 +214,14 @@ function GridModal({ payload }: { payload: LocalEpisodesPayload }) {
               {localEps.length === 1 ? t("1 episode on disk") : t("{n} episodes on disk", { n: localEps.length })}
             </span>
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={() => closeLocalEpisodes()}
             aria-label={t("Close")}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={17} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex flex-col gap-4 overflow-y-auto p-4">
@@ -300,7 +301,7 @@ function GridModal({ payload }: { payload: LocalEpisodesPayload }) {
                 )}
               </div>
             )}
-            <button
+            <FocusButton
               type="button"
               onClick={() => update({ localEpisodeSortDesc: !sortDesc })}
               aria-label={t("Sort episodes")}
@@ -313,7 +314,7 @@ function GridModal({ payload }: { payload: LocalEpisodesPayload }) {
                 <ArrowUpNarrowWide size={14} strokeWidth={2.2} />
               )}
               {sortLabel}
-            </button>
+            </FocusButton>
           </div>
 
           <div className="flex shrink-0 flex-col gap-1">
@@ -324,7 +325,7 @@ function GridModal({ payload }: { payload: LocalEpisodesPayload }) {
                 pr && ep.runtime && ep.runtime > 0 ? Math.min(1, pr.ms / (ep.runtime * 60_000)) : 0;
               const watchedAgo = pr ? formatRelativeWatched(pr.t) : "";
               return (
-              <button
+              <FocusButton
                 key={ep.id}
                 type="button"
                 onClick={() => play(ep)}
@@ -374,7 +375,7 @@ function GridModal({ payload }: { payload: LocalEpisodesPayload }) {
                     />
                   </span>
                 )}
-              </button>
+              </FocusButton>
               );
             })}
             {listEps.length === 0 && (
@@ -387,14 +388,14 @@ function GridModal({ payload }: { payload: LocalEpisodesPayload }) {
 
         {payload.onStream && (
           <div className="border-t border-edge-soft p-4">
-            <button
+            <FocusButton
               type="button"
               onClick={stream}
               className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-canvas/50 text-[13.5px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-canvas/70"
             >
               <Wifi size={16} strokeWidth={2.2} />
               {t("Stream / addons instead")}
-            </button>
+            </FocusButton>
           </div>
         )}
       </div>
@@ -413,7 +414,7 @@ function SeasonPill({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
@@ -421,6 +422,6 @@ function SeasonPill({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

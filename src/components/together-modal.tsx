@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, LogOut, MousePointer2, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -123,7 +124,7 @@ export function TogetherPopover({
           {view === "link" ? t("Invite via link") : t("Watch together")}
         </h2>
         <Tooltip label={view === "link" ? t("Back") : t("Invite via link")} side="bottom">
-          <button
+          <FocusButton
             type="button"
             onClick={() => setView((v) => (v === "link" ? "default" : "link"))}
             aria-label={view === "link" ? t("Close invite link panel") : t("Open invite link panel")}
@@ -136,7 +137,7 @@ export function TogetherPopover({
           >
             <LinkGlyph />
             {t("Invite")}
-          </button>
+          </FocusButton>
         </Tooltip>
       </header>
 
@@ -171,19 +172,19 @@ export function TogetherPopover({
             className="h-10 rounded-lg border border-edge bg-canvas px-3 text-[12px] text-ink transition-colors focus:border-accent"
           />
           <div className="flex items-center gap-2">
-            <button
+            <FocusButton
               onClick={handleJoin}
               disabled={!joinCode.trim()}
               className="inline-flex h-9 items-center justify-center rounded-lg bg-ink px-3 text-[13px] font-medium text-canvas transition-transform hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100"
             >
               {t("Join")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={goToSettings}
               className="inline-flex h-9 items-center justify-center rounded-lg border border-edge px-3 text-[13px] font-medium text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("Open Settings")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       )}
@@ -202,14 +203,14 @@ export function TogetherPopover({
             />
           </label>
 
-          <button
+          <FocusButton
             onClick={handleStart}
             disabled={connecting}
             className="flex h-11 items-center justify-center gap-2 rounded-xl bg-ink text-[13.5px] font-medium text-canvas transition-transform hover:scale-[1.01] disabled:opacity-40 disabled:hover:scale-100"
           >
             <Plus size={15} strokeWidth={2.2} />
             {connecting ? t("Starting…") : t("Start a new room")}
-          </button>
+          </FocusButton>
 
           <div className="flex items-center gap-3 text-[10.5px] uppercase tracking-wider text-ink-subtle">
             <span className="h-px flex-1 bg-edge-soft" />
@@ -233,13 +234,13 @@ export function TogetherPopover({
                     : "text-center text-[15px] font-mono tracking-[0.3em]"
                 }`}
               />
-              <button
+              <FocusButton
                 onClick={handleJoin}
                 disabled={joinCode.trim().length === 0 || connecting}
                 className="h-10 rounded-lg border border-edge px-4 text-[13px] font-medium text-ink transition-colors hover:bg-elevated disabled:opacity-40 disabled:hover:bg-transparent"
               >
                 {t("Join")}
-              </button>
+              </FocusButton>
             </div>
             <p className="px-1 text-[10.5px] text-ink-subtle">
               {t("or paste an invite link")}
@@ -249,12 +250,12 @@ export function TogetherPopover({
           {errored && snapshot.lastError && (
             <div className="flex flex-col gap-2 rounded-lg bg-danger/15 px-3 py-2.5">
               <p className="text-[12px] leading-snug text-danger">{snapshot.lastError}</p>
-              <button
+              <FocusButton
                 onClick={retrySession}
                 className="self-start rounded-md border border-danger/40 px-2.5 py-1 text-[11.5px] font-medium text-danger transition-colors hover:bg-danger/20"
               >
                 {t("Try again")}
-              </button>
+              </FocusButton>
             </div>
           )}
         </>
@@ -269,13 +270,13 @@ export function TogetherPopover({
               <span className="text-[10.5px] uppercase tracking-wider text-ink-subtle">{t("Room code")}</span>
               <span className="font-mono text-[18px] tracking-[0.35em] text-ink">{snapshot.room}</span>
             </div>
-            <button
+            <FocusButton
               onClick={handleCopy}
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-edge text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
               aria-label={t("Copy room code")}
             >
               {copied ? <Check size={15} strokeWidth={2.4} /> : <Copy size={14} strokeWidth={1.9} />}
-            </button>
+            </FocusButton>
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -311,7 +312,7 @@ export function TogetherPopover({
 
           {snapshot.hostClientId === clientId && <GuestPickToggle />}
 
-          <button
+          <FocusButton
             onClick={() => update({ togetherShareCursors: !settings.togetherShareCursors })}
             className="flex h-10 items-center justify-between gap-2 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             aria-pressed={settings.togetherShareCursors}
@@ -332,15 +333,15 @@ export function TogetherPopover({
                 }`}
               />
             </span>
-          </button>
+          </FocusButton>
 
-          <button
+          <FocusButton
             onClick={leaveSession}
             className="flex h-10 items-center justify-center gap-1.5 rounded-lg border border-edge text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             <LogOut size={13} strokeWidth={1.9} />
             {t("Leave room")}
-          </button>
+          </FocusButton>
         </>
       )}
       </div>

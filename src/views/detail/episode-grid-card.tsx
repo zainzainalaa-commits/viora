@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CalendarDays, Check, Info, Play, RotateCcw } from "lucide-react";
 import { EpisodeDownloadButton } from "./episode-download-button";
 import { useEffect, useRef, useState } from "react";
@@ -72,7 +73,7 @@ export function EpisodeGridCard({
 
   return (
     <div onMouseEnter={enter} onMouseLeave={leave} className={`group relative ${preview ? "z-30" : ""}`}>
-      <button
+      <FocusButton
         data-ep={g.number}
         data-no-card-ring
         onClick={g.play}
@@ -123,7 +124,7 @@ export function EpisodeGridCard({
             </p>
           )}
         </div>
-      </button>
+      </FocusButton>
       {preview && !spoilered && (
         <EpisodePreview
           meta={cardMeta}
@@ -195,7 +196,7 @@ function EpisodePreview({
   const { openEpisodeDetail } = useView();
   return (
     <div className="animate-popover-in absolute -inset-x-2 -top-2 z-30 overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)]">
-      <button onClick={g.play} onContextMenu={onContext} className="block w-full text-start">
+      <FocusButton onClick={g.play} onContextMenu={onContext} className="block w-full text-start">
         <div className="relative aspect-video overflow-hidden">
           <Poster src={still} seed={g.key} ratio="landscape" />
           {watched && <div className="absolute inset-0 bg-canvas/45" />}
@@ -213,7 +214,7 @@ function EpisodePreview({
             </>
           )}
         </div>
-      </button>
+      </FocusButton>
       <div className="flex flex-col gap-1.5 p-3.5">
         <span className="truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
           {meta.name}
@@ -235,13 +236,13 @@ function EpisodePreview({
           </div>
         )}
         <div className="mt-1 flex gap-2">
-          <button
+          <FocusButton
             onClick={g.play}
             className="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg bg-ink text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
           >
             {watched ? <RotateCcw size={14} strokeWidth={2.4} /> : <Play size={13} fill="currentColor" />}
             {watched ? t("Watch again") : minsLeft > 0 ? t("Resume") : t("Play")}
-          </button>
+          </FocusButton>
           <EpisodeDownloadButton
             meta={meta}
             episode={{
@@ -254,14 +255,14 @@ function EpisodePreview({
             }}
             size={36}
           />
-          <button
+          <FocusButton
             onClick={() => openEpisodeDetail(meta.id, g.season, g.number, meta)}
             aria-label={t("Episode details")}
             title={t("Episode details")}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-edge-soft text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <Info size={15} strokeWidth={2} />
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -80,7 +81,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        <button
+        <FocusButton
           type="button"
           onClick={() => setRemember((v) => !v)}
           disabled={busy}
@@ -97,13 +98,13 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
             <span className="text-[13px] font-medium text-ink">{t("Remember me")}</span>
             <span className="text-[11.5px] text-ink-subtle">{t("Stays signed in on this device only.")}</span>
           </span>
-        </button>
+        </FocusButton>
 
         {error && (
           <p className="rounded-lg bg-danger/15 px-3 py-2 text-[12.5px] text-danger">{error}</p>
         )}
 
-        <button
+        <FocusButton
           type="submit"
           disabled={busy || !email || !password}
           className="flex h-11 items-center justify-center gap-2 rounded-xl border border-edge bg-elevated text-[14px] font-semibold text-ink transition-colors hover:bg-raised disabled:cursor-not-allowed disabled:opacity-50"
@@ -116,24 +117,24 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           ) : (
             t("Sign in with email")
           )}
-        </button>
+        </FocusButton>
 
         <div className="flex items-center justify-between gap-3 pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="text-[12.5px] text-ink-subtle transition-colors hover:text-ink-muted"
           >
             {t("Cancel")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => openUrl("https://www.stremio.com/register")}
             className="flex items-center gap-1.5 text-[12.5px] text-ink-subtle transition-colors hover:text-ink-muted"
           >
             <span>{t("Create account")}</span>
             <ExternalLink size={11} />
-          </button>
+          </FocusButton>
         </div>
       </form>
     </div>,
@@ -178,7 +179,7 @@ function Field({
           }`}
         />
         {isPassword && (
-          <button
+          <FocusButton
             type="button"
             tabIndex={-1}
             onMouseDown={(e) => e.preventDefault()}
@@ -189,7 +190,7 @@ function Field({
             className="absolute inset-y-0 end-0 flex w-11 items-center justify-center text-ink-subtle transition-colors hover:text-ink disabled:opacity-50"
           >
             {show ? <EyeOff size={17} strokeWidth={2} /> : <Eye size={17} strokeWidth={2} />}
-          </button>
+          </FocusButton>
         )}
       </div>
     </label>

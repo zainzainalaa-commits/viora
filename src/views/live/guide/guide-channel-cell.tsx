@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { Info, Play, Tv } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -49,7 +50,7 @@ export function GuideChannelCell({
         sublabel={channel.group}
         className="flex min-w-0 flex-1"
       >
-        <button
+        <FocusButton
           onClick={() => onPlay(channel)}
           className="flex w-full min-w-0 items-center gap-2.5 py-2 text-start transition-opacity hover:opacity-85"
         >
@@ -107,7 +108,7 @@ export function GuideChannelCell({
               </span>
             ) : null}
           </div>
-        </button>
+        </FocusButton>
       </HoverTooltip>
       <FavoriteButton
         active={isFav}
@@ -116,13 +117,13 @@ export function GuideChannelCell({
         variant="inline"
       />
       {hydrated && onInfo && (
-        <button
+        <FocusButton
           onClick={() => onInfo(hydrated)}
           aria-label={t("Open details")}
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
           <Info size={13} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

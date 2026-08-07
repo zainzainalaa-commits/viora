@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { fetchTrailer, resolveTrailerQuality, trailerSrc, type TrailerInfo } from "@/lib/trailer";
@@ -82,7 +83,7 @@ export function DetailHeroTrailer({
         style={{ opacity: wantsPlayback && ready ? 1 : 0 }}
       />
       {wantsPlayback && ready && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => setMuted((m) => !m)}
           aria-label={muted ? t("Unmute trailer") : t("Mute trailer")}
@@ -90,7 +91,7 @@ export function DetailHeroTrailer({
           className="absolute bottom-8 end-8 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/55 text-white ring-1 ring-white/15 backdrop-blur-md transition-colors hover:bg-black/75"
         >
           {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        </button>
+        </FocusButton>
       )}
     </>
   );

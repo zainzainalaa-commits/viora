@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CalendarClock } from "lucide-react";
 import { daysFromTodayLocal, formatAirDate } from "@/lib/dates";
 import type { TmdbDetail } from "@/lib/providers/tmdb";
@@ -10,7 +11,7 @@ export function UpcomingCta({ detail, onTry }: { detail: TmdbDetail | null; onTr
   const friendly = upcomingDateLabel(t, date);
   return (
     <Tooltip label={t("Not officially released yet. Click to search anyway in case of an early release.")}>
-      <button
+      <FocusButton
         onClick={onTry}
         className="group flex h-12 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full border border-edge bg-elevated/40 px-7 text-[15px] font-semibold text-ink-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-[transform,background-color,border-color,color] duration-200 hover:border-ink-subtle hover:bg-elevated/70 hover:text-ink active:scale-[0.98]"
       >
@@ -21,7 +22,7 @@ export function UpcomingCta({ detail, onTry }: { detail: TmdbDetail | null; onTr
             · {friendly}
           </span>
         )}
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }

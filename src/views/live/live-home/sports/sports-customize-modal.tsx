@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { X, Check, Settings2 } from "lucide-react";
 import { useT, useUiLanguage } from "@/lib/i18n";
@@ -64,12 +65,12 @@ export function SportsCustomizeModal({ selected, onSave, onClose }: SportsCustom
               <p className="text-[12px] text-ink-subtle">{t("sports.customize.selected", { n: draft.size })}</p>
             </div>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex gap-1.5 overflow-x-auto border-b border-edge-soft/30 px-4 py-2.5 [scrollbar-width:none]">
@@ -120,12 +121,12 @@ export function SportsCustomizeModal({ selected, onSave, onClose }: SportsCustom
                         <span>{g.icon}</span>
                         {getGroupLabel(g)}
                       </span>
-                      <button
+                      <FocusButton
                         onClick={() => toggleGroup(g.key)}
                         className={`text-[11px] font-medium transition-colors ${allSel ? "text-danger hover:text-danger/80" : someSel ? "text-amber-400 hover:text-amber-300" : "text-ink-subtle hover:text-ink"}`}
                       >
                         {allSel ? t("sports.customize.deselectGroupAll") : t("sports.customize.selectGroupAll")}
-                      </button>
+                      </FocusButton>
                     </div>
                     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                       {leagues.map((league) => (
@@ -146,32 +147,32 @@ export function SportsCustomizeModal({ selected, onSave, onClose }: SportsCustom
 
         <div className="flex items-center justify-between border-t border-edge-soft/30 px-6 py-3.5">
           <div className="flex gap-2">
-            <button
+            <FocusButton
               onClick={selectAll}
               className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("sports.customize.selectAll")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={clearAll}
               className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("sports.customize.clearAll")}
-            </button>
+            </FocusButton>
           </div>
           <div className="flex gap-2">
-            <button
+            <FocusButton
               onClick={onClose}
               className="rounded-xl border border-edge-soft/50 px-4 py-2 text-[13px] font-medium text-ink-muted transition-colors hover:bg-elevated"
             >
               {t("sports.customize.cancel")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={() => { onSave([...draft]); onClose(); }}
               className="rounded-xl bg-ink px-5 py-2 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-80"
             >
               {t("sports.customize.save")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>
@@ -189,7 +190,7 @@ function GroupTab({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`relative flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-all ${
         active
@@ -206,7 +207,7 @@ function GroupTab({
           {badge}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -219,7 +220,7 @@ function LeagueCard({
 }) {
   const [imgErr, setImgErr] = useState(false);
   return (
-    <button
+    <FocusButton
       onClick={onToggle}
       className={`relative flex items-center gap-2.5 rounded-xl border p-2.5 text-start transition-all ${
         selected
@@ -248,6 +249,6 @@ function LeagueCard({
           <Check size={11} strokeWidth={3} className="text-canvas" />
         </div>
       )}
-    </button>
+    </FocusButton>
   );
 }

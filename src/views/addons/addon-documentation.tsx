@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -86,7 +87,7 @@ export function AddonDocumentation({ slug }: { slug: string }) {
               ),
               p: (p) => <p className="mb-3">{p.children}</p>,
               a: (p) => (
-                <button
+                <FocusButton
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
@@ -95,7 +96,7 @@ export function AddonDocumentation({ slug }: { slug: string }) {
                   className="inline font-semibold text-accent underline-offset-2 transition-colors hover:text-ink hover:underline"
                 >
                   {p.children}
-                </button>
+                </FocusButton>
               ),
               ul: (p) => <ul className="mb-3 ms-5 list-disc">{p.children}</ul>,
               ol: (p) => <ol className="mb-3 ms-5 list-decimal">{p.children}</ol>,
@@ -168,7 +169,7 @@ export function AddonDocumentation({ slug }: { slug: string }) {
           </ReactMarkdown>
       </div>
       {needsToggle && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => setExpanded((e) => !e)}
           className="mt-4 inline-flex items-center gap-1 text-[11.5px] font-bold uppercase tracking-[0.18em] text-accent transition-opacity hover:opacity-80"
@@ -179,7 +180,7 @@ export function AddonDocumentation({ slug }: { slug: string }) {
             strokeWidth={2.6}
             className={`transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
           />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

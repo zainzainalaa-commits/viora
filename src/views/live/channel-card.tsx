@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Info, Pin, Tv } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -69,7 +70,7 @@ export function ChannelCard({
           : "border-edge-soft/55 hover:border-edge/85 hover:bg-raised"
       }`}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={() => onPlay(channel)}
         aria-label={t("Play {name}", { name: displayName })}
@@ -161,19 +162,19 @@ export function ChannelCard({
             <div className="truncate text-[12.5px] text-ink-subtle">{t("No program info")}</div>
           )}
         </div>
-      </button>
+      </FocusButton>
       <div className="absolute end-2 top-2 z-10 flex items-center gap-1.5">
         {onInfo && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => onInfo(hydrated ?? channelMeta(channel))}
             aria-label={t("Open details")}
             className="flex h-7 w-7 items-center justify-center rounded-full bg-canvas/85 text-ink opacity-0 transition-opacity duration-150 hover:bg-canvas group-hover:opacity-100"
           >
             <Info size={13} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         )}
-        <button
+        <FocusButton
           type="button"
           onClick={() => togglePin(channel.id)}
           aria-label={isChannelPinned ? t("Unpin channel") : t("Pin to top")}
@@ -184,7 +185,7 @@ export function ChannelCard({
           }`}
         >
           <Pin size={13} strokeWidth={2.2} className={isChannelPinned ? "fill-current" : ""} />
-        </button>
+        </FocusButton>
         <FavoriteButton
           active={isFav}
           onToggle={() => favorites.toggle(channel)}

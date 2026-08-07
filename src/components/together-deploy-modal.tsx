@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, Check, Copy, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import cfTokenTutorial from "@/assets/cf-token-tutorial.png";
@@ -100,7 +101,7 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
   const body = (
     <>
       {phase !== "deploying" && phase !== "done" && (
-        <button
+        <FocusButton
           onClick={onClose}
           className="flex h-8 w-fit items-center gap-1.5 rounded-lg px-2 -ms-2 text-[12.5px] font-medium text-ink-subtle transition-colors hover:bg-elevated/60 hover:text-ink"
         >
@@ -114,7 +115,7 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
             />
           </svg>
           {t("Relay")}
-        </button>
+        </FocusButton>
       )}
       <header>
           <h2 className="font-display text-[26px] font-medium leading-tight tracking-tight text-ink">
@@ -160,20 +161,20 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
                 }} />
               </Step>
             </ol>
-            <button
+            <FocusButton
               onClick={() => openUrl("https://dash.cloudflare.com/profile/api-tokens")}
               className="flex h-11 items-center justify-center gap-2 rounded-xl border border-edge text-[14px] text-ink transition-colors hover:bg-elevated"
             >
               <ExternalLink size={15} strokeWidth={1.8} />
               {t("Open Cloudflare token page")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={() => setPhase("token")}
               className="flex h-11 items-center justify-center gap-2 rounded-xl bg-ink text-[14px] font-medium text-canvas transition-transform hover:scale-[1.01]"
             >
               {t("I have my token")}
               <ArrowRight size={15} strokeWidth={2} />
-            </button>
+            </FocusButton>
           </div>
         )}
 
@@ -194,19 +195,19 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
               <p className="rounded-lg bg-danger/15 px-3 py-2 text-[13px] text-danger">{error}</p>
             )}
             <div className="flex gap-2">
-              <button
+              <FocusButton
                 onClick={() => setPhase("intro")}
                 className="h-11 flex-1 rounded-xl border border-edge text-[14px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
               >
                 {t("Back")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={verifyTokenAndPickAccount}
                 disabled={!token.trim()}
                 className="h-11 flex-1 rounded-xl bg-ink text-[14px] font-medium text-canvas transition-transform hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100"
               >
                 {t("Continue")}
-              </button>
+              </FocusButton>
             </div>
           </div>
         )}
@@ -216,7 +217,7 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
             <p className="text-[13px] text-ink-muted">{t("Which account should the relay live in?")}</p>
             <div className="flex flex-col gap-1.5">
               {accounts.map((a) => (
-                <button
+                <FocusButton
                   key={a.id}
                   onClick={() => {
                     setAccountId(a.id);
@@ -226,7 +227,7 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
                 >
                   <span>{a.name}</span>
                   <span className="font-mono text-[11px] text-ink-subtle">{a.id.slice(0, 8)}…</span>
-                </button>
+                </FocusButton>
               ))}
             </div>
           </div>
@@ -262,7 +263,7 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
             <div className="flex flex-col gap-3 rounded-xl border border-edge bg-canvas/60 p-4">
               <span className="text-[11px] uppercase tracking-wider text-ink-subtle">{t("Your relay URL")}</span>
               <p className="break-all font-mono text-[13px] text-ink">{result.url}</p>
-              <button
+              <FocusButton
                 onClick={copyUrl}
                 className={`group relative flex h-11 items-center justify-center gap-2 overflow-hidden rounded-lg text-[14px] font-medium transition-[background-color,color] duration-200 ${
                   copied
@@ -286,17 +287,17 @@ export function TogetherDeployModal({ onClose, inline = false }: { onClose: () =
                     </>
                   )}
                 </span>
-              </button>
+              </FocusButton>
             </div>
             <p className="text-[12px] text-ink-subtle">
               {t("Send this to anyone you want to watch with. They paste it in their Settings → Harbor Relay. After that, share a 6-character room code from the people icon up top.")}
             </p>
-            <button
+            <FocusButton
               onClick={onClose}
               className="h-11 rounded-xl border border-edge text-[14px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               {t("Done")}
-            </button>
+            </FocusButton>
           </div>
         )}
 
@@ -390,26 +391,26 @@ function ErrorPanel({
             }} />
           </Step>
         </ol>
-        <button
+        <FocusButton
           onClick={() => openUrl(dashUrl)}
           className="flex h-11 items-center justify-center gap-2 rounded-xl border border-edge text-[14px] text-ink transition-colors hover:bg-elevated"
         >
           <ExternalLink size={15} strokeWidth={1.8} />
           {t("Open Cloudflare Workers")}
-        </button>
+        </FocusButton>
         <div className="flex gap-2">
-          <button
+          <FocusButton
             onClick={onClose}
             className="h-11 flex-1 rounded-xl border border-edge text-[14px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             {t("Close")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onRetry}
             className="h-11 flex-1 rounded-xl bg-ink text-[14px] font-medium text-canvas transition-transform hover:scale-[1.02]"
           >
             {t("Try deploy again")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     );
@@ -420,18 +421,18 @@ function ErrorPanel({
     <div className="flex flex-col gap-4">
       <p className="rounded-lg bg-danger/15 px-3 py-2 text-[13px] text-danger">{linkified}</p>
       <div className="flex gap-2">
-        <button
+        <FocusButton
           onClick={onClose}
           className="h-11 flex-1 rounded-xl border border-edge text-[14px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
         >
           {t("Close")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={onEditToken}
           className="h-11 flex-1 rounded-xl bg-ink text-[14px] font-medium text-canvas transition-transform hover:scale-[1.02]"
         >
           {t("Try again")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );
@@ -441,13 +442,13 @@ function linkifyMessage(text: string): React.ReactNode {
   const parts = text.split(/(https?:\/\/[^\s)]+)/g);
   return parts.map((part, i) =>
     /^https?:\/\//.test(part) ? (
-      <button
+      <FocusButton
         key={i}
         onClick={() => openUrl(part)}
         className="underline underline-offset-2 hover:text-ink"
       >
         {part}
-      </button>
+      </FocusButton>
     ) : (
       <span key={i}>{part}</span>
     ),

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { ReactNode } from "react";
 import { close, minimize } from "@/lib/window";
 import { toggleWindowFullscreen } from "@/lib/fullscreen-state";
@@ -48,7 +49,7 @@ function Ctl({
   children: ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       aria-label={label}
       title={label}
@@ -61,6 +62,6 @@ function Ctl({
       <svg width="16" height="16" viewBox="0 0 13 13" fill="none">
         {children}
       </svg>
-    </button>
+    </FocusButton>
   );
 }

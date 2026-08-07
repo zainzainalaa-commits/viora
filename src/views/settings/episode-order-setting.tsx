@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 import { ToggleRow } from "./shared";
@@ -14,7 +15,7 @@ function Seg<T extends string>({
   return (
     <div className="flex shrink-0 items-center gap-1 rounded-full border border-edge-soft bg-canvas/60 p-1">
       {options.map((o) => (
-        <button
+        <FocusButton
           key={o.value}
           type="button"
           onClick={() => onChange(o.value)}
@@ -23,7 +24,7 @@ function Seg<T extends string>({
           }`}
         >
           {o.label}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );

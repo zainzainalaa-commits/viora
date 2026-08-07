@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Layers } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -48,7 +49,7 @@ export function AddonFilterSelect({
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className={`flex h-11 items-center gap-2.5 rounded-full border ps-3 pe-3.5 text-[13.5px] font-semibold transition-colors ${
           open || value !== "all"
@@ -63,7 +64,7 @@ export function AddonFilterSelect({
         )}
         <span className="max-w-[180px] truncate">{selected ? selected.name : t("All addons")}</span>
         <ChevronDown size={15} className={`shrink-0 text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute start-0 top-[calc(100%+6px)] z-40 flex max-h-[380px] w-[280px] flex-col overflow-y-auto rounded-2xl border border-edge bg-canvas p-1.5 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl">
           <Row
@@ -109,7 +110,7 @@ function Row({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-start text-[13.5px] font-medium transition-colors ${
         active ? "bg-elevated" : "hover:bg-elevated/60"
@@ -117,6 +118,6 @@ function Row({
     >
       {children}
       {active && <Check size={15} className="shrink-0 text-accent" />}
-    </button>
+    </FocusButton>
   );
 }

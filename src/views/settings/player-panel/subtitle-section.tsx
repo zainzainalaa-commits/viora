@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import godfatherStill from "@/assets/godfather-offer.svg";
@@ -70,7 +71,7 @@ export function SubtitleStylePanel() {
           {styles.map((s) => {
             const sel = settings.subStyle === s.id;
             return (
-              <button
+              <FocusButton
                 key={s.id}
                 type="button"
                 onClick={() => update({ subStyle: s.id })}
@@ -80,7 +81,7 @@ export function SubtitleStylePanel() {
               >
                 <span className="text-[13px] font-semibold text-ink">{s.label}</span>
                 <span className="text-[11.5px] leading-snug text-ink-muted">{s.sub}</span>
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -92,7 +93,7 @@ export function SubtitleStylePanel() {
           {assModes.map((m) => {
             const sel = settings.subAssOverride === m.id;
             return (
-              <button
+              <FocusButton
                 key={m.id}
                 type="button"
                 onClick={() => update({ subAssOverride: m.id })}
@@ -102,7 +103,7 @@ export function SubtitleStylePanel() {
               >
                 <span className="text-[13px] font-semibold text-ink">{m.label}</span>
                 <span className="text-[11.5px] leading-snug text-ink-muted">{m.sub}</span>
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -200,7 +201,7 @@ export function SubtitleStylePanel() {
           {aligns.map((a) => {
             const sel = settings.subAlignX === a.id;
             return (
-              <button
+              <FocusButton
                 key={a.id}
                 type="button"
                 onClick={() => update({ subAlignX: a.id })}
@@ -209,7 +210,7 @@ export function SubtitleStylePanel() {
                 }`}
               >
                 {a.label}
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -227,13 +228,13 @@ export function SubtitleStylePanel() {
               direction="up"
             />
             {settings.subFontColor.toUpperCase() !== "#FFFFFF" && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => update({ subFontColor: "#FFFFFF" })}
                 className="ms-auto rounded-md px-2 py-1 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
               >
                 {t("Reset")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>
@@ -249,13 +250,13 @@ export function SubtitleStylePanel() {
               direction="up"
             />
             {settings.subBorderColor.toUpperCase() !== "#000000" && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => update({ subBorderColor: "#000000" })}
                 className="ms-auto rounded-md px-2 py-1 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
               >
                 {t("Reset")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>
@@ -273,27 +274,27 @@ export function SubtitleStylePanel() {
               direction="up"
             />
             {(settings.subBoxColor || "#000000").toUpperCase() !== "#000000" && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => update({ subBoxColor: "#000000" })}
                 className="ms-auto rounded-md px-2 py-1 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
               >
                 {t("Reset")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>
       )}
 
       <div className="flex justify-end border-t border-edge-soft pt-4">
-        <button
+        <FocusButton
           type="button"
           onClick={resetDefaults}
           disabled={isDefault}
           className="flex h-9 items-center gap-2 rounded-full border border-edge-soft bg-canvas/40 px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-edge-soft disabled:hover:text-ink-muted"
         >
           {t("Reset to defaults")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );
@@ -466,7 +467,7 @@ function FontPicker() {
           const sel = settings.subFontFamily === f.id;
           return (
             <div key={f.id} className="relative">
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => update({ subFontFamily: f.id })}
                 className={`flex h-11 w-full items-center justify-center rounded-xl border px-2 text-[13px] font-semibold transition-colors ${
@@ -477,9 +478,9 @@ function FontPicker() {
                 style={{ fontFamily: previewFamily(f.id) }}
               >
                 <span className="truncate">{f.custom ? f.label : t(f.label)}</span>
-              </button>
+              </FocusButton>
               {f.custom && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -489,19 +490,19 @@ function FontPicker() {
                   className="absolute -end-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-canvas text-ink-muted ring-1 ring-edge transition-colors hover:bg-danger hover:text-white"
                 >
                   <X size={10} strokeWidth={2.6} />
-                </button>
+                </FocusButton>
               )}
             </div>
           );
         })}
-        <button
+        <FocusButton
           type="button"
           onClick={() => fileRef.current?.click()}
           className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-dashed border-edge bg-canvas/30 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink hover:bg-elevated hover:text-ink"
         >
           <Plus size={13} strokeWidth={2.4} />
           {t("Upload font")}
-        </button>
+        </FocusButton>
       </div>
       <input
         ref={fileRef}
@@ -565,20 +566,20 @@ function ConfirmDeleteFont({
           {t("will be removed from Harbor. Anything you've set to use it will fall back to Inter.")}
         </p>
         <div className="mt-4 flex justify-end gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onCancel}
             className="rounded-full bg-raised px-4 py-2 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-canvas/55 hover:text-ink"
           >
             {t("Cancel")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onConfirm}
             className="rounded-full bg-danger px-4 py-2 text-[12.5px] font-semibold text-white transition-colors hover:bg-danger/90"
           >
             {t("Delete")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

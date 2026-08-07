@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Lock, Pencil } from "lucide-react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
 import { useT } from "@/lib/i18n";
@@ -23,7 +24,7 @@ export function ProfileTile({
   return (
     <div className="group flex flex-col items-center gap-2">
       <div className="relative">
-        <button
+        <FocusButton
           type="button"
           onClick={onSelect}
           className="block cursor-pointer outline-none"
@@ -44,7 +45,7 @@ export function ProfileTile({
               <CatAvatar className="h-full w-full" />
             )}
           </span>
-        </button>
+        </FocusButton>
         {profile.passwordHash && (
           <span
             aria-label={t("chrome.locked")}
@@ -54,14 +55,14 @@ export function ProfileTile({
           </span>
         )}
         {onEdit && (
-          <button
+          <FocusButton
             type="button"
             onClick={onEdit}
             aria-label={t("Edit {name}", { name: profile.name })}
             className="absolute -end-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-canvas/95 text-ink opacity-0 ring-1 ring-edge transition-opacity duration-150 group-hover:opacity-100 hover:bg-elevated"
           >
             <Pencil size={12} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         )}
       </div>
       <div className="flex flex-col items-center gap-0.5">

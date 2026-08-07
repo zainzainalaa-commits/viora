@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { GalleryHorizontal, LayoutGrid, List } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -19,7 +20,7 @@ export function EpisodeLayoutToggle({
   return (
     <div className="flex h-10 items-center gap-0.5 rounded-full border border-edge-soft bg-canvas/90 p-1">
       {options.map(({ key, label, icon: Icon }) => (
-        <button
+        <FocusButton
           key={key}
           type="button"
           aria-label={label}
@@ -30,7 +31,7 @@ export function EpisodeLayoutToggle({
           }`}
         >
           <Icon size={15} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       ))}
     </div>
   );

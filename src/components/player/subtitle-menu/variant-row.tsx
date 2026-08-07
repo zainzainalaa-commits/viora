@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Sparkles } from "lucide-react";
 import type { TrackInfo } from "@/lib/player/bridge";
 import { useContextMenu } from "@/lib/context-menu";
@@ -42,7 +43,7 @@ export function VariantRow({
   const langName = track.lang ? languageName(track.lang) : tr("Unknown");
 
   return (
-    <button
+    <FocusButton
       onClick={onPick}
       onContextMenu={(e) =>
         open(e, {
@@ -114,7 +115,7 @@ export function VariantRow({
           ))}
         </div>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

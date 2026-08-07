@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
@@ -68,7 +69,7 @@ export function SideRail() {
             className="pointer-events-none absolute inset-x-0 top-0 h-20"
             style={{ background: "radial-gradient(120% 78% at 24% 4%, var(--color-accent-soft), transparent 66%)" }}
           />
-          <button
+          <FocusButton
             type="button"
             onClick={() => setView("home")}
             className="relative flex items-center gap-2 text-accent"
@@ -83,7 +84,7 @@ export function SideRail() {
                 {APP_NAME}
               </span>
             )}
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex-1 overflow-y-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -121,14 +122,14 @@ export function SideRail() {
             style={{ background: "linear-gradient(90deg, transparent, var(--color-accent-soft), transparent)" }}
           />
           <div className={`flex items-center gap-1 ${collapsed ? "justify-center" : "justify-between"}`}>
-            <button
+            <FocusButton
               type="button"
               onClick={() => setSearchOpen(true)}
               aria-label={t("common.search")}
               className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated/50 hover:text-ink"
             >
               <Search size={15} strokeWidth={1.8} />
-            </button>
+            </FocusButton>
             {!collapsed && <RecordingPill />}
             {!collapsed && view !== "live" && <TogetherButton variant="ghost" popoverPlacement="above-left" />}
           </div>
@@ -183,7 +184,7 @@ function RailItem({
   const t = useT();
   const translated = t(label);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={translated}
@@ -208,7 +209,7 @@ function RailItem({
         />
       )}
       <span className="relative">{collapsed ? translated.slice(0, 1) : translated}</span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -232,7 +233,7 @@ function WinBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -242,6 +243,6 @@ function WinBtn({
       <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
         {children}
       </svg>
-    </button>
+    </FocusButton>
   );
 }

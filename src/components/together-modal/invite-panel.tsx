@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check } from "lucide-react";
 import { useMemo, useState } from "react";
 import { buildInviteUrl } from "@/lib/together/invite";
@@ -38,12 +39,12 @@ export function InvitePanel({
             "Once you're in a room you can copy a link that joins anyone instantly: it sets the relay URL and the room code in one click.",
           )}
         </p>
-        <button
+        <FocusButton
           onClick={onClose}
           className="self-start text-[12.5px] font-medium text-ink-muted transition-colors hover:text-ink"
         >
           {t("Back")}
-        </button>
+        </FocusButton>
       </div>
     );
   }
@@ -59,7 +60,7 @@ export function InvitePanel({
           className="h-10 rounded-lg border border-edge bg-canvas px-3 font-mono text-[11.5px] text-ink outline-none"
         />
       </div>
-      <button
+      <FocusButton
         onClick={copy}
         className="flex h-10 items-center justify-center gap-2 rounded-lg bg-ink text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.01]"
       >
@@ -74,7 +75,7 @@ export function InvitePanel({
             {t("Copy invite link")}
           </>
         )}
-      </button>
+      </FocusButton>
       <p className="text-[11.5px] leading-snug text-ink-subtle">
         {t(
           "Anyone who opens this link gets the relay URL and room code set automatically. Works in the browser too: no install required for the joiner.",

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Clock, Gauge, Plus, Settings2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SLEEP_PRESETS, type SleepMode, type SleepTimerState } from "@/views/player/hooks/use-sleep-timer";
@@ -115,7 +116,7 @@ export function SpeedMenu({
   return (
     <div ref={wrap} className="relative">
       <Tooltip label={sleep ? t("Speed & sleep") : t("Playback speed")}>
-        <button
+        <FocusButton
           onClick={() => {
             if (!open) measure();
             setOpen((o) => !o);
@@ -134,7 +135,7 @@ export function SpeedMenu({
           ) : Math.abs(rate - 1) > 0.01 ? (
             <span className="text-[11px] font-bold tabular-nums tracking-wider">{current}</span>
           ) : null}
-        </button>
+        </FocusButton>
       </Tooltip>
       {open && (
         <div
@@ -192,7 +193,7 @@ export function SpeedMenu({
                   />
                 )}
                 {sleepActive && !editing && (
-                  <button
+                  <FocusButton
                     onClick={() => {
                       sleep.cancel();
                       setOpen(false);
@@ -200,13 +201,13 @@ export function SpeedMenu({
                     className="mt-1 flex h-10 w-full items-center rounded-lg px-3 text-start text-[14px] font-medium text-danger transition-colors hover:bg-danger/10"
                   >
                     {t("Cancel timer")}
-                  </button>
+                  </FocusButton>
                 )}
               </Section>
             )}
           </div>
           <div className="flex items-center justify-end border-t border-edge-soft px-3 py-2">
-            <button
+            <FocusButton
               onClick={() => setEditing((e) => !e)}
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium transition-colors ${
                 editing ? "bg-canvas/55 text-ink" : "text-ink-subtle hover:bg-canvas/55 hover:text-ink"
@@ -214,7 +215,7 @@ export function SpeedMenu({
             >
               <Settings2 size={13} strokeWidth={2} />
               {editing ? t("Done") : t("Customize")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       )}
@@ -256,7 +257,7 @@ function Row({
 }) {
   return (
     <div className="relative flex items-center">
-      <button
+      <FocusButton
         onClick={onClick}
         className={`flex h-10 w-full items-center justify-between rounded-lg px-3 text-start text-[14px] transition-colors ${
           selected ? "bg-elevated text-ink ring-1 ring-edge" : "text-ink-muted hover:bg-canvas/55 hover:text-ink"
@@ -266,9 +267,9 @@ function Row({
         {hint && !onRemove && (
           <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">{hint}</span>
         )}
-      </button>
+      </FocusButton>
       {onRemove && (
-        <button
+        <FocusButton
           onClick={(e) => {
             e.stopPropagation();
             onRemove();
@@ -277,7 +278,7 @@ function Row({
           className="absolute end-2 flex h-6 w-6 items-center justify-center rounded-md text-ink-subtle transition-colors hover:bg-danger/15 hover:text-danger"
         >
           <X size={13} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -317,7 +318,7 @@ function AddPresetInput({
       {units ? (
         <div className="flex items-center rounded-md bg-canvas/55 p-0.5">
           {units.labels.map((u, i) => (
-            <button
+            <FocusButton
               key={u}
               onClick={() => setUnit(i)}
               className={`rounded px-1.5 py-0.5 text-[11px] font-semibold transition-colors ${
@@ -325,19 +326,19 @@ function AddPresetInput({
               }`}
             >
               {u}
-            </button>
+            </FocusButton>
           ))}
         </div>
       ) : (
         <span className="text-[12px] font-medium text-ink-subtle">{suffix}</span>
       )}
-      <button
+      <FocusButton
         onClick={submit}
         aria-label="Add preset"
         className="flex h-7 w-7 items-center justify-center rounded-md bg-raised text-ink-muted transition-colors hover:bg-canvas/55 hover:text-ink"
       >
         <Plus size={15} strokeWidth={2.4} />
-      </button>
+      </FocusButton>
     </div>
   );
 }

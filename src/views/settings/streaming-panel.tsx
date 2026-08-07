@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Download, ExternalLink, Key, Loader2, Search, Trash2, X, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddonLogo } from "@/components/addon-logo";
@@ -95,22 +96,22 @@ export function RecommendedAddonCard({
         )}
       </div>
       {installed ? (
-        <button
+        <FocusButton
           onClick={onUninstall}
           className="flex h-10 items-center gap-1.5 rounded-lg border border-edge bg-elevated px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-danger/60 hover:bg-danger/10 hover:text-danger"
         >
           <Trash2 size={13} strokeWidth={2.2} />
           Remove
-        </button>
+        </FocusButton>
       ) : (
-        <button
+        <FocusButton
           onClick={onInstall}
           disabled={!debrid || busy}
           className="flex h-10 items-center gap-1.5 rounded-lg bg-ink px-4 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {busy ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} strokeWidth={2.2} />}
           Install
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -183,21 +184,21 @@ export function ManualAddonCard({
           <span className="text-[12.5px] leading-relaxed text-ink-muted">{blurb}</span>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <button
+          <FocusButton
             onClick={() => openUrl(configureUrl)}
             className="flex h-10 items-center gap-1.5 rounded-lg border border-edge bg-elevated px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-ink-subtle hover:text-ink"
           >
             <ExternalLink size={13} strokeWidth={2.2} />
             Configure
-          </button>
+          </FocusButton>
           {installedId && (
-            <button
+            <FocusButton
               onClick={onUninstall}
               className="flex h-10 items-center gap-1.5 rounded-lg border border-edge bg-elevated px-3.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-danger/60 hover:bg-danger/10 hover:text-danger"
             >
               <Trash2 size={13} strokeWidth={2.2} />
               Remove
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
@@ -222,14 +223,14 @@ export function ManualAddonCard({
               className="h-11 flex-1 bg-transparent text-[14.5px] text-ink placeholder:text-ink-subtle/60 outline-none"
             />
           </div>
-          <button
+          <FocusButton
             onClick={onInstall}
             disabled={!draft.trim() || busy}
             className="flex h-11 items-center gap-1.5 rounded-lg bg-ink px-5 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {busy ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} strokeWidth={2.2} />}
             Install
-          </button>
+          </FocusButton>
         </div>
       )}
       {error && <span className="text-[12px] text-danger">{error}</span>}
@@ -270,7 +271,7 @@ export function LanguagesPicker({
       {value.length > 0 && (
         <div className="flex flex-wrap gap-2 rounded-xl border border-edge-soft bg-canvas/40 px-3 py-2.5">
           {value.map((lang) => (
-            <button
+            <FocusButton
               key={lang}
               onClick={() => toggle(lang)}
               className="group inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/15 px-3 py-1.5 text-[12.5px] font-semibold text-accent transition-colors hover:bg-accent/25"
@@ -278,7 +279,7 @@ export function LanguagesPicker({
               <Flag language={lang} size="sm" showLabel={false} />
               <span>{lang}</span>
               <X size={11} strokeWidth={2.4} className="opacity-70 group-hover:opacity-100" />
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
@@ -298,14 +299,14 @@ export function LanguagesPicker({
       </div>
       <div className="flex flex-wrap gap-1.5">
         {shown.map((lang) => (
-          <button
+          <FocusButton
             key={lang}
             onClick={() => toggle(lang)}
             className="inline-flex items-center gap-1.5 rounded-full border border-edge-soft bg-canvas/30 px-2.5 py-1.5 text-[12px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <Flag language={lang} size="sm" showLabel={false} />
             <span>{lang}</span>
-          </button>
+          </FocusButton>
         ))}
         {moreCount > 0 && (
           <span className="inline-flex items-center px-2 py-1.5 text-[12px] text-ink-subtle">
@@ -333,7 +334,7 @@ export function ServiceCard({
   onToggle: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onToggle}
       aria-pressed={active}
       className={`relative flex h-20 items-center justify-center overflow-hidden rounded-xl border px-4 transition-all ${
@@ -348,6 +349,6 @@ export function ServiceCard({
           <Check size={11} strokeWidth={3} className="text-canvas" />
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }

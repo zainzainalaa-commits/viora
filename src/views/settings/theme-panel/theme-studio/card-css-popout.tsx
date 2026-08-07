@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -77,7 +78,7 @@ export function CardCssPopout({
               Write CSS, watch real posters react
             </span>
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label="Done"
@@ -85,21 +86,21 @@ export function CardCssPopout({
             style={{ background: "var(--color-accent)" }}
           >
             Done
-          </button>
+          </FocusButton>
         </header>
 
         <div className="flex min-h-0 flex-1">
           <div className="flex min-w-0 flex-1 flex-col border-e border-edge-soft">
             <div className="flex h-11 shrink-0 items-center gap-2 border-b border-edge-soft px-3">
               <span className="font-mono text-[12px] text-ink-subtle">styles.css</span>
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => onChange({ css: css.trim() ? css : STARTER })}
                 className="ms-auto flex h-7 items-center gap-1.5 rounded-md border border-edge-soft px-2.5 text-[12px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 <Sparkles size={13} strokeWidth={2.2} />
                 Insert starter
-              </button>
+              </FocusButton>
             </div>
             <div className="relative min-h-0 flex-1">
               <CodeEditor
@@ -136,7 +137,7 @@ export function CardCssPopout({
             <div className="min-h-0 flex-1 overflow-y-auto p-6">
               <div className="grid grid-cols-3 gap-5">
                 {picks.map((p) => (
-                  <button
+                  <FocusButton
                     key={p.id}
                     type="button"
                     tabIndex={-1}
@@ -154,7 +155,7 @@ export function CardCssPopout({
                       </div>
                     </div>
                     <p className="line-clamp-2 text-[12px] font-medium leading-snug text-ink">{p.name}</p>
-                  </button>
+                  </FocusButton>
                 ))}
               </div>
             </div>

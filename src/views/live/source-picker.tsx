@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpToLine, Check, ChevronDown, ChevronUp, Copy, Download, MoreHorizontal, Pencil, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -92,7 +93,7 @@ export function SourcePicker({
   return (
     <div className="flex items-center gap-2">
       <div ref={wrapRef} className="relative">
-        <button
+        <FocusButton
           onClick={() => setOpen((v) => !v)}
           className="flex h-11 items-center gap-2.5 rounded-xl border border-edge-soft/55 bg-elevated px-3.5 pe-3 text-[13.5px] font-medium text-ink transition-colors hover:bg-raised"
         >
@@ -108,7 +109,7 @@ export function SourcePicker({
             strokeWidth={2}
             className={`text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`}
           />
-        </button>
+        </FocusButton>
         {open && (
           <div className="absolute start-0 top-[calc(100%+8px)] z-[100] w-[340px] overflow-hidden rounded-2xl border border-edge-soft bg-elevated shadow-[0_18px_50px_-15px_rgba(0,0,0,0.6)]">
             {mode === "list" && (
@@ -158,13 +159,13 @@ export function SourcePicker({
                   })}
                 </div>
                 <div className="border-t border-edge-soft/55 p-1.5">
-                  <button
+                  <FocusButton
                     onClick={() => setMode("add")}
                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-start text-[13px] font-medium text-ink-muted transition-colors hover:bg-raised hover:text-ink"
                   >
                     <Plus size={15} strokeWidth={2} />
                     {t("Add another playlist")}
-                  </button>
+                  </FocusButton>
                 </div>
               </>
             )}
@@ -203,14 +204,14 @@ export function SourcePicker({
           </div>
         )}
       </div>
-      <button
+      <FocusButton
         onClick={onRefresh}
         disabled={loading || !activeId}
         title={ago ? t("Last updated {ago}", { ago }) : t("Refresh playlist")}
         className="flex h-11 w-11 items-center justify-center rounded-xl border border-edge-soft/55 bg-elevated text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:opacity-40"
       >
         <RefreshCw size={15} strokeWidth={2} className={loading ? "animate-spin" : ""} />
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -259,7 +260,7 @@ function SourceRow({
           isActive ? "bg-raised text-ink" : "text-ink-muted hover:bg-raised hover:text-ink"
         }`}
       >
-        <button
+        <FocusButton
           onClick={onSelect}
           className="flex flex-1 items-center gap-2.5 px-3.5 py-2.5 text-start text-[13.5px]"
         >
@@ -269,10 +270,10 @@ function SourceRow({
             }`}
           />
           <span className="truncate">{source.name}</span>
-        </button>
+        </FocusButton>
         {onMove && total > 1 && (
           <div className="flex shrink-0 flex-col opacity-0 transition-opacity group-hover:opacity-100">
-            <button
+            <FocusButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -283,8 +284,8 @@ function SourceRow({
               className="flex h-4 w-6 items-center justify-center text-ink-subtle transition-colors hover:text-ink disabled:opacity-25"
             >
               <ChevronUp size={13} strokeWidth={2.2} />
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -295,10 +296,10 @@ function SourceRow({
               className="flex h-4 w-6 items-center justify-center text-ink-subtle transition-colors hover:text-ink disabled:opacity-25"
             >
               <ChevronDown size={13} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         )}
-        <button
+        <FocusButton
           ref={triggerRef}
           onClick={(e) => {
             e.stopPropagation();
@@ -312,7 +313,7 @@ function SourceRow({
           }`}
         >
           <MoreHorizontal size={15} strokeWidth={2} />
-        </button>
+        </FocusButton>
       </div>
       {isMenuOpen && (
         <PortalMenu
@@ -443,7 +444,7 @@ function MenuItem({
       ? "text-accent"
       : "text-ink-muted hover:bg-raised hover:text-ink";
   return (
-    <button
+    <FocusButton
       type="button"
       disabled={disabled}
       title={hint}
@@ -452,7 +453,7 @@ function MenuItem({
     >
       <span className="flex h-4 w-4 items-center justify-center">{icon}</span>
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useMedia } from "@/components/hover-preview/scene";
@@ -116,16 +117,16 @@ export default function ArabicWelcome({ onFeedback }: { onFeedback?: () => void 
           </p>
         </div>
 
-        <button
+        <FocusButton
           type="button"
           onClick={() => onFeedback?.()}
           style={riseStyle(600)}
           className={`mt-9 py-2 text-[14px] font-medium text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline hover:decoration-edge ${riseClass}`}
         >
           {feedbackLabel(settings.uiLanguage)}
-        </button>
+        </FocusButton>
 
-        <button
+        <FocusButton
           type="button"
           autoFocus
           onClick={dismiss}
@@ -138,7 +139,7 @@ export default function ArabicWelcome({ onFeedback }: { onFeedback?: () => void 
           <span lang="en" dir="ltr" className="text-[12px] font-medium tracking-wide text-canvas/70">
             {CTA_HELPER_EN}
           </span>
-        </button>
+        </FocusButton>
       </div>
     </div>,
     document.body,

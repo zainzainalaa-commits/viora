@@ -1,5 +1,7 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { isDpadPrimary } from "@/lib/platform";
 import { useView } from "@/lib/view";
 
 export function FloatingBack({
@@ -11,6 +13,10 @@ export function FloatingBack({
 }) {
   const { canGoBack, goBack, exitPlayback, topKind, chromeHidden } = useView();
   const t = useT();
+  // A remote already has Back. Drawing another one on screen costs a focus stop
+  // that does nothing the hardware key does not, and it sits in the top-left
+  // corner where it intercepts every leftward move out of the content.
+  if (isDpadPrimary()) return null;
   if (!canGoBack || chromeHidden) return null;
   const deep =
     topKind === "meta" ||
@@ -26,7 +32,7 @@ export function FloatingBack({
   void exitPlayback;
   const onClick = goBack;
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={t("common.back")}
@@ -35,6 +41,6 @@ export function FloatingBack({
     >
       <ArrowLeft size={15} className="dir-icon" />
       {t("common.back")}
-    </button>
+    </FocusButton>
   );
 }

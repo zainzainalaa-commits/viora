@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Check, ChevronDown, Hourglass, Play, RotateCcw } from "lucide-react";
 import { SPOILER_TEXT_CLASS, SPOILER_THUMB_CLASS, type SpoilerMask } from "@/lib/spoilers";
@@ -85,14 +86,14 @@ export function EpisodeRow({
             )}
           </div>
           <div className="flex items-center gap-2">
-            <button
+            <FocusButton
               onClick={onPlay}
               className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-accent px-4 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90"
             >
               {isCurrent ? <RotateCcw size={15} strokeWidth={2.6} /> : <Play size={16} fill="currentColor" />}
               {isCurrent ? t("Restart") : t("Play")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={onToggle}
               aria-label={expanded ? t("Hide details") : t("Show details")}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-raised hover:text-ink"
@@ -102,7 +103,7 @@ export function EpisodeRow({
                 strokeWidth={2.4}
                 className={`transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
               />
-            </button>
+            </FocusButton>
           </div>
         </div>
       </div>

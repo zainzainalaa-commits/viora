@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
@@ -289,7 +290,7 @@ function CategoryPills({
           {CATEGORIES.map((c) => {
             const isActive = c.id === active.id;
             return (
-              <button
+              <FocusButton
                 key={c.id}
                 data-cat={c.id}
                 onClick={() => onChange(c)}
@@ -300,7 +301,7 @@ function CategoryPills({
                 }`}
               >
                 {t(c.label)}
-              </button>
+              </FocusButton>
             );
           })}
         </div>
@@ -324,7 +325,7 @@ function ScrollArrow({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       aria-label={side === "left" ? t("Scroll filters left") : t("Scroll filters right")}
       onClick={onClick}
@@ -335,7 +336,7 @@ function ScrollArrow({
       }`}
     >
       {side === "left" ? <ChevronLeft size={16} strokeWidth={2.4} /> : <ChevronRight size={16} strokeWidth={2.4} />}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -384,7 +385,7 @@ function CategoryFab({
       {open && (
         <div className="absolute bottom-full end-0 mb-2 max-h-[60vh] w-44 overflow-y-auto rounded-2xl border border-edge-soft/60 bg-canvas py-1.5 shadow-2xl">
           {CATEGORIES.map((c) => (
-            <button
+            <FocusButton
               key={c.id}
               onClick={() => {
                 onChange(c);
@@ -397,17 +398,17 @@ function CategoryFab({
               }`}
             >
               {t(c.label)}
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/90 px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
       >
         <SlidersHorizontal size={12} strokeWidth={2.2} />
         {t(active.label)}
-      </button>
+      </FocusButton>
     </div>
   );
 }

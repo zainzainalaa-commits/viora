@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -129,7 +130,7 @@ function Still({
     );
   }
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={`Expand ${alt} image`}
@@ -145,6 +146,6 @@ function Still({
         aria-hidden
         className="absolute inset-0 bg-canvas/0 transition-colors duration-200 group-hover/still:bg-canvas/20"
       />
-    </button>
+    </FocusButton>
   );
 }

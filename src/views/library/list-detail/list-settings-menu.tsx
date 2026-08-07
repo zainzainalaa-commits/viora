@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -21,7 +22,7 @@ export function ListSettingsMenu({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={anchorRef}
         type="button"
         aria-label={t("List settings")}
@@ -29,7 +30,7 @@ export function ListSettingsMenu({
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-edge bg-canvas/80 text-ink transition-colors hover:border-ink-subtle hover:bg-canvas/95"
       >
         <MoreHorizontal size={18} strokeWidth={2} />
-      </button>
+      </FocusButton>
 
       <AnchoredMenu anchorRef={anchorRef} open={open} onClose={() => setOpen(false)} width={200}>
         <div className="animate-popover-in overflow-hidden rounded-xl border border-edge-soft bg-elevated p-1 shadow-[0_18px_50px_-15px_rgba(0,0,0,0.6)]">
@@ -93,7 +94,7 @@ function MenuItem({
   danger?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex h-9 w-full items-center gap-2.5 rounded-lg px-3 text-start text-[13px] transition-colors hover:bg-raised ${
         danger ? "text-danger" : "text-ink"
@@ -101,7 +102,7 @@ function MenuItem({
     >
       <span className={danger ? "text-danger" : "text-ink-muted"}>{icon}</span>
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -152,20 +153,20 @@ function RenameModal({
           className="h-11 w-full rounded-xl border border-edge bg-canvas px-3.5 text-[14px] text-ink outline-none transition-colors placeholder:text-ink-subtle focus:border-ink"
         />
         <div className="flex items-center justify-end gap-2 pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-11 items-center rounded-xl px-4 text-[13px] font-medium text-ink-subtle transition-colors hover:text-ink"
           >
             {t("Cancel")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="submit"
             disabled={!name.trim()}
             className="flex h-11 items-center rounded-xl border border-edge bg-raised px-5 text-[14px] font-semibold text-ink transition-colors hover:bg-elevated disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("Save")}
-          </button>
+          </FocusButton>
         </div>
       </form>
     </div>,
@@ -208,20 +209,20 @@ function ConfirmDelete({
           </p>
         </div>
         <div className="flex items-center justify-end gap-2 pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-11 items-center rounded-xl px-4 text-[13px] font-medium text-ink-subtle transition-colors hover:text-ink"
           >
             {t("Keep it")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onConfirm}
             className="flex h-11 items-center rounded-xl border border-danger/45 bg-danger/15 px-5 text-[14px] font-semibold text-danger transition-colors hover:bg-danger/22"
           >
             {t("Delete")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>,

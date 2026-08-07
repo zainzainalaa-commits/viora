@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronUp, Eye, EyeOff } from "lucide-react";
 import type { ReactNode } from "react";
 import { LazyMount } from "@/components/lazy-mount";
@@ -78,7 +79,7 @@ function RailControls({
       <span className={`flex-1 truncate text-[13px] font-semibold ${hidden ? "text-ink-subtle" : "text-ink"}`}>
         {label}
       </span>
-      <button
+      <FocusButton
         type="button"
         onClick={onUp}
         disabled={!canUp}
@@ -87,8 +88,8 @@ function RailControls({
         className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
       >
         <ChevronUp size={16} strokeWidth={2.2} />
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={onDown}
         disabled={!canDown}
@@ -97,8 +98,8 @@ function RailControls({
         className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
       >
         <ChevronDown size={16} strokeWidth={2.2} />
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={onToggleHidden}
         aria-label={hidden ? t("Show") : t("Hide")}
@@ -108,7 +109,7 @@ function RailControls({
         }`}
       >
         {hidden ? <EyeOff size={16} strokeWidth={2.2} /> : <Eye size={16} strokeWidth={2.2} />}
-      </button>
+      </FocusButton>
     </div>
   );
 }

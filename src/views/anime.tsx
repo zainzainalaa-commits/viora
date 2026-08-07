@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Sparkles } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { AnimeGenrePicker } from "@/components/anime-genre-picker";
@@ -486,7 +487,7 @@ export function AnimeView({ active = true }: { active?: boolean }) {
           {heroMetas.length > 0 && (
             <div data-scroll-anchor="hero" className="relative harbor-anime-hero">
               <AnimeHero slides={heroMetas} topPicks={topPicks} />
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => setShowPicker(true)}
                 title={t("Tune your Top Picks")}
@@ -499,7 +500,7 @@ export function AnimeView({ active = true }: { active?: boolean }) {
                     {favoriteGenres.length}
                   </span>
                 )}
-              </button>
+              </FocusButton>
             </div>
           )}
           {cwItems.length > 0 && (

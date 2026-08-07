@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { PanelTop } from "lucide-react";
 import { useSettings } from "@/lib/settings";
 import { type ThemeSettings } from "@/lib/theme";
@@ -113,7 +114,7 @@ function NativeTitleBarRow() {
           {t("Show your operating system's own title bar with its minimize, maximize, and close buttons. They stay reachable everywhere, including while a video is playing. Turn this off to use Harbor's built-in window buttons.")}
         </p>
       </div>
-      <button
+      <FocusButton
         type="button"
         role="switch"
         aria-checked={on}
@@ -127,7 +128,7 @@ function NativeTitleBarRow() {
             on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
           }`}
         />
-      </button>
+      </FocusButton>
     </div>
   );
 }

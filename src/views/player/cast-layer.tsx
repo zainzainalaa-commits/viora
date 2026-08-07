@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CastMenu } from "@/components/player/cast-menu";
 import { getPlaybackPosition } from "@/lib/player/playback-clock";
 import type { PlayerSrc } from "@/lib/view";
@@ -71,7 +72,7 @@ export function CastLayer({
       {cast.castIncompatError && (
         <div className="pointer-events-auto absolute left-1/2 top-20 z-30 flex max-w-[520px] -translate-x-1/2 items-start gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/15 px-4 py-3 text-[12.5px] leading-relaxed text-amber-50 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] backdrop-blur-md">
           <span className="flex-1">{cast.castIncompatError}</span>
-          <button
+          <FocusButton
             type="button"
             onClick={() => {
               cast.setCastIncompatError(null);
@@ -80,14 +81,14 @@ export function CastLayer({
             className="shrink-0 rounded-full bg-amber-300/30 px-3 py-1 text-[11.5px] font-semibold text-amber-50 hover:bg-amber-300/50"
           >
             Pick another
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={() => cast.setCastIncompatError(null)}
             className="shrink-0 rounded-full px-2 py-1 text-[11.5px] font-medium text-amber-50/80 hover:text-amber-50"
           >
             Dismiss
-          </button>
+          </FocusButton>
         </div>
       )}
     </>

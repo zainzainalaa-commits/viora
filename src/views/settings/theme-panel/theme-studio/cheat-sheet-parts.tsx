@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, Download } from "lucide-react";
 import { useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -69,7 +70,7 @@ export function CopyName({ text }: { text: string }) {
   };
   return (
     <HoverTip label="Click to copy" disabled={copied}>
-      <button
+      <FocusButton
         type="button"
         onClick={copy}
         aria-label={`Copy ${text}`}
@@ -89,7 +90,7 @@ export function CopyName({ text }: { text: string }) {
           <Check size={13} strokeWidth={2.6} className="text-accent" />
           <code className="font-mono text-[13px] font-semibold text-accent">Copied</code>
         </span>
-      </button>
+      </FocusButton>
     </HoverTip>
   );
 }
@@ -114,23 +115,23 @@ export function CodeBlock({ code, filename, compact }: { code: string; filename?
       <div className="flex items-center gap-2 border-b border-edge-soft/70 bg-canvas/40 px-3 py-1.5">
         <span className="flex-1 truncate font-mono text-[12px] text-ink-subtle">{filename ?? "example"}</span>
         {filename && (
-          <button
+          <FocusButton
             type="button"
             onClick={download}
             className="flex h-7 items-center gap-1.5 rounded-md px-2 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-white/[0.06] hover:text-ink"
           >
             <Download size={13} strokeWidth={2.2} />
             Download
-          </button>
+          </FocusButton>
         )}
-        <button
+        <FocusButton
           type="button"
           onClick={copy}
           className="flex h-7 items-center gap-1.5 rounded-md px-2 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-white/[0.06] hover:text-ink"
         >
           {copied ? <Check size={13} strokeWidth={2.6} /> : <Copy size={13} strokeWidth={2.2} />}
           {copied ? "Copied" : "Copy"}
-        </button>
+        </FocusButton>
       </div>
       <pre className="overflow-auto px-4 py-3 font-mono text-[13px] leading-relaxed text-ink-muted">{code}</pre>
     </div>

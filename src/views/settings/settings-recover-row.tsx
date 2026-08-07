@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { History } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -48,7 +49,7 @@ export function SettingsRecoverRow() {
           {t("Updating separated settings per profile, which may have reset your theme and keys. Harbor still has your old setup saved. Bring it back on this profile, then reload.")}
         </span>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={restore}
         disabled={applying}
@@ -56,7 +57,7 @@ export function SettingsRecoverRow() {
       >
         <History size={14} strokeWidth={2.4} />
         {applying ? t("Restoring...") : t("Restore")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

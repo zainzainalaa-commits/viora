@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Download, ExternalLink, Loader2, Play, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AddonLogo, AddonLogoStack } from "@/components/addon-logo";
@@ -61,7 +62,7 @@ export function SourceDrawer({
   }, [addonOptions, addonFilter]);
   return (
     <div className="flex flex-col gap-4">
-      <button
+      <FocusButton
         onClick={onToggle}
         className="group flex w-fit items-center gap-3 rounded-full border border-edge-soft/70 bg-canvas/70 px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.22em] text-ink-muted transition-all hover:border-edge hover:bg-canvas/90 hover:text-ink"
       >
@@ -79,7 +80,7 @@ export function SourceDrawer({
             </span>
           </span>
         )}
-      </button>
+      </FocusButton>
       {open && addonOptions.length > 1 && (
         <div className="flex flex-wrap items-center gap-1.5">
           <AddonPill active={addonFilter === "all"} onClick={() => setAddonFilter("all")} label="All" count={streams.length} />
@@ -128,7 +129,7 @@ function AddonPill({
   count: number;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors ${
         active
@@ -138,7 +139,7 @@ function AddonPill({
     >
       <span className="max-w-[180px] truncate">{label}</span>
       <span className={active ? "text-canvas/70" : "text-ink-subtle/80"}>{count}</span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -174,7 +175,7 @@ function SourceRow({
 
   return (
     <li className={divider ? "border-t border-edge-soft/30" : ""}>
-      <button
+      <FocusButton
         onClick={onPlay}
         disabled={resolving}
         className="group flex w-full items-start gap-4 px-5 py-4 text-start transition-colors hover:bg-ink/5 disabled:cursor-wait disabled:opacity-60"
@@ -260,7 +261,7 @@ function SourceRow({
             />
           )}
         </div>
-      </button>
+      </FocusButton>
     </li>
   );
 }

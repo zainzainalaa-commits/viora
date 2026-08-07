@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Pencil } from "lucide-react";
 
 const CARD_STYLES = [
@@ -33,7 +34,7 @@ export function StylePicker({
         const active = value === s.id;
         const editable = kind === "card" && s.id === "custom" && !!onEditCustom;
         return (
-          <button
+          <FocusButton
             key={s.id}
             type="button"
             onClick={() => {
@@ -58,7 +59,7 @@ export function StylePicker({
                 </span>
               )}
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>

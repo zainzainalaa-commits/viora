@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { addonLogoSrc, resolveAddonLogo } from "@/components/addon-logo";
@@ -116,7 +117,7 @@ export function StremioLayout({
   return (
     <div className="flex flex-col gap-3">
       <div className="relative">
-        <button
+        <FocusButton
           onClick={() => setFilterOpen((v) => !v)}
           className="flex w-full items-center justify-between gap-3 rounded-2xl bg-elevated/60 px-4 py-3 text-start text-[15px] font-medium text-ink ring-1 ring-edge-soft transition-colors hover:bg-elevated"
         >
@@ -135,10 +136,10 @@ export function StremioLayout({
               filterOpen ? "rotate-180" : ""
             }`}
           />
-        </button>
+        </FocusButton>
         {filterOpen && (
           <div className="absolute inset-x-0 top-full z-10 mt-1 max-h-80 overflow-y-auto rounded-2xl bg-elevated p-1.5 ring-1 ring-edge shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
-            <button
+            <FocusButton
               onClick={() => {
                 setFilter("all");
                 setFilterOpen(false);
@@ -150,9 +151,9 @@ export function StremioLayout({
               <CircleLogo addonId={null} addonName="All" logo={null} />
               <span className="flex-1 truncate">All sources</span>
               <span className="text-[12px] text-ink-subtle">{streams.length}</span>
-            </button>
+            </FocusButton>
             {addonOptions.map((opt) => (
-              <button
+              <FocusButton
                 key={opt.id}
                 onClick={() => {
                   setFilter(opt.id);
@@ -169,7 +170,7 @@ export function StremioLayout({
                 />
                 <span className="flex-1 truncate">{opt.name}</span>
                 <span className="text-[12px] text-ink-subtle">{opt.count}</span>
-              </button>
+              </FocusButton>
             ))}
           </div>
         )}

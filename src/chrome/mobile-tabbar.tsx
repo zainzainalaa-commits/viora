@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { MoreHorizontal, Search } from "lucide-react";
 import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-items";
@@ -94,7 +95,7 @@ export function MobileTabBar() {
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-edge" />
             <div className="grid grid-cols-3 gap-2">
               {overflow.map((item) => (
-                <button
+                <FocusButton
                   key={item.id}
                   type="button"
                   onClick={() => navigate(item)}
@@ -109,7 +110,7 @@ export function MobileTabBar() {
                     {item.render(view === item.view)}
                   </span>
                   <span className="truncate">{t(item.label)}</span>
-                </button>
+                </FocusButton>
               ))}
             </div>
           </div>
@@ -146,7 +147,7 @@ function TabButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -160,6 +161,6 @@ function TabButton({
         {children}
       </span>
       <span className="max-w-full truncate">{label}</span>
-    </button>
+    </FocusButton>
   );
 }

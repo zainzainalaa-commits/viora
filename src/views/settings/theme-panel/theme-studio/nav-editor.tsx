@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 import {
@@ -46,14 +47,14 @@ export function NavEditor({ layout }: { layout: ThemeLayout }) {
       )}
       {hasChanges && (
         <div className="flex justify-end">
-          <button
+          <FocusButton
             type="button"
             onClick={() => update({ navCustomization: resetNavCustomization() })}
             className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft bg-canvas/40 px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <RotateCcw size={12} strokeWidth={2.2} />
             Reset
-          </button>
+          </FocusButton>
         </div>
       )}
       <div className="flex flex-col gap-1.5">

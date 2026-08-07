@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, Check, Loader2, Plus, Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import stremioAddonsLogo from "@/assets/stremio-addons-net.png";
@@ -57,7 +58,7 @@ export function CommunityAddonsRail({
     <section className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex items-center gap-4">
-          <button
+          <FocusButton
             type="button"
             onClick={() => openUrl(SITE_URL)}
             aria-label={`Open ${SITE_NAME}`}
@@ -69,20 +70,20 @@ export function CommunityAddonsRail({
               draggable={false}
               className="absolute inset-0 h-full w-full object-cover"
             />
-          </button>
+          </FocusButton>
           <div className="flex flex-col gap-1">
             <span className="text-[10.5px] font-bold uppercase tracking-[0.22em] text-accent">
               Community ratings
             </span>
             <h3 className="text-[24px] font-medium tracking-tight text-ink">
               Top on{" "}
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => openUrl(SITE_URL)}
                 className="font-semibold text-ink underline decoration-accent/60 decoration-2 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
               >
                 {SITE_NAME}
-              </button>
+              </FocusButton>
             </h3>
             <p className="max-w-[52ch] text-[12.5px] text-ink-muted">
               Ranked by the {SITE_NAME} community from their public index.
@@ -91,14 +92,14 @@ export function CommunityAddonsRail({
         </div>
         <div className="flex items-center gap-2">
           <TabBar value={sortMode} onChange={setSortMode} />
-          <button
+          <FocusButton
             type="button"
             onClick={() => openUrl(SITE_URL)}
             className="flex h-9 items-center gap-1.5 rounded-full border border-edge-soft px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <ArrowUpRight size={12} strokeWidth={2.4} className="dir-icon" />
             Browse all
-          </button>
+          </FocusButton>
         </div>
       </div>
 
@@ -126,7 +127,7 @@ function TabBar({ value, onChange }: { value: SortMode; onChange: (v: SortMode) 
       {TABS.map((t) => {
         const active = value === t.id;
         return (
-          <button
+          <FocusButton
             key={t.id}
             type="button"
             onClick={() => onChange(t.id)}
@@ -136,7 +137,7 @@ function TabBar({ value, onChange }: { value: SortMode; onChange: (v: SortMode) 
             }`}
           >
             {t.label}
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -260,7 +261,7 @@ function CommunityCard({
       </div>
       <div className="flex min-h-[120px] flex-1 flex-col gap-2 px-3.5 py-3">
         <div className="flex min-w-0 flex-col">
-          <button
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -270,7 +271,7 @@ function CommunityCard({
             title={`Open ${name} on ${SITE_NAME}`}
           >
             {name}
-          </button>
+          </FocusButton>
           {description && (
             <span className="mt-0.5 line-clamp-2 text-[11.5px] leading-snug text-ink-subtle">
               {description}
@@ -294,7 +295,7 @@ function CommunityCard({
               Installed
             </span>
           ) : (
-            <button
+            <FocusButton
               type="button"
               onClick={install}
               disabled={busy || !m?.id}
@@ -306,7 +307,7 @@ function CommunityCard({
                 <Plus size={11} strokeWidth={2.6} />
               )}
               Install
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>

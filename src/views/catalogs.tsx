@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useState } from "react";
 import { Check, Pin, Puzzle, Search, SlidersHorizontal, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
@@ -89,7 +90,7 @@ export function Catalogs({ active = true }: { active?: boolean }) {
               </p>
             </div>
             {!loading && catalogs.length > 0 && (
-              <button
+              <FocusButton
                 onClick={() => setCustomize((v) => !v)}
                 className={`flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-[13.5px] font-semibold transition-colors ${
                   customize
@@ -99,7 +100,7 @@ export function Catalogs({ active = true }: { active?: boolean }) {
               >
                 {customize ? <Check size={16} /> : <SlidersHorizontal size={15} />}
                 {customize ? t("Done") : t("Customize")}
-              </button>
+              </FocusButton>
             )}
           </div>
 
@@ -116,13 +117,13 @@ export function Catalogs({ active = true }: { active?: boolean }) {
                     className="h-full w-full rounded-full border border-edge-soft bg-elevated/40 ps-10 pe-9 text-[14px] text-ink outline-none transition-colors placeholder:text-ink-subtle focus:border-edge"
                   />
                   {query && (
-                    <button
+                    <FocusButton
                       onClick={() => setQuery("")}
                       aria-label={t("Clear")}
                       className="absolute end-2.5 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
                     >
                       <X size={15} />
-                    </button>
+                    </FocusButton>
                   )}
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -213,14 +214,14 @@ export function Catalogs({ active = true }: { active?: boolean }) {
 
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`h-9 rounded-full px-3.5 text-[13px] font-semibold transition-colors ${
         active ? "bg-ink text-canvas" : "bg-elevated/40 text-ink-muted hover:bg-elevated hover:text-ink"
       }`}
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -259,13 +260,13 @@ function AllHidden({ count, onCustomize }: { count: number; onCustomize: () => v
           ? t("You've hidden the one catalog that matched.")
           : t("You've hidden every catalog that matched.")}
       </p>
-      <button
+      <FocusButton
         onClick={onCustomize}
         className="flex h-10 items-center gap-2 rounded-full border border-edge-soft bg-elevated/40 px-5 text-[13.5px] font-semibold text-ink transition-colors hover:bg-elevated"
       >
         <SlidersHorizontal size={15} />
         {t("Customize")}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -281,12 +282,12 @@ function EmptyState({ onOpenAddons }: { onOpenAddons: () => void }) {
           {t("Install a Stremio addon and its catalogs show up here as poster rails, ready to browse.")}
         </p>
       </div>
-      <button
+      <FocusButton
         onClick={onOpenAddons}
         className="flex h-10 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
       >
         {t("Browse addons")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

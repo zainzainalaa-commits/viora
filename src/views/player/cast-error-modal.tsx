@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect } from "react";
 import { useT } from "@/lib/i18n";
 
@@ -69,14 +70,14 @@ export function CastErrorModal({
           </ol>
         )}
         <div className="mt-7 flex justify-end">
-          <button
+          <FocusButton
             type="button"
             onClick={onDismiss}
             className="rounded-full bg-accent px-5 py-2 text-[13px] font-semibold text-canvas transition-colors hover:bg-accent/85"
             autoFocus
           >
             {t("Got it")}
-          </button>
+          </FocusButton>
         </div>
       </div>
       <style>{`

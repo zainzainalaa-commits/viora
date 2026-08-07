@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { SpeedTestButton } from "./speed-test";
 
@@ -33,7 +34,7 @@ export function BandwidthInput() {
         {BANDWIDTH_PRESETS.map((p) => {
           const selected = cap === p.value;
           return (
-            <button
+            <FocusButton
               key={p.value}
               type="button"
               onClick={() => update({ bandwidthMbps: p.value })}
@@ -44,7 +45,7 @@ export function BandwidthInput() {
               }`}
             >
               {p.value === 0 ? p.label : p.value === 1000 ? p.label : `${p.label} Mbps`}
-            </button>
+            </FocusButton>
           );
         })}
       </div>

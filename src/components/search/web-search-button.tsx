@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Globe } from "lucide-react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -13,7 +14,7 @@ export function WebSearchButton() {
       side="top"
       align="center"
     >
-      <button
+      <FocusButton
         type="button"
         onClick={() => update({ aiWebSearch: !active })}
         aria-label={t("Toggle live web")}
@@ -25,7 +26,7 @@ export function WebSearchButton() {
         }`}
       >
         <Globe size={17} strokeWidth={1.9} />
-      </button>
+      </FocusButton>
     </HoverTooltip>
   );
 }

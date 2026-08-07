@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -31,7 +32,7 @@ export function AiModelSelect({
     <div className="flex items-center gap-2.5 px-1">
       <span className="shrink-0 text-[12px] text-ink-subtle">{t("Model")}</span>
       <div ref={ref} className="relative flex-1">
-        <button
+        <FocusButton
           onClick={() => setOpen((v) => !v)}
           className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-start transition-colors ${
             open ? "border-edge bg-elevated" : "border-edge-soft bg-canvas/60 hover:border-edge"
@@ -54,13 +55,13 @@ export function AiModelSelect({
             size={14}
             className={`shrink-0 text-ink-muted transition-transform ${open ? "rotate-180" : ""}`}
           />
-        </button>
+        </FocusButton>
         {open && (
           <div className="absolute inset-x-0 top-[calc(100%+6px)] z-30 flex max-h-[320px] flex-col overflow-y-auto rounded-2xl border border-edge bg-canvas py-1.5 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl">
             {models.map((m) => {
               const sel = m.id === value;
               return (
-                <button
+                <FocusButton
                   key={m.id}
                   onClick={() => {
                     onChange(m.id);
@@ -92,7 +93,7 @@ export function AiModelSelect({
                     </span>
                   </span>
                   {sel && <Check size={14} className="shrink-0 text-accent" />}
-                </button>
+                </FocusButton>
               );
             })}
           </div>

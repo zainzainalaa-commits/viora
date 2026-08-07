@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useRef, useState } from "react";
 import { ImagePlus, Move, ZoomIn } from "lucide-react";
 
@@ -124,11 +125,11 @@ export function CoverCropper({ onChange }: { onChange: (blob: Blob | null) => vo
             </div>
           </>
         ) : (
-          <button type="button" onClick={pick} className="flex h-full w-full flex-col items-center justify-center gap-2 text-ink-subtle transition-colors hover:text-ink">
+          <FocusButton type="button" onClick={pick} className="flex h-full w-full flex-col items-center justify-center gap-2 text-ink-subtle transition-colors hover:text-ink">
             <ImagePlus size={28} strokeWidth={1.6} />
             <span className="text-[13px] font-medium">Add a cover image</span>
             <span className="text-[11.5px]">A 16:9 shot of your theme looks best</span>
-          </button>
+          </FocusButton>
         )}
       </div>
       {src && (
@@ -149,9 +150,9 @@ export function CoverCropper({ onChange }: { onChange: (blob: Blob | null) => vo
             }}
             className="h-1.5 flex-1 cursor-pointer accent-accent"
           />
-          <button type="button" onClick={pick} className="shrink-0 text-[12px] font-medium text-ink-muted transition-colors hover:text-ink">
+          <FocusButton type="button" onClick={pick} className="shrink-0 text-[12px] font-medium text-ink-muted transition-colors hover:text-ink">
             Replace
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>

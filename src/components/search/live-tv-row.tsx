@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Radio, Tv } from "lucide-react";
 import type { LiveTvHit } from "@/lib/search";
 import { useView } from "@/lib/view";
@@ -35,7 +36,7 @@ export function LiveTvRow({ items, onClose }: { items: LiveTvHit[]; onClose: () 
       </h3>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {items.map((hit, ix) => (
-          <button
+          <FocusButton
             key={`${hit.playlistId}:${hit.channelId}:${ix}`}
             onClick={() => play(hit)}
             className="group flex items-center gap-3 rounded-xl border border-edge-soft/60 bg-elevated/40 px-3 py-2.5 text-start transition-colors hover:border-edge hover:bg-elevated"
@@ -63,7 +64,7 @@ export function LiveTvRow({ items, onClose }: { items: LiveTvHit[]; onClose: () 
                 {hit.playlistName}
               </span>
             </span>
-          </button>
+          </FocusButton>
         ))}
       </div>
     </section>

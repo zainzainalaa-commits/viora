@@ -286,6 +286,8 @@ export type Settings = {
   nextEpisodeLeadSec: number;
   autoPlayNextEpisode: boolean;
   keyboardPauseShowsControls: boolean;
+  /** Skip the scenes Cinemana marks as cut — a family-viewing option. */
+  skipFlaggedScenes: boolean;
   hideWatchedInCatalogs: boolean;
   hideUnreleased: boolean;
   localEpisodeSortDesc: boolean;

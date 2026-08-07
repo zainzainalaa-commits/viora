@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import { Poster, usePosterChain } from "@/components/poster";
@@ -53,7 +54,7 @@ function Pick({
     hydrated?.type === "series" ? "series" : "movie",
   );
   return (
-    <button
+    <FocusButton
       data-art={hydrated?.background || hydrated?.poster || channel.logo || ""}
       onClick={() => onPlay(channel)}
       title={channel.name}
@@ -79,6 +80,6 @@ function Pick({
       <p className="line-clamp-2 text-[12.5px] font-medium leading-snug text-ink">
         {current?.title || hydrated?.name || channel.name}
       </p>
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -7,14 +8,14 @@ export function CachedTip() {
   const [open, setOpen] = useState(false);
   return (
     <div className="flex flex-col gap-1.5 self-start">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1 self-start text-[11.5px] font-medium text-ink-subtle/70 transition-colors hover:text-ink-muted"
       >
         <HelpCircle size={12} strokeWidth={2} />
         {t("Says “cached” but won’t play?")}
-      </button>
+      </FocusButton>
       {open && (
         <p className="max-w-lg rounded-lg bg-elevated/60 px-3 py-2 text-[11.5px] leading-relaxed text-ink-subtle ring-1 ring-edge-soft/50">
           {t(

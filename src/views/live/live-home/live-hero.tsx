@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw, Tv } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -125,7 +126,7 @@ export function LiveHero({
       {items.length > 1 && (
         <div className="absolute end-6 top-6 z-10 flex gap-2">
           {items.map((_, i) => (
-            <button
+            <FocusButton
               key={i}
               onClick={(e) => {
                 e.stopPropagation();

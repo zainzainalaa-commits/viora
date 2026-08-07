@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
 import { listMpvAudioDevices, type MpvAudioDevice } from "@/lib/player/mpv";
@@ -49,13 +50,13 @@ export function QualityPanel() {
         />
         <p className="text-[12.5px] leading-relaxed text-ink-subtle">
           {t("Want to change the ratio mid-playback? The live aspect button is hidden by default to keep the player tidy.")}{" "}
-          <button
+          <FocusButton
             type="button"
             onClick={() => setActive("playerLayout")}
             className="font-semibold text-ink underline-offset-4 transition-colors hover:underline"
           >
             {t("Turn it on in Player layout")}
-          </button>
+          </FocusButton>
         </p>
       </Section>
 
@@ -159,6 +160,12 @@ export function QualityPanel() {
           sub={t("Show the player controls when you pause or resume using the keyboard. Turn off to keep them hidden so they don't cover subtitles.")}
           value={settings.keyboardPauseShowsControls}
           onChange={(v) => update({ keyboardPauseShowsControls: v })}
+        />
+        <ToggleRow
+          label={t("Offer to skip flagged scenes")}
+          sub={t("Cinemana marks scenes it treats as unsuitable for family viewing. With this on, a Skip Scene button appears when one starts. It applies to other sources as well, but only when the file being played is the same cut — otherwise the timings would not line up, so it stays quiet rather than jumping to the wrong place.")}
+          value={settings.skipFlaggedScenes}
+          onChange={(v) => update({ skipFlaggedScenes: v })}
         />
       </Section>
     </>

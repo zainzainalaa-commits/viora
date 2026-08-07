@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDownToLine, Check, Pause, Play, RotateCw } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import { activeDownloadFor, pauseDownload, resumeDownload, useDownloads } from "@/lib/download/downloads-store";
@@ -76,7 +77,7 @@ export function EpisodeDownloadButton({
   const showProgress = downloading || paused;
 
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={
@@ -140,6 +141,6 @@ export function EpisodeDownloadButton({
       {!downloading && !paused && !done && !failed && (
         <ArrowDownToLine size={20} strokeWidth={2} />
       )}
-    </button>
+    </FocusButton>
   );
 }

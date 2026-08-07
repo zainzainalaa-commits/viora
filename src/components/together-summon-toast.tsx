@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, X } from "lucide-react";
 import { useTogether } from "@/lib/together/provider";
 import { useView, type View } from "@/lib/view";
@@ -66,21 +67,21 @@ export function TogetherSummonToast() {
           </span>
         </div>
 
-        <button
+        <FocusButton
           onClick={handleAccept}
           className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[12.5px] font-semibold text-canvas transition-transform hover:scale-[1.04]"
         >
           Sure
           <ArrowRight size={13} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
 
-        <button
+        <FocusButton
           onClick={dismissSummon}
           aria-label="Dismiss"
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
         >
           <X size={15} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

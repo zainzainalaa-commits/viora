@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check } from "lucide-react";
 import type { ThemeLayout } from "@/lib/theme";
 
@@ -65,7 +66,7 @@ export function LayoutPicker({
       {LAYOUTS.map((l) => {
         const active = value === l.id;
         return (
-          <button
+          <FocusButton
             key={l.id}
             type="button"
             onClick={() => onChange(l.id)}
@@ -89,7 +90,7 @@ export function LayoutPicker({
                 </span>
               )}
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>

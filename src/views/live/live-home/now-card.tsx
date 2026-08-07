@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Play, Tv } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -26,7 +27,7 @@ export function NowCard({
   const left = current ? fmtLeft(current.endMs, Date.now(), t) : null;
 
   return (
-    <button
+    <FocusButton
       type="button"
       data-art={backdrop || channel.logo || ""}
       onClick={() => onPlay(channel)}
@@ -97,6 +98,6 @@ export function NowCard({
           </div>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 }

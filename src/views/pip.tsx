@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -289,7 +290,7 @@ export function PipApp() {
             hover ? "opacity-100" : "opacity-0"
           }`}
         >
-          <button
+          <FocusButton
             type="button"
             onClick={closeWithState}
             className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-[11.5px] font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-md transition-colors hover:bg-black/80"
@@ -301,7 +302,7 @@ export function PipApp() {
               <path d="M21 15v4a2 2 0 0 1-2 2h-4" />
             </svg>
             Exit PiP
-          </button>
+          </FocusButton>
           {session?.title && (
             <span className="pointer-events-none truncate text-[12px] font-medium text-white/75">
               {session.title}
@@ -332,7 +333,7 @@ export function PipApp() {
                 </svg>
                 <span className="absolute bottom-0.5 right-0.5 rounded-sm bg-black/55 px-1 text-[8px] font-bold leading-none">30</span>
               </PipBtn>
-              <button
+              <FocusButton
                 type="button"
                 onClick={playPause}
                 aria-label="Play / Pause"
@@ -348,7 +349,7 @@ export function PipApp() {
                     <polygon points="6 3 20 12 6 21 6 3" />
                   </svg>
                 )}
-              </button>
+              </FocusButton>
               <PipBtn label="Forward 30 seconds" onClick={fwd30}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12a9 9 0 1 1-3-6.7" />
@@ -403,14 +404,14 @@ function PipBtn({
   label: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
       className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/12 hover:text-white"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

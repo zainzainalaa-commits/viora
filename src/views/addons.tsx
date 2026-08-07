@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronRight, Library, Sparkles, Star, TrendingUp } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AgeGateModal } from "@/components/age-gate-modal";
@@ -13,6 +14,7 @@ import { prefetchTopAddonLogos } from "@/lib/providers/addon-logo-prefetch";
 import { relatedAddons, recommendedAddons } from "@/lib/addons-store/recommend";
 import { loadDisplayOrder } from "@/lib/addons-store/reorder";
 import { fetchManifestAt, installAddon, installFromUrl, loadInstalled, uninstallAddon } from "@/lib/addon-store";
+import { APP_NAME } from "@/lib/brand";
 import { useAuth } from "@/lib/auth";
 import streamsIcon from "@/assets/category/streams.svg";
 import catalogsIcon from "@/assets/category/catalogs.svg";
@@ -240,7 +242,13 @@ export function AddonsView() {
     const id = r.manifest?.id ?? r.curated?.id;
     if (!id) return;
     try {
-      await uninstallAddon(id, r.transportUrl);
+      // A built-in refuses removal. Announcing "Removed" and firing the change
+      // event regardless would show it as gone until the next refresh put it
+      // back, which reads as the app losing track of itself.
+      if (!(await uninstallAddon(id, r.transportUrl))) {
+        showToast("error", t("Built into {app} — turn it off instead", { app: APP_NAME }));
+        return;
+      }
       window.dispatchEvent(
         new CustomEvent("harbor:addons-changed", {
           detail: { id, installed: false },
@@ -292,7 +300,7 @@ export function AddonsView() {
               const active = tab === tabId;
               if (tabId === "installed") {
                 return (
-                  <button
+                  <FocusButton
                     key={tabId}
                     onClick={() => setTab(tabId)}
                     className={`flex h-12 items-center gap-2 rounded-full px-4 text-[14px] font-semibold transition-colors ${
@@ -310,11 +318,11 @@ export function AddonsView() {
                     >
                       {installedIds.size}
                     </span>
-                  </button>
+                  </FocusButton>
                 );
               }
               const btn = (
-                <button
+                <FocusButton
                   onClick={() => {
                     setTab(tabId);
                     if (tabId === "browse") setCategoryFilter(null);
@@ -326,7 +334,7 @@ export function AddonsView() {
                   }`}
                 >
                   {tabId === "discover" ? t("Discover") : t("Browse")}
-                </button>
+                </FocusButton>
               );
               if (tabId === "discover") {
                 return (
@@ -348,7 +356,7 @@ export function AddonsView() {
             <div className="min-w-0 flex-[1.4]">
               <AddByUrlBar onSubmit={async (raw) => { setInstallModal({ kind: "install", url: raw }); }} compact />
             </div>
-            <button
+            <FocusButton
               onClick={() => {
                 if (settings.showAdultAddons) {
                   update({ showAdultAddons: false });
@@ -375,9 +383,9 @@ export function AddonsView() {
                 )}
               </span>
               <span>{t("Adult")}</span>
-            </button>
+            </FocusButton>
             {tab === "browse" && (
-              <button
+              <FocusButton
                 onClick={() => setFiltersOpen((v) => !v)}
                 className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-edge-soft px-3 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:border-edge hover:text-ink-muted"
               >
@@ -387,7 +395,7 @@ export function AddonsView() {
                   className={`transition-transform duration-300 ${filtersOpen ? "rotate-90" : "-rotate-90"}`}
                 />
                 {filtersOpen ? t("Hide") : t("Filters")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>
@@ -399,7 +407,7 @@ export function AddonsView() {
           >
             <div className="overflow-hidden">
               <div className="flex flex-wrap items-center gap-2 pb-1">
-                <button
+                <FocusButton
                   onClick={() => setCategoryFilter(null)}
                   className={`flex h-10 items-center gap-2 rounded-full px-4 text-[13.5px] font-semibold transition-colors ${
                     categoryFilter == null
@@ -408,11 +416,11 @@ export function AddonsView() {
                   }`}
                 >
                   {t("All")}
-                </button>
+                </FocusButton>
                 {saCategories.filter((c) => settings.showAdultAddons || c.slug !== "nsfw").map((c) => {
                   const active = categoryFilter === c.slug;
                   return (
-                    <button
+                    <FocusButton
                       key={c.slug}
                       onClick={() => setCategoryFilter(c.slug)}
                       className={`flex h-10 items-center gap-2 rounded-full px-4 text-[13.5px] font-semibold transition-colors ${
@@ -422,14 +430,14 @@ export function AddonsView() {
                       }`}
                     >
                       <span>{c.name}</span>
-                    </button>
+                    </FocusButton>
                   );
                 })}
                 <span aria-hidden className="mx-1 h-6 w-px shrink-0 bg-edge-soft" />
                 {BROWSE_MODES.map((m) => {
                   const active = browseMode === m.id;
                   return (
-                    <button
+                    <FocusButton
                       key={m.id}
                       type="button"
                       onClick={() => setBrowseMode(m.id)}
@@ -442,7 +450,7 @@ export function AddonsView() {
                     >
                       <m.Icon size={13} strokeWidth={2.4} className={active ? "" : "text-accent"} />
                       {t(m.label)}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>

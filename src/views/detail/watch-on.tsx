@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { WatchProvider } from "@/lib/providers/tmdb";
 import { openUrl } from "@/lib/window";
 import { useT } from "@/lib/i18n";
@@ -10,7 +11,7 @@ export function WatchOn({ providers }: { providers: WatchProvider[] }) {
       <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-ink-subtle">{t("Watch on")}</p>
       <div className="flex flex-wrap gap-2.5">
         {providers.map((p) => (
-          <button
+          <FocusButton
             key={p.id}
             type="button"
             onClick={() => p.link && openUrl(p.link)}
@@ -26,7 +27,7 @@ export function WatchOn({ providers }: { providers: WatchProvider[] }) {
               className="h-7 w-7 select-none rounded-md object-contain"
             />
             <span className="text-[13.5px] font-semibold tracking-tight text-ink">{p.name}</span>
-          </button>
+          </FocusButton>
         ))}
       </div>
     </div>

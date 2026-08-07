@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   ArrowLeft,
   Captions,
@@ -68,13 +69,13 @@ export function TransportKids({
           visible ? "opacity-100" : "opacity-0"
         }`}
       >
-        <button
+        <FocusButton
           onClick={onBack}
           className="pointer-events-auto flex h-14 items-center gap-2.5 rounded-full bg-white/90 ps-4 pe-6 text-[18px] font-extrabold text-[#0e3a43] shadow-[0_10px_26px_-10px_rgba(0,0,0,0.6)] transition-transform hover:scale-105 active:scale-95"
         >
           <ArrowLeft size={26} strokeWidth={2.8} className="dir-icon" />
           {t("common.back")}
-        </button>
+        </FocusButton>
         <div className="pointer-events-none flex min-w-0 items-center gap-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
           <span className="truncate font-display text-[22px] font-bold">{title}</span>
           {resolution && (
@@ -108,7 +109,7 @@ export function TransportKids({
 
           <div className="flex items-center gap-6 justify-self-center">
             <SeekBtn dir={-1} onClick={() => onSeekStep(-10)} label={t("Back 10s")} />
-            <button
+            <FocusButton
               onClick={onPlayPause}
               aria-label={playing ? t("Pause") : t("Play")}
               className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-white text-[#1f8f88] shadow-[0_14px_36px_-10px_rgba(0,0,0,0.7)] transition-transform hover:scale-105 active:scale-95"
@@ -118,7 +119,7 @@ export function TransportKids({
               ) : (
                 <Play size={46} strokeWidth={0} fill="currentColor" className="ms-1.5" />
               )}
-            </button>
+            </FocusButton>
             <SeekBtn dir={1} onClick={() => onSeekStep(10)} label={t("Forward 10s")} />
           </div>
 
@@ -129,13 +130,13 @@ export function TransportKids({
               </RoundBtn>
             )}
             {canPickAnother && (
-              <button
+              <FocusButton
                 onClick={onPickAnother}
                 className="flex h-16 shrink-0 items-center gap-2 rounded-full bg-white/15 ps-5 pe-6 text-[16px] font-extrabold text-white transition hover:bg-white/25 active:scale-95"
               >
                 <Shuffle size={24} strokeWidth={2.4} />
                 {t("Switch")}
-              </button>
+              </FocusButton>
             )}
             <RoundBtn onClick={onFullscreen} label={t("Fullscreen")}>
               {fullscreen ? <Minimize size={28} strokeWidth={2.2} /> : <Maximize size={28} strokeWidth={2.2} />}
@@ -223,13 +224,13 @@ function KidsVolume({
   };
   return (
     <div className="flex items-center gap-3">
-      <button
+      <FocusButton
         onClick={onMute}
         aria-label={v === 0 ? "Unmute" : "Mute"}
         className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 active:scale-95"
       >
         {v === 0 ? <VolumeX size={28} strokeWidth={2.2} /> : <Volume2 size={28} strokeWidth={2.2} />}
-      </button>
+      </FocusButton>
       <div
         ref={ref}
         onPointerDown={(e) => {
@@ -258,14 +259,14 @@ function KidsVolume({
 function SeekBtn({ dir, onClick, label }: { dir: -1 | 1; onClick: () => void; label: string }) {
   const Icon = dir < 0 ? RotateCcw : RotateCw;
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       aria-label={label}
       className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 active:scale-95"
     >
       <Icon size={42} strokeWidth={2.1} />
       <span className="absolute text-[13px] font-extrabold">10</span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -281,7 +282,7 @@ function RoundBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       aria-label={label}
       className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full transition active:scale-95 ${
@@ -289,6 +290,6 @@ function RoundBtn({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

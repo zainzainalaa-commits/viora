@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertCircle, FileVideo, Loader2, Magnet, Play } from "lucide-react";
 import { useMemo, useState } from "react";
 import { awaitCastServerReady } from "@/lib/stremio-server";
@@ -77,7 +78,7 @@ export function MagnetCard({ raw, onClose }: { raw: string; onClose: () => void 
           </span>
         </div>
         {files.map((f) => (
-          <button
+          <FocusButton
             key={f.idx}
             type="button"
             onClick={() => startPlay(f.idx, f.name)}
@@ -86,7 +87,7 @@ export function MagnetCard({ raw, onClose }: { raw: string; onClose: () => void 
             <Play size={18} className="shrink-0 text-ink-muted" />
             <span className="min-w-0 flex-1 truncate text-[14px] text-ink">{f.name}</span>
             <span className="shrink-0 text-[12px] tabular-nums text-ink-subtle">{formatSize(f.length)}</span>
-          </button>
+          </FocusButton>
         ))}
       </div>
     );
@@ -104,7 +105,7 @@ export function MagnetCard({ raw, onClose }: { raw: string; onClose: () => void 
           {error ?? "Streams directly from peers over your own connection."}
         </span>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={onPlay}
         disabled={mode === "starting"}
@@ -116,7 +117,7 @@ export function MagnetCard({ raw, onClose }: { raw: string; onClose: () => void 
           <Play size={18} fill="currentColor" />
         )}
         {mode === "starting" ? "Starting" : "Play"}
-      </button>
+      </FocusButton>
     </div>
   );
 }

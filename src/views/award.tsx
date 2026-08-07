@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { LayoutGrid, List } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
@@ -186,7 +187,7 @@ function ModeToggle({
   const t = useT();
   return (
     <div className="flex w-fit items-center gap-1 self-start rounded-full border border-edge-soft bg-elevated/40 p-1">
-      <button
+      <FocusButton
         type="button"
         onClick={() => onSelect("gallery")}
         className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
@@ -196,8 +197,8 @@ function ModeToggle({
       >
         <LayoutGrid size={15} strokeWidth={2.2} />
         {t("Gallery")}
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => onSelect("list")}
         className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
@@ -207,7 +208,7 @@ function ModeToggle({
       >
         <List size={15} strokeWidth={2.2} />
         {t("Full list")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -35,7 +36,7 @@ export function Synopsis({ text }: { text: string }) {
         {text}
       </p>
       {showToggle && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => setExpanded((e) => !e)}
           className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink"
@@ -44,7 +45,7 @@ export function Synopsis({ text }: { text: string }) {
           <ChevronDown
             className={`h-3.5 w-3.5 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
           />
-        </button>
+        </FocusButton>
       )}
     </div>
   );

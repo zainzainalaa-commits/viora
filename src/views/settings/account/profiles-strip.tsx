@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Plus } from "lucide-react";
 import { useProfiles } from "@/lib/profiles";
 import { useT } from "@/lib/i18n";
@@ -22,7 +23,7 @@ export function ProfilesStrip() {
             onEdit={() => openPicker({ kind: "edit", profileId: p.id })}
           />
         ))}
-        <button
+        <FocusButton
           type="button"
           onClick={() => openPicker({ kind: "create" })}
           className="group flex flex-col items-center gap-2"
@@ -34,20 +35,20 @@ export function ProfilesStrip() {
           <span className="text-[12px] font-medium text-ink-subtle transition-colors group-hover:text-ink">
             {t("Add")}
           </span>
-        </button>
+        </FocusButton>
       </div>
       {solo ? (
         <p className="max-w-md text-[12.5px] leading-relaxed text-ink-subtle">
           {t("Add a profile for someone else and everyone keeps their own Continue Watching, watch history, and progress.")}
         </p>
       ) : (
-        <button
+        <FocusButton
           type="button"
           onClick={() => openPicker({ kind: "list" })}
           className="flex h-9 w-fit items-center rounded-lg border border-edge-soft px-3.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
         >
           {t("Switch profile")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { PersonRef } from "@/lib/providers/tmdb";
 import { useView } from "@/lib/view";
 
@@ -14,13 +15,13 @@ export function Credit({ label, people }: { label: string; people: PersonRef[] }
           return (
             <span key={`${p.id}-${i}`}>
               {resolved ? (
-                <button
+                <FocusButton
                   data-person-card
                   onClick={() => openPerson(p.id)}
                   className="cursor-pointer rounded text-ink underline-offset-4 transition-colors hover:text-accent hover:underline"
                 >
                   {p.name}
-                </button>
+                </FocusButton>
               ) : (
                 <span className="text-ink">{p.name}</span>
               )}

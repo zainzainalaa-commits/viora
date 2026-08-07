@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy } from "lucide-react";
 import type { ThemePreset } from "@/lib/theme";
 
@@ -22,13 +23,13 @@ export function ActiveBanner({
             Hand-tuned colors. Edit them in the section above.
           </p>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={onCustomize}
           className="h-9 rounded-full bg-ink px-4 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
         >
           Edit colors
-        </button>
+        </FocusButton>
       </div>
     );
   }
@@ -85,15 +86,15 @@ export function ActiveBanner({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onCustomize}
             className="flex h-10 items-center gap-1.5 rounded-full border px-4 text-[12.5px] font-semibold backdrop-blur-md transition-all hover:-translate-y-px"
             style={{ borderColor: editBorder, background: editBg, color: fg }}
           >
             Edit colors
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onExport}
             className="flex h-10 items-center gap-1.5 rounded-full px-4 text-[12.5px] font-semibold transition-all hover:-translate-y-px hover:opacity-90"
@@ -101,7 +102,7 @@ export function ActiveBanner({
           >
             <Copy size={13} strokeWidth={2.2} />
             Copy theme
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

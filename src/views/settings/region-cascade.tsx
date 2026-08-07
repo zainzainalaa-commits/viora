@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Globe, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { setUiLanguage, useT } from "@/lib/i18n";
@@ -135,27 +136,27 @@ function LocaleConfirm({
               </p>
             </div>
           </div>
-          <button
+          <FocusButton
             onClick={onDismiss}
             aria-label={t("Close")}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={18} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
         <div className="flex items-center justify-end gap-2.5 px-6 py-4">
-          <button
+          <FocusButton
             onClick={onDismiss}
             className="rounded-full px-4 py-2.5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:text-ink"
           >
             {t("Just change region")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onConfirm}
             className="rounded-full bg-ink px-5 py-2.5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
           >
             {t("Apply {language}", { language: label })}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

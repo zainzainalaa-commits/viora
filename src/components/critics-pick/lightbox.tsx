@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -56,7 +57,7 @@ export function Lightbox({
           {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
         </span>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -66,10 +67,10 @@ export function Lightbox({
         className="absolute end-8 top-8 flex h-12 w-12 items-center justify-center rounded-full border border-edge-soft bg-elevated/50 text-ink-muted transition-colors duration-200 hover:bg-elevated hover:text-ink"
       >
         <X size={22} />
-      </button>
+      </FocusButton>
       {total > 1 && (
         <>
-          <button
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -79,8 +80,8 @@ export function Lightbox({
             className="absolute start-8 top-1/2 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-edge-soft bg-elevated/50 text-ink-muted transition-colors duration-200 hover:bg-elevated hover:text-ink"
           >
             <ChevronLeft size={28} className="dir-icon" />
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -90,7 +91,7 @@ export function Lightbox({
             className="absolute end-8 top-1/2 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-edge-soft bg-elevated/50 text-ink-muted transition-colors duration-200 hover:bg-elevated hover:text-ink"
           >
             <ChevronRight size={28} className="dir-icon" />
-          </button>
+          </FocusButton>
         </>
       )}
       <img
@@ -106,7 +107,7 @@ export function Lightbox({
           onClick={(e) => e.stopPropagation()}
         >
           {images.map((_, i) => (
-            <button
+            <FocusButton
               key={i}
               type="button"
               onClick={() => setIndex(i)}

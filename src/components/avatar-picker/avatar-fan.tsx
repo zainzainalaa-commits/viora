@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo } from "react";
 import { Shuffle } from "lucide-react";
 import { AVATAR_CATALOG, avatarUrl } from "@/lib/avatars/catalog";
@@ -29,7 +30,7 @@ export function AvatarFan({
   }, []);
   return (
     <div className="flex items-center overflow-hidden rounded-xl border border-edge-soft">
-      <button
+      <FocusButton
         type="button"
         onClick={onClick}
         className="group flex flex-1 items-center gap-3 px-2.5 py-1.5 text-start transition-colors hover:bg-canvas/50"
@@ -58,8 +59,8 @@ export function AvatarFan({
         <span className="text-start text-[12.5px] font-medium leading-tight text-ink-muted transition-colors group-hover:text-ink">
           {label ?? t("or use one of our avatars")}
         </span>
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => onRandomize(randomId())}
         aria-label={t("Random avatar")}
@@ -67,7 +68,7 @@ export function AvatarFan({
         className="flex w-10 shrink-0 items-center justify-center self-stretch border-s border-edge-soft text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
       >
         <Shuffle size={15} strokeWidth={2.2} />
-      </button>
+      </FocusButton>
     </div>
   );
 }

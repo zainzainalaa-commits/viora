@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronUp, Grid2x2, Info, Square, StopCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMultiviewStore, type Layout } from "@/lib/multiview/store";
@@ -96,7 +97,7 @@ export function MultiviewView({
               {LAYOUTS.map((l) => {
                 const isActive = store.layout === l.id;
                 return (
-                  <button
+                  <FocusButton
                     key={l.id}
                     onClick={() => store.setLayout(l.id)}
                     title={l.label}
@@ -106,27 +107,27 @@ export function MultiviewView({
                   >
                     {l.id === "2x2" ? <Grid2x2 size={13} /> : <Square size={12} />}
                     {l.id === "2x2" ? "2x2" : l.id}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>
-            <button
+            <FocusButton
               onClick={() => store.reset()}
               className="flex h-9 items-center gap-2 rounded-xl border border-edge-soft/55 px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-danger/40 hover:text-danger"
             >
               <StopCircle size={15} />
               Clear all
-            </button>
+            </FocusButton>
           </>
         )}
-        <button
+        <FocusButton
           onClick={() => setCollapsed((c) => !c)}
           title={collapsed ? "Show controls" : "Hide controls, full grid"}
           aria-label={collapsed ? "Show controls" : "Hide controls"}
           className="ms-auto flex h-8 w-8 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
         >
           {collapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
-        </button>
+        </FocusButton>
       </div>
 
       {!collapsed && !bannerHidden && (
@@ -137,14 +138,14 @@ export function MultiviewView({
             drops to "Stream offline" while others play, your provider may be throttling. Try
             closing a stream and retrying.
           </p>
-          <button
+          <FocusButton
             type="button"
             onClick={dismissBanner}
             aria-label="Dismiss"
             className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
           >
             <X size={12} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         </div>
       )}
 

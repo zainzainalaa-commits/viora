@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -40,14 +41,14 @@ export function ProfilePickerModal() {
     >
       <div className="relative flex max-h-[calc(100vh-3rem)] w-full max-w-[860px] flex-col animate-in fade-in zoom-in-95 slide-in-from-bottom-3 duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
         {showClose && (
-          <button
+          <FocusButton
             type="button"
             onClick={closePicker}
             aria-label={t("common.close")}
             className="absolute end-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-canvas/70 text-ink-muted ring-1 ring-edge-soft backdrop-blur transition-colors hover:bg-elevated hover:text-ink"
           >
             <X size={16} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         )}
         <div
           ref={scrollRef}
@@ -92,7 +93,7 @@ export function ProfilePickerModal() {
         {moreBelow && (
           <>
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-black/90 via-black/45 to-transparent" />
-            <button
+            <FocusButton
               type="button"
               onClick={() =>
                 scrollRef.current?.scrollBy({ top: scrollRef.current.clientHeight * 0.8, behavior: "smooth" })
@@ -101,7 +102,7 @@ export function ProfilePickerModal() {
               className="absolute bottom-3 left-1/2 z-20 flex h-8 w-8 -translate-x-1/2 animate-bounce items-center justify-center rounded-full bg-canvas/80 text-ink-muted ring-1 ring-edge-soft backdrop-blur transition-colors hover:text-ink"
             >
               <ChevronDown size={16} strokeWidth={2.4} />
-            </button>
+            </FocusButton>
           </>
         )}
       </div>
@@ -163,7 +164,7 @@ function ListView({
 function AddProfileButton({ onClick }: { onClick: () => void }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className="group flex flex-col items-center gap-2 outline-none"
@@ -175,7 +176,7 @@ function AddProfileButton({ onClick }: { onClick: () => void }) {
       <span className="text-[14px] font-medium text-ink-muted transition-colors group-hover:text-ink">
         {t("Add profile")}
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -184,13 +185,13 @@ function NotFoundFallback({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-[14px] text-ink-muted">{t("Profile not found.")}</p>
-      <button
+      <FocusButton
         type="button"
         onClick={onBack}
         className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas"
       >
         {t("common.back")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

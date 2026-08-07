@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import simklLogo from "@/assets/simkl.png";
@@ -131,7 +132,7 @@ export function AddToSimklButton({
   return (
     <div className="relative shrink-0">
       {status == null ? (
-        <button
+        <FocusButton
           type="button"
           disabled={busy}
           onClick={() => void setTo("plantowatch")}
@@ -141,10 +142,10 @@ export function AddToSimklButton({
           <img src={simklLogo} alt="" className="h-[18px] w-[18px] rounded-[4px] object-contain" />
           <Plus size={16} strokeWidth={2.2} className="-ms-1" />
           {t("Add to Simkl")}
-        </button>
+        </FocusButton>
       ) : (
         <>
-          <button
+          <FocusButton
             ref={btnRef}
             type="button"
             disabled={busy}
@@ -157,7 +158,7 @@ export function AddToSimklButton({
               size={16}
               className={`text-ink-muted transition-transform ${menuOpen ? "rotate-180" : ""}`}
             />
-          </button>
+          </FocusButton>
           <AnchoredMenu
             anchorRef={btnRef}
             open={menuOpen}
@@ -166,7 +167,7 @@ export function AddToSimklButton({
           >
             <div className="overflow-hidden rounded-2xl border border-edge bg-raised py-1.5 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.7)]">
               {order.map((s) => (
-                <button
+                <FocusButton
                   key={s}
                   type="button"
                   onClick={() => void setTo(s)}
@@ -176,7 +177,7 @@ export function AddToSimklButton({
                 >
                   {t(SIMKL_STATUS_LABELS[s])}
                   {s === status && <Check size={15} className="text-ink" />}
-                </button>
+                </FocusButton>
               ))}
               {settings.simklEnableUserRatings && (
                 <>
@@ -190,14 +191,14 @@ export function AddToSimklButton({
                 </>
               )}
               <div className="my-1 h-px bg-edge-soft" />
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => void remove()}
                 className="flex w-full items-center gap-2.5 px-4 py-2.5 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-danger/15 hover:text-danger"
               >
                 <Trash2 size={14} />
                 {t("Remove from list")}
-              </button>
+              </FocusButton>
             </div>
           </AnchoredMenu>
         </>

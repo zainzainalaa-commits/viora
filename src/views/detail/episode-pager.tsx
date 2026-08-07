@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -42,7 +43,7 @@ export function EpisodePager({
               …
             </span>
           ) : (
-            <button
+            <FocusButton
               key={p}
               onClick={() => onChange(p - 1)}
               className={`h-8 min-w-8 rounded-lg px-2 text-[12.5px] font-medium tabular-nums transition-colors ${
@@ -50,7 +51,7 @@ export function EpisodePager({
               }`}
             >
               {p}
-            </button>
+            </FocusButton>
           ),
         )}
         <NavBtn label={t("Next")} disabled={page === pageCount - 1} onClick={() => onChange(page + 1)}>
@@ -91,7 +92,7 @@ function NavBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       aria-label={label}
       title={label}
       disabled={disabled}
@@ -99,7 +100,7 @@ function NavBtn({
       className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:pointer-events-none disabled:opacity-30"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

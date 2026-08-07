@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Info, Zap } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -44,7 +45,7 @@ export function TierStrip({
           const accent = streamLeadLabel(stream, t);
           const statusLabel = trulyInstantHere ? "Instant" : cachedHere ? "Cached" : "Cache";
           return (
-            <button
+            <FocusButton
               key={t}
               onClick={() => onSelect(t)}
               className={`group flex min-h-[56px] items-center gap-3 rounded-[14px] border px-4 py-2.5 text-start transition-[border-color,background-color,opacity] duration-200 ${
@@ -71,7 +72,7 @@ export function TierStrip({
                   {statusLabel} · {sizeStr ?? "size unknown"}
                 </span>
               </div>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { BookOpen } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -104,14 +105,14 @@ export function CheatSheet({ onClose }: { onClose: () => void }) {
         <span className="ms-2 hidden text-[13px] text-ink-muted md:inline">
           Every variable, selector, hook, and recipe for building custom Harbor themes.
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={onClose}
           className="ms-auto flex h-11 items-center rounded-lg px-5 text-[14.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
           style={{ background: "var(--color-accent)" }}
         >
           Done
-        </button>
+        </FocusButton>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
@@ -121,7 +122,7 @@ export function CheatSheet({ onClose }: { onClose: () => void }) {
           </span>
           <nav className="flex flex-col gap-0.5">
             {SECTIONS.map((s) => (
-              <button
+              <FocusButton
                 key={s.id}
                 type="button"
                 onClick={() => jump(s.id)}
@@ -132,7 +133,7 @@ export function CheatSheet({ onClose }: { onClose: () => void }) {
                 }`}
               >
                 {s.label}
-              </button>
+              </FocusButton>
             ))}
           </nav>
         </aside>
@@ -291,7 +292,7 @@ export function CheatSheet({ onClose }: { onClose: () => void }) {
       <div className="pointer-events-auto fixed bottom-6 end-6 z-[50] flex flex-col items-center gap-1 rounded-xl border border-edge-soft bg-surface/90 p-1.5 backdrop-blur-md">
         {SECTIONS.map((s) => (
           <HoverTip key={s.id} label={s.label} side="left">
-            <button
+            <FocusButton
               type="button"
               onClick={() => jump(s.id)}
               aria-label={s.label}
@@ -304,7 +305,7 @@ export function CheatSheet({ onClose }: { onClose: () => void }) {
                   transform: active === s.id ? "scale(1.6)" : "scale(1)",
                 }}
               />
-            </button>
+            </FocusButton>
           </HoverTip>
         ))}
       </div>

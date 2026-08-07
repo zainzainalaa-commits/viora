@@ -1,3 +1,4 @@
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
 import { ArrowRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DoneStep } from "@/components/onboarding/done-step";
@@ -39,9 +40,14 @@ export function OnboardingModal() {
     setTimeout(finishOnboarding, 320);
   };
 
+  // The backdrop sits above the sidebar (z-60) deliberately. A dialog rendered
+  // under the navigation leaves those controls visible, hit-testable and
+  // focusable, which is what let the remote walk out of setup into the app
+  // behind it.
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-canvas/85 backdrop-blur-md ${
+    <FocusModal
+      onClose={finish}
+      className={`fixed inset-0 z-[250] flex items-center justify-center bg-canvas/85 backdrop-blur-md ${
         closing ? "opacity-0 transition-opacity duration-300" : "animate-fade-in"
       }`}
     >
@@ -51,13 +57,13 @@ export function OnboardingModal() {
         }`}
       >
         {!isSplash && (
-          <button
+          <FocusButton
             onClick={finish}
             aria-label={t("Skip setup")}
             className="absolute end-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={17} />
-          </button>
+          </FocusButton>
         )}
 
         {isSplash ? (
@@ -84,44 +90,46 @@ export function OnboardingModal() {
               />
               <div className="flex items-center gap-2.5">
                 {(step === "tmdb" || step === "stremio" || step === "streaming" || step === "subtitles") && (
-                  <button
+                  <FocusButton
                     key={`skip-${step}`}
                     onClick={next}
                     className="animate-skip-in h-11 rounded-full px-4 text-[13px] font-medium text-ink-subtle transition-colors hover:text-ink"
                   >
                     {t("Skip for now")}
-                  </button>
+                  </FocusButton>
                 )}
                 {stepIdx > 1 && stepIdx < STEPS.length - 1 && (
-                  <button
+                  <FocusButton
                     onClick={back}
                     className="h-11 rounded-full px-5 text-[14px] font-medium text-ink-muted transition-colors hover:text-ink"
                   >
                     {t("Back")}
-                  </button>
+                  </FocusButton>
                 )}
                 {stepIdx < STEPS.length - 1 ? (
-                  <button
+                  <FocusButton
                     onClick={next}
+                    data-focus-primary
                     className="flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.03] active:scale-[0.97]"
                   >
                     {step === "welcome" ? t("Get Started") : t("Continue")}
                     <ArrowRight size={15} strokeWidth={2.4} className="dir-icon" />
-                  </button>
+                  </FocusButton>
                 ) : (
-                  <button
+                  <FocusButton
                     onClick={finish}
+                    data-focus-primary
                     className="flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.03] active:scale-[0.97]"
                   >
-                    {t("Enter Harbor")}
+                    {t("Enter Viora")}
                     <ArrowRight size={15} strokeWidth={2.4} className="dir-icon" />
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             </div>
           </>
         )}
       </div>
-    </div>
+    </FocusModal>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -15,14 +16,14 @@ export function ArcModeToggle({
 }) {
   const t = useT();
   const opt = (value: "seasons" | "arcs", label: string) => (
-    <button
+    <FocusButton
       onClick={() => onModeChange(value)}
       className={`h-8 rounded-full px-3.5 text-[13px] font-medium transition-colors ${
         mode === value ? "bg-ink text-canvas" : "text-ink-muted hover:text-ink"
       }`}
     >
       {label}
-    </button>
+    </FocusButton>
   );
   return (
     <div className="flex h-10 items-center gap-1 rounded-full border border-edge-soft bg-canvas/90 px-1">
@@ -88,7 +89,7 @@ export function ArcPicker({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => (menu ? setMenu(null) : openMenu())}
@@ -99,7 +100,7 @@ export function ArcPicker({
           size={15}
           className={`text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div
@@ -112,7 +113,7 @@ export function ArcPicker({
               {arcs.map((a) => {
                 const isActive = a.id === activeArcId;
                 return (
-                  <button
+                  <FocusButton
                     key={a.id}
                     onClick={() => {
                       onArcChange(a.id);
@@ -128,7 +129,7 @@ export function ArcPicker({
                         ? t("{n} episode", { n: a.episodes.length })
                         : t("{n} episodes", { n: a.episodes.length })}
                     </span>
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>

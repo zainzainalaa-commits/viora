@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
@@ -63,7 +64,7 @@ export function CinematicOverlay() {
         active,
         onSelect: () => navigate(item),
         node: (
-          <button
+          <FocusButton
             type="button"
             onClick={() => navigate(item)}
             className={`relative h-9 whitespace-nowrap rounded-full px-3 text-[12.5px] font-medium transition-colors ${
@@ -77,7 +78,7 @@ export function CinematicOverlay() {
               />
             )}
             {label}
-          </button>
+          </FocusButton>
         ),
       };
     });
@@ -95,7 +96,7 @@ export function CinematicOverlay() {
           data-tauri-drag-region
           className="pointer-events-auto relative flex h-14 w-full items-center gap-2 px-1"
         >
-          <button
+          <FocusButton
             type="button"
             onClick={() => setView("home")}
             className="flex shrink-0 items-center gap-2 text-ink"
@@ -116,7 +117,7 @@ export function CinematicOverlay() {
                 {APP_NAME}
               </span>
             )}
-          </button>
+          </FocusButton>
 
           <div className="mx-1 h-6 w-px shrink-0 bg-white/15" />
 
@@ -230,7 +231,7 @@ function IconBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -242,7 +243,7 @@ function IconBtn({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -256,7 +257,7 @@ function WinBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -266,6 +267,6 @@ function WinBtn({
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
         {children}
       </svg>
-    </button>
+    </FocusButton>
   );
 }

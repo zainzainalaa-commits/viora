@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Plus, Loader2, Star, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { ArrowedScrollRow } from "@/components/arrowed-scroll-row";
@@ -131,7 +132,7 @@ function MoverCard({
             <Star size={10} strokeWidth={2.6} fill="currentColor" />
             {entry.community.stars.toLocaleString()}
           </span>
-          <button
+          <FocusButton
             type="button"
             onClick={install}
             disabled={busy || !c.manifestId}
@@ -143,7 +144,7 @@ function MoverCard({
               <Plus size={11} strokeWidth={2.6} />
             )}
             Install
-          </button>
+          </FocusButton>
         </div>
       </div>
     </article>

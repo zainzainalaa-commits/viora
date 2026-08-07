@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUp, ExternalLink, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -116,13 +117,13 @@ export function TopRankModal() {
                 className="h-full w-56 bg-transparent text-[13px] text-ink outline-none placeholder:text-ink-subtle/60"
               />
             </div>
-            <button
+            <FocusButton
               onClick={close}
               aria-label={t("Close")}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-edge text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               <X size={16} strokeWidth={2} />
-            </button>
+            </FocusButton>
           </div>
         </header>
 
@@ -153,7 +154,7 @@ export function TopRankModal() {
           )}
         </div>
 
-        <button
+        <FocusButton
           onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label={t("Back to top")}
           className={`absolute bottom-5 end-5 z-10 flex h-8 w-8 items-center justify-center rounded-md border border-edge-soft/40 bg-canvas/90 text-ink-muted transition-[transform,opacity,background-color,color] duration-300 hover:bg-canvas hover:text-ink ${
@@ -161,7 +162,7 @@ export function TopRankModal() {
           }`}
         >
           <ArrowUp size={14} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </div>
     </div>,
     document.body,
@@ -186,7 +187,7 @@ function PersonRow({
 
   return (
     <div className="group flex h-full gap-4 rounded-2xl border border-edge-soft bg-canvas/40 p-4 transition-colors hover:border-edge hover:bg-canvas/65">
-      <button
+      <FocusButton
         onClick={() => onOpenPerson(person.id)}
         className="relative h-full w-[120px] shrink-0 overflow-hidden rounded-xl bg-elevated/60 ring-1 ring-edge-soft/60"
         aria-label={t("Open {name}", { name: person.name })}
@@ -200,15 +201,15 @@ function PersonRow({
           <span className="text-[8.5px] uppercase tracking-[0.18em] text-ink-subtle">#</span>
           <span className="text-accent">{person.rank}</span>
         </span>
-      </button>
+      </FocusButton>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 overflow-hidden">
-        <button
+        <FocusButton
           onClick={() => onOpenPerson(person.id)}
           className="truncate text-start text-[15px] font-semibold leading-tight text-ink transition-colors hover:text-accent"
         >
           {person.name}
-        </button>
+        </FocusButton>
         <p className="text-[10.5px] uppercase tracking-[0.18em] text-ink-subtle">{t("Best known for")}</p>
         <div className="flex max-h-[68px] flex-wrap gap-1.5 overflow-hidden">
           {bestKnown.map((k) => (
@@ -217,14 +218,14 @@ function PersonRow({
           {bestKnown.length === 0 && <span className="text-[12px] text-ink-subtle">{t("No credits available")}</span>}
         </div>
         <div className="mt-auto flex items-center gap-2 pt-1">
-          <button
+          <FocusButton
             onClick={() => onOpenPerson(person.id)}
             className="inline-flex h-8 items-center gap-1.5 rounded-full bg-ink px-3 text-[12px] font-semibold text-canvas transition-transform hover:scale-[1.04]"
           >
             {t("View profile")}
             <ExternalLink size={11} strokeWidth={2.4} />
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={handleImdb.open}
             disabled={handleImdb.loading}
             className="inline-flex h-8 items-center gap-1.5 rounded-full border border-edge px-3 text-[12px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:opacity-60"
@@ -232,7 +233,7 @@ function PersonRow({
           >
             <ImdbIcon className="h-[12px] w-auto rounded-[2px]" />
             IMDb
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>
@@ -249,7 +250,7 @@ function KnownChip({ entry, onClick }: { entry: KnownForEntry; onClick: () => vo
     entry.mediaType === "tv" ? "series" : "movie",
   );
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className="group/chip inline-flex max-w-[170px] items-center gap-1.5 rounded-full border border-edge-soft bg-elevated/40 py-0.5 ps-0.5 pe-2.5 transition-colors hover:border-edge hover:bg-elevated"
       title={entry.title}
@@ -267,7 +268,7 @@ function KnownChip({ entry, onClick }: { entry: KnownForEntry; onClick: () => vo
       {entry.releaseInfo && (
         <span className="font-mono text-[10px] text-ink-subtle">{entry.releaseInfo}</span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 

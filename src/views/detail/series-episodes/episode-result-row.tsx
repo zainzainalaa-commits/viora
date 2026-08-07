@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import { Poster } from "@/components/poster";
@@ -17,7 +18,7 @@ export function EpisodeResultRow({
   const t = useT();
   const staggered = index != null;
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onPlay}
       style={staggered ? { animationDelay: `${Math.min(index, 8) * 55}ms` } : undefined}
@@ -41,6 +42,6 @@ export function EpisodeResultRow({
           {t("Season {s}", { s: video.season ?? 0 })} · {t("Episode {n}", { n: video.episode ?? 0 })}
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }

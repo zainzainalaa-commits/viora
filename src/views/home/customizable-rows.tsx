@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { LazyMount } from "@/components/lazy-mount";
@@ -62,7 +63,7 @@ function RowTitle({ row }: { row: HomeRow }) {
 
   if (!row.fetcher) return <>{t(row.name)}{badge}{menu}</>;
   return (
-    <button
+    <FocusButton
       onClick={() =>
         openGrid({ title: t(row.name), fetcher: row.fetcher!, initial: row.metas })
       }
@@ -74,7 +75,7 @@ function RowTitle({ row }: { row: HomeRow }) {
         {t("See all")}
         <ChevronRight size={14} strokeWidth={2.4} className="dir-icon" />
       </span>
-    </button>
+    </FocusButton>
   );
 }
 

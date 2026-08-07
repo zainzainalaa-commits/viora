@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark } from "lucide-react";
 import { type Meta } from "@/lib/cinemeta";
 import { useSettings } from "@/lib/settings";
@@ -23,7 +24,7 @@ export function TabBtn({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`relative -mb-px flex items-center gap-2 px-4 pb-3 pt-2 text-[13.5px] font-semibold transition-colors ${
@@ -36,7 +37,7 @@ export function TabBtn({
           active ? "bg-ink" : "bg-transparent"
         }`}
       />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -95,7 +96,7 @@ export function FilterPill({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
@@ -105,7 +106,7 @@ export function FilterPill({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -189,7 +190,7 @@ export function SortControl() {
   return (
     <div className="flex items-center gap-1 rounded-full bg-elevated/40 p-0.5 ring-1 ring-edge-soft/60">
       {options.map(([key, label]) => (
-        <button
+        <FocusButton
           key={key}
           type="button"
           onClick={() => update({ librarySort: key })}
@@ -200,7 +201,7 @@ export function SortControl() {
           }`}
         >
           {label}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );

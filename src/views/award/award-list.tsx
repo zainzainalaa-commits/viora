@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AWARD_CATALOG } from "@/lib/awards-catalog";
@@ -73,7 +74,7 @@ export function AwardList({ awardType, tint }: { awardType: AwardType; tint: str
       {noResults && (
         <p className="rounded-2xl border border-edge-soft bg-elevated/30 p-5 text-[13.5px] text-ink-muted">
           {t("No winners match these filters.")}{" "}
-          <button
+          <FocusButton
             type="button"
             onClick={() => {
               setDecade(null);
@@ -82,7 +83,7 @@ export function AwardList({ awardType, tint }: { awardType: AwardType; tint: str
             className="text-ink underline-offset-4 hover:underline"
           >
             {t("Clear filters")}
-          </button>
+          </FocusButton>
           .
         </p>
       )}
@@ -122,14 +123,14 @@ function FilterBar({
           className="flex-1 bg-transparent text-[14.5px] text-ink placeholder:text-ink-subtle/65 outline-none"
         />
         {query && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => onQuery("")}
             aria-label={t("Clear search")}
             className="flex h-7 w-7 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
           >
             <X size={13} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         )}
       </div>
       <div className="flex gap-1.5 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -154,7 +155,7 @@ function DecadePill({
   tint: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold tabular-nums transition-colors ${
@@ -163,7 +164,7 @@ function DecadePill({
       style={active ? { backgroundColor: tint } : undefined}
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -238,13 +239,13 @@ function WinnerRow({
       </span>
       <div className="flex min-w-0 flex-col gap-1">
         {workClickable ? (
-          <button
+          <FocusButton
             type="button"
             onClick={onWorkClick}
             className="self-start text-start text-[16px] font-medium leading-tight text-ink transition-colors hover:text-accent"
           >
             {entry.workTitle}
-          </button>
+          </FocusButton>
         ) : (
           <span className="text-[16px] font-medium leading-tight text-ink">{entry.workTitle}</span>
         )}
@@ -254,14 +255,14 @@ function WinnerRow({
               <span key={`${r}-${i}`}>
                 {i > 0 && <span className="text-ink-subtle">, </span>}
                 {settings.tmdbKey ? (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => onRecipientClick(r)}
                     disabled={resolving}
                     className="text-start transition-colors hover:text-ink disabled:cursor-default disabled:hover:text-ink-muted"
                   >
                     {r}
-                  </button>
+                  </FocusButton>
                 ) : (
                   <span>{r}</span>
                 )}

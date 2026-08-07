@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -21,7 +22,7 @@ export function ExitConfirm({
         {t("You'll leave the player and open the full details page.")}
       </p>
 
-      <button
+      <FocusButton
         type="button"
         onClick={() => setRemember((v) => !v)}
         className="group mt-5 flex items-center gap-2.5"
@@ -34,23 +35,23 @@ export function ExitConfirm({
           {remember && <Check size={13} strokeWidth={3.2} className="text-black" />}
         </span>
         <span className="text-[13px] text-white/70">{t("Don't ask me again")}</span>
-      </button>
+      </FocusButton>
 
       <div className="mt-6 flex gap-2.5">
-        <button
+        <FocusButton
           type="button"
           onClick={onCancel}
           className="flex-1 rounded-full bg-white/10 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-white/15"
         >
           {t("Keep watching")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => onConfirm(remember)}
           className="flex-1 rounded-full bg-white py-2.5 text-[13.5px] font-semibold text-black transition-transform hover:scale-[1.03]"
         >
           {t("Exit")}
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

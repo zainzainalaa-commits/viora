@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Radio, Users, X } from "lucide-react";
 import { useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -61,22 +62,22 @@ export function P2pConfirmModal({
           Auto-play peer-to-peer sources from now on
         </label>
         <div className="flex items-center gap-3 pt-1">
-          <button
+          <FocusButton
             type="button"
             onClick={() => onConfirm(remember)}
             className="flex h-12 items-center gap-2 rounded-xl bg-accent px-6 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
           >
             <Radio size={15} strokeWidth={2.4} />
             Stream via P2P
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onCancel}
             className="flex h-12 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 text-[14px] font-medium text-white/75 backdrop-blur-md transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
           >
             <X size={15} strokeWidth={2.2} />
             Back to sources
-          </button>
+          </FocusButton>
         </div>
       </div>
     </main>

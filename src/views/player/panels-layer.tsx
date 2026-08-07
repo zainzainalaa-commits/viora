@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { EpisodePanel } from "@/components/player/episode-panel";
 import { ResumePrompt } from "@/components/player/resume-prompt";
 import type { Meta } from "@/lib/cinemeta";
@@ -61,7 +62,7 @@ export function PanelsLayer({
   return (
     <>
       {upNextButtonVisible && (
-        <button
+        <FocusButton
           onClick={onOpenEpisodePanel}
           aria-label={t("Up next")}
           className={`group absolute top-1/2 z-20 flex h-32 -translate-y-1/2 flex-col items-center justify-center gap-2.5 bg-elevated/95 text-ink shadow-[0_10px_32px_-10px_rgba(0,0,0,0.6)] backdrop-blur-md transition-[padding,background] duration-200 hover:bg-elevated ${
@@ -85,7 +86,7 @@ export function PanelsLayer({
           >
             {t("Up Next")}
           </span>
-        </button>
+        </FocusButton>
       )}
 
       {isSeriesPlayback && (

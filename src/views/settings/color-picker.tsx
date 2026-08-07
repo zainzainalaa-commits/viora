@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -31,7 +32,7 @@ export function ColorPicker({
         {HARBOR_COLOR_SWATCHES.map((hex) => {
           const selected = value.toLowerCase() === hex;
           return (
-            <button
+            <FocusButton
               key={hex}
               type="button"
               onClick={() => onChange(hex)}
@@ -130,7 +131,7 @@ export function ColorPopoverTrigger({
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={`flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-medium transition-colors ${
@@ -145,7 +146,7 @@ export function ColorPopoverTrigger({
           style={{ background: value }}
         />
         {label}
-      </button>
+      </FocusButton>
       {open && !portal && (
         <>
           <div

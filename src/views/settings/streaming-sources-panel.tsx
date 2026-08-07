@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import allDebridLogo from "@/assets/addon-logos/alldebrid.webp";
@@ -328,7 +329,7 @@ function StreamFilterPicker({
       {options.map((opt) => {
         const selected = value === opt.id;
         return (
-          <button
+          <FocusButton
             key={opt.id}
             type="button"
             onClick={() => onChange(opt.id)}
@@ -349,7 +350,7 @@ function StreamFilterPicker({
               <span className="text-[15px] font-semibold text-ink">{opt.label}</span>
               <span className="text-[12.5px] leading-snug text-ink-muted">{opt.sub}</span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -381,7 +382,7 @@ function PickerLayoutPicker({
       {options.map((opt) => {
         const selected = value === opt.id;
         return (
-          <button
+          <FocusButton
             key={opt.id}
             type="button"
             onClick={() => onChange(opt.id)}
@@ -402,7 +403,7 @@ function PickerLayoutPicker({
               <span className="text-[15px] font-semibold text-ink">{opt.label}</span>
               <span className="text-[12.5px] leading-snug text-ink-muted">{opt.sub}</span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -434,7 +435,7 @@ function StreamSortPicker({
       {options.map((opt) => {
         const selected = value === opt.id;
         return (
-          <button
+          <FocusButton
             key={opt.id}
             type="button"
             onClick={() => onChange(opt.id)}
@@ -455,7 +456,7 @@ function StreamSortPicker({
               <span className="text-[15px] font-semibold text-ink">{opt.label}</span>
               <span className="text-[12.5px] leading-snug text-ink-muted">{opt.sub}</span>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
     </div>
@@ -494,7 +495,7 @@ function AioStatusBanner({ snapshot }: { snapshot: AioStatusSnapshot }) {
   const hasWarning = expiringSoon.length > 0;
   return (
     <>
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen(true)}
         className={`mb-2 flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-2 text-start text-[12px] transition-colors ${
@@ -518,7 +519,7 @@ function AioStatusBanner({ snapshot }: { snapshot: AioStatusSnapshot }) {
           {t("View all")}
           <ChevronRight size={13} strokeWidth={2.4} />
         </span>
-      </button>
+      </FocusButton>
       {open && <AioStatusModal snapshot={snapshot} onClose={() => setOpen(false)} />}
     </>
   );

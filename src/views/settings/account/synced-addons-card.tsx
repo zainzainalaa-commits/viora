@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AddonLogo, AddonLogoStack, resolveAddonLogo } from "@/components/addon-logo";
@@ -62,15 +63,15 @@ export function SyncedAddonsCard() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             onClick={sync}
             disabled={busy}
             className="flex h-10 items-center gap-1.5 rounded-xl bg-ink px-4 text-[12.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] disabled:opacity-60"
           >
             {busy ? <Loader2 size={13} className="animate-spin" /> : null}
             {busy ? t("Syncing…") : t("Sync now")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={() => {
               requestAddonsTab("installed");
               setView("addons");
@@ -79,7 +80,7 @@ export function SyncedAddonsCard() {
           >
             {t("Manage")}
             <ArrowRight size={12} strokeWidth={2.2} className="dir-icon" />
-          </button>
+          </FocusButton>
         </div>
       </div>
       {lastSynced && (
@@ -125,7 +126,7 @@ function AddonStackPeek({ addons, max }: { addons: Addon[]; max: number }) {
         max={max}
       />
       {overflow > 0 && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label={t("Show {n} more addons", { n: overflow })}
@@ -136,7 +137,7 @@ function AddonStackPeek({ addons, max }: { addons: Addon[]; max: number }) {
           }`}
         >
           +{overflow}
-        </button>
+        </FocusButton>
       )}
       {open && <AddonListTooltip addons={addons} onClose={() => setOpen(false)} />}
     </div>
@@ -151,7 +152,7 @@ function AddonListTooltip({ addons, onClose }: { addons: Addon[]; onClose: () =>
         <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-subtle">
           {t("All addons ({n})", { n: addons.length })}
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={onClose}
           aria-label={t("Close")}
@@ -160,7 +161,7 @@ function AddonListTooltip({ addons, onClose }: { addons: Addon[]; onClose: () =>
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
-        </button>
+        </FocusButton>
       </div>
       <div className="flex max-h-[320px] flex-col overflow-y-auto">
         {addons.map((a) => (

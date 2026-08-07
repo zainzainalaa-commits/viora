@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { PauseCircle, PlayCircle, RotateCcw, Save, Undo2, X } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
@@ -34,7 +35,7 @@ export function SyncTransport({
     <div className="flex flex-col gap-3 border-b border-white/10 bg-black/40 px-4 py-3 backdrop-blur-xl">
       {/* Top Row: Play/Pause, Offset Nudge, Reset */}
       <div className="flex items-center justify-between gap-2">
-        <button
+        <FocusButton
           onClick={onPlayPause}
           aria-label={playing ? t("Pause") : t("Play")}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white transition-colors hover:bg-white/20 active:scale-95"
@@ -44,7 +45,7 @@ export function SyncTransport({
           ) : (
             <PlayCircle size={20} strokeWidth={1.5} />
           )}
-        </button>
+        </FocusButton>
 
         {/* Nudge steps */}
         <div className="flex h-10 flex-1 items-stretch justify-center overflow-hidden rounded-xl bg-white/5">
@@ -63,14 +64,14 @@ export function SyncTransport({
         </div>
 
         {nonZero ? (
-          <button
+          <FocusButton
             onClick={() => onNudge(-previewOffset)}
             aria-label={t("Reset offset")}
             title={t("Reset offset to 0")}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
           >
             <RotateCcw size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         ) : (
           <div className="w-10 shrink-0" />
         )}
@@ -78,14 +79,14 @@ export function SyncTransport({
 
       {/* Bottom Row: Exit, Progress, Undo, Save */}
       <div className="flex items-center justify-between gap-2">
-        <button
+        <FocusButton
           onClick={onExit}
           aria-label={t("Exit sync mode")}
           title={t("Exit sync mode")}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/60 transition-colors hover:bg-white/15 hover:text-white"
         >
           <X size={16} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
 
         <div className="flex flex-1 items-center justify-center gap-2">
           {mode === "normal" ? (
@@ -115,7 +116,7 @@ export function SyncTransport({
           )}
         </div>
 
-        <button
+        <FocusButton
           onClick={onUndo}
           disabled={!canUndo}
           aria-label={t("Undo")}
@@ -123,9 +124,9 @@ export function SyncTransport({
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-25"
         >
           <Undo2 size={16} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
 
-        <button
+        <FocusButton
           onClick={onSave}
           disabled={saveDisabled}
           aria-label={t("Save sync")}
@@ -137,7 +138,7 @@ export function SyncTransport({
         >
           <Save size={14} strokeWidth={2.2} />
           {t("Save")}
-        </button>
+        </FocusButton>
       </div>
 
     </div>
@@ -146,12 +147,12 @@ export function SyncTransport({
 
 function NudgeBtn({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className="flex items-center justify-center px-2.5 font-mono text-[11.5px] font-semibold tabular-nums text-white/70 transition-colors hover:bg-white/12 hover:text-white active:scale-95"
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }

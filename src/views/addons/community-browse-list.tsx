@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight, Loader2, Plus, Sparkles, Star, TrendingUp } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
@@ -356,7 +357,7 @@ function CommunityRow({
       </div>
       <div className="relative flex shrink-0 items-center gap-2">
         {!installed && m?.id && (
-          <button
+          <FocusButton
             type="button"
             onClick={install}
             disabled={busy}
@@ -368,7 +369,7 @@ function CommunityRow({
               <Plus size={12} strokeWidth={2.6} />
             )}
             {t("Install")}
-          </button>
+          </FocusButton>
         )}
         {installed && (
           <span className="flex h-9 items-center gap-1 rounded-full bg-accent/15 px-3 text-[12.5px] font-semibold text-accent">

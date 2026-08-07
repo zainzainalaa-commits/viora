@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { EpgProgram } from "@/lib/iptv/types";
@@ -105,13 +106,13 @@ function Header({
           </span>
         </HoverTooltip>
       </div>
-      <button
+      <FocusButton
         onClick={onClose}
         aria-label={t("Close")}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-raised text-ink-muted transition-colors hover:bg-raised/70 hover:text-ink"
       >
         <X size={17} strokeWidth={2.1} />
-      </button>
+      </FocusButton>
     </div>
   );
 }

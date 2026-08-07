@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronUp, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import type { Diagnostics } from "@/lib/bug-report";
@@ -14,7 +15,7 @@ export function DiagnosticsCard({ diag }: { diag: Diagnostics | null }) {
   const compact = `Harbor ${diag.appVersion} · ${diag.os}${diag.osVersion ? ` ${diag.osVersion}` : ""} · ${diag.viewport} · ${diag.locale}`;
   return (
     <div className="rounded-xl border border-edge-soft/55 bg-canvas/30">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-3 px-4 py-3 text-start"
@@ -29,7 +30,7 @@ export function DiagnosticsCard({ diag }: { diag: Diagnostics | null }) {
         <span className="ms-auto text-ink-subtle">
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </span>
-      </button>
+      </FocusButton>
       {open && (
         <div className="border-t border-edge-soft/55 px-4 py-3">
           <p className="mb-2 text-[11.5px] leading-relaxed text-ink-muted">

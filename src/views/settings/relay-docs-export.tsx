@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { Check, FolderOpen, X } from "lucide-react";
 import { saveTextFileWithPath } from "@/lib/download-text";
@@ -50,7 +51,7 @@ export function DownloadMenu({
 
   return (
     <div ref={wrap} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         disabled={busy}
@@ -64,7 +65,7 @@ export function DownloadMenu({
       >
         <DownloadGlyph />
         {busy ? "Saving…" : "Download"}
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-[calc(100%+8px)] z-30 flex w-44 flex-col overflow-hidden rounded-xl border border-edge-soft bg-elevated shadow-[0_18px_50px_-15px_rgba(0,0,0,0.6)] backdrop-blur-md animate-in fade-in slide-in-from-top-1 duration-150">
           <DownloadOption label="Plain text (.txt)" onClick={() => void exportAs("txt")} />
@@ -78,13 +79,13 @@ export function DownloadMenu({
 
 function DownloadOption({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className="flex w-full items-center px-3.5 py-2.5 text-start text-[12.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -125,22 +126,22 @@ export function SavePill({ path, onDismiss }: { path: string; onDismiss: () => v
             {dir || name}
           </span>
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={reveal}
           className="ms-1 flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-raised px-3 text-[11.5px] font-semibold text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
         >
           <FolderOpen size={13} strokeWidth={2.2} />
           Show
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={14} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

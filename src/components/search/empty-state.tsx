@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, Clock, Compass, ListTree, Loader2, Shuffle, Sparkles, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AddonsIcon } from "@/components/icons/addons-icon";
@@ -251,7 +252,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
     return (
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-center gap-3">
-          <button
+          <FocusButton
             type="button"
             onClick={() => {
               setGenreBrowse(null);
@@ -262,7 +263,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
           >
             <ArrowLeft size={13} strokeWidth={2.4} className="dir-icon" />
             {t("Back")}
-          </button>
+          </FocusButton>
           <span className="text-[10.5px] font-bold uppercase tracking-[0.22em] text-ink-subtle">
             {t("Browsing")}
           </span>
@@ -313,7 +314,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
           <>
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
               {items.map((m) => (
-                <button
+                <FocusButton
                   key={m.id}
                   type="button"
                   onClick={() => {
@@ -323,7 +324,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
                   className="block min-w-0 text-start"
                 >
                   <PickCard meta={m} />
-                </button>
+                </FocusButton>
               ))}
             </div>
             <div ref={sentinelRef} className="h-px w-full" aria-hidden />
@@ -352,13 +353,13 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
               <span className="text-ink-muted"><Clock size={13} strokeWidth={2.2} /></span>
               {t("Recent searches")}
             </h3>
-            <button
+            <FocusButton
               type="button"
               onClick={clearRecent}
               className="text-[11.5px] font-medium uppercase tracking-[0.14em] text-ink-subtle transition-colors hover:text-ink"
             >
               {t("Clear history")}
-            </button>
+            </FocusButton>
           </div>
           <div className="flex flex-wrap gap-2">
             {recent.map((q) => (
@@ -366,10 +367,10 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
                 key={q}
                 className="group inline-flex items-center gap-1 rounded-full border border-edge-soft bg-elevated/60 ps-3.5 pe-1.5 text-[13.5px] text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
-                <button onClick={() => setQuery(q)} className="h-10 py-2 pe-1">
+                <FocusButton onClick={() => setQuery(q)} className="h-10 py-2 pe-1">
                   {q}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   onClick={(e) => {
                     e.stopPropagation();
                     removeRecent(q);
@@ -378,7 +379,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
                   className="ms-0.5 flex h-7 w-7 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
                 >
                   <X size={12} strokeWidth={2.4} />
-                </button>
+                </FocusButton>
               </span>
             ))}
           </div>
@@ -389,7 +390,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
         <Title icon={<Compass size={13} strokeWidth={2.2} />}>{t("Jump to")}</Title>
         <div className="flex flex-wrap gap-2">
           {visibleJumps.map((j) => (
-            <button
+            <FocusButton
               key={j.view}
               onClick={() => {
                 setView(j.view);
@@ -399,10 +400,10 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
             >
               <span className="flex h-5 w-5 items-center justify-center text-ink-muted">{j.icon}</span>
               {t(j.label)}
-            </button>
+            </FocusButton>
           ))}
           {!hiddenTabs.liveTv && (
-            <button
+            <FocusButton
               onClick={() => onOpenGuide()}
               className="flex h-12 items-center gap-2.5 rounded-full border border-edge-soft bg-elevated/50 px-5 text-[14.5px] font-semibold text-ink transition-all hover:border-edge hover:bg-elevated active:scale-[0.97]"
             >
@@ -410,7 +411,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
                 <ListTree size={16} strokeWidth={2} />
               </span>
               {t("TV Guide")}
-            </button>
+            </FocusButton>
           )}
         </div>
       </section>
@@ -419,19 +420,19 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
         <Title icon={<Sparkles size={13} strokeWidth={2.2} />}>{t("Try a genre")}</Title>
         <div className="flex flex-wrap gap-2">
           {visibleGenres.map((name) => (
-            <button
+            <FocusButton
               key={name}
               onClick={() => setGenreBrowse(name)}
               className="h-10 rounded-full border border-edge-soft bg-elevated/40 px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {name}
-            </button>
+            </FocusButton>
           ))}
         </div>
       </section>
 
       <section className="flex justify-center pt-2">
-        <button
+        <FocusButton
           type="button"
           onClick={onSurprise}
           disabled={surpriseBusy}
@@ -445,7 +446,7 @@ export function EmptyState({ onClose, onOpenGuide }: { onClose: () => void; onOp
           <span className="underline decoration-edge-soft underline-offset-4 transition-colors group-hover:decoration-edge">
             {surpriseBusy ? t("Picking…") : t("Surprise me")}
           </span>
-        </button>
+        </FocusButton>
       </section>
     </div>
   );
@@ -463,7 +464,7 @@ function FilterPill({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`h-8 rounded-full border px-3.5 text-[12px] font-semibold transition-all ${
@@ -474,7 +475,7 @@ function FilterPill({
       style={active && accent ? { background: accent, borderColor: accent, color: "white" } : undefined}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

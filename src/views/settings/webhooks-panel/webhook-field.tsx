@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Loader2, X } from "lucide-react";
 import { openUrl } from "@/lib/window";
 import type { ReactNode } from "react";
@@ -45,14 +46,14 @@ export function WebhookField({
           autoComplete="off"
           className="h-10 flex-1 rounded-lg border border-edge bg-canvas px-3 font-mono text-[12px] text-ink outline-none transition-colors focus:border-ink-subtle"
         />
-        <button
+        <FocusButton
           onClick={onTest}
           disabled={!value || status.state === "busy"}
           className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-ink px-4 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {status.state === "busy" && <Loader2 size={12} strokeWidth={2.4} className="animate-spin" />}
           {t("Send test")}
-        </button>
+        </FocusButton>
       </div>
       <div className="rounded-lg bg-canvas/60 p-3 text-[12px] leading-relaxed text-ink-muted">
         {help}
@@ -148,13 +149,13 @@ export function TelegramMark({ size = 18 }: { size?: number }) {
 function ExternalLinkButton({ label, url }: { label: string; url: string }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => openUrl(url)}
       className="inline-flex items-center gap-1.5 self-start rounded-lg border border-edge-soft bg-canvas/60 px-3 py-1.5 text-[11.5px] font-semibold text-ink transition-colors hover:border-edge hover:bg-canvas/80"
     >
       {t(label)}
       <ExternalLink size={11} strokeWidth={2.2} />
-    </button>
+    </FocusButton>
   );
 }

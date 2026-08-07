@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, Eye, EyeOff, ExternalLink, Loader2, Settings2, Star, Trash2, TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
@@ -177,7 +178,7 @@ export function AddonDetail({
           />
         </div>
         {community && (
-          <button
+          <FocusButton
             type="button"
             onClick={openRate}
             className="absolute end-12 top-32 flex items-baseline gap-2 leading-none transition-opacity hover:opacity-80"
@@ -192,7 +193,7 @@ export function AddonDetail({
             <span className="text-[32px] font-semibold tabular-nums leading-none text-ink">
               {community.stars.toLocaleString()}
             </span>
-          </button>
+          </FocusButton>
         )}
         <div className="relative flex min-w-0 flex-1 flex-col gap-2">
           <span className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
@@ -214,23 +215,23 @@ export function AddonDetail({
           {m?.description && <AddonDescription text={m.description} />}
           <div className="mt-3 flex flex-wrap items-center gap-2.5">
             {busy === "remove" ? (
-              <button
+              <FocusButton
                 disabled
                 className="flex h-11 items-center gap-2 rounded-full bg-elevated/60 px-5 text-[13.5px] font-semibold text-ink-muted ring-1 ring-edge-soft"
               >
                 <Loader2 size={14} strokeWidth={2.4} className="animate-spin" />
                 {t("Removing")}
-              </button>
+              </FocusButton>
             ) : busy === "install" ? (
-              <button
+              <FocusButton
                 disabled
                 className="flex h-11 items-center gap-2 rounded-full bg-ink/85 px-5 text-[13.5px] font-semibold text-canvas/80"
               >
                 <Loader2 size={14} strokeWidth={2.4} className="animate-spin" />
                 {t("Installing")}
-              </button>
+              </FocusButton>
             ) : installed ? (
-              <button
+              <FocusButton
                 onClick={() => void handleUninstall()}
                 className="group/pill flex h-11 items-center gap-2 rounded-full bg-elevated/70 px-5 text-[13.5px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-danger/15 hover:text-danger hover:ring-danger/30"
               >
@@ -238,65 +239,65 @@ export function AddonDetail({
                 <Trash2 size={14} strokeWidth={2.2} className="hidden group-hover/pill:block" />
                 <span className="block group-hover/pill:hidden">{t("Installed")}</span>
                 <span className="hidden group-hover/pill:block">{t("Remove")}</span>
-              </button>
+              </FocusButton>
             ) : isConfigurable ? (
-              <button
+              <FocusButton
                 onClick={() => openInstallerViewport(configureUrl, nameOf(resolved), resolveAddonLogo(m?.logo, resolved.transportUrl))}
                 className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
               >
                 <Settings2 size={14} strokeWidth={2.2} />
                 {t("Configure & install")}
-              </button>
+              </FocusButton>
             ) : (
-              <button
+              <FocusButton
                 onClick={() => void handleInstall()}
                 className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
               >
                 {t("Install")}
-              </button>
+              </FocusButton>
             )}
             {!installed && isConfigurable && !busy && !web && (
-              <button
+              <FocusButton
                 onClick={() => void handleInstall()}
                 className="flex h-11 items-center gap-2 rounded-full border border-edge-soft px-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 {t("Install default")}
-              </button>
+              </FocusButton>
             )}
             {installed && isConfigurable && !busy && (
-              <button
+              <FocusButton
                 onClick={() => openInstallerViewport(configureUrl, nameOf(resolved), resolveAddonLogo(m?.logo, resolved.transportUrl))}
                 className="flex h-11 items-center gap-2 rounded-full border border-edge-soft px-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 <Settings2 size={14} strokeWidth={2.2} />
                 {t("Reconfigure")}
-              </button>
+              </FocusButton>
             )}
-            <button
+            <FocusButton
               onClick={() => copy("https")}
               className="flex h-11 items-center gap-2 rounded-full border border-edge-soft px-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {copied === "https" ? <Check size={14} strokeWidth={2.4} /> : <Copy size={14} strokeWidth={2.2} />}
               {copied === "https" ? t("Copied") : t("Copy URL")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={() => copy("stremio")}
               className="flex h-11 items-center gap-2 rounded-full border border-edge-soft px-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {copied === "stremio" ? <Check size={14} strokeWidth={2.4} /> : <ExternalLink size={14} strokeWidth={2.2} />}
               {copied === "stremio" ? t("Copied") : t("stremio:// link")}
-            </button>
+            </FocusButton>
             {community && (
               <>
                 <span className="mx-1 h-6 w-px shrink-0 bg-edge-soft" aria-hidden />
-                <button
+                <FocusButton
                   onClick={openRate}
                   className="flex h-11 items-center gap-2 rounded-full border border-accent/40 bg-accent-soft px-5 text-[13.5px] font-semibold text-accent transition-colors hover:border-accent hover:bg-accent-soft/80"
                 >
                   <Star size={14} strokeWidth={2.4} fill="currentColor" className="harbor-rating-star" />
                   {t("Rate")}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   onClick={() => openUrl(addonSiteUrl(community.slug))}
                   className="flex h-11 items-center gap-2 rounded-full border border-edge-soft ps-2 pe-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
                 >
@@ -312,7 +313,7 @@ export function AddonDetail({
                     />
                   </span>
                   {t("On Stremio-Addons")}
-                </button>
+                </FocusButton>
               </>
             )}
           </div>
@@ -363,7 +364,7 @@ export function AddonDetail({
                 </span>
                 <div className="flex items-center gap-1.5">
                   {manifestVisible && (
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => void copy("https")}
                       className="flex h-7 items-center gap-1.5 rounded-full border border-edge-soft px-2.5 text-[11px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
@@ -374,9 +375,9 @@ export function AddonDetail({
                         <Copy size={11} strokeWidth={2.4} />
                       )}
                       {copied === "https" ? t("Copied") : t("Copy")}
-                    </button>
+                    </FocusButton>
                   )}
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => setManifestVisible((v) => !v)}
                     className="flex h-7 items-center gap-1.5 rounded-full border border-edge-soft px-2.5 text-[11px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
@@ -392,7 +393,7 @@ export function AddonDetail({
                       <Eye size={11} strokeWidth={2.4} />
                     )}
                     {manifestVisible ? t("Hide") : t("Reveal")}
-                  </button>
+                  </FocusButton>
                 </div>
               </div>
               <div className="rounded-xl border border-edge-soft bg-canvas/60 p-4">
@@ -413,13 +414,13 @@ export function AddonDetail({
             </p>
             <p className="text-[11.5px] leading-relaxed text-ink-subtle">
               {t("Version and capabilities come straight from the addon's manifest. Ratings and categories come from the")}{" "}
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => openUrl("https://stremio-addons.net")}
                 className="inline-flex items-baseline gap-1 font-semibold text-ink-muted underline-offset-2 transition-colors hover:text-ink hover:underline"
               >
                 stremio-addons.net
-              </button>{" "}
+              </FocusButton>{" "}
               {t("community API. Star, browse, and contribute on their site.")}
             </p>
           </div>

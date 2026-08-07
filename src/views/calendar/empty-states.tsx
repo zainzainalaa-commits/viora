@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Calendar as CalendarIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import type { CalendarFilter } from "@/lib/calendar";
@@ -27,12 +28,12 @@ function EmptyShell({
 
 function ActionButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className="mt-1 rounded-full bg-ink px-5 py-2 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo, useState } from "react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -1171,7 +1172,7 @@ export function SettingsNav({
     const chip = status[id];
     const debridChipLocal = id === "streaming" && debridKeys > 0 ? `${debridKeys}D` : null;
     return (
-      <button
+      <FocusButton
         key={id}
         onClick={() => {
           onChange(id);
@@ -1213,7 +1214,7 @@ export function SettingsNav({
             )}
           </span>
         )}
-      </button>
+      </FocusButton>
     );
   };
 
@@ -1222,7 +1223,7 @@ export function SettingsNav({
       <div data-tauri-drag-region className="h-3 shrink-0" />
       {showBack && (
         <div className="px-3 pb-1.5">
-          <button
+          <FocusButton
             type="button"
             onClick={() => (canGoBack ? goBack() : setView("home"))}
             className="flex h-10 w-full items-center gap-2 rounded-xl px-3 text-start text-[13.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated/70 hover:text-ink"
@@ -1231,7 +1232,7 @@ export function SettingsNav({
               <path d="M15 5l-7 7 7 7" />
             </svg>
             {t("Back")}
-          </button>
+          </FocusButton>
         </div>
       )}
       <div className="px-3 pb-3">
@@ -1262,7 +1263,7 @@ export function SettingsNav({
             }}
           />
           {query && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => setQuery("")}
               className="shrink-0 text-ink-subtle transition-colors hover:text-ink"
@@ -1271,7 +1272,7 @@ export function SettingsNav({
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
                 <path d="M6 6l12 12M18 6 6 18" />
               </svg>
-            </button>
+            </FocusButton>
           )}
         </div>
       </div>
@@ -1297,7 +1298,7 @@ export function SettingsNav({
                   {optionMatches.length === 1 ? t("{n} option", { n: optionMatches.length }) : t("{n} options", { n: optionMatches.length })}
                 </div>
                 {optionMatches.map((o) => (
-                  <button
+                  <FocusButton
                     key={`${o.section}-${o.label}`}
                     onClick={() => {
                       onChange(o.section, o.anchorTitle ? settingsAnchor(o.anchorTitle) : undefined);
@@ -1317,7 +1318,7 @@ export function SettingsNav({
                         {t(sectionLabel.get(o.section) ?? o.section)}
                       </span>
                     </span>
-                  </button>
+                  </FocusButton>
                 ))}
               </>
             )}
@@ -1335,7 +1336,7 @@ export function SettingsNav({
               const chip = status[id];
               const debridChip = id === "streaming" && debridKeys > 0 ? `${debridKeys}D` : null;
               return (
-                <button
+                <FocusButton
                   key={id}
                   onClick={() => {
                     onChange(id);
@@ -1383,7 +1384,7 @@ export function SettingsNav({
                       )}
                     </span>
                   )}
-                </button>
+                </FocusButton>
               );
             })}
           </div>

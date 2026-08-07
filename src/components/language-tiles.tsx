@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
@@ -69,7 +70,7 @@ function LanguageTile({ lang }: { lang: Lang }) {
   }, [lang.iso, settings.tmdbKey]);
 
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() =>
         openFilter({ kind: "language", mediaType: "tv", name: lang.name, iso: lang.iso })
@@ -113,7 +114,7 @@ function LanguageTile({ lang }: { lang: Lang }) {
           ›
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

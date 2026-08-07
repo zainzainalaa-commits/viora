@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Image as ImageIcon, Layers, RotateCcw, Upload } from "lucide-react";
 import { useRef, useState, type ChangeEvent } from "react";
 
@@ -132,7 +133,7 @@ function MultiStateUpload({
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-0.5 rounded-lg bg-white/8 p-0.5">
         {states.map((s) => (
-          <button
+          <FocusButton
             key={s.id}
             type="button"
             onClick={() => setActiveState(s.id)}
@@ -142,7 +143,7 @@ function MultiStateUpload({
           >
             {s.url && <span className="h-2 w-2 rounded-full bg-emerald-400" />}
             {s.label}
-          </button>
+          </FocusButton>
         ))}
       </div>
       <SingleUpload
@@ -152,14 +153,14 @@ function MultiStateUpload({
         label={active.label}
       />
       {onApplyToAll && active.url && (
-        <button
+        <FocusButton
           type="button"
           onClick={() => onApplyToAll(active.url!)}
           title="Use this icon for all states"
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/85 transition-colors hover:bg-white/15 hover:text-white"
         >
           <Layers size={13} strokeWidth={2.3} />
-        </button>
+        </FocusButton>
       )}
     </div>
   );
@@ -213,7 +214,7 @@ function PickButton({ onPick, busy }: { onPick: (file: File | undefined) => void
         }}
         className="hidden"
       />
-      <button
+      <FocusButton
         type="button"
         disabled={busy}
         onClick={() => ref.current?.click()}
@@ -222,14 +223,14 @@ function PickButton({ onPick, busy }: { onPick: (file: File | undefined) => void
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/85 transition-colors hover:bg-white/15 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
       >
         <Upload size={14} strokeWidth={2.3} />
-      </button>
+      </FocusButton>
     </>
   );
 }
 
 function ResetButton({ onClick }: { onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       title="Reset to default"
@@ -237,7 +238,7 @@ function ResetButton({ onClick }: { onClick: () => void }) {
       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/85 transition-colors hover:bg-white/15 hover:text-white"
     >
       <RotateCcw size={13} strokeWidth={2.3} />
-    </button>
+    </FocusButton>
   );
 }
 

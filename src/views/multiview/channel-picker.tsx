@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Link2, Loader2, Search, Star, Tv, X } from "lucide-react";
 import { useFavorites } from "@/lib/iptv/favorites";
@@ -116,13 +117,13 @@ export function ChannelPicker({
           />
           {showLoading && <Loader2 size={14} className="animate-spin text-ink-subtle" />}
         </div>
-        <button
+        <FocusButton
           onClick={onClose}
           aria-label="Close"
           className="flex h-10 w-10 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
         >
           <X size={18} />
-        </button>
+        </FocusButton>
       </header>
 
       <div className="flex min-h-0 flex-1">
@@ -213,13 +214,13 @@ export function ChannelPicker({
           spellCheck={false}
           className="h-9 flex-1 bg-transparent text-[13.5px] text-ink outline-none placeholder:text-ink-subtle/60"
         />
-        <button
+        <FocusButton
           onClick={submitManual}
           disabled={!/^https?:\/\//i.test(manual.trim())}
           className="rounded-full bg-ink px-4 py-1.5 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Add
-        </button>
+        </FocusButton>
       </footer>
     </div>
   );
@@ -238,7 +239,7 @@ function RailItem({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-start text-[13px] transition-colors ${
         active ? "bg-ink text-canvas" : "text-ink-muted hover:bg-elevated hover:text-ink"
@@ -254,7 +255,7 @@ function RailItem({
           {count}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -288,7 +289,7 @@ function PlaylistDropdown({
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft/55 bg-elevated px-3.5 text-[13px] font-medium text-ink transition-colors hover:bg-raised"
@@ -299,7 +300,7 @@ function PlaylistDropdown({
           strokeWidth={2}
           className={`text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute start-0 top-[calc(100%+6px)] z-[310] w-[240px] overflow-hidden rounded-xl border border-edge-soft bg-elevated shadow-[0_18px_50px_-15px_rgba(0,0,0,0.6)]">
           <PlaylistOption
@@ -345,7 +346,7 @@ function PlaylistOption({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex w-full flex-col gap-0.5 px-3.5 py-2.5 text-start transition-colors ${
@@ -354,7 +355,7 @@ function PlaylistOption({
     >
       <span className="truncate text-[13px] font-medium">{label}</span>
       <span className="text-[11px] text-ink-subtle">{sub}</span>
-    </button>
+    </FocusButton>
   );
 }
 

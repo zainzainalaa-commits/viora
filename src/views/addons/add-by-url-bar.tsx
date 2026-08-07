@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Link } from "lucide-react";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -61,13 +62,13 @@ export function AddByUrlBar({
         />
       </div>
       {value.trim().length > 0 && (
-        <button
+        <FocusButton
           onClick={() => void submit()}
           disabled={!value.trim() || busy}
           className={`flex ${heightClass} items-center gap-1.5 ${radius} bg-ink ${btnPad} ${btnText} font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40`}
         >
           {busy ? t("Installing…") : t("Install")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );

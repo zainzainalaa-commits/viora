@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { AlertTriangle, Image as ImageIcon, Loader2, Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -90,7 +91,7 @@ export function SeekImageUpload({
           </p>
           <p className="text-[11px] leading-snug text-ink-subtle">{hint}</p>
         </div>
-        <button
+        <FocusButton
           type="button"
           disabled={busy}
           onClick={() => fileInputRef.current?.click()}
@@ -98,8 +99,8 @@ export function SeekImageUpload({
         >
           <Upload size={12} strokeWidth={2.2} />
           {busy ? "Processing" : value ? "Replace" : "Upload"}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           type="button"
           onClick={() => {
             setError(null);
@@ -110,7 +111,7 @@ export function SeekImageUpload({
           aria-label="Remove image"
         >
           <X size={13} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </div>
       {error && (
         <div className="flex items-start gap-2 rounded-lg bg-danger/15 px-2.5 py-2 text-[11.5px] leading-snug text-danger ring-1 ring-danger/30">

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Loader2, Play, X } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import type { ScoredStream } from "@/lib/streams/types";
@@ -64,13 +65,13 @@ export function KidsStreamSwitcher({
       </div>
 
       <div className="relative flex w-full max-w-[620px] flex-col items-center gap-6 text-center text-white">
-        <button
+        <FocusButton
           onClick={onClose}
           aria-label={t("Close")}
           className="absolute -top-1 end-0 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white ring-2 ring-white/30 transition-colors hover:bg-white/25"
         >
           <X size={24} strokeWidth={2.6} />
-        </button>
+        </FocusButton>
 
         <h2 className="font-display text-[clamp(30px,5vw,46px)] font-extrabold leading-none tracking-tight drop-shadow-[0_3px_12px_rgba(0,0,0,0.35)]">
           {t("Pick a video")}
@@ -90,7 +91,7 @@ export function KidsStreamSwitcher({
               const isCurrent = isCurrentStream(s, currentUrl, currentInfoHash, currentFileIdx);
               const quality = QUALITY_LABEL[qualityKey(s)];
               return (
-                <button
+                <FocusButton
                   key={`${s.addonId}-${s.infoHash ?? s.url ?? i}`}
                   type="button"
                   onClick={() => onPick(s)}
@@ -129,7 +130,7 @@ export function KidsStreamSwitcher({
                       <Play size={24} strokeWidth={0} fill="currentColor" className="ms-0.5" />
                     )}
                   </span>
-                </button>
+                </FocusButton>
               );
             })}
           </div>

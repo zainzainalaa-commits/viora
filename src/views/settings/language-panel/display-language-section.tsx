@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import { LANGUAGES, setUiLanguage, useT } from "@/lib/i18n";
 import { Section } from "../shared";
@@ -14,7 +15,7 @@ export function DisplayLanguageSection() {
         {LANGUAGES.map((lang) => {
           const selected = settings.uiLanguage === lang.code;
           return (
-            <button
+            <FocusButton
               key={lang.code}
               type="button"
               dir={lang.rtl ? "rtl" : "ltr"}
@@ -39,7 +40,7 @@ export function DisplayLanguageSection() {
                 <span className="text-[15px] font-semibold text-ink">{lang.nativeLabel}</span>
                 <span className="text-[12.5px] leading-snug text-ink-muted">{lang.label}</span>
               </div>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

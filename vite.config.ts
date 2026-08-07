@@ -16,6 +16,34 @@ export default defineConfig({
     port: 1420,
     strictPort: true,
     watch: { ignored: ["**/src-tauri/**"] },
+    proxy: {
+      // Stands in for the hosted relay the web build expects.
+      //
+      // safeFetch sends most addon and metadata hosts to `/api-proxy/<host>/…`
+      // because a browser cannot reach the ones that send no CORS header. Under
+      // Tauri that rewrite is skipped and requests go out directly, so the
+      // desktop and Android builds never needed the relay — but this fork no
+      // longer ships one, which left `/api-proxy` answering with index.html in
+      // the dev preview. Cinemeta then parsed "<!doctype html>" as JSON, and
+      // anything built on it, Cinemana's title lookup included, silently
+      // returned nothing.
+      //
+      // Forwarding the path back to the host named in it makes the preview
+      // behave like the real app. Dev server only: it has no effect on any
+      // build output.
+      // `router` is an http-proxy option that Vite forwards but does not declare
+      // in its own types, hence the cast. It is what allows one rule to serve
+      // every host, since the target is only known per request.
+      "/api-proxy": {
+        target: "https://v3-cinemeta.strem.io",
+        changeOrigin: true,
+        router: (req: { url?: string }) => {
+          const host = /^\/api-proxy\/([^/?#]+)/.exec(req.url ?? "")?.[1];
+          return host ? `https://${host}` : "https://v3-cinemeta.strem.io";
+        },
+        rewrite: (path: string) => path.replace(/^\/api-proxy\/[^/?#]+/, ""),
+      } as unknown as Record<string, unknown>,
+    },
   },
   resolve: {
     alias: { "@": "/src" },

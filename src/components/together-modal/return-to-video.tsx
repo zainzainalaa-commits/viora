@@ -1,9 +1,10 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play } from "lucide-react";
 import type { SyncState } from "@/lib/together/protocol";
 
 export function ReturnToVideo({ media, onReturn }: { media: SyncState; onReturn: () => void }) {
   return (
-    <button
+    <FocusButton
       onClick={onReturn}
       className="group flex items-center gap-3 rounded-xl border border-accent/40 bg-accent/10 p-2 text-start transition-colors hover:bg-accent/15"
     >
@@ -36,6 +37,6 @@ export function ReturnToVideo({ media, onReturn }: { media: SyncState; onReturn:
       <span className="me-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-canvas transition-transform group-hover:scale-105">
         <Play size={14} strokeWidth={2.4} className="translate-x-px" />
       </span>
-    </button>
+    </FocusButton>
   );
 }

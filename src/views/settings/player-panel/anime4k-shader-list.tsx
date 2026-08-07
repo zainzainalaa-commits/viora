@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Download, Loader2, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { anime4kDir, downloadAnime4k } from "@/lib/anime4k";
@@ -76,7 +77,7 @@ export function Anime4kShaderList() {
               {error}
             </span>
           )}
-          <button
+          <FocusButton
             type="button"
             onClick={() => setup(false)}
             disabled={busy}
@@ -84,7 +85,7 @@ export function Anime4kShaderList() {
           >
             {busy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} strokeWidth={2.2} />}
             {busy ? "Downloading shaders…" : "Set up Anime4K"}
-          </button>
+          </FocusButton>
         </div>
       ) : (
         <>
@@ -96,7 +97,7 @@ export function Anime4kShaderList() {
             {ANIME4K_MODES.map((m) => {
               const selected = mode === m.id;
               return (
-                <button
+                <FocusButton
                   key={m.id}
                   type="button"
                   onClick={() => pickMode(m.id)}
@@ -117,7 +118,7 @@ export function Anime4kShaderList() {
                     <span className="text-[14px] font-semibold text-ink">{m.label}</span>
                     <span className="text-[12px] leading-snug text-ink-subtle">{m.sub}</span>
                   </span>
-                </button>
+                </FocusButton>
               );
             })}
           </div>
@@ -126,7 +127,7 @@ export function Anime4kShaderList() {
               <Check size={13} className="text-emerald-300" strokeWidth={2.6} />
               Shaders installed
             </span>
-            <button
+            <FocusButton
               type="button"
               onClick={() => setup(true)}
               disabled={busy}
@@ -150,7 +151,7 @@ export function Anime4kShaderList() {
                   Re-download
                 </>
               )}
-            </button>
+            </FocusButton>
           </div>
           {error && (
             <span className="rounded-lg bg-danger/15 px-3 py-2 text-[12px] text-danger ring-1 ring-danger/30">
@@ -165,7 +166,7 @@ export function Anime4kShaderList() {
 
 function TierBtn({ active, onClick, label }: { active: boolean; onClick: () => void; label: string }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
@@ -173,6 +174,6 @@ function TierBtn({ active, onClick, label }: { active: boolean; onClick: () => v
       }`}
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }

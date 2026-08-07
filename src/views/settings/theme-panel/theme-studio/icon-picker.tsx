@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Ban, Search, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { CHROME_ICONS } from "./chrome-icons";
@@ -44,7 +45,7 @@ export function IconPicker({
             className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none placeholder:text-ink-subtle"
           />
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={() => fileRef.current?.click()}
           onMouseEnter={() => setHover("__upload")}
@@ -53,7 +54,7 @@ export function IconPicker({
         >
           <Upload size={13} strokeWidth={2} />
           Upload
-        </button>
+        </FocusButton>
         <input
           ref={fileRef}
           type="file"
@@ -111,7 +112,7 @@ function Tile({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       onMouseEnter={() => onHover(true)}
@@ -123,7 +124,7 @@ function Tile({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 

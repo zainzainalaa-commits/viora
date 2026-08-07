@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Film, Globe2, Loader2, Plus, Search, Sparkles, Trash2, Tv2, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MOVIE_GENRES, TV_GENRES } from "@/lib/feed/tags";
@@ -105,14 +106,14 @@ export function CustomManager({
               )}
             </p>
           </div>
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label={t("Close")}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-canvas/70 hover:text-ink"
           >
             <X size={17} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </header>
 
         <div className="flex flex-col gap-8 overflow-y-auto px-8 py-7">
@@ -230,7 +231,7 @@ export function CustomManager({
                 {results.map((p) => {
                   const tracked = value.trackedPeople.some((x) => x.id === p.id);
                   return (
-                    <button
+                    <FocusButton
                       key={p.id}
                       type="button"
                       disabled={tracked}
@@ -264,7 +265,7 @@ export function CustomManager({
                       ) : (
                         <Plus size={15} className="text-ink-subtle" />
                       )}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>
@@ -289,14 +290,14 @@ export function CustomManager({
                       )}
                     </span>
                     <span className="flex-1 truncate text-[13.5px] text-ink">{p.name}</span>
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => onRemovePerson(p.id)}
                       aria-label={t("Remove {name}", { name: p.name })}
                       className="flex h-8 w-8 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-danger/15 hover:text-danger"
                     >
                       <Trash2 size={14} strokeWidth={1.9} />
-                    </button>
+                    </FocusButton>
                   </li>
                 ))}
               </ul>
@@ -305,21 +306,21 @@ export function CustomManager({
         </div>
 
         <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-edge-soft px-8 py-4">
-          <button
+          <FocusButton
             type="button"
             onClick={onClearAll}
             disabled={activeCount === 0}
             className="rounded-full px-3 py-2 text-[13px] font-medium text-ink-subtle transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-40"
           >
             {t("Clear all")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onClose}
             className="flex h-11 items-center rounded-full bg-ink px-8 text-[14px] font-semibold text-canvas transition-colors hover:bg-ink/90"
           >
             {t("Done")}
-          </button>
+          </FocusButton>
         </footer>
       </div>
     </div>

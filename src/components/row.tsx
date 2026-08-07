@@ -10,14 +10,23 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { FocusContext } from "@noriginmedia/norigin-spatial-navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
+import { isDpadPrimary } from "@/lib/platform";
+import { FocusButton, FocusCell, ScrollProvider, revealWithin, useFocusRow } from "@/lib/tv-focus";
 
 const GAP = 20;
-const EAGER_COUNT = 6;
-const NEAR_MARGIN = "300px";
+
+// A card that has not mounted cannot be focused, so on a D-pad the render
+// window has to stay ahead of the remote: pressing right must always find
+// something already there. A mouse can afford a tighter window because it
+// scrolls continuously and the observer keeps up; a keypress jumps a whole
+// card at a time and would outrun it.
+const EAGER_COUNT = isDpadPrimary() ? 14 : 6;
+const NEAR_MARGIN = isDpadPrimary() ? "1600px" : "300px";
 
 export type RowShape = "portrait" | "landscape" | "service" | "rank" | "tile";
 
@@ -68,15 +77,25 @@ function LazyChild({
     };
   }, [root, visible]);
 
+  const style = {
+    ...(span ? { gridColumn: span } : undefined),
+    contentVisibility: visible ? ("visible" as const) : ("auto" as const),
+    containIntrinsicSize: visible ? undefined : "auto 200px",
+  };
+
+  // A skeleton is not a destination: registering one would let the remote stop
+  // on a grey box, and worse, on a box whose card has not decided its size yet.
+  // Cells appear in the tree only once their card is real.
+  if (isDpadPrimary() && visible) {
+    return (
+      <FocusCell ref={ref} style={style}>
+        {children}
+      </FocusCell>
+    );
+  }
+
   return (
-    <div
-      ref={ref}
-      style={{
-        ...(span ? { gridColumn: span } : undefined),
-        contentVisibility: visible ? "visible" : "auto",
-        containIntrinsicSize: visible ? undefined : "auto 200px",
-      }}
-    >
+    <div ref={ref} style={style}>
       {visible ? children : <Skeleton shape={shape} />}
     </div>
   );
@@ -182,6 +201,36 @@ export function Row({
     setCanNext(remaining > 1);
     if (el.clientWidth > 0 && remaining < 800) onEndRef.current?.();
   };
+
+  // The row joins the focus tree as a container, which is what gives it a
+  // memory: come back to it later and focus lands on the card you left, not the
+  // first one. `scrollKey` doubles as the focus key so that memory survives the
+  // same navigations the scroll position already survives.
+  const {
+    ref: rowFocusRef,
+    focusKey: rowFocusKey,
+    scroll: revealCard,
+  } = useFocusRow({ trackRef, focusKey: scrollKey ? `row:${scrollKey}` : undefined });
+
+  // Landing on a card is two movements: the row slides sideways, and the page
+  // comes down to the row. Every scrolling view already publishes its scroll
+  // element here, so the vertical half costs nothing to reuse.
+  const scrollRoot = useContext(ScrollRootContext);
+  const revealCardOnScreen = useCallback(
+    (node: HTMLElement) => {
+      revealCard(node);
+      if (scrollRoot) revealWithin(scrollRoot, node, "vertical");
+    },
+    [revealCard, scrollRoot],
+  );
+
+  const attachContainer = useCallback(
+    (el: HTMLDivElement | null) => {
+      containerRef.current = el;
+      (rowFocusRef as { current: HTMLElement | null }).current = el;
+    },
+    [rowFocusRef],
+  );
 
   const childCount = Children.count(children);
   const restoredRef = useRef(false);
@@ -441,6 +490,8 @@ export function Row({
   };
 
   return (
+   <FocusContext.Provider value={rowFocusKey}>
+    <ScrollProvider scroll={revealCardOnScreen}>
     <div className={`flex min-w-0 flex-col gap-5 ps-[9px] ${className}`}>
       {(title || onViewAll || headerRight) && (
         <div className="flex items-baseline justify-between gap-4 pe-1">
@@ -459,7 +510,9 @@ export function Row({
             <div className="flex shrink-0 items-center gap-3">
               {headerRight}
               {onViewAll && (
-                <button
+                // "View all" is a destination, unlike the edge chevrons below
+                // it, which only do what a direction key already does.
+                <FocusButton
                   type="button"
                   onClick={onViewAll}
                   className="group/va inline-flex shrink-0 items-center gap-1 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
@@ -470,13 +523,13 @@ export function Row({
                     strokeWidth={2.2}
                     className="dir-icon transition-transform duration-200 group-hover/va:translate-x-0.5"
                   />
-                </button>
+                </FocusButton>
               )}
             </div>
           )}
         </div>
       )}
-      <div ref={containerRef} className="group/row relative min-w-0">
+      <div ref={attachContainer} className="group/row relative min-w-0">
         <RowTrackContext.Provider value={trackEl}>
           <div
             ref={trackCb}
@@ -510,6 +563,8 @@ export function Row({
         <EdgeArrow side="right" visible={canNext} always={arrowsAlways} onClick={() => scroll(1)} />
       </div>
     </div>
+    </ScrollProvider>
+   </FocusContext.Provider>
   );
 }
 

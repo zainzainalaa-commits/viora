@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ListVideo, Search, X } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -163,14 +164,14 @@ export function CastModal({
           className="relative z-10 flex shrink-0 items-center justify-between gap-3 px-5 py-3.5"
         >
           {canBack ? (
-            <button
+            <FocusButton
               type="button"
               onClick={back}
               className="flex items-center gap-1 rounded-full py-1.5 pl-2 pr-3.5 text-[13px] font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white"
             >
               <ChevronLeft size={18} strokeWidth={2.3} />
               {t("Back")}
-            </button>
+            </FocusButton>
           ) : (
             <span className="pl-1 text-[11px] font-bold uppercase tracking-[0.28em] text-white/45">
               {t("About this title")}
@@ -178,7 +179,7 @@ export function CastModal({
           )}
           <div className="flex shrink-0 items-center gap-1.5">
             {view.kind !== "queue" && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={openQueueView}
                 className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
@@ -190,26 +191,26 @@ export function CastModal({
                     {queue.length}
                   </span>
                 )}
-              </button>
+              </FocusButton>
             )}
             {view.kind !== "search" && (
-              <button
+              <FocusButton
                 type="button"
                 onClick={openSearch}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
                 aria-label={t("Search")}
               >
                 <Search size={18} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             )}
-            <button
+            <FocusButton
               type="button"
               onClick={onClose}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
               aria-label={t("Close")}
             >
               <X size={18} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         </header>
 

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Minimize2 } from "lucide-react";
 import { useSettings } from "@/lib/settings";
 
@@ -20,7 +21,7 @@ function SubToggle({
         <span className="text-[13px] font-medium text-ink">{label}</span>
         <span className="text-[11.5px] leading-snug text-ink-subtle">{hint}</span>
       </div>
-      <button
+      <FocusButton
         type="button"
         role="switch"
         aria-checked={on}
@@ -34,7 +35,7 @@ function SubToggle({
             on ? "translate-x-4 rtl:-translate-x-4" : "translate-x-0"
           }`}
         />
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -59,7 +60,7 @@ export function TrayRow() {
             {t("Closing the window tucks Harbor into the tray instead of quitting, so it reopens instantly. Right-click the tray icon for quick controls, or pick Quit to exit fully.")}
           </p>
         </div>
-        <button
+        <FocusButton
           type="button"
           role="switch"
           aria-checked={on}
@@ -73,7 +74,7 @@ export function TrayRow() {
               on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
             }`}
           />
-        </button>
+        </FocusButton>
       </div>
       <div className="flex flex-col gap-1.5 ps-4">
         <SubToggle

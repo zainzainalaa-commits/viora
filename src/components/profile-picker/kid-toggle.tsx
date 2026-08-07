@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { useT } from "@/lib/i18n";
 import { DEFAULT_KID, type KidConfig } from "@/lib/profiles";
@@ -65,7 +66,7 @@ export function KidToggle({
 
 function Switch({ on, onClick }: { on: boolean; onClick: () => void }) {
   return (
-    <button
+    <FocusButton
       type="button"
       role="switch"
       aria-checked={on}
@@ -79,7 +80,7 @@ function Switch({ on, onClick }: { on: boolean; onClick: () => void }) {
           on ? "left-6 bg-[#0d4f73]" : "left-1 bg-ink/55"
         }`}
       />
-    </button>
+    </FocusButton>
   );
 }
 

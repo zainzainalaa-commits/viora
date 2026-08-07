@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import stremioWordmark from "@/assets/stremio-wordmark.png";
 import { AuthModal } from "@/components/auth-modal";
@@ -113,7 +114,7 @@ export function AccountStub() {
                     }}
                     className="h-10 flex-1 rounded-xl border border-ink bg-elevated px-3 text-[15px] font-semibold text-ink outline-none"
                   />
-                  <button
+                  <FocusButton
                     onClick={() => {
                       pushDisplayName(nameDraft.trim() || displayName);
                       setEditingName(false);
@@ -121,10 +122,10 @@ export function AccountStub() {
                     className="h-10 rounded-xl bg-ink px-4 text-[12.5px] font-semibold text-canvas"
                   >
                     {t("Save")}
-                  </button>
+                  </FocusButton>
                 </div>
               ) : (
-                <button
+                <FocusButton
                   onClick={() => setEditingName(true)}
                   className="flex flex-wrap items-baseline gap-x-2 gap-y-0 self-start rounded-lg px-1 py-0.5 text-start transition-colors hover:bg-canvas/50"
                 >
@@ -145,10 +146,10 @@ export function AccountStub() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </button>
+                </FocusButton>
               )}
               <div className="flex flex-wrap items-center gap-2">
-                <button
+                <FocusButton
                   onClick={() => fileRef.current?.click()}
                   className="flex h-9 items-center gap-1.5 rounded-lg border border-edge-soft px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
                 >
@@ -156,14 +157,14 @@ export function AccountStub() {
                     <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                   </svg>
                   {t("Upload photo")}
-                </button>
+                </FocusButton>
                 {customAvatar && (
-                  <button
+                  <FocusButton
                     onClick={() => pushIdentity({ harborAvatar: null })}
                     className="flex h-9 items-center rounded-lg border border-edge-soft px-3 text-[12.5px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:text-danger"
                   >
                     {stremioAvatar ? t("Reset to Stremio avatar") : t("Reset to default")}
-                  </button>
+                  </FocusButton>
                 )}
               </div>
               <AvatarFan
@@ -213,12 +214,12 @@ export function AccountStub() {
                   {reveal ? user.email : maskedEmail}
                 </span>
               </div>
-              <button
+              <FocusButton
                 onClick={() => setReveal((v) => !v)}
                 className="flex h-9 shrink-0 items-center rounded-lg border border-edge-soft px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 {reveal ? t("Hide") : t("Reveal")}
-              </button>
+              </FocusButton>
             </div>
             <div className="flex items-center justify-between gap-4">
               <div className="flex min-w-0 flex-col">
@@ -229,18 +230,18 @@ export function AccountStub() {
               </div>
             </div>
             <div className="mt-1 flex items-center gap-2 border-t border-edge-soft/60 pt-3">
-              <button
+              <FocusButton
                 onClick={() => setShowAuth(true)}
                 className="flex h-10 items-center gap-1.5 rounded-xl border border-edge-soft px-4 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 {t("Re-authenticate")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={signOut}
                 className="flex h-10 items-center gap-1.5 rounded-xl border border-edge-soft px-4 text-[12.5px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:bg-danger/10 hover:text-danger"
               >
                 {t("Sign out")}
-              </button>
+              </FocusButton>
             </div>
           </div>
         ) : (
@@ -251,12 +252,12 @@ export function AccountStub() {
                 {t("Sign in to sync your library, watch progress, and addons.")}
               </span>
             </div>
-            <button
+            <FocusButton
               onClick={() => setShowAuth(true)}
               className="flex h-10 items-center gap-1.5 rounded-xl bg-ink px-4 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
             >
               {t("Sign in")}
-            </button>
+            </FocusButton>
           </div>
         )}
       </Section>

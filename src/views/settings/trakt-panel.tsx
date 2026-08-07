@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Link2, LogOut, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TraktDeviceModal } from "@/components/trakt/trakt-device-modal";
@@ -67,20 +68,20 @@ export function TraktPanel() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button
+            <FocusButton
               onClick={() => setModalOpen(true)}
               className="flex h-11 items-center gap-2.5 rounded-xl bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
             >
               <Link2 size={15} strokeWidth={2.2} />
               {t("Connect Trakt")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={() => openUrl("https://trakt.tv")}
               className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
               {t("About Trakt")}
               <ExternalLink size={13} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         </section>
       ) : (
@@ -112,7 +113,7 @@ export function TraktPanel() {
               </div>
             </div>
             {username && (
-              <button
+              <FocusButton
                 onClick={() =>
                   openUrl(`https://trakt.tv/users/${encodeURIComponent(username)}`)
                 }
@@ -120,7 +121,7 @@ export function TraktPanel() {
               >
                 {t("Open profile")}
                 <ExternalLink size={11} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             )}
           </div>
           {traktAvatar && (
@@ -140,26 +141,26 @@ export function TraktPanel() {
             />
           )}
           {!confirmDisconnect ? (
-            <button
+            <FocusButton
               onClick={() => setConfirmDisconnect(true)}
               className="flex items-center gap-2 self-start rounded-lg px-2 py-1.5 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-red-300"
             >
               <Trash2 size={12} />
               {t("Disconnect from Trakt")}
-            </button>
+            </FocusButton>
           ) : (
             <div className="flex items-center justify-between gap-3 rounded-lg border border-red-400/30 bg-red-400/5 p-3">
               <span className="text-[12.5px] text-red-200">
                 {t("Disconnect Trakt? Scrobbles and syncs will stop until you reconnect.")}
               </span>
               <div className="flex items-center gap-2">
-                <button
+                <FocusButton
                   onClick={() => setConfirmDisconnect(false)}
                   className="rounded-md px-2.5 py-1 text-[12px] text-ink-muted hover:text-ink"
                 >
                   {t("Cancel")}
-                </button>
-                <button
+                </FocusButton>
+                <FocusButton
                   onClick={() => {
                     if (settings.useTraktAvatar && settings.harborAvatar === traktAvatar) {
                       pushAvatar(null);
@@ -172,7 +173,7 @@ export function TraktPanel() {
                 >
                   <LogOut size={11} strokeWidth={2.4} />
                   {t("Disconnect")}
-                </button>
+                </FocusButton>
               </div>
             </div>
           )}

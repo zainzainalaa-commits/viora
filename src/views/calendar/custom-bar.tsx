@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -117,7 +118,7 @@ export function CustomCalendarBar({
 
   return (
     <>
-      <button
+      <FocusButton
         onClick={() => setOpen(true)}
         className="flex items-center gap-2 rounded-full border border-edge-soft bg-elevated/40 px-4 py-1.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
       >
@@ -125,7 +126,7 @@ export function CustomCalendarBar({
         <span className="text-ink">{t("Manage")}</span>
         <span className="text-ink-subtle">·</span>
         <span className="truncate max-w-[260px]">{summary}</span>
-      </button>
+      </FocusButton>
       {open &&
         createPortal(
           <CustomManager

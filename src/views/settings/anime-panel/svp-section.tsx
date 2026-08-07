@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Loader2, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -68,7 +69,7 @@ export function SvpSection() {
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {installed ? (
-            <button
+            <FocusButton
               type="button"
               onClick={openSvp}
               disabled={busy}
@@ -76,7 +77,7 @@ export function SvpSection() {
             >
               {busy ? <Loader2 size={13} className="animate-spin" /> : <Play size={13} strokeWidth={2.2} />}
               {t("Open SVP")}
-            </button>
+            </FocusButton>
           ) : (
             <LinkButton label={t("Get SVP (free)")} url="https://www.svp-team.com/get/" />
           )}
@@ -152,13 +153,13 @@ function Step({
 
 function LinkButton({ label, url }: { label: string; url: string }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => openUrl(url)}
       className="inline-flex items-center gap-1.5 self-start rounded-lg border border-edge bg-elevated/60 px-3 py-1.5 text-[11.5px] font-semibold text-ink transition-colors hover:border-ink"
     >
       {label}
       <ExternalLink size={11} strokeWidth={2.2} />
-    </button>
+    </FocusButton>
   );
 }

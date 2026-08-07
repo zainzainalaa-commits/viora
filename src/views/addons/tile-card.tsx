@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Loader2, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
@@ -67,7 +68,7 @@ export function TileCard({
         </div>
       </div>
       <p className="relative line-clamp-3 text-[13.5px] leading-relaxed text-ink-muted">{description}</p>
-      <button
+      <FocusButton
         onClick={handle}
         disabled={installed || installing}
         className={`relative mt-auto flex h-11 items-center justify-center gap-1.5 rounded-full px-5 text-[13.5px] font-semibold transition-all duration-150 ease-out active:scale-[0.96] ${
@@ -96,7 +97,7 @@ export function TileCard({
         ) : (
           t("Install")
         )}
-      </button>
+      </FocusButton>
     </div>
   );
 }

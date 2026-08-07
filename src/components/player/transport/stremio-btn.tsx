@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 export function StremioBtn({
   children,
   onClick,
@@ -12,7 +13,7 @@ export function StremioBtn({
   disabled?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -26,6 +27,6 @@ export function StremioBtn({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { HarborLoader } from "@/components/harbor-loader";
 import type { PlayerSnapshot } from "@/lib/player/bridge";
@@ -174,7 +175,7 @@ export function CinematicPlayerLoader({
           </p>
         )}
       </div>
-      <button
+      <FocusButton
         onClick={onCancel}
         className="absolute bottom-10 left-1/2 z-10 flex h-11 -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-black/45 px-6 text-[13.5px] font-medium text-white/75 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-black/60 hover:text-white"
       >
@@ -187,7 +188,7 @@ export function CinematicPlayerLoader({
           />
         </svg>
         {t("Cancel")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

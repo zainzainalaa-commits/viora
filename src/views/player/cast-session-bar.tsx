@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { CastDeviceInfo } from "@/lib/cast";
 
 export function CastSessionBar({
@@ -41,7 +42,7 @@ export function CastSessionBar({
         </span>
       )}
       <div className="ms-2 flex items-center gap-1.5">
-        <button
+        <FocusButton
           onClick={() => void onTogglePlay()}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-canvas/60 text-ink transition-colors hover:bg-canvas/85"
           aria-label={playing ? "Pause" : "Play"}
@@ -56,25 +57,25 @@ export function CastSessionBar({
               <path d="M7 5v14l12-7z" />
             </svg>
           )}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={() => void onSeek(Math.max(0, positionSec - 15))}
           className="rounded-full bg-canvas/60 px-2.5 py-1 text-[11px] font-semibold text-ink transition-colors hover:bg-canvas/85"
         >
           −15s
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={() => void onSeek(Math.min(durationSec || Number.POSITIVE_INFINITY, positionSec + 15))}
           className="rounded-full bg-canvas/60 px-2.5 py-1 text-[11px] font-semibold text-ink transition-colors hover:bg-canvas/85"
         >
           +15s
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={() => void onStop()}
           className="rounded-full bg-rose-400/20 px-3 py-1 text-[11px] font-semibold text-rose-100 transition-colors hover:bg-rose-400/30"
         >
           Stop
-        </button>
+        </FocusButton>
       </div>
     </div>
   );

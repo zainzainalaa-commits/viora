@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, FolderOpen, Languages, Loader2, Search as SearchIcon, SlidersHorizontal, Sparkles, Timer, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Flag } from "@/components/flag";
@@ -109,7 +110,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
         <div className="flex items-center gap-1">
           {/* ── Sync button → opens the floating player-level bar ── */}
           <Tooltip label={tr("Subtitle sync")} side="bottom" align="end">
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 openSyncBar();
@@ -123,12 +124,12 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               {delayNonZero && (
                 <span className="absolute end-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent" />
               )}
-            </button>
+            </FocusButton>
           </Tooltip>
 
           {/* ── Style bar button ── */}
           {onOpenStyleBar && (
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 onOpenStyleBar();
@@ -138,16 +139,16 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-raised hover:text-ink"
             >
               <SlidersHorizontal size={18} strokeWidth={2} />
-            </button>
+            </FocusButton>
           )}
 
-          <button
+          <FocusButton
             onClick={onClose}
             aria-label={tr("Close")}
             className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       </header>
 
@@ -155,7 +156,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
       <div className="flex min-h-0 flex-1">
         {/* Language sidebar */}
         <aside className="flex w-[128px] shrink-0 flex-col gap-0.5 overflow-y-auto border-e border-edge-soft bg-canvas/30 p-2">
-          <button
+          <FocusButton
             onClick={() => {
               if (offSelected) return;
               onSelect(null);
@@ -176,7 +177,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               {offSelected ? null : <Check size={9} strokeWidth={3} />}
             </span>
             {offSelected ? tr("Off") : tr("On")}
-          </button>
+          </FocusButton>
 
           {groups.length > 0 && (
             <div className="mt-1.5 mb-0.5 px-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-ink-subtle">
@@ -184,7 +185,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
             </div>
           )}
           {groups.length > 1 && (
-            <button
+            <FocusButton
               onClick={() => setActiveLang(ALL_LANGS)}
               className={`flex items-center gap-2 rounded-md px-2.5 py-2 text-start text-[12.5px] font-medium transition-colors ${
                 allLangs
@@ -195,13 +196,13 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               <Languages size={14} strokeWidth={2} className="shrink-0" />
               <span className="flex-1 truncate">{tr("All languages")}</span>
               <span className="text-[10.5px] tabular-nums text-ink-subtle">{tracks.length}</span>
-            </button>
+            </FocusButton>
           )}
           {groups.map((g) => {
             const isActive = activeLang === g.langKey;
             const hasSelected = g.variants.some((v) => v.id === selectedId);
             return (
-              <button
+              <FocusButton
                 key={g.langKey}
                 onClick={() => setActiveLang(g.langKey)}
                 className={`group flex items-center gap-2 rounded-md px-2.5 py-2 text-start text-[12.5px] transition-colors ${
@@ -218,7 +219,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
                 <span className="text-[10.5px] tabular-nums text-ink-subtle">
                   {g.variants.length}
                 </span>
-              </button>
+              </FocusButton>
             );
           })}
         </aside>
@@ -297,22 +298,22 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
           )}
 
           <div className="flex shrink-0 items-stretch border-t border-edge-soft">
-            <button
+            <FocusButton
               onClick={() => setSearchOpen((v) => !v)}
               className="flex flex-1 items-center gap-2 px-3 py-2 text-start text-[12px] font-semibold text-ink-muted transition-colors hover:bg-canvas/40 hover:text-ink"
             >
               <SearchIcon size={12} strokeWidth={2.2} />
               {searchOpen ? tr("Hide search") : tr("Find more subtitles")}
-            </button>
+            </FocusButton>
             {isTauri && (
               <Tooltip label={tr("Load a .srt or .ass from your computer")} align="end">
-                <button
+                <FocusButton
                   onClick={() => void loadLocal()}
                   className="flex h-full shrink-0 items-center gap-2 border-s border-edge-soft px-3 py-2 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-canvas/40 hover:text-ink"
                 >
                   <FolderOpen size={12} strokeWidth={2.2} />
                   {tr("Load file")}
-                </button>
+                </FocusButton>
               </Tooltip>
             )}
           </div>
@@ -336,7 +337,7 @@ function Tab({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       disabled={disabled}
       className={`flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] font-semibold transition-colors disabled:opacity-40 ${
@@ -346,7 +347,7 @@ function Tab({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -366,7 +367,7 @@ function ToggleChip({
   hint?: string;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       title={hint}
       className={`flex h-6 items-center rounded-full px-2 text-[11px] font-semibold transition-colors ${
@@ -374,7 +375,7 @@ function ToggleChip({
       }`}
     >
       {label}
-    </button>
+    </FocusButton>
   );
 }
 

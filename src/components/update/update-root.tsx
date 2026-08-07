@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { ArrowUpCircle, X } from "lucide-react";
@@ -29,7 +30,7 @@ export function UpdateRoot() {
 
   return createPortal(
     <div className="fixed bottom-5 end-5 z-[120] flex items-center gap-1.5">
-      <button
+      <FocusButton
         onClick={openUpdatePanel}
         className="group flex h-11 items-center gap-2.5 rounded-full border border-accent/30 bg-elevated ps-3 pe-4 shadow-[0_14px_40px_rgba(0,0,0,0.42)] transition-transform hover:-translate-y-0.5"
       >
@@ -41,15 +42,15 @@ export function UpdateRoot() {
         </span>
         <span className="text-[13.5px] font-semibold text-ink">{label}</span>
         {u.version && <span className="text-[12px] text-ink-subtle">{u.version}</span>}
-      </button>
+      </FocusButton>
       {u.status === "available" && (
-        <button
+        <FocusButton
           onClick={dismissUpdate}
           aria-label="Dismiss"
           className="flex h-7 w-7 items-center justify-center rounded-full bg-elevated/90 text-ink-subtle shadow-md transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={13} strokeWidth={2.4} />
-        </button>
+        </FocusButton>
       )}
     </div>,
     document.body,

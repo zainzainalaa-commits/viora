@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Download, ImagePlus, Play } from "lucide-react";
 import { t } from "@/lib/i18n";
 
@@ -17,7 +18,7 @@ function TileButton({
   className?: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       title={label}
       aria-label={label}
@@ -28,7 +29,7 @@ function TileButton({
       className={`flex h-8 w-8 items-center justify-center rounded-full bg-canvas/80 text-ink shadow-[0_4px_14px_rgba(0,0,0,0.45)] backdrop-blur-md transition-transform hover:scale-110 active:scale-90 ${className}`}
     >
       {icon}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -36,7 +37,7 @@ export function VideoTile({ v, onPlay, onDownload }: { v: GalleryVideo; onPlay: 
   return (
     <div className="group flex w-[300px] shrink-0 flex-col gap-2.5">
       <div className="relative">
-        <button
+        <FocusButton
           type="button"
           onClick={onPlay}
           className="relative block aspect-video w-full overflow-hidden rounded-xl bg-elevated/40 text-start"
@@ -52,7 +53,7 @@ export function VideoTile({ v, onPlay, onDownload }: { v: GalleryVideo; onPlay: 
               <Play size={18} fill="currentColor" />
             </span>
           </span>
-        </button>
+        </FocusButton>
         <span className="absolute end-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
           <TileButton icon={<Download size={15} strokeWidth={2.2} />} label={t("Download")} onClick={onDownload} />
         </span>
@@ -84,7 +85,7 @@ export function ImageTile({
   const aspect = ratio === "landscape" ? "aspect-video" : "aspect-[2/3]";
   return (
     <div className={`group relative ${w} shrink-0`} data-title-backdrop={pinnable ? src : undefined}>
-      <button
+      <FocusButton
         type="button"
         onClick={onOpen}
         className="block w-full cursor-zoom-in overflow-hidden rounded-xl bg-elevated/40"
@@ -95,7 +96,7 @@ export function ImageTile({
           loading="lazy"
           className={`${aspect} w-full object-cover transition-transform duration-300 group-hover:scale-105`}
         />
-      </button>
+      </FocusButton>
       <span className="absolute end-2 top-2 flex items-center gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
         {onSetBackdrop && (
           <TileButton
@@ -113,7 +114,7 @@ export function ImageTile({
 export function LogoTile({ src, onOpen, onDownload }: { src: string; onOpen: () => void; onDownload: () => void }) {
   return (
     <div className="group relative flex h-[120px] w-[220px] shrink-0">
-      <button
+      <FocusButton
         type="button"
         onClick={onOpen}
         className="flex w-full cursor-zoom-in items-center justify-center rounded-xl border border-edge-soft bg-canvas/30 p-5"
@@ -124,7 +125,7 @@ export function LogoTile({ src, onOpen, onDownload }: { src: string; onOpen: () 
           loading="lazy"
           className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
         />
-      </button>
+      </FocusButton>
       <span className="absolute end-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
         <TileButton icon={<Download size={15} strokeWidth={2.2} />} label={t("Download")} onClick={onDownload} />
       </span>

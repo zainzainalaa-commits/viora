@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CatAvatar } from "@/components/icons/cat-avatar";
 
 export function AvatarRing({
@@ -10,7 +11,7 @@ export function AvatarRing({
   onClick?: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       type="button"
       className="group relative shrink-0 overflow-hidden rounded-full ring-2 ring-edge-soft transition-all hover:ring-ink"
@@ -24,6 +25,6 @@ export function AvatarRing({
       <span className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/65 to-transparent pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white opacity-0 transition-opacity group-hover:opacity-100">
         Change
       </span>
-    </button>
+    </FocusButton>
   );
 }

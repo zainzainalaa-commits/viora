@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Blocks, Check, ChevronRight } from "lucide-react";
 import type { AddonHit } from "@/lib/search-addon-index";
 import { useT } from "@/lib/i18n";
@@ -15,7 +16,7 @@ export function AddonHits({ hits, onClose }: { hits: AddonHit[]; onClose: () => 
       </h3>
       <div className="grid gap-1.5">
         {hits.map((a) => (
-          <button
+          <FocusButton
             key={a.id}
             onClick={() => {
               openAddonDetail(a.id);
@@ -45,7 +46,7 @@ export function AddonHits({ hits, onClose }: { hits: AddonHit[]; onClose: () => 
               )}
             </div>
             <ChevronRight size={18} className="dir-icon shrink-0 text-ink-subtle transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-          </button>
+          </FocusButton>
         ))}
       </div>
     </section>

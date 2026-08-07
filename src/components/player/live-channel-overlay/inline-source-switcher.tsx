@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { IptvPlaylistSource } from "@/lib/iptv/types";
@@ -37,7 +38,7 @@ export function InlineSourceSwitcher({
 
   return (
     <div ref={wrapRef} className="relative shrink-0">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className="flex h-11 items-center gap-2.5 rounded-xl border border-edge-soft/55 bg-elevated px-3.5 pe-3 text-[13.5px] font-medium text-ink transition-colors hover:bg-raised"
       >
@@ -48,7 +49,7 @@ export function InlineSourceSwitcher({
           strokeWidth={2}
           className={`text-ink-subtle transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute start-0 top-[calc(100%+8px)] z-[100] w-[300px] overflow-hidden rounded-2xl border border-edge-soft bg-elevated shadow-[0_18px_50px_-15px_rgba(0,0,0,0.6)]">
           <div className="border-b border-edge-soft/55 px-3.5 py-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
@@ -58,7 +59,7 @@ export function InlineSourceSwitcher({
             {sources.map((s) => {
               const isActive = s.id === selectedId;
               return (
-                <button
+                <FocusButton
                   key={s.id}
                   onClick={() => {
                     onSelect(s.id);
@@ -74,7 +75,7 @@ export function InlineSourceSwitcher({
                     }`}
                   />
                   <span className="truncate">{s.name}</span>
-                </button>
+                </FocusButton>
               );
             })}
           </div>

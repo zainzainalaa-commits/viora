@@ -92,6 +92,46 @@
             document.head.appendChild(s);
           }
         } catch (e) {}
+
+        // Fit the layout to whatever panel this is.
+        //
+        // A TV reports a CSS viewport of screen-width divided by density: 960px
+        // on a 1080p set, which is under the 1024px breakpoint the wide layout
+        // needs, so the app falls back to the compact chrome a narrow desktop
+        // window would use — a side rail with no labels.
+        //
+        // Picking a viewport width is really a two-axis problem. Widening to a
+        // fixed number fixes 16:9 and breaks everything else: on a 21:9 panel a
+        // 1280px viewport is only 540px tall, far short of what the layout
+        // assumes vertically. So the width is chosen as the smallest that
+        // satisfies both minimums at this panel's real aspect ratio, and is
+        // never smaller than what the device already reports — a 4K set is left
+        // untouched rather than being scaled to someone's idea of a TV.
+        try {
+          var DESIGN_W = 1280;
+          var DESIGN_H = 720;
+          if (window.matchMedia && window.matchMedia('(pointer: none)').matches) {
+            var w = document.documentElement.clientWidth || window.innerWidth || 0;
+            var h = document.documentElement.clientHeight || window.innerHeight || 0;
+            if (w > 0 && h > 0) {
+              // Width needed for the height minimum, at this aspect ratio.
+              var forHeight = Math.round(DESIGN_H * (w / h));
+              var target = Math.max(w, DESIGN_W, forHeight);
+              if (target > w) {
+                var vp = document.querySelector('meta[name="viewport"]');
+                // The scale is not optional. A width on its own tells the engine
+                // how wide to lay the page out but nothing about how big to draw
+                // it, and Android WebView's answer is 1:1 — so a 1280px layout in
+                // a 960px window simply had its right and bottom quarter hanging
+                // outside the screen. Stating the ratio makes the whole layout
+                // land exactly on the panel, which is the entire point of
+                // choosing a width in the first place.
+                var scale = w / target;
+                if (vp) vp.setAttribute('content', 'width=' + target + ', initial-scale=' + scale);
+              }
+            }
+          }
+        } catch (e) {}
       })();
     </script>
   </head>

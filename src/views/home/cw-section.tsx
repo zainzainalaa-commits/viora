@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { LogIn } from "lucide-react";
 import stremioWordmark from "@/assets/stremio-wordmark.png";
@@ -20,14 +21,14 @@ export function CWSection({ signedIn, items, watchedSet, onDismiss }: Props) {
   const [showAuth, setShowAuth] = useState(false);
 
   const signInButton = signedIn ? null : (
-    <button
+    <FocusButton
       type="button"
       onClick={() => setShowAuth(true)}
       className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-edge-soft px-3 py-1 text-[12.5px] font-medium text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
     >
       <LogIn size={13} strokeWidth={2.2} />
       {t("profile.signIn")}
-    </button>
+    </FocusButton>
   );
 
   const authModal = showAuth ? <AuthModal onClose={() => setShowAuth(false)} /> : null;
@@ -66,7 +67,7 @@ export function CWSection({ signedIn, items, watchedSet, onDismiss }: Props) {
         ) : (
           <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[15.5px] leading-relaxed text-ink-muted">
             <span>{t("Sign in to")}</span>
-            <button
+            <FocusButton
               type="button"
               onClick={() => setShowAuth(true)}
               className="rounded-md transition-opacity hover:opacity-80"
@@ -78,7 +79,7 @@ export function CWSection({ signedIn, items, watchedSet, onDismiss }: Props) {
                 className="relative top-0.5 h-7 w-auto select-none grayscale invert"
                 draggable={false}
               />
-            </button>
+            </FocusButton>
             <span>{t("to bring in your library.")}</span>
           </p>
         )}

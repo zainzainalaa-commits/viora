@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { CircleStop, FolderOpen } from "lucide-react";
 import type { DvrSession } from "@/lib/dvr/types";
 import { useT } from "@/lib/i18n";
@@ -52,21 +53,21 @@ export function ActiveView({
         </div>
       </div>
       <Footer>
-        <button
+        <FocusButton
           onClick={onReveal}
           className="flex h-10 items-center gap-2 rounded-lg bg-raised px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-raised/70"
         >
           <FolderOpen size={15} strokeWidth={2} />
           {t("Show in folder")}
-        </button>
+        </FocusButton>
         {!isDone && (
-          <button
+          <FocusButton
             onClick={onStop}
             className="flex h-10 items-center gap-2 rounded-lg bg-danger px-4 text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90"
           >
             <CircleStop size={15} strokeWidth={2} />
             {t("Stop recording")}
-          </button>
+          </FocusButton>
         )}
       </Footer>
     </>

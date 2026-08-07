@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -48,7 +49,7 @@ export function FileDrop({
 
   return (
     <div className="flex flex-col gap-2.5">
-      <button
+      <FocusButton
         type="button"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => {
@@ -74,7 +75,7 @@ export function FileDrop({
         <span className="text-[11.5px] text-ink-subtle">
           PNG, JPG, WebP, GIF, MP4, WebM, MOV. Up to {MAX_FILES} files, 100 MB each.
         </span>
-      </button>
+      </FocusButton>
       <input
         ref={inputRef}
         type="file"
@@ -101,14 +102,14 @@ export function FileDrop({
                 <span className="truncate" title={f.name}>{f.name}</span>
                 <span className="ms-auto shrink-0 text-ink-subtle">{fmtBytes(f.size)}</span>
               </div>
-              <button
+              <FocusButton
                 type="button"
                 onClick={() => remove(i)}
                 aria-label="Remove"
                 className="absolute end-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-canvas/85 text-ink-muted opacity-0 transition-opacity hover:text-ink group-hover:opacity-100"
               >
                 <X size={13} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             </li>
           ))}
         </ul>

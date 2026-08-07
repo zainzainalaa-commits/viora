@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Clock, Lock } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import type { KidConfig } from "@/lib/profiles";
@@ -54,7 +55,7 @@ export function KidsSetupPanel({
             {KID_AVATARS.map((src) => {
               const on = avatar === src;
               return (
-                <button
+                <FocusButton
                   key={src}
                   type="button"
                   onClick={() => setAvatar(src)}
@@ -72,7 +73,7 @@ export function KidsSetupPanel({
                       <Check size={14} strokeWidth={3} />
                     </span>
                   )}
-                </button>
+                </FocusButton>
               );
             })}
           </div>
@@ -171,7 +172,7 @@ function Pill({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`h-10 rounded-xl text-[14px] font-extrabold transition ${
@@ -183,6 +184,6 @@ function Pill({
       }`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

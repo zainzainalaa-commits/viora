@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { HarborLoader } from "@/components/harbor-loader";
@@ -169,7 +170,7 @@ export function EpisodePanel({
           </p>
         </div>
       )}
-      <button
+      <FocusButton
         aria-label={t("Dismiss episode panel")}
         onClick={onClose}
         tabIndex={open ? 0 : -1}
@@ -209,13 +210,13 @@ export function EpisodePanel({
                   {meta.name}
                 </h2>
               </div>
-              <button
+              <FocusButton
                 aria-label={t("Close")}
                 onClick={onClose}
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated text-ink-muted transition-colors hover:bg-raised hover:text-ink"
               >
                 <X size={18} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             </header>
             <div className="flex items-center justify-between gap-3 px-6 pb-3">
               {currentEpisode ? (
@@ -277,13 +278,13 @@ export function EpisodePanel({
                 </div>
               )}
               {!loading && nextSeason !== undefined && (
-                <button
+                <FocusButton
                   onClick={() => setSeason(nextSeason)}
                   className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-elevated px-4 py-3.5 text-[13.5px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-raised"
                 >
                   {t("Season {n}", { n: nextSeason })}
                   <ChevronRight size={16} strokeWidth={2.4} />
-                </button>
+                </FocusButton>
               )}
             </div>
             <footer className="border-t border-edge-soft/60 px-6 py-4 text-[12px] text-ink-subtle">

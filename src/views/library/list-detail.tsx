@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, Layers, X } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import { MAX_ITEMS, removeFromList, useList, type ListItem } from "@/lib/custom-lists";
@@ -20,14 +21,14 @@ export function ListDetail({ listId, onBack }: { listId: string; onBack: () => v
 
   return (
     <section className="flex flex-col gap-6">
-      <button
+      <FocusButton
         type="button"
         onClick={onBack}
         className="flex items-center gap-1.5 self-start text-[13px] font-semibold text-ink-muted transition-colors hover:text-ink"
       >
         <ArrowLeft size={16} strokeWidth={2.2} />
         {t("Back to lists")}
-      </button>
+      </FocusButton>
 
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1.5">
@@ -49,14 +50,14 @@ export function ListDetail({ listId, onBack }: { listId: string; onBack: () => v
           {list.items.map((it) => (
             <div key={it.id} className="group/item relative">
               <PickCard meta={itemToMeta(it)} />
-              <button
+              <FocusButton
                 type="button"
                 aria-label={t("Remove from list")}
                 onClick={() => removeFromList(list.id, it.id)}
                 className="absolute end-1.5 top-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-canvas/85 text-ink opacity-0 ring-1 ring-edge-soft/70 backdrop-blur-sm transition-opacity hover:bg-canvas hover:text-danger group-hover/item:opacity-100 focus:opacity-100"
               >
                 <X size={14} strokeWidth={2.4} />
-              </button>
+              </FocusButton>
             </div>
           ))}
         </Grid>

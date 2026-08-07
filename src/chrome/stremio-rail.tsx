@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Lock } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
@@ -117,7 +118,7 @@ function RailAvatar() {
   const label =
     activeProfile?.name ?? user?.fullname ?? user?.email?.split("@")[0] ?? t("profile.fallback");
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => openPicker({ kind: "list" })}
       aria-label={label}
@@ -142,7 +143,7 @@ function RailAvatar() {
       <span className="max-w-[5rem] truncate text-[10px] font-semibold leading-none opacity-0 transition-opacity group-hover:opacity-100">
         {label}
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -163,7 +164,7 @@ function RailTab({
   const [hovered, setHovered] = useState(false);
   const translated = t(label);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
@@ -191,6 +192,6 @@ function RailTab({
       >
         {translated}
       </span>
-    </button>
+    </FocusButton>
   );
 }

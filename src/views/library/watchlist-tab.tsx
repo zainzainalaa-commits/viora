@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { useSettings } from "@/lib/settings";
@@ -194,22 +195,22 @@ function ViewModeToggle({ flat, onToggle }: { flat: boolean; onToggle: () => voi
   const t = useT();
   return (
     <div className="flex items-center gap-1 rounded-full bg-elevated/40 p-0.5 ring-1 ring-edge-soft/60">
-      <button
+      <FocusButton
         onClick={() => flat && onToggle()}
         className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
           !flat ? "bg-ink text-canvas" : "text-ink-muted hover:bg-raised hover:text-ink"
         }`}
       >
         {t("Grouped")}
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         onClick={() => !flat && onToggle()}
         className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
           flat ? "bg-ink text-canvas" : "text-ink-muted hover:bg-raised hover:text-ink"
         }`}
       >
         {t("One list")}
-      </button>
+      </FocusButton>
     </div>
   );
 }

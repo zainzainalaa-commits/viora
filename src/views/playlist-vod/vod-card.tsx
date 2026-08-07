@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { memo, useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
 import { Poster } from "@/components/poster";
@@ -45,7 +46,7 @@ export const VodCard = memo(function VodCard({ kind, title, year, logo, seed, su
   }, [settings.tmdbKey, kind, title, year, logo]);
 
   return (
-    <button ref={ref} onClick={onClick} className="group flex w-full min-w-0 flex-col gap-2 text-start">
+    <FocusButton ref={ref} onClick={onClick} className="group flex w-full min-w-0 flex-col gap-2 text-start">
       <Poster
         src={poster ?? undefined}
         seed={seed}
@@ -64,6 +65,6 @@ export const VodCard = memo(function VodCard({ kind, title, year, logo, seed, su
           <p className="truncate text-[11.5px] text-ink-subtle">{subtitle ?? year}</p>
         )}
       </div>
-    </button>
+    </FocusButton>
   );
 });

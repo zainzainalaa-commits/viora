@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PersonHoverCard } from "./person-hover-card";
 
@@ -60,7 +61,7 @@ export function PersonLink({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         type="button"
         onMouseEnter={scheduleOpen}
@@ -75,7 +76,7 @@ export function PersonLink({
         className={className}
       >
         {name}
-      </button>
+      </FocusButton>
       {anchor && (
         <PersonHoverCard
           personId={id}

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AwardLogo, laurelColorFor } from "@/components/icons/award-logo";
@@ -92,7 +93,7 @@ export function AwardLaurelStrip({
         ))}
       </div>
 
-      <button
+      <FocusButton
         type="button"
         onClick={() => scrollBy(-1)}
         aria-label={tr("Scroll awards left")}
@@ -101,8 +102,8 @@ export function AwardLaurelStrip({
         }`}
       >
         <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
-      </button>
-      <button
+      </FocusButton>
+      <FocusButton
         type="button"
         onClick={() => scrollBy(1)}
         aria-label={tr("Scroll awards right")}
@@ -111,7 +112,7 @@ export function AwardLaurelStrip({
         }`}
       >
         <ChevronRight size={14} strokeWidth={2.2} className="dir-icon" />
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -130,7 +131,7 @@ function AwardChip({
   const tr = useT();
   const tint = laurelColorFor(type);
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={(e) => onClick(e.currentTarget.getBoundingClientRect())}
       title={tr("{label} details", { label: labelFor(type) })}
@@ -158,7 +159,7 @@ function AwardChip({
         </span>
         <span className="text-[10.5px] uppercase tracking-[0.16em] text-ink-subtle">{labelFor(type)}</span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

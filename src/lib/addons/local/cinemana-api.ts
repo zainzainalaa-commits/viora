@@ -48,6 +48,24 @@ export type CinemanaFile = {
   transcoddedFileName?: string;
 };
 
+export type CinemanaTranslation = {
+  id?: number;
+  /** "arabic", "english", … */
+  name?: string;
+  /** "ar", "en", "sp" */
+  type?: string;
+  /** "srt" or "vtt" — the same track is published in both. */
+  extention?: string;
+  file?: string;
+};
+
+export type CinemanaTranslationFiles = {
+  arTranslationFilePath?: string;
+  enTranslationFilePath?: string;
+  spTranslationFilePath?: string;
+  translations?: CinemanaTranslation[];
+};
+
 export class CinemanaUnavailableError extends Error {
   constructor(status: number) {
     super(`Cinemana returned ${status}`);
@@ -86,8 +104,26 @@ export function browse(
   );
 }
 
-export function search(query: string, page = 0, signal?: AbortSignal): Promise<CinemanaItem[]> {
-  const params = new URLSearchParams({ videoTitle: query, page: String(page) });
+/**
+ * Title search, scoped to films or to series.
+ *
+ * `type` is a word, not the numeric `videoKind` the rest of the API uses —
+ * "series" works, 2 silently returns films. That one mismatch is why the search
+ * looked film-only for a long time: every numeric value is accepted and
+ * ignored, so a wrong guess is indistinguishable from an unsupported feature.
+ * Omitting it also yields films, so it is always sent explicitly.
+ */
+export function search(
+  query: string,
+  opts: { type: "movie" | "series"; page?: number; level?: number } = { type: "movie" },
+  signal?: AbortSignal,
+): Promise<CinemanaItem[]> {
+  const params = new URLSearchParams({
+    level: String(opts.level ?? 0),
+    videoTitle: query,
+    type: opts.type,
+    page: String(opts.page ?? 0),
+  });
   return getJson<CinemanaItem[]>(`${BASE}/AdvancedSearch?${params}`, signal);
 }
 
@@ -103,6 +139,53 @@ export function seasonEpisodes(rootId: string, signal?: AbortSignal): Promise<Ci
 /** Pre-transcoded renditions. URLs are signed and expire, so never cache them. */
 export function transcodedFiles(id: string, signal?: AbortSignal): Promise<CinemanaFile[]> {
   return getJson<CinemanaFile[]>(`${BASE}/transcoddedFiles/id/${id}`, signal);
+}
+
+/**
+ * The full subtitle list, which the video record does not carry.
+ *
+ * `allVideoInfo` exposes only `arTranslationFilePath` / `enTranslationFilePath`,
+ * and fills the missing ones with the string `defaultImages/loading.gif` rather
+ * than leaving them empty — a truthy value that reads as a real subtitle and
+ * offers the viewer a track that resolves to an image. This endpoint returns a
+ * proper list instead, with a language and a format per entry.
+ */
+export function translationFiles(
+  id: string,
+  signal?: AbortSignal,
+): Promise<CinemanaTranslationFiles> {
+  return getJson<CinemanaTranslationFiles>(`${BASE}/translationFiles/id/${id}`, signal);
+}
+
+export type CinemanaSkipRanges = { start?: string[]; end?: string[] };
+
+/**
+ * Time ranges Cinemana marks for skipping, as parallel start/end arrays.
+ *
+ * They are unlabelled, and the service's own website never calls this endpoint —
+ * it belongs to their mobile app. What the shape of the data says: the ranges
+ * sit in the middle of the runtime, never at the head or tail, run from one
+ * second to a couple of minutes, and are numerous on an adult thriller and
+ * nearly absent on a PG film. That is censorship marking, not chapters.
+ */
+export function skippingDurations(
+  id: string,
+  signal?: AbortSignal,
+): Promise<CinemanaSkipRanges> {
+  return getJson<CinemanaSkipRanges>(`${BASE}/skippingDurations/id/${id}`, signal);
+}
+
+/** Runtime in seconds, or null when the record does not carry one. */
+export function durationSecondsOf(item: CinemanaItem): number | null {
+  const secs = Number(item.duration);
+  return Number.isFinite(secs) && secs > 0 ? secs : null;
+}
+
+/** True for the placeholder Cinemana substitutes when a track is absent. */
+export function isRealSubtitleUrl(url: string | undefined | null): boolean {
+  if (!url) return false;
+  if (!/^https?:\/\//i.test(url)) return false;
+  return !/defaultImages\//i.test(url);
 }
 
 /** `https://www.imdb.com/title/tt123/` -> `tt123`. */

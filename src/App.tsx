@@ -88,7 +88,7 @@ import { AnilistProvider } from "@/lib/anilist/provider";
 import { MalProvider } from "@/lib/mal/provider";
 import { SimklProvider } from "@/lib/simkl/provider";
 import { LetterboxdProvider } from "@/lib/stremboxd/provider";
-import { useKeyboardNavigation } from "@/lib/use-keyboard-navigation";
+import { FocusLayer, FocusSection, focusKeys, setFocusSafely, useBackHandler } from "@/lib/tv-focus";
 
 const importAnime = () => import("@/views/anime");
 const importCalendar = () => import("@/views/calendar");
@@ -453,24 +453,31 @@ function Shell() {
 
   useEffect(() => installLongPressContextMenu(), []);
 
-  useKeyboardNavigation({
-    enabled: !player,
-    wrap: false,
-    onBack: () => {
-      if (stackKinds.length > 1 || topKind !== "home") {
-        goBack();
-        return true;
-      }
-      return false;
-    },
-    onBackToNav: () => {
-      window.scrollTo({ top: 111, left: 111, behavior: "smooth" });
-      const nav = document.querySelector<HTMLElement>(
-        '[data-harbor-nav] a[href], [data-harbor-nav] button, [data-harbor-nav] [data-focusable="true"]'
-      );
-      nav?.focus({ preventScroll: true });
-    },
-  });
+  // Outermost Back handler: pop the view stack while there is one, otherwise
+  // fall back to the sidebar so Back never leaves the user with nowhere to go.
+  useBackHandler(() => {
+    if (player) return false;
+    // Live is entered by switching view, not by pushing onto the stack, so
+    // there is nothing for goBack to pop — and Live hides the sidebar, which
+    // used to leave its on-screen Back button as the only way out. Sending the
+    // remote's Back to Home is what keeps it from being a dead end.
+    if (topKind === "live") {
+      setView("home");
+      return true;
+    }
+    if (stackKinds.length > 1 || topKind !== "home") {
+      goBack();
+      return true;
+    }
+    // At the root, Back means one of two things depending on where the user is.
+    // From the content it pulls focus to the navigation, which is the way out of
+    // a grid without hunting for the edge. From the navigation there is nowhere
+    // further to go, so the press is declined and Android closes the app — the
+    // behaviour a TV viewer expects from Back on a home screen.
+    const inSidebar = !!document.activeElement?.closest("aside");
+    if (inSidebar) return false;
+    return setFocusSafely(focusKeys.sidebar);
+  }, !player);
   
   useEffect(() => startMaintenance(), []);
 
@@ -608,9 +615,7 @@ function Shell() {
   }, [topKind]);
 
   useEffect(() => {
-    void import("@/lib/addon-store").then(({ seedDefaultAddonsIfFirstRun }) =>
-      seedDefaultAddonsIfFirstRun(),
-    );
+    void import("@/lib/addon-store").then(({ ensureBuiltInAddons }) => ensureBuiltInAddons());
   }, []);
 
   useEffect(() => {
@@ -784,117 +789,124 @@ function Shell() {
         </div>
       )}
       {!playerActive && <WindowResizeEdges />}
-      <div className={`relative flex min-h-0 min-w-0 flex-1 flex-col ${playerActive ? "invisible" : ""}`}>
-        <div className={layer(homeTop)}>
+      {/* The content half of the app is one region, so leaving it for the
+          sidebar and coming back lands where you were, and so focus always has
+          somewhere to return to when a view unmounts under it. */}
+      <FocusSection
+        focusKey={focusKeys.content}
+        inert={playerActive}
+        className={`relative flex min-h-0 min-w-0 flex-1 flex-col ${playerActive ? "invisible" : ""}`}
+      >
+        <FocusLayer top={homeTop} className={layer(homeTop)}>
           <Home active={homeTop} />
-        </div>
+        </FocusLayer>
         {settingsAlive && (
-          <div className={layer(settingsTop)}>
+          <FocusLayer top={settingsTop} className={layer(settingsTop)}>
             <Suspense fallback={null}>
               <Settings active={settingsTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {animeAlive && (
-          <div className={layer(animeTop)}>
+          <FocusLayer top={animeTop} className={layer(animeTop)}>
             <Suspense fallback={null}>
               <AnimeView active={animeTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {discoverAlive && (
-          <div className={layer(discoverTop)}>
+          <FocusLayer top={discoverTop} className={layer(discoverTop)}>
             <Suspense fallback={null}>
               <Discover active={discoverTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {catalogsAlive && (
-          <div className={layer(catalogsTop)}>
+          <FocusLayer top={catalogsTop} className={layer(catalogsTop)}>
             <Suspense fallback={null}>
               <Catalogs active={catalogsTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {addonsAlive && (
-          <div className={layer(addonsTop)}>
+          <FocusLayer top={addonsTop} className={layer(addonsTop)}>
             <Suspense fallback={null}>
               <AddonsView />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {calendarAlive && (
-          <div className={layer(calendarTop)}>
+          <FocusLayer top={calendarTop} className={layer(calendarTop)}>
             <Suspense fallback={null}>
               <CalendarView />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {moviesAlive && (
-          <div className={layer(moviesTop)}>
+          <FocusLayer top={moviesTop} className={layer(moviesTop)}>
             <Suspense fallback={null}>
               <Movies active={moviesTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {kidsAlive && (
-          <div className={layer(kidsTop)}>
+          <FocusLayer top={kidsTop} className={layer(kidsTop)}>
             <Suspense fallback={null}>
               <Kids active={kidsTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {showsAlive && (
-          <div className={layer(showsTop)}>
+          <FocusLayer top={showsTop} className={layer(showsTop)}>
             <Suspense fallback={null}>
               <Shows active={showsTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {libraryAlive && (
-          <div className={layer(libraryTop)}>
+          <FocusLayer top={libraryTop} className={layer(libraryTop)}>
             <Suspense fallback={null}>
               <LibraryView active={libraryTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {liveAlive && (
-          <div className={layer(liveTop)}>
+          <FocusLayer top={liveTop} className={layer(liveTop)}>
             <Suspense fallback={null}>
               <LiveView active={liveTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {vodAlive && (
-          <div className={layer(vodTop)}>
+          <FocusLayer top={vodTop} className={layer(vodTop)}>
             <Suspense fallback={null}>
               <PlaylistVodView active={vodTop} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {downloadsAlive && (
-          <div className={layer(downloadsTop)}>
+          <FocusLayer top={downloadsTop} className={layer(downloadsTop)}>
             <Suspense fallback={null}>
               <DownloadsView />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {queueAlive && (
-          <div className={layer(queueTop)}>
+          <FocusLayer top={queueTop} className={layer(queueTop)}>
             <Suspense fallback={null}>
               <QueueView />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {serviceAlive && service && (
-          <div className={layer(serviceTop)}>
+          <FocusLayer top={serviceTop} className={layer(serviceTop)}>
             <Suspense fallback={null}>
               <ServiceView key={service} service={service} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {detailAlive && meta && (
-          <div className={layer(detailTop)}>
+          <FocusLayer top={detailTop} className={layer(detailTop)}>
             <Suspense fallback={null}>
               {kid ? (
                 <KidsDetailView key={`kid-meta-${meta.id}`} meta={meta} episodeHint={metaEpisodeHint ?? undefined} />
@@ -902,24 +914,24 @@ function Shell() {
                 <DetailView key={`meta-${meta.id}`} meta={meta} liveContext={metaLiveContext} episodeHint={metaEpisodeHint ?? undefined} />
               )}
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {personAlive && personId !== null && (
-          <div className={layer(personTop)}>
+          <FocusLayer top={personTop} className={layer(personTop)}>
             <Suspense fallback={null}>
               <PersonView key={`person-${personId}`} personId={personId} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {collectionAlive && collectionId !== null && (
-          <div className={layer(collectionTop)}>
+          <FocusLayer top={collectionTop} className={layer(collectionTop)}>
             <Suspense fallback={null}>
               <CollectionView key={`collection-${collectionId}`} collectionId={collectionId} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {episodeDetailAlive && episodeDetail && (
-          <div className={layer(episodeDetailTop)}>
+          <FocusLayer top={episodeDetailTop} className={layer(episodeDetailTop)}>
             <Suspense fallback={null}>
               <EpisodeDetailView
                 key={`episode-${episodeDetail.seriesId}-${episodeDetail.season}-${episodeDetail.episode}`}
@@ -929,52 +941,52 @@ function Shell() {
                 seriesMeta={episodeDetail.seriesMeta}
               />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {matchDetailAlive && matchDetailGame && (
-          <div className={layer(matchDetailTop)}>
+          <FocusLayer top={matchDetailTop} className={layer(matchDetailTop)}>
             <Suspense fallback={null}>
               <MatchDetailView key={`match-${matchDetailGame.id}`} game={matchDetailGame} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {filterAlive && filter && (
-          <div className={layer(filterTop)}>
+          <FocusLayer top={filterTop} className={layer(filterTop)}>
             <Suspense fallback={null}>
               <FilterView key={filterReactKey(filter)} filter={filter} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {gridAlive && grid && (
-          <div className={layer(gridTop)}>
+          <FocusLayer top={gridTop} className={layer(gridTop)}>
             <Suspense fallback={null}>
               <GridView key={`grid-${grid.title}`} grid={grid} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {collectionsIndexAlive && (
-          <div className={layer(collectionsIndexTop)}>
+          <FocusLayer top={collectionsIndexTop} className={layer(collectionsIndexTop)}>
             <Suspense fallback={null}>
               <CollectionsView />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {awardAlive && awardType && (
-          <div className={layer(awardTop)}>
+          <FocusLayer top={awardTop} className={layer(awardTop)}>
             <Suspense fallback={null}>
               <AwardView key={`award-${awardType}`} awardType={awardType} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {animeAwardAlive && animeAwardSource && (
-          <div className={layer(animeAwardTop)}>
+          <FocusLayer top={animeAwardTop} className={layer(animeAwardTop)}>
             <Suspense fallback={null}>
               <AnimeAwardView key={`anime-award-${animeAwardSource}`} sourceId={animeAwardSource} />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {pickerAlive && picker && (
-          <div className={layer(pickerTop)}>
+          <FocusLayer top={pickerTop} className={layer(pickerTop)}>
             <Suspense fallback={null}>
               <PlayPicker
                 key={`picker-${picker.meta.id}-${picker.episode?.season ?? ""}-${picker.episode?.episode ?? ""}-${picker.attempt ?? 0}-${picker.intent ?? "play"}`}
@@ -986,7 +998,7 @@ function Shell() {
                 resume={picker.resume}
               />
             </Suspense>
-          </div>
+          </FocusLayer>
         )}
         {pickerTop && !themeHasTopbar && (
           <div className="fixed end-3 top-3 z-[120]">
@@ -1004,7 +1016,7 @@ function Shell() {
             className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-canvas/90 via-canvas/40 to-transparent"
           />
         )}
-      </div>
+      </FocusSection>
       {player && (
         <Suspense fallback={null}>
           <PlayerView key={player.meta.id.startsWith("iptv:") ? "player-live" : `player-${player.meta.id}`} src={player} />

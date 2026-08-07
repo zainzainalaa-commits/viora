@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { RotateCcw, SlidersHorizontal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CROP_PRESETS } from "@/views/player/hooks/use-video-fill";
@@ -38,7 +39,7 @@ export function AspectMenu({
   return (
     <div ref={wrap} className="relative">
       <Tooltip label={t("Picture")}>
-        <button
+        <FocusButton
           onClick={() => {
             if (!open) measure();
             setOpen((o) => !o);
@@ -52,7 +53,7 @@ export function AspectMenu({
           {aspectActive && current ? (
             <span className="text-[11px] font-bold tabular-nums tracking-wider">{current.label}</span>
           ) : null}
-        </button>
+        </FocusButton>
       </Tooltip>
       {open && (
         <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex max-h-[70vh] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-y-auto rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>
@@ -62,19 +63,19 @@ export function AspectMenu({
                 {t("Picture")}
               </span>
               {pictureActive && (
-                <button
+                <FocusButton
                   type="button"
                   onClick={() => applyPatch(Object.fromEntries(PICTURE_KEYS.map((k) => [k, null])))}
                   className="flex items-center gap-1 text-[11.5px] font-semibold text-ink-subtle transition-colors hover:text-ink"
                 >
                   <RotateCcw size={11} strokeWidth={2.4} />
                   {t("Reset")}
-                </button>
+                </FocusButton>
               )}
             </div>
             <div className="flex flex-wrap gap-1.5 px-1">
               {PICTURE_TEMPLATES.map((tpl) => (
-                <button
+                <FocusButton
                   key={tpl.label}
                   type="button"
                   title={t(tpl.sub)}
@@ -82,7 +83,7 @@ export function AspectMenu({
                   className="rounded-full border border-edge-soft bg-canvas/40 px-3 py-1.5 text-[12px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
                 >
                   {t(tpl.label)}
-                </button>
+                </FocusButton>
               ))}
             </div>
             <div className="mt-2 flex flex-col">
@@ -101,7 +102,7 @@ export function AspectMenu({
               {CROP_PRESETS.map((m) => {
                 const sel = m.id === mode;
                 return (
-                  <button
+                  <FocusButton
                     key={m.id}
                     onClick={() => {
                       onMode(m.id);
@@ -117,7 +118,7 @@ export function AspectMenu({
                         {t("default")}
                       </span>
                     )}
-                  </button>
+                  </FocusButton>
                 );
               })}
             </div>

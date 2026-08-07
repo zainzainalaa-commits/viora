@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link2, Loader2 } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -231,13 +232,13 @@ export function GuideView({
                     <div className="flex h-full items-center gap-3 px-3 text-[11.5px] text-ink-subtle">
                       <span>{t("No program info")}</span>
                       {epg && epg.byChannel.size > 0 && (
-                        <button
+                        <FocusButton
                           onClick={() => setMatchTarget(ch)}
                           className="flex items-center gap-1.5 rounded-md border border-edge-soft/55 bg-elevated/70 px-2 py-1 font-medium text-ink-muted transition-colors hover:text-ink"
                         >
                           <Link2 size={11} strokeWidth={2.2} />
                           {t("Match EPG")}
-                        </button>
+                        </FocusButton>
                       )}
                     </div>
                   )}

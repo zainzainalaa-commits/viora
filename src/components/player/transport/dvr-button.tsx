@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useDvr } from "@/lib/dvr/provider";
 import { useT } from "@/lib/i18n";
 import { BigButton } from "./big-button";
@@ -40,14 +41,14 @@ export function DvrButton({
 
   return (
     <Tooltip label={t("Recording · {pct}% · {remaining} · click to manage", { pct, remaining: remainingLabel })}>
-      <button
+      <FocusButton
         onClick={onClick}
         aria-label={t("Manage recording")}
         className="relative flex h-12 w-12 items-center justify-center rounded-full text-white transition-[background-color] hover:bg-white/10"
       >
         <ProgressRing ratio={ratio} />
         <DvrIcon recording size={18} />
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }

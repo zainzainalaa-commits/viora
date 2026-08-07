@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -71,7 +72,7 @@ export function LooksCluster({ settings, update }: { settings: Settings; update:
           placeholder={list.length ? t("New look name") : t("Name your look")}
           className="h-8 w-[150px] rounded-[8px] bg-elevated px-2.5 text-[13px] text-ink outline-none ring-1 ring-edge placeholder:text-ink-subtle focus:ring-ink"
         />
-        <button
+        <FocusButton
           onClick={createNamed}
           disabled={!draft.trim()}
           className={`ms-0.5 flex h-8 items-center gap-1 rounded-[8px] px-2.5 text-[13px] font-semibold transition-colors ${
@@ -80,8 +81,8 @@ export function LooksCluster({ settings, update }: { settings: Settings; update:
         >
           <Check size={13} strokeWidth={2.6} />
           {t("Save")}
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={() => {
             setNaming(false);
             setDraft("");
@@ -90,7 +91,7 @@ export function LooksCluster({ settings, update }: { settings: Settings; update:
           className="flex h-8 w-8 items-center justify-center rounded-[8px] text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
         >
           <X size={15} />
-        </button>
+        </FocusButton>
       </div>
     );
   }
@@ -102,7 +103,7 @@ export function LooksCluster({ settings, update }: { settings: Settings; update:
         const matches = styleMatches(settings, p);
         return (
           <PresetTip key={p.id} label={t("Click to apply · Right-click to delete")}>
-            <button
+            <FocusButton
               onClick={() => apply(p)}
               onContextMenu={(e) => {
                 e.preventDefault();
@@ -119,14 +120,14 @@ export function LooksCluster({ settings, update }: { settings: Settings; update:
             >
               {p.name}
               {isSel && dirty && <span aria-label={t("unsaved changes")} className="h-1.5 w-1.5 rounded-full bg-amber-400" />}
-            </button>
+            </FocusButton>
           </PresetTip>
         );
       })}
 
       {list.length > 0 && <span aria-hidden className="mx-0.5 h-5 w-px bg-edge-soft" />}
 
-      <button
+      <FocusButton
         onClick={selected ? (dirty ? overrideSelected : undefined) : startCreate}
         disabled={isSaved}
         title={
@@ -142,17 +143,17 @@ export function LooksCluster({ settings, update }: { settings: Settings; update:
       >
         {isSaved || selected ? <Check size={13} strokeWidth={2.6} /> : <Plus size={14} strokeWidth={2.6} />}
         {isSaved ? t("Saved") : selected ? t("Override {name}", { name: selected.name }) : t("Save look")}
-      </button>
+      </FocusButton>
 
       {selected && (
         <PresetTip label={t("Save as a new look")}>
-          <button
+          <FocusButton
             onClick={startCreate}
             aria-label={t("Save as a new look")}
             className="flex h-8 w-8 items-center justify-center rounded-[8px] text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
           >
             <Plus size={16} />
-          </button>
+          </FocusButton>
         </PresetTip>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ExternalLink, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -110,13 +111,13 @@ export function AwardDetailModal({
             {noms > 0 && `${noms} ${noms === 1 ? "nomination" : "nominations"}`}
           </p>
         </div>
-        <button
+        <FocusButton
           onClick={onClose}
           aria-label="Close"
           className="flex h-7 w-7 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-canvas/60 hover:text-ink"
         >
           <X size={13} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </header>
 
       <ul className="flex-1 overflow-y-auto px-2 py-1.5 [scrollbar-width:thin]">
@@ -199,7 +200,7 @@ function AwardRow({
   const interactive = !!work;
 
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={handleOpen}
       disabled={!interactive}
@@ -244,7 +245,7 @@ function AwardRow({
       {interactive && (
         <ExternalLink size={11} strokeWidth={2.2} className="shrink-0 text-ink-subtle" />
       )}
-    </button>
+    </FocusButton>
   );
 }
 

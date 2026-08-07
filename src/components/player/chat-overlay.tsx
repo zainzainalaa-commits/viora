@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { MessageCircle, Send } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { nameColor } from "@/lib/together/colors";
@@ -140,16 +141,16 @@ export function ChatOverlay({
             className="flex-1 bg-transparent text-[13.5px] text-white placeholder:text-white/35 outline-none"
             maxLength={300}
           />
-          <button
+          <FocusButton
             type="submit"
             className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/85 transition-colors hover:bg-white/20"
             aria-label={t("Send")}
           >
             <Send size={12} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         </form>
       ) : (
-        <button
+        <FocusButton
           onClick={() => {
             setComposing(true);
             setTimeout(() => inputRef.current?.focus(), 30);
@@ -158,7 +159,7 @@ export function ChatOverlay({
         >
           <MessageCircle size={11} strokeWidth={2.4} />
           {t("Press T")}
-        </button>
+        </FocusButton>
       )}
     </div>
   );

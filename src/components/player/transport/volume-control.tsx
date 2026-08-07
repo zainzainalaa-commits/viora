@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Minus, Plus, Volume2, VolumeX } from "lucide-react";
 import { useRef } from "react";
 import type { PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
@@ -78,13 +79,13 @@ export function VolumeControl({
 
   const muteBtn = (
     <Tooltip label={label}>
-      <button
+      <FocusButton
         onClick={onMute}
         className="flex h-12 w-12 items-center justify-center rounded-full text-white/90 transition-colors hover:bg-white/10 hover:text-white"
         aria-label={label}
       >
         {muted ? <VolumeX size={24} strokeWidth={1.75} /> : <Volume2 size={24} strokeWidth={1.75} />}
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 
@@ -105,25 +106,25 @@ export function VolumeControl({
       <div className="flex items-center gap-1" onWheel={onWheel}>
         {muteBtn}
         <Tooltip label={tr("Volume down")}>
-          <button
+          <FocusButton
             onClick={() => step(-0.05)}
             className="flex h-9 w-9 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-white"
             aria-label={tr("Volume down")}
           >
             <Minus size={16} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         </Tooltip>
         <span className="min-w-[2.5rem] text-center font-mono text-[12px] tabular-nums text-white/85">
           {pct}%
         </span>
         <Tooltip label={tr("Volume up")}>
-          <button
+          <FocusButton
             onClick={() => step(0.05)}
             className="flex h-9 w-9 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-white"
             aria-label={tr("Volume up")}
           >
             <Plus size={16} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         </Tooltip>
       </div>
     );

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Loader2, Square, X } from "lucide-react";
 import type { GifState } from "@/views/player/hooks/use-gif-recorder";
 import { useT } from "@/lib/i18n";
@@ -29,22 +30,22 @@ export function GifRecordPill({
             <span className="tabular-nums">
               {t("REC")} <span className="text-white/70">{fmt(elapsedSec)}</span>
             </span>
-            <button
+            <FocusButton
               type="button"
               onClick={onStop}
               className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3 text-[12px] font-semibold text-white transition-colors hover:bg-white/25"
             >
               <Square size={11} strokeWidth={2.4} fill="currentColor" />
               {t("Stop")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               type="button"
               onClick={onAbort}
               aria-label={t("Discard recording")}
               className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white/55 transition-colors hover:bg-white/10 hover:text-white"
             >
               <X size={13} strokeWidth={2.4} />
-            </button>
+            </FocusButton>
           </>
         ) : (
           <span className="inline-flex items-center gap-2 pe-2">

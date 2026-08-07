@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   Check,
   ChevronDown,
@@ -133,7 +134,7 @@ export function ProfilePicker({
         onChange={handleImport}
         className="hidden"
       />
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
@@ -142,7 +143,7 @@ export function ProfilePicker({
       >
         <span className="truncate">{label}</span>
         <ChevronDown size={14} strokeWidth={2.3} className={open ? "rotate-180 transition-transform" : "transition-transform"} />
-      </button>
+      </FocusButton>
 
       {open && (
         <div className="absolute end-0 top-[calc(100%+8px)] z-40 w-[280px] overflow-hidden rounded-2xl border border-white/12 bg-black/95 shadow-[0_24px_60px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
@@ -157,7 +158,7 @@ export function ProfilePicker({
                 const isActive = p.id === activeProfileId;
                 return (
                   <li key={p.id}>
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => {
                         onSwitch(p.id);
@@ -171,7 +172,7 @@ export function ProfilePicker({
                         {isActive && <Check size={14} strokeWidth={2.4} />}
                       </span>
                       <span className="truncate">{p.name}</span>
-                    </button>
+                    </FocusButton>
                   </li>
                 );
               })
@@ -291,14 +292,14 @@ function LayoutDialog({ dialog, onClose }: { dialog: Dialog; onClose: () => void
           <p className="mt-2.5 text-[13.5px] leading-relaxed text-white/65">{dialog.message}</p>
         )}
         <div className="mt-5 flex justify-end gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onClose}
             className="h-10 rounded-full px-4 text-[13px] font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           >
             Cancel
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={confirm}
             disabled={!canConfirm}
@@ -307,7 +308,7 @@ function LayoutDialog({ dialog, onClose }: { dialog: Dialog; onClose: () => void
             }`}
           >
             {dialog.confirmLabel}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>,
@@ -329,7 +330,7 @@ function MenuItem({
   danger?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -343,6 +344,6 @@ function MenuItem({
     >
       <span className="flex h-4 w-4 shrink-0 items-center justify-center">{icon}</span>
       {label}
-    </button>
+    </FocusButton>
   );
 }

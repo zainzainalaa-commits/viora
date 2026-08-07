@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { Check, HardDrive, RotateCcw, Wifi } from "lucide-react";
@@ -70,7 +71,7 @@ export function WatchLocalModal() {
         <div className="flex flex-col gap-2.5">
           {state.hasResume ? (
             <>
-              <button
+              <FocusButton
                 type="button"
                 autoFocus
                 onClick={() => choose("local")}
@@ -80,18 +81,18 @@ export function WatchLocalModal() {
                 {state.resumeMs > 0
                   ? `${t("Continue from last watched")} · ${formatClock(state.resumeMs)}`
                   : t("Continue from last watched")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 type="button"
                 onClick={() => choose("local-restart")}
                 className="flex h-12 items-center justify-center gap-2.5 rounded-full bg-canvas/50 text-[14px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-canvas/70"
               >
                 <RotateCcw size={16} strokeWidth={2.2} />
                 {t("Watch from the beginning")}
-              </button>
+              </FocusButton>
             </>
           ) : (
-            <button
+            <FocusButton
               type="button"
               autoFocus
               onClick={() => choose("local")}
@@ -99,18 +100,18 @@ export function WatchLocalModal() {
             >
               <HardDrive size={16} strokeWidth={2.2} />
               {t("Watch my local copy")}
-            </button>
+            </FocusButton>
           )}
-          <button
+          <FocusButton
             type="button"
             onClick={() => choose("stream")}
             className="flex h-12 items-center justify-center gap-2.5 rounded-full bg-canvas/50 text-[14px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-canvas/70"
           >
             <Wifi size={16} strokeWidth={2.2} />
             {t("Stream / addons")}
-          </button>
+          </FocusButton>
         </div>
-        <button
+        <FocusButton
           type="button"
           role="switch"
           aria-checked={remember}
@@ -129,7 +130,7 @@ export function WatchLocalModal() {
             {remember && <Check size={12} strokeWidth={3} />}
           </span>
           {t("Remember my choice")}
-        </button>
+        </FocusButton>
       </div>
     </div>,
     document.body,

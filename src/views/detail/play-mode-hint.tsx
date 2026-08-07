@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useRef } from "react";
 import { useOnboarding } from "@/lib/onboarding";
@@ -34,7 +35,7 @@ export function PlayModeHint({ children }: { children: React.ReactNode }) {
               <p className="text-[12px] leading-snug text-ink-subtle">
                 {t("Switch to Manual in settings if you'd rather pick the source yourself.")}
               </p>
-              <button
+              <FocusButton
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
@@ -44,9 +45,9 @@ export function PlayModeHint({ children }: { children: React.ReactNode }) {
                 className="self-start text-[12px] font-semibold text-accent transition-colors hover:underline"
               >
                 {t("Open settings")}
-              </button>
+              </FocusButton>
             </div>
-            <button
+            <FocusButton
               type="button"
               onClick={(e) => {
                 e.preventDefault();
@@ -57,7 +58,7 @@ export function PlayModeHint({ children }: { children: React.ReactNode }) {
               className="-me-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
             >
               <X size={13} />
-            </button>
+            </FocusButton>
             <div className="absolute start-10 top-full -mt-1.5 h-3 w-3 rotate-45 border-b border-e border-edge-soft bg-elevated/95" />
           </div>
         </div>

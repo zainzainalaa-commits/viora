@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Pencil, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -64,7 +65,7 @@ export function ColorThemeBody({
       {Object.values(THEME_PRESETS).filter((p) => !LAYOUT_PRESET_IDS.has(p.id)).map((p) => {
         const active = activePreset === p.id;
         return (
-          <button
+          <FocusButton
             key={p.id}
             onClick={() => onSelect(p.id)}
             className={`group relative flex h-[150px] flex-col justify-end overflow-hidden rounded-2xl border p-4 text-start transition-all ${
@@ -92,7 +93,7 @@ export function ColorThemeBody({
                 {p.blurb}
               </p>
             </div>
-          </button>
+          </FocusButton>
         );
       })}
       <CustomTile
@@ -122,7 +123,7 @@ function CustomTile({
   const t = useT();
   if (!custom) {
     return (
-      <button
+      <FocusButton
         onClick={onApply}
         className="group flex h-[150px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-edge bg-elevated/20 p-4 text-ink-muted transition-all hover:border-edge hover:bg-elevated/40 hover:text-ink"
       >
@@ -131,7 +132,7 @@ function CustomTile({
         </span>
         <p className="text-[14px] font-semibold">{t("Custom")}</p>
         <p className="text-[11.5px] text-ink-subtle">{t("Build your own palette")}</p>
-      </button>
+      </FocusButton>
     );
   }
   return (
@@ -141,7 +142,7 @@ function CustomTile({
       }`}
       style={{ background: custom.canvas }}
     >
-      <button
+      <FocusButton
         onClick={onApply}
         className="absolute inset-0 z-0 cursor-pointer"
         aria-label={t("Apply custom theme")}
@@ -156,7 +157,7 @@ function CustomTile({
       >
         {active && <Check size={14} strokeWidth={3} style={{ color: custom.canvas }} />}
       </div>
-      <button
+      <FocusButton
         onClick={(e) => {
           e.stopPropagation();
           onEdit();
@@ -170,7 +171,7 @@ function CustomTile({
         aria-label={t("Edit custom theme")}
       >
         <Pencil size={12} strokeWidth={2.2} />
-      </button>
+      </FocusButton>
       <div className="relative">
         <p className="text-[14.5px] font-semibold" style={{ color: custom.ink }}>
           {t("Custom")}

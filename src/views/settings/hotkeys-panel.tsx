@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Keyboard, RotateCcw, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -70,13 +71,13 @@ export function HotkeysPanel() {
           {t("Click any binding to rebind it. Press Esc while capturing to cancel. Letters ignore Shift (so K and Shift+K trigger the same action).")}
         </p>
         {overrideCount > 0 && (
-          <button
+          <FocusButton
             onClick={resetAll}
             className="flex shrink-0 items-center gap-1.5 rounded-full border border-edge-soft bg-canvas/80 px-3 py-1.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <RotateCcw size={13} strokeWidth={2.2} />
             {t("Reset all ({n})", { n: overrideCount })}
-          </button>
+          </FocusButton>
         )}
       </div>
 
@@ -203,7 +204,7 @@ function SeekStepPicker({
         {SEEK_STEP_OPTIONS.map((seconds) => {
           const selected = seconds === value;
           return (
-            <button
+            <FocusButton
               key={seconds}
               type="button"
               aria-pressed={selected}
@@ -215,7 +216,7 @@ function SeekStepPicker({
               }`}
             >
               {seconds}s
-            </button>
+            </FocusButton>
           );
         })}
       </div>
@@ -298,7 +299,7 @@ function HotkeyRow({
             <Keyboard size={12} strokeWidth={2.4} className="me-1.5 inline-block" />
             {t("Press a key…")}
           </span>
-          <button
+          <FocusButton
             onClick={onStartCapture}
             className="hidden"
             aria-hidden
@@ -307,20 +308,20 @@ function HotkeyRow({
       ) : (
         <div className="flex items-center gap-1.5">
           {isCustom && (
-            <button
+            <FocusButton
               onClick={onReset}
               title={t("Reset to default")}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
             >
               <X size={14} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           )}
-          <button
+          <FocusButton
             onClick={onStartCapture}
             className="flex h-8 min-w-[88px] items-center justify-center rounded-lg border border-edge bg-elevated px-3 text-[12.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-raised"
           >
             {formatBindingForDisplay(binding)}
-          </button>
+          </FocusButton>
         </div>
       )}
     </div>

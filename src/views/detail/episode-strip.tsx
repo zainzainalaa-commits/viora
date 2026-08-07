@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Eye } from "lucide-react";
 import { EpisodeRatingBadge } from "./episode-rating-badge";
 import { useEffect, useMemo, useState } from "react";
@@ -180,7 +181,7 @@ function EpisodeStripCard({
       onContextMenu={(e) => onContextMenu?.(e, ep.seasonNumber, ep.episodeNumber, progress.watched)}
       className="group flex w-full flex-col gap-2.5 text-start"
     >
-      <button
+      <FocusButton
         type="button"
         onClick={handlePlayClick}
         className="relative aspect-video overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
@@ -221,9 +222,9 @@ function EpisodeStripCard({
             <div className="h-full bg-accent" style={{ width: `${Math.max(2, progress.ratio * 100)}%` }} />
           </div>
         )}
-      </button>
+      </FocusButton>
       <div className="flex items-start justify-between gap-2 px-0.5">
-        <button
+        <FocusButton
           type="button"
           onClick={handlePlayClick}
           className="flex min-w-0 flex-1 flex-col gap-0.5 text-start focus-visible:outline-none"
@@ -235,7 +236,7 @@ function EpisodeStripCard({
             S{ep.seasonNumber} E{ep.episodeNumber}
             {ep.runtime ? ` · ${t("{n} min", { n: ep.runtime })}` : ""}
           </span>
-        </button>
+        </FocusButton>
         <div className="flex shrink-0 items-center gap-0.5">
           <EpisodeDownloadButton
             meta={meta}
@@ -249,7 +250,7 @@ function EpisodeStripCard({
             }}
             size={30}
           />
-          <button
+          <FocusButton
             type="button"
             onClick={() => openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta)}
             aria-label={t("Episode details")}
@@ -257,7 +258,7 @@ function EpisodeStripCard({
             className="flex items-center justify-center rounded-full p-1.5 text-ink-subtle transition-colors hover:bg-elevated hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
           >
             <Eye size={16} strokeWidth={2} />
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

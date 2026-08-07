@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { Settings2 } from "lucide-react";
 import { useT, useUiLanguage } from "@/lib/i18n";
@@ -55,14 +56,14 @@ export function SportsMarquee({
               </span>
             )}
           </div>
-          <button
+          <FocusButton
             onClick={() => setShowCustomize(true)}
             title={t("sports.customize")}
             className="flex items-center gap-1.5 rounded-full border border-edge-soft/50 bg-elevated px-2.5 py-1 text-[11.5px] font-medium text-ink-muted transition-all hover:border-edge hover:bg-elevated hover:text-ink"
           >
             <Settings2 size={13} />
             <span>{t("sports.customize")}</span>
-          </button>
+          </FocusButton>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <LeagueChip active={selected === "all"} onClick={() => onLeague("all")} label={t("All")} />
@@ -119,7 +120,7 @@ function LeagueChip({
 }) {
   const [err, setErr] = useState(false);
   return (
-    <button
+    <FocusButton
       onClick={onClick}
       className={`flex h-9 shrink-0 items-center gap-1.5 rounded-full border ps-1.5 pe-3.5 text-[12.5px] font-medium transition-colors ${
         active
@@ -139,6 +140,6 @@ function LeagueChip({
         <span className="w-1.5" />
       )}
       <span className="truncate">{label}</span>
-    </button>
+    </FocusButton>
   );
 }

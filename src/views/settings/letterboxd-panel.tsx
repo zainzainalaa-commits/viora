@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Link2, Loader2, LogOut, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -223,31 +224,31 @@ export function LetterboxdPanel() {
 
             <div className="flex flex-wrap items-center gap-3">
               {lb.mode === "public" ? (
-                <button
+                <FocusButton
                   onClick={handleVerify}
                   disabled={busy || username.trim().length === 0}
                   className="flex h-11 items-center gap-2.5 rounded-xl bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97] disabled:opacity-50"
                 >
                   {busy ? <Loader2 size={15} className="animate-spin" /> : <Link2 size={15} strokeWidth={2.2} />}
                   {t("Connect / Verify")}
-                </button>
+                </FocusButton>
               ) : (
-                <button
+                <FocusButton
                   onClick={handleLogin}
                   disabled={busy || username.trim().length === 0 || password.length === 0}
                   className="flex h-11 items-center gap-2.5 rounded-xl bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97] disabled:opacity-50"
                 >
                   {busy ? <Loader2 size={15} className="animate-spin" /> : <Link2 size={15} strokeWidth={2.2} />}
                   {needs2fa ? t("Verify & connect") : t("Connect")}
-                </button>
+                </FocusButton>
               )}
-              <button
+              <FocusButton
                 onClick={() => openUrl("https://stremboxd.com/configure")}
                 className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
                 {t("About Stremboxd")}
                 <ExternalLink size={13} strokeWidth={2.2} />
-              </button>
+              </FocusButton>
             </div>
 
             {verify && (
@@ -285,13 +286,13 @@ export function LetterboxdPanel() {
                     <span className="text-[12px] text-ink-subtle">{t("Full mode — diary, friends & ratings enabled")}</span>
                   </div>
                 </div>
-                <button
+                <FocusButton
                   onClick={handleDisconnect}
                   className="flex h-9 items-center gap-1.5 rounded-lg border border-edge-soft px-3 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-red-400/40 hover:text-red-300"
                 >
                   <LogOut size={12} strokeWidth={2.4} />
                   {t("Disconnect")}
-                </button>
+                </FocusButton>
               </div>
             )}
 
@@ -304,7 +305,7 @@ export function LetterboxdPanel() {
                   const selected = lb.selectedCatalogs.includes(opt.id);
                   const locked = !!opt.fullOnly && !isFullConnected;
                   return (
-                    <button
+                    <FocusButton
                       key={opt.id}
                       onClick={() => !locked && toggleCatalog(opt.id, !selected)}
                       disabled={locked}
@@ -327,7 +328,7 @@ export function LetterboxdPanel() {
                       {opt.fullOnly && (
                         <span className="ms-auto text-[10px] uppercase tracking-wider text-ink-subtle">{t("Full")}</span>
                       )}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>
@@ -351,13 +352,13 @@ export function LetterboxdPanel() {
                           {ref.filmCount != null ? `${ref.filmCount} films` : ""}
                         </span>
                       </div>
-                      <button
+                      <FocusButton
                         onClick={() => removeList(ref.id)}
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-red-400/10 hover:text-red-300"
                         aria-label={t("Remove list")}
                       >
                         <Trash2 size={14} />
-                      </button>
+                      </FocusButton>
                     </div>
                   ))}
                 </div>
@@ -372,14 +373,14 @@ export function LetterboxdPanel() {
                   autoComplete="off"
                   className="h-11 flex-1 rounded-xl border border-edge-soft bg-elevated px-4 text-[14px] text-ink placeholder:text-ink-subtle/55 outline-none focus:border-ink"
                 />
-                <button
+                <FocusButton
                   onClick={handleAddList}
                   disabled={listBusy || listUrl.trim().length === 0}
                   className="flex h-11 items-center gap-2 rounded-xl border border-edge-soft px-4 text-[13.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink disabled:opacity-50"
                 >
                   {listBusy ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
                   {t("Add")}
-                </button>
+                </FocusButton>
               </div>
               {listError && <p className="text-[12.5px] text-red-300">{listError}</p>}
             </div>
@@ -409,14 +410,14 @@ export function LetterboxdPanel() {
                     const listRef = lb.listRefs.find((r) => `letterboxd-list-${r.id}` === id);
                     const label = opt?.label ?? listRef?.name ?? id;
                     return (
-                      <button
+                      <FocusButton
                         key={id}
                         onClick={() => update({ letterboxd: { ...lb, hiddenCatalogs: lb.hiddenCatalogs.filter((h) => h !== id) } })}
                         className="flex items-center gap-1.5 rounded-full border border-edge-soft bg-canvas/40 px-3 py-1.5 text-[12px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
                       >
                         {label}
                         <span className="text-[10px] uppercase tracking-wider text-accent">{t("Show")}</span>
-                      </button>
+                      </FocusButton>
                     );
                   })}
                 </div>

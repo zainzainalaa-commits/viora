@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { BookOpen, Check, Copy, Download, Loader2, Power, Radio, ShieldCheck, Wifi, X } from "lucide-react";
 import { useState } from "react";
 import cloudflareLogo from "@/assets/cloudflare.webp";
@@ -122,13 +123,13 @@ export function TogetherRelayPanel({
               </span>
               <span className="truncate font-mono text-[13px] text-ink">{settings.togetherRelayUrl}</span>
             </div>
-            <button
+            <FocusButton
               onClick={copy}
               className="flex h-10 items-center gap-1.5 rounded-lg border border-edge px-3 text-[13px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               {copied ? <Check size={14} strokeWidth={2.2} /> : <Copy size={14} strokeWidth={1.8} />}
               {copied ? t("Copied") : t("Copy")}
-            </button>
+            </FocusButton>
           </div>
 
           <div className="flex flex-col gap-1 rounded-xl border border-edge-soft bg-canvas/40 p-1">
@@ -151,14 +152,14 @@ export function TogetherRelayPanel({
                   {t("Pings your Worker at /health to confirm it's reachable from this device.")}
                 </span>
               </div>
-              <button
+              <FocusButton
                 onClick={runTest}
                 disabled={testing}
                 className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:opacity-60"
               >
                 {testing ? <Loader2 size={13} strokeWidth={1.9} className="animate-spin" /> : <Wifi size={13} strokeWidth={1.9} />}
                 {testing ? t("Testing…") : t("Run test")}
-              </button>
+              </FocusButton>
             </div>
             {passive && (
               <>
@@ -188,13 +189,13 @@ export function TogetherRelayPanel({
                     </div>
                   </div>
                   {passive.needsUpdate && !isPubRelay && (
-                    <button
+                    <FocusButton
                       onClick={() => (isManaged ? setShowDeploy(true) : setShowDocs(true))}
                       className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                     >
                       {isManaged ? <Power size={13} strokeWidth={2} /> : <BookOpen size={13} strokeWidth={1.9} />}
                       {isManaged ? t("Redeploy") : t("Redeploy instructions")}
-                    </button>
+                    </FocusButton>
                   )}
                 </div>
               </>
@@ -209,13 +210,13 @@ export function TogetherRelayPanel({
                       {t("Cloudflare shows API tokens only once. Save a copy now or you'll lose the ability to stop or redeploy this relay from Harbor.")}
                     </span>
                   </div>
-                  <button
+                  <FocusButton
                     onClick={exportBackup}
                     className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
                   >
                     <Download size={13} strokeWidth={1.9} />
                     {t("Export")}
-                  </button>
+                  </FocusButton>
                 </div>
               </>
             )}
@@ -245,48 +246,48 @@ export function TogetherRelayPanel({
                 </div>
               </div>
               {testResult.needsUpdate && !isPubRelay && (
-                <button
+                <FocusButton
                   onClick={() => (isManaged ? setShowDeploy(true) : setShowDocs(true))}
                   className="ms-7 flex h-8 w-fit items-center gap-1.5 rounded-lg bg-ink px-3 text-[11.5px] font-medium text-canvas transition-transform hover:scale-[1.02]"
                 >
                   <Power size={12} strokeWidth={2} />
                   {isManaged ? t("Redeploy relay") : t("Redeploy instructions")}
-                </button>
+                </FocusButton>
               )}
             </div>
           )}
 
           {isManaged ? (
             <div className="flex items-center gap-2">
-              <button
+              <FocusButton
                 onClick={stop}
                 disabled={stopping}
                 className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-danger/40 text-[13px] text-danger transition-colors hover:bg-danger/10 disabled:opacity-50 disabled:hover:bg-transparent"
               >
                 {stopping ? <Loader2 size={14} strokeWidth={1.9} className="animate-spin" /> : <Power size={14} strokeWidth={1.9} />}
                 {stopping ? t("Stopping…") : t("Stop relay")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={() => update({ togetherRelayUrl: "" })}
                 className="h-11 rounded-xl border border-edge px-4 text-[13px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
               >
                 {t("Forget URL")}
-              </button>
+              </FocusButton>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <button
+              <FocusButton
                 onClick={() => update({ togetherRelayUrl: "" })}
                 className="h-11 flex-1 rounded-xl border border-edge text-[13px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
               >
                 {t("Use a different URL")}
-              </button>
-              <button
+              </FocusButton>
+              <FocusButton
                 onClick={() => setShowDeploy(true)}
                 className="h-11 flex-1 rounded-xl bg-ink text-[13px] font-medium text-canvas transition-transform hover:scale-[1.01]"
               >
                 {t("Deploy mine instead")}
-              </button>
+              </FocusButton>
             </div>
           )}
 
@@ -297,13 +298,13 @@ export function TogetherRelayPanel({
       ) : (
         <div className="flex flex-col gap-3">
           {isTauri ? (
-            <button
+            <FocusButton
               onClick={() => setShowDeploy(true)}
               className="flex h-12 items-center justify-center gap-2 rounded-xl bg-ink text-[14px] font-medium text-canvas transition-transform hover:scale-[1.01]"
             >
               <Power size={15} strokeWidth={1.9} />
               {t("Deploy a relay")}
-            </button>
+            </FocusButton>
           ) : (
             <div className="flex flex-col gap-2 rounded-xl border border-edge-soft bg-canvas/40 p-4">
               <div className="flex items-center gap-2">
@@ -330,13 +331,13 @@ export function TogetherRelayPanel({
               placeholder="wss://your-relay.workers.dev"
               className="h-11 flex-1 rounded-xl border border-edge bg-canvas px-3.5 text-[13px] text-ink transition-colors focus:border-accent"
             />
-            <button
+            <FocusButton
               onClick={commitDraftUrl}
               disabled={!draftUrl.trim()}
               className="h-11 rounded-xl bg-ink px-4 text-[13px] font-medium text-canvas transition-transform hover:scale-[1.01] disabled:opacity-40 disabled:hover:scale-100"
             >
               {t("Save")}
-            </button>
+            </FocusButton>
           </div>
           <p className="text-[11.5px] leading-relaxed text-ink-subtle">
             {t("Only enter URLs for relays you operate or trust. A relay only carries Watch Together sync messages (play, pause, seek). Nothing else passes through it.")}
@@ -345,18 +346,18 @@ export function TogetherRelayPanel({
             <span className="text-[12px] text-ink-muted">
               {t("Hit your daily quota? Use Harbor's public relay, or host your own.")}
             </span>
-            <button
+            <FocusButton
               onClick={() => HARBOR_PUBLIC_RELAY && update({ togetherRelayUrl: HARBOR_PUBLIC_RELAY })}
               className="flex h-9 w-fit items-center gap-1.5 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               <Radio size={13} strokeWidth={1.9} />
               {t("Use Harbor's public relay")}
-            </button>
+            </FocusButton>
           </div>
         </div>
       )}
 
-      <button
+      <FocusButton
         onClick={() => setShowDocs(true)}
         className="flex items-center gap-2 self-start text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
       >
@@ -376,7 +377,7 @@ export function TogetherRelayPanel({
           />
         </svg>
         {t("Documentation: run your own relay")}
-      </button>
+      </FocusButton>
 
     </>
   );

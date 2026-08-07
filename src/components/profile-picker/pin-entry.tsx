@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, Delete } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -107,7 +108,7 @@ export function PinEntry({
   return (
     <div className="flex w-full max-w-[420px] flex-col gap-7 animate-in fade-in slide-in-from-bottom-2 duration-200">
       <div className="flex items-center justify-between gap-3">
-        <button
+        <FocusButton
           type="button"
           onClick={onBack}
           className="flex h-9 items-center gap-1.5 rounded-lg px-2 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-elevated/40 hover:text-ink"
@@ -115,7 +116,7 @@ export function PinEntry({
         >
           <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
           {t("common.back")}
-        </button>
+        </FocusButton>
       </div>
       <div className="flex flex-col items-center gap-2">
         <span className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
@@ -132,7 +133,7 @@ export function PinEntry({
           shake ? "animate-[pin-shake_0.34s_ease]" : ""
         }`}
       >
-        <button
+        <FocusButton
           type="button"
           onClick={focus}
           aria-label={t("Focus PIN entry")}
@@ -163,7 +164,7 @@ export function PinEntry({
               }`}
             />
           ))}
-        </button>
+        </FocusButton>
         {error && <p className="text-[12.5px] font-medium text-red-300">{error}</p>}
         <div className="grid grid-cols-3 gap-2.5 pt-1">
           {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((d) => (
@@ -209,7 +210,7 @@ function PinKey({
   "aria-label"?: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -217,6 +218,6 @@ function PinKey({
       {...rest}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight } from "lucide-react";
 import type { FeedItem } from "@/lib/feed";
 import { useT } from "@/lib/i18n";
@@ -24,7 +25,7 @@ export function DiscoveryQueueCta({ items }: { items: FeedItem[] }) {
           {t("{count} picks ready", { count: items.length })}
         </span>
       </div>
-      <button
+      <FocusButton
         type="button"
         onClick={openQueue}
         className="group relative flex h-[156px] items-stretch overflow-hidden rounded-2xl border border-edge-soft bg-elevated/40 text-start"
@@ -64,7 +65,7 @@ export function DiscoveryQueueCta({ items }: { items: FeedItem[] }) {
             />
           </div>
         </div>
-      </button>
+      </FocusButton>
     </section>
   );
 }

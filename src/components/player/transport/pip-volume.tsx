@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { PlayerSnapshot } from "@/lib/player/bridge";
@@ -43,7 +44,7 @@ export function PipVolume({
       onMouseEnter={cancelClose}
       onMouseLeave={armClose}
     >
-      <button
+      <FocusButton
         type="button"
         onClick={onMute}
         onContextMenu={(e) => {
@@ -55,7 +56,7 @@ export function PipVolume({
         className="inline-flex h-9 w-9 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-white"
       >
         {muted ? <VolumeX size={16} strokeWidth={2.2} /> : <Volume2 size={16} strokeWidth={2.2} />}
-      </button>
+      </FocusButton>
       {open && (
         <div
           data-tauri-drag-region="false"

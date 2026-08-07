@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDownToLine, Bookmark, Check, Layers, MoreHorizontal, Pause, Play, RotateCw, Star, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
@@ -132,7 +133,7 @@ export function HeroActionOverflow({
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         type="button"
         aria-label={t("More actions")}
@@ -143,7 +144,7 @@ export function HeroActionOverflow({
       >
         <MoreHorizontal size={20} strokeWidth={1.9} />
         {isFav && <span className="absolute end-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-accent" />}
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div
@@ -327,7 +328,7 @@ function Item({
   active?: boolean;
 }) {
   return (
-    <button
+    <FocusButton
       role="menuitem"
       onClick={onClick}
       className={`flex h-9 items-center gap-2.5 rounded-lg px-3 text-start text-[13px] transition-colors hover:bg-raised ${
@@ -336,6 +337,6 @@ function Item({
     >
       <span className={active ? "text-accent" : "text-ink-muted"}>{icon}</span>
       {label}
-    </button>
+    </FocusButton>
   );
 }

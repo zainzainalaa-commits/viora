@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LogIn, LogOut, Pencil, Search, Settings as SettingsLucide, Users } from "lucide-react";
@@ -60,7 +61,7 @@ export function RoyalTopbar() {
       active,
       onSelect: () => navigate(item),
       node: (
-        <button
+        <FocusButton
           type="button"
           onClick={() => navigate(item)}
           aria-label={label}
@@ -79,7 +80,7 @@ export function RoyalTopbar() {
             {item.render(false)}
           </span>
           <span className="hidden xl:inline">{label}</span>
-        </button>
+        </FocusButton>
       ),
     };
   });
@@ -97,7 +98,7 @@ export function RoyalTopbar() {
           className="harbor-royal-bar pointer-events-auto grid h-14 w-full grid-cols-[1fr_auto] items-center gap-3 rounded-[10px] border border-[color-mix(in_srgb,var(--color-accent)_22%,var(--color-edge))] bg-canvas/85 ps-3.5 pe-2 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-accent)_14%,transparent),0_22px_60px_-26px_rgba(0,0,0,0.85)] backdrop-blur-xl"
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <button
+            <FocusButton
               type="button"
               onClick={() => setView("home")}
               className="flex shrink-0 items-center gap-2.5 text-ink"
@@ -114,7 +115,7 @@ export function RoyalTopbar() {
               >
                 {APP_NAME}
               </span>
-            </button>
+            </FocusButton>
 
             <Filigree />
 
@@ -205,7 +206,7 @@ function SearchPill({ onOpen }: { onOpen: () => void }) {
   }, [binding, onOpen]);
 
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onOpen}
       aria-label={t("common.search")}
@@ -216,7 +217,7 @@ function SearchPill({ onOpen }: { onOpen: () => void }) {
       <kbd className="ms-2 hidden items-center rounded-[5px] border border-edge-soft bg-elevated/60 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase leading-none text-ink-subtle md:flex">
         {formatBindingForDisplay(binding)}
       </kbd>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -232,7 +233,7 @@ function WinBtn({
   children: ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -246,7 +247,7 @@ function WinBtn({
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
         {children}
       </svg>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -286,7 +287,7 @@ function RoyalProfileMenu({
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
@@ -304,7 +305,7 @@ function RoyalProfileMenu({
           )}
         </span>
         <span className="hidden max-w-[8rem] truncate md:inline">{name}</span>
-      </button>
+      </FocusButton>
       {open && (
         <div className="harbor-royal-menu absolute end-0 top-[calc(100%+10px)] z-40 w-60 overflow-hidden rounded-[10px] border border-[color-mix(in_srgb,var(--color-accent)_24%,var(--color-edge))] bg-canvas/95 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.85)] backdrop-blur-2xl">
           <div className="border-b border-edge-soft px-4 py-3">
@@ -324,7 +325,7 @@ function RoyalProfileMenu({
                 {t("profile.switch")}
               </span>
               {otherProfiles.map((p) => (
-                <button
+                <FocusButton
                   key={p.id}
                   type="button"
                   onClick={() => dismiss(() => (p.passwordHash ? openPicker({ kind: "unlock", profileId: p.id }) : selectProfile(p.id)))}
@@ -337,7 +338,7 @@ function RoyalProfileMenu({
                     {p.name.slice(0, 1).toUpperCase()}
                   </span>
                   <span className="truncate text-[12.5px] text-ink">{p.name}</span>
-                </button>
+                </FocusButton>
               ))}
             </div>
           )}
@@ -382,7 +383,7 @@ function MenuItem({
   children: ReactNode;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       className={`flex items-center gap-2.5 px-4 py-2.5 text-start text-[13px] transition-colors hover:bg-elevated hover:text-ink ${
@@ -390,6 +391,6 @@ function MenuItem({
       } ${active ? "text-accent" : "text-ink-muted"}`}
     >
       {children}
-    </button>
+    </FocusButton>
   );
 }

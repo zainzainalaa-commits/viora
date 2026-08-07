@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { REPO_URL } from "@/lib/brand";
 import { History, RotateCw } from "lucide-react";
 import { BetaTag } from "@/components/beta-tag";
@@ -101,21 +102,21 @@ function HistoryError({ onRetry }: { onRetry: () => void }) {
         {t("Couldn't load earlier builds. Check your connection and try again.")}
       </p>
       <div className="flex items-center gap-3">
-        <button
+        <FocusButton
           type="button"
           onClick={onRetry}
           className="flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-elevated px-3 text-[12px] font-semibold text-ink transition-all hover:scale-[1.02] hover:border-ink active:scale-[0.97]"
         >
           <RotateCw size={13} strokeWidth={2.4} />
           {t("Try again")}
-        </button>
-        {RELEASES_URL && <button
+        </FocusButton>
+        {RELEASES_URL && <FocusButton
           type="button"
           onClick={() => openUrl(RELEASES_URL)}
           className="text-[12px] font-semibold text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
         >
           {t("Browse all releases")}
-        </button>}
+        </FocusButton>}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Play, RotateCcw } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useActiveKid } from "@/lib/profiles";
@@ -59,21 +60,21 @@ export function ResumePrompt({
           {t("Where do you want to start?")}
         </p>
         <div className="relative mt-10 flex flex-col items-center gap-5 sm:flex-row">
-          <button
+          <FocusButton
             onClick={onResume}
             autoFocus
             className="flex h-20 min-w-[280px] items-center justify-center gap-3 rounded-full bg-white px-10 text-[24px] font-extrabold text-[#0c4a6e] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.6)] transition-transform hover:scale-[1.04] active:scale-[0.97]"
           >
             <Play size={30} strokeWidth={0} fill="currentColor" />
             {t("Keep Watching")}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onStartOver}
             className="flex h-20 min-w-[220px] items-center justify-center gap-3 rounded-full bg-white/15 px-10 text-[24px] font-extrabold text-white ring-2 ring-white/40 transition-transform hover:scale-[1.04] hover:bg-white/25 active:scale-[0.97]"
           >
             <RotateCcw size={28} strokeWidth={2.6} />
             {t("Start Over")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     );
@@ -98,21 +99,21 @@ export function ResumePrompt({
           <div className="h-full bg-accent" style={{ width: `${pct}%` }} />
         </div>
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-          <button
+          <FocusButton
             onClick={onResume}
             autoFocus
             className="flex h-12 flex-1 items-center justify-center gap-2.5 rounded-full bg-accent text-[15px] font-semibold text-canvas shadow-[0_8px_22px_-10px_var(--color-accent)] transition-opacity hover:opacity-90"
           >
             <Play size={18} fill="currentColor" />
             {t("Resume from {time}", { time: formatTime(resumeSec) })}
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             onClick={onStartOver}
             className="flex h-12 items-center justify-center gap-2.5 rounded-full bg-elevated px-6 text-[14px] font-semibold text-ink ring-1 ring-edge-soft transition-colors hover:bg-raised"
           >
             <RotateCcw size={16} strokeWidth={2.4} />
             {t("Start Over")}
-          </button>
+          </FocusButton>
         </div>
       </div>
     </div>

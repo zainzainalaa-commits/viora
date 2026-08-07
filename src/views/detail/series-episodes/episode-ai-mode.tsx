@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useMemo, useState } from "react";
 import { X } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -107,14 +108,14 @@ export function EpisodeAiMode({
           />
           <AiExampleHint hidden={input.length > 0} />
         </div>
-        <button
+        <FocusButton
           type="button"
           onClick={onExit}
           aria-label={t("Exit AI mode")}
           className="shrink-0 text-ink-subtle transition-colors hover:text-ink"
         >
           <X size={16} />
-        </button>
+        </FocusButton>
       </form>
 
       {status === "idle" && (

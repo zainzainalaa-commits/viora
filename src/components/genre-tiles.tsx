@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
 import { fetchGenreSample } from "@/lib/feed";
@@ -89,7 +90,7 @@ function GenreTile({ genre }: { genre: string }) {
   };
 
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onOpen}
       className="group relative aspect-[5/4] w-full cursor-pointer overflow-hidden rounded-2xl border border-edge-soft text-start transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0.24,1)] hover:-translate-y-1"
@@ -128,7 +129,7 @@ function GenreTile({ genre }: { genre: string }) {
           ›
         </span>
       </div>
-    </button>
+    </FocusButton>
   );
 }
 

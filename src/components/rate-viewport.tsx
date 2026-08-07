@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowUpRight, ExternalLink, Loader2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -70,22 +71,22 @@ export function RateViewport({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <FocusButton
             type="button"
             onClick={() => openUrl(url)}
             className="flex h-9 items-center gap-1.5 rounded-full border border-edge-soft px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
             <ExternalLink size={12} strokeWidth={2.4} />
             Open in browser
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onClose}
             aria-label="Close"
             className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <X size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </div>
       </header>
 
@@ -107,7 +108,7 @@ export function RateViewport({
               That&apos;s the correct security posture: it stops other sites from impersonating
               the rating UI. Use the button below to rate in your browser.
             </p>
-            <button
+            <FocusButton
               type="button"
               onClick={() => {
                 openUrl(url);
@@ -117,7 +118,7 @@ export function RateViewport({
             >
               <ArrowUpRight size={13} strokeWidth={2.4} />
               Open on stremio-addons.net
-            </button>
+            </FocusButton>
           </div>
         )}
         <iframe

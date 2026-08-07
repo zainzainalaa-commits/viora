@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   AlertTriangle,
   CheckSquare,
@@ -146,7 +147,7 @@ export function ShowGroupCard({
                   <Download size={11} strokeWidth={2.2} />
                 </CardIconButton>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -165,17 +166,17 @@ export function ShowGroupCard({
                 aria-label={confirm ? t("Confirm remove") : t("Remove from library")}
               >
                 {confirm ? <RefreshCw size={11} strokeWidth={2.4} /> : <Trash2 size={11} strokeWidth={2.2} />}
-              </button>
+              </FocusButton>
             </div>
           </>
         )}
       </div>
-      <button type="button" onClick={onActivate} className="text-start">
+      <FocusButton type="button" onClick={onActivate} className="text-start">
         <p className="truncate text-[13px] font-medium text-ink transition-colors hover:text-accent" title={head.title}>
           {head.title}
         </p>
         <p className="-mt-1.5 truncate text-[11.5px] text-ink-subtle">{countLabel}</p>
-      </button>
+      </FocusButton>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, Maximize, Minimize, Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
 import type { PlayerShellProps } from "@/lib/player-shells/types";
@@ -27,14 +28,14 @@ export function MinimalShell({
       }`}
     >
       <div className="pointer-events-auto flex items-center gap-4">
-        <button
+        <FocusButton
           onClick={onBack}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-colors hover:bg-black/85"
           aria-label={t("Back")}
         >
           <ChevronLeft size={18} strokeWidth={2.2} />
-        </button>
-        <button
+        </FocusButton>
+        <FocusButton
           onClick={onPlayPause}
           className="flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition-colors hover:bg-white/25"
           aria-label={playing ? t("Pause") : t("Play")}
@@ -44,20 +45,20 @@ export function MinimalShell({
           ) : (
             <Play size={22} strokeWidth={1.8} fill="currentColor" className="ml-0.5" />
           )}
-        </button>
+        </FocusButton>
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="truncate text-[14px] font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
             {title}
           </span>
           <MinimalTime durationSec={snap.durationSec} visible={visible} />
         </div>
-        <button
+        <FocusButton
           onClick={onFullscreen}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-colors hover:bg-black/85"
           aria-label={fullscreen ? t("Exit fullscreen") : t("Fullscreen")}
         >
           {fullscreen ? <Minimize size={16} strokeWidth={2.2} /> : <Maximize size={16} strokeWidth={2.2} />}
-        </button>
+        </FocusButton>
       </div>
       <MinimalTrack durationSec={snap.durationSec} visible={visible} onSeek={onSeek} />
     </div>

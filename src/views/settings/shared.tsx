@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Eye, Key, Lock } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { openUrl } from "@/lib/window";
@@ -38,12 +39,12 @@ export function useSettingsActiveContext() {
 
 export function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <button
+    <FocusButton
       onClick={() => openUrl(href)}
       className="inline-flex items-center gap-1 text-ink underline-offset-4 hover:underline"
     >
       {children} <ExternalLink size={12} />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -197,7 +198,7 @@ export function KeyField({
           className="h-full flex-1 bg-transparent text-[15px] tracking-wide text-ink placeholder:text-ink-subtle/55 outline-none"
         />
         {value.length > 0 && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => setReveal((v) => !v)}
             aria-label={reveal ? t("Hide") : t("Show")}
@@ -227,14 +228,14 @@ export function KeyField({
                 <circle cx="12" cy="12" r="2.7" stroke="currentColor" strokeWidth="1.6" />
               </svg>
             )}
-          </button>
+          </FocusButton>
         )}
         <div
           className={`flex shrink-0 items-center transition-all ${
             showSave || saved ? "ms-1 w-auto opacity-100" : "w-0 overflow-hidden opacity-0"
           }`}
         >
-          <button
+          <FocusButton
             type="button"
             onClick={onSave}
             disabled={!showSave && !saved}
@@ -259,7 +260,7 @@ export function KeyField({
             >
               {t("Save")}
             </span>
-          </button>
+          </FocusButton>
         </div>
       </div>
       <p className="text-[12.5px] leading-relaxed text-ink-subtle">{help}</p>
@@ -305,7 +306,7 @@ export function ToggleRow({
     if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
   }, []);
   return (
-    <button
+    <FocusButton
       ref={btnRef}
       onClick={() => !locked && onChange(!value)}
       onMouseEnter={openPreview}
@@ -362,7 +363,7 @@ export function ToggleRow({
           />
         </span>
       </span>
-    </button>
+    </FocusButton>
   );
 }
 
@@ -379,7 +380,7 @@ export function Segmented<T extends string>({
   return (
     <div className="flex w-fit flex-wrap gap-1 rounded-2xl bg-elevated/40 p-1 ring-1 ring-edge-soft/60">
       {options.map((o) => (
-        <button
+        <FocusButton
           key={o.value}
           type="button"
           onClick={() => onChange(o.value)}
@@ -390,7 +391,7 @@ export function Segmented<T extends string>({
           }`}
         >
           {t(o.label)}
-        </button>
+        </FocusButton>
       ))}
     </div>
   );

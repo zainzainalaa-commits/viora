@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { Camera, FolderOpen, Repeat, X } from "lucide-react";
 import type { AbLoopState } from "@/views/player/hooks/use-ab-loop";
@@ -58,14 +59,14 @@ function AbLoopChip({ ab, visible }: { ab: AbLoopState; visible: boolean }) {
             {ab.a == null ? "⇧ I" : "⇧ O"}
           </span>
         )}
-        <button
+        <FocusButton
           type="button"
           onClick={ab.clear}
           aria-label={t("Clear A-B loop")}
           className="flex h-5 w-5 items-center justify-center rounded-full text-white/55 transition-colors hover:bg-white/10 hover:text-white"
         >
           <X size={11} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </div>
     </div>
   );
@@ -88,14 +89,14 @@ function FrameToast({ toast }: { toast: FrameGrabToast }) {
         <Camera size={13} strokeWidth={2.2} className="shrink-0" />
         <span className="whitespace-nowrap">{toast.text}</span>
         {toast.kind === "ok" && toast.path && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => void revealItemInDir(toast.path as string)}
             className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[12px] font-semibold text-white transition-colors hover:bg-white/25"
           >
             <FolderOpen size={12} strokeWidth={2.2} />
             {t("Open folder")}
-          </button>
+          </FocusButton>
         )}
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   Camera,
   ChevronLeft,
@@ -175,7 +176,7 @@ export function RenderedStremioControl({
       const res = realQualityLabel(ctx.snap.videoWidth, ctx.snap.videoHeight) ?? ctx.resolution;
       if (ctx.titleClickable && ctx.onTitleClick) {
         return (
-          <button
+          <FocusButton
             type="button"
             onClick={ctx.onTitleClick}
             className="pointer-events-auto group flex min-w-0 items-center gap-2 rounded-lg px-2 py-1 text-start text-white/90 transition-colors hover:bg-white/[0.05]"
@@ -197,7 +198,7 @@ export function RenderedStremioControl({
               )}
             </span>
             <Info size={13} strokeWidth={2.1} className="shrink-0 opacity-40 transition-opacity group-hover:opacity-90" />
-          </button>
+          </FocusButton>
         );
       }
       return (

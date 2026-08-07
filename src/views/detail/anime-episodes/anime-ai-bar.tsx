@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
 import type { AiProvider } from "@/lib/ai-models";
@@ -39,14 +40,14 @@ export function AnimeAiBar({
         <AiExampleHint hidden={input.length > 0} />
       </div>
       {loading && <Loader2 size={16} className="shrink-0 animate-spin text-accent" />}
-      <button
+      <FocusButton
         type="button"
         onClick={onExit}
         aria-label={t("Exit AI mode")}
         className="shrink-0 text-ink-subtle transition-colors hover:text-ink"
       >
         <X size={16} />
-      </button>
+      </FocusButton>
     </form>
   );
 }

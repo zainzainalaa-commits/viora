@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Eye, EyeOff, RotateCcw, X } from "lucide-react";
 import {
   CONTROL_META,
@@ -129,7 +130,7 @@ export function FloatingInspector({
                 {controlStates(selectedId).map((s) => {
                   const active = (previewStates[selectedId] ?? controlStates(selectedId)[0]) === s;
                   return (
-                    <button
+                    <FocusButton
                       key={s}
                       type="button"
                       onClick={() => onSetPreviewState(selectedId, s)}
@@ -138,7 +139,7 @@ export function FloatingInspector({
                       }`}
                     >
                       {STATE_LABEL[s] ?? s}
-                    </button>
+                    </FocusButton>
                   );
                 })}
               </div>
@@ -244,7 +245,7 @@ function IconBtn({
       ? "bg-accent/85 text-canvas hover:bg-accent"
       : "text-white/85 hover:bg-white/15 hover:text-white";
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -255,7 +256,7 @@ function IconBtn({
       }`}
     >
       {icon}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -331,7 +332,7 @@ function PanelInspector({
                   const active = sideFromCorner(cfg.corner) === side;
                   const targetCorner: PanelCorner = side === "left" ? "top-left" : "top-right";
                   return (
-                    <button
+                    <FocusButton
                       key={side}
                       type="button"
                       onClick={() => onSetCorner(panelId, targetCorner)}
@@ -341,13 +342,13 @@ function PanelInspector({
                       }`}
                     >
                       {SIDE_LABEL[side]}
-                    </button>
+                    </FocusButton>
                   );
                 })
               : PANEL_CORNERS.map((c) => {
                   const active = cfg.corner === c;
                   return (
-                    <button
+                    <FocusButton
                       key={c}
                       type="button"
                       onClick={() => onSetCorner(panelId, c)}
@@ -357,7 +358,7 @@ function PanelInspector({
                       }`}
                     >
                       {CORNER_LABEL[c]}
-                    </button>
+                    </FocusButton>
                   );
                 })}
           </div>
@@ -404,7 +405,7 @@ function VariantPicker({
       {VARIANT_OPTIONS.map((opt) => {
         const active = value === opt.value;
         return (
-          <button
+          <FocusButton
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
@@ -413,7 +414,7 @@ function VariantPicker({
             }`}
           >
             {opt.label}
-          </button>
+          </FocusButton>
         );
       })}
     </div>

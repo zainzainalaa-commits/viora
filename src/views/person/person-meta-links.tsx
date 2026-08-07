@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { openInAppBrowser } from "@/lib/window";
 import { useT } from "@/lib/i18n";
 import { fmtDate } from "./person-utils";
@@ -17,14 +18,14 @@ export function BirthdayLink({ birthday, age }: { birthday: string; age: number 
   const d = date.getUTCDate();
   const handle = () => openInAppBrowser(`https://www.imdb.com/search/name/?birth_monthday=${m}-${d}`);
   return (
-    <button
+    <FocusButton
       onClick={handle}
       className="group inline-flex items-center gap-1 text-ink-muted underline decoration-edge underline-offset-4 transition-colors hover:text-ink hover:decoration-accent"
       title={t("See others born this day")}
     >
       {t("Born {date}", { date: fmtDate(birthday) })}
       {age != null && ` · ${age}`}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -35,12 +36,12 @@ export function PlaceLink({ place }: { place: string }) {
     openInAppBrowser(`https://www.imdb.com/search/name/?birth_place=${q}`);
   };
   return (
-    <button
+    <FocusButton
       onClick={handle}
       className="inline-flex items-center text-ink-muted underline decoration-edge underline-offset-4 transition-colors hover:text-ink hover:decoration-accent"
       title={t("See others from this place")}
     >
       {place}
-    </button>
+    </FocusButton>
   );
 }

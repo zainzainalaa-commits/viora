@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ArrowRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -105,20 +106,20 @@ export function TogetherInviteToast() {
           </span>
         </div>
 
-        <button
+        <FocusButton
           onClick={onJoin}
           className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[12.5px] font-semibold text-canvas transition-transform hover:scale-[1.04]"
         >
           {guestPick ? t("Choose") : t("Join")} <ArrowRight size={13} strokeWidth={2.4} className="dir-icon" />
-        </button>
+        </FocusButton>
 
-        <button
+        <FocusButton
           onClick={dismissInvite}
           aria-label={t("Dismiss")}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
         >
           <X size={15} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
 
         <div
           aria-hidden

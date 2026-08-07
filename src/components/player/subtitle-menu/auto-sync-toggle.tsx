@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Wand2 } from "lucide-react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -9,7 +10,7 @@ export function AutoSyncToggle() {
   const on = settings.subtitleAutoSync;
   return (
     <Tooltip label={tr("Auto-sync subtitles to the audio (experimental)")} side="bottom" align="end">
-      <button
+      <FocusButton
         type="button"
         onClick={() => update({ subtitleAutoSync: !on })}
         aria-label={tr("Auto-sync subtitles")}
@@ -19,7 +20,7 @@ export function AutoSyncToggle() {
         }`}
       >
         <Wand2 size={16} strokeWidth={2} />
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }

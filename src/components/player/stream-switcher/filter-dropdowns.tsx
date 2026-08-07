@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Boxes, ChevronDown, Disc3, Gauge } from "lucide-react";
 import { AddonLogo } from "@/components/addon-logo";
 import { FormatBadge, type BadgeKind } from "@/components/format-badge";
@@ -26,7 +27,7 @@ export function AddonFilterMenu({
   const t = useT();
   return (
     <div className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
           addonFilter !== "all"
@@ -43,10 +44,10 @@ export function AddonFilterMenu({
           strokeWidth={2.4}
           className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-full z-20 mt-1.5 max-h-72 w-64 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
-          <button
+          <FocusButton
             onClick={() => {
               setAddonFilter("all");
               setOpen(() => false);
@@ -60,9 +61,9 @@ export function AddonFilterMenu({
             </span>
             <span className="flex-1 truncate">{t("All addons")}</span>
             <span className="text-[11px] tabular-nums text-ink-subtle">{totalCount}</span>
-          </button>
+          </FocusButton>
           {addonOptions.map((opt) => (
-            <button
+            <FocusButton
               key={opt.id}
               onClick={() => {
                 setAddonFilter(opt.id);
@@ -82,7 +83,7 @@ export function AddonFilterMenu({
               </span>
               <span className="flex-1 truncate">{opt.name}</span>
               <span className="text-[11px] tabular-nums text-ink-subtle">{opt.count}</span>
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
@@ -118,7 +119,7 @@ export function SourceFilterMenu({
   const activeName = sourceFilter === "all" ? t("Any source") : sourceFilter;
   return (
     <div className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
           sourceFilter !== "all"
@@ -139,10 +140,10 @@ export function SourceFilterMenu({
           strokeWidth={2.4}
           className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-full z-20 mt-1.5 w-52 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
-          <button
+          <FocusButton
             onClick={() => {
               setSourceFilter("all");
               setOpen(() => false);
@@ -156,9 +157,9 @@ export function SourceFilterMenu({
             </span>
             <span className="flex-1 truncate">{t("Any source")}</span>
             <span className="text-[11px] tabular-nums text-ink-subtle">{totalCount}</span>
-          </button>
+          </FocusButton>
           {sourceOptions.map((opt) => (
-            <button
+            <FocusButton
               key={opt.id}
               onClick={() => {
                 setSourceFilter(opt.id);
@@ -179,7 +180,7 @@ export function SourceFilterMenu({
               </span>
               <span className="flex-1 truncate">{opt.name}</span>
               <span className="text-[11px] tabular-nums text-ink-subtle">{opt.count}</span>
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}
@@ -205,7 +206,7 @@ export function QualityFilterMenu({
   const t = useT();
   return (
     <div className="relative">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
           qualityFilter !== "all"
@@ -230,10 +231,10 @@ export function QualityFilterMenu({
           strokeWidth={2.4}
           className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-full z-20 mt-1.5 w-56 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
-          <button
+          <FocusButton
             onClick={() => {
               setQualityFilter("all");
               setOpen(() => false);
@@ -247,9 +248,9 @@ export function QualityFilterMenu({
             </span>
             <span className="flex-1 truncate">{t("Any quality")}</span>
             <span className="text-[11px] tabular-nums text-ink-subtle">{totalCount}</span>
-          </button>
+          </FocusButton>
           {qualityOptions.map((opt) => (
-            <button
+            <FocusButton
               key={opt.id}
               onClick={() => {
                 setQualityFilter(opt.id);
@@ -264,7 +265,7 @@ export function QualityFilterMenu({
               </span>
               <span className="flex-1 truncate">{opt.name}</span>
               <span className="text-[11px] tabular-nums text-ink-subtle">{opt.count}</span>
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}

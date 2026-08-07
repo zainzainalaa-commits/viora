@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePlaylistMutations } from "./live/hooks/use-playlist-mutations";
@@ -309,12 +310,12 @@ export function LiveView({ active }: { active: boolean }) {
                 className="flex-1 bg-transparent text-[14px] text-ink placeholder:text-ink-subtle focus:outline-none"
               />
               {query && (
-                <button
+                <FocusButton
                   onClick={() => setQuery("")}
                   className="text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
                 >
                   {t("Clear")}
-                </button>
+                </FocusButton>
               )}
             </div>
           )}

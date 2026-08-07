@@ -1,3 +1,5 @@
+import { FocusButton } from "@/lib/tv-focus";
+import { FocusSection } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUp, Loader2 } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -630,7 +632,12 @@ const streamIds = useStreamIds(meta, episode, imdbId, intent === "download-seaso
   }
 
   return (
-    <main ref={mainRef} className="absolute inset-0 z-50 overflow-y-auto bg-canvas">
+    <FocusSection
+      as="main"
+      scrolls
+      ref={mainRef}
+      className="absolute inset-0 z-50 overflow-y-auto bg-canvas"
+    >
       <BackdropLayer src={backdropSrc} />
 
       <div aria-hidden data-tauri-drag-region={fs ? "false" : "true"} className="absolute inset-x-0 top-0 z-10 h-20" />
@@ -785,7 +792,7 @@ const streamIds = useStreamIds(meta, episode, imdbId, intent === "download-seaso
       {(settings.pickerLayout === "stremio" || isDownload) && filteredPicker && filteredPicker.all.length > 0 && (
         <PickerScrollTop scrollRef={mainRef} />
       )}
-    </main>
+    </FocusSection>
   );
 }
 
@@ -802,7 +809,7 @@ function PickerScrollTop({ scrollRef }: { scrollRef: React.RefObject<HTMLElement
   }, [scrollRef]);
   if (!show) return null;
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label={t("Scroll to top")}
@@ -810,7 +817,7 @@ function PickerScrollTop({ scrollRef }: { scrollRef: React.RefObject<HTMLElement
     >
       <ArrowUp size={24} strokeWidth={2.6} />
       <span className="text-[16px] font-bold">{t("Top")}</span>
-    </button>
+    </FocusButton>
   );
 }
 

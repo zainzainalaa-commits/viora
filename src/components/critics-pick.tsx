@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight, ExternalLink, Play, Quote, Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { narrowMediaType, type Meta } from "@/lib/cinemeta";
@@ -195,7 +196,7 @@ export function CriticsPick({ meta }: { meta: Meta }) {
         </span>
       </div>
       <div className="grid grid-cols-[minmax(0,1fr)_360px] items-stretch gap-4">
-        <button
+        <FocusButton
           type="button"
           onClick={() => openMeta({ ...meta, logo: logo ?? meta.logo })}
           className="group relative min-h-[520px] overflow-hidden rounded-2xl border border-edge-soft bg-canvas text-start transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0.24,1)] hover:-translate-y-1"
@@ -265,7 +266,7 @@ export function CriticsPick({ meta }: { meta: Meta }) {
               )}
             </div>
           </div>
-        </button>
+        </FocusButton>
         <aside className="flex min-h-0 flex-col gap-4 overflow-hidden rounded-2xl border border-edge-soft bg-elevated/35 p-5">
           <div className="flex flex-col gap-2">
             <Quote size={22} className="shrink-0 text-accent" />
@@ -280,7 +281,7 @@ export function CriticsPick({ meta }: { meta: Meta }) {
                     <span>· {activeReview.rating}/10</span>
                   )}
                   {activeReview.url && (
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -290,40 +291,40 @@ export function CriticsPick({ meta }: { meta: Meta }) {
                       className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded text-ink-subtle transition-colors hover:text-ink"
                     >
                       <ExternalLink size={11} strokeWidth={2} />
-                    </button>
+                    </FocusButton>
                   )}
                 </div>
                 <div className="flex items-center gap-1">
                   {reviews.length > 1 && (
                     <div className="me-1 flex items-center gap-0.5">
-                      <button
+                      <FocusButton
                         type="button"
                         onClick={() => setReviewIdx((i) => (i - 1 + reviews.length) % reviews.length)}
                         aria-label={t("Previous review")}
                         className="flex h-5 w-5 items-center justify-center rounded text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
                       >
                         <ChevronLeft size={12} className="dir-icon" />
-                      </button>
+                      </FocusButton>
                       <span className="font-mono text-[10px] text-ink-subtle">
                         {reviewIdx + 1}/{reviews.length}
                       </span>
-                      <button
+                      <FocusButton
                         type="button"
                         onClick={() => setReviewIdx((i) => (i + 1) % reviews.length)}
                         aria-label={t("Next review")}
                         className="flex h-5 w-5 items-center justify-center rounded text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
                       >
                         <ChevronRight size={12} className="dir-icon" />
-                      </button>
+                      </FocusButton>
                     </div>
                   )}
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => setOverviewOpen(true)}
                     className="text-[11.5px] font-semibold uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-80"
                   >
                     {t("Read full")}
-                  </button>
+                  </FocusButton>
                 </div>
               </div>
             ) : (
@@ -349,13 +350,13 @@ export function CriticsPick({ meta }: { meta: Meta }) {
                   )}
                 </div>
                 {overview && (
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => setOverviewOpen(true)}
                     className="shrink-0 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-80"
                   >
                     {t("Read full")}
-                  </button>
+                  </FocusButton>
                 )}
               </div>
             )}
@@ -378,22 +379,22 @@ export function CriticsPick({ meta }: { meta: Meta }) {
                 <span className="text-[10.5px] uppercase tracking-[0.2em] text-ink-subtle">{t("Cast")}</span>
                 {data.cast.length > 4 && (
                   <div className="flex gap-1">
-                    <button
+                    <FocusButton
                       type="button"
                       onClick={() => scrollCast(-1)}
                       aria-label={t("Scroll cast left")}
                       className="flex h-6 w-6 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors duration-150 hover:bg-elevated hover:text-ink"
                     >
                       <ChevronLeft size={14} className="dir-icon" />
-                    </button>
-                    <button
+                    </FocusButton>
+                    <FocusButton
                       type="button"
                       onClick={() => scrollCast(1)}
                       aria-label={t("Scroll cast right")}
                       className="flex h-6 w-6 items-center justify-center rounded-full border border-edge-soft text-ink-muted transition-colors duration-150 hover:bg-elevated hover:text-ink"
                     >
                       <ChevronRight size={14} className="dir-icon" />
-                    </button>
+                    </FocusButton>
                   </div>
                 )}
               </div>
@@ -416,13 +417,13 @@ export function CriticsPick({ meta }: { meta: Meta }) {
               {data.director && (
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="text-[10.5px] uppercase tracking-[0.2em] text-ink-subtle">{t("Director")}</span>
-                  <button
+                  <FocusButton
                     type="button"
                     onClick={() => openPerson(data.director!.id)}
                     className="truncate text-ink underline-offset-2 transition-colors hover:underline"
                   >
                     {data.director.name}
-                  </button>
+                  </FocusButton>
                 </div>
               )}
               {data.genres.length > 0 && (
@@ -441,7 +442,7 @@ export function CriticsPick({ meta }: { meta: Meta }) {
           )}
 
           <div className="mt-auto flex justify-end">
-            <button
+            <FocusButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -450,7 +451,7 @@ export function CriticsPick({ meta }: { meta: Meta }) {
               className="rounded-full bg-ink px-6 py-2 text-[13px] font-semibold text-canvas transition-colors duration-200 hover:bg-ink/90"
             >
               Play
-            </button>
+            </FocusButton>
           </div>
         </aside>
       </div>

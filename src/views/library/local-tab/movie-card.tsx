@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import {
   AlertTriangle,
   CheckSquare,
@@ -103,7 +104,7 @@ export function OwnedCard({
                   <Download size={11} strokeWidth={2.2} />
                 </CardIconButton>
               )}
-              <button
+              <FocusButton
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -122,12 +123,12 @@ export function OwnedCard({
                 aria-label={confirm ? t("Confirm remove") : t("Remove from library")}
               >
                 {confirm ? <RefreshCw size={11} strokeWidth={2.4} /> : <Trash2 size={11} strokeWidth={2.2} />}
-              </button>
+              </FocusButton>
             </div>
           </>
         )}
       </div>
-      <button type="button" onClick={onActivate} className="text-start">
+      <FocusButton type="button" onClick={onActivate} className="text-start">
         <p className="truncate text-[13px] font-medium text-ink transition-colors hover:text-accent" title={entry.filename}>
           {entry.title}
         </p>
@@ -142,7 +143,7 @@ export function OwnedCard({
             {entry.type === "show" && t(" · Series")}
           </p>
         ) : null}
-      </button>
+      </FocusButton>
     </div>
   );
 }

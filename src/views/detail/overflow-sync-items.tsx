@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ChevronDown, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import anilistLogo from "@/assets/anilist.png";
@@ -54,7 +55,7 @@ function GroupRow({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       role="menuitem"
       onClick={onClick}
       className="flex h-9 items-center gap-2.5 rounded-lg px-3 text-start text-[13px] text-ink transition-colors hover:bg-raised"
@@ -65,7 +66,7 @@ function GroupRow({
         size={13}
         className={`text-ink-muted transition-transform ${open ? "rotate-180" : ""}`}
       />
-    </button>
+    </FocusButton>
   );
 }
 
@@ -81,7 +82,7 @@ function StatusRow({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       role="menuitem"
       onClick={onClick}
       className={`flex h-8 items-center justify-between gap-2 rounded-lg py-1 ps-9 pe-3 text-start text-[12.5px] transition-colors ${
@@ -97,7 +98,7 @@ function StatusRow({
         {label}
       </span>
       {active && <Check size={13} className="text-ink" />}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -294,7 +295,7 @@ export function TraktMenuItems({
   const target = resolveTarget(harborId);
   if (!target || target.kind !== "movie") return null;
   return (
-    <button
+    <FocusButton
       role="menuitem"
       onClick={() => {
         void pushWatched(target).catch(() => {});
@@ -304,6 +305,6 @@ export function TraktMenuItems({
     >
       <img src={traktLogo} alt="" className="h-[14px] w-[14px] rounded-[3px] object-contain" />
       <span className="flex-1 truncate">{t("Mark watched on Trakt")}</span>
-    </button>
+    </FocusButton>
   );
 }

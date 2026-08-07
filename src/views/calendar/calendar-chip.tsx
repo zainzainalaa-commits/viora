@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Poster, usePosterChain } from "@/components/poster";
@@ -30,7 +31,7 @@ export function CalendarChip({
       ? "bg-amber-400/20 text-amber-200"
       : "bg-blue-400/20 text-blue-200";
   return (
-    <button
+    <FocusButton
       ref={ref}
       onClick={(e) => {
         e.stopPropagation();
@@ -58,7 +59,7 @@ export function CalendarChip({
         {tag}
       </span>
       {hovered && <ChipTooltip item={item} anchorRef={ref} />}
-    </button>
+    </FocusButton>
   );
 }
 

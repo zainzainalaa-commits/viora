@@ -1,3 +1,5 @@
+import { FocusButton } from "@/lib/tv-focus";
+import { APP_NAME } from "@/lib/brand";
 import { Check } from "lucide-react";
 import { FONT_PAIRS, type FontPairId } from "@/lib/theme";
 import { CustomFontTiles } from "../custom-font-tiles";
@@ -18,7 +20,7 @@ export function FontPicker({
       {Object.values(FONT_PAIRS).map((p) => {
         const active = pairValue === p.id && !customValue;
         return (
-          <button
+          <FocusButton
             key={p.id}
             type="button"
             onClick={() => onPickPair(p.id)}
@@ -33,7 +35,7 @@ export function FontPicker({
                 className="truncate text-[22px] leading-tight"
                 style={{ fontFamily: p.display, fontWeight: 600 }}
               >
-                Harbor
+                {APP_NAME}
               </span>
               {active && (
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-canvas">
@@ -47,7 +49,7 @@ export function FontPicker({
             <span className="mt-1 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
               {p.name}
             </span>
-          </button>
+          </FocusButton>
         );
       })}
 

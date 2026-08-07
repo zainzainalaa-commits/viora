@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -57,13 +58,13 @@ export function AioStatusModal({
               <span className="text-[11.5px] text-ink-subtle">{t("Service status")}</span>
             </div>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             aria-label={t("Close")}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={16} strokeWidth={2.2} />
-          </button>
+          </FocusButton>
         </header>
         <div className="flex-1 overflow-y-auto p-2">
           {snapshot.services.length === 0 ? (

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, X } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { resolveAddonLogo } from "@/components/addon-logo";
@@ -92,13 +93,13 @@ export function StreamsView({
   return (
     <>
       <header className="flex items-center gap-2 px-4 pb-4 pt-7">
-        <button
+        <FocusButton
           aria-label={t("Back")}
           onClick={onBack}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           <ChevronLeft size={20} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
         <div className="min-w-0 flex-1">
           <p className="text-[10.5px] font-semibold uppercase tracking-[0.32em] text-ink-subtle">
             {epLabel}
@@ -107,13 +108,13 @@ export function StreamsView({
             {episode.name ?? t("Episode {n}", { n: episode.episode })}
           </h2>
         </div>
-        <button
+        <FocusButton
           aria-label={t("Close")}
           onClick={onClose}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-elevated text-ink-muted transition-colors hover:bg-raised hover:text-ink"
         >
           <X size={18} strokeWidth={2.2} />
-        </button>
+        </FocusButton>
       </header>
       <div className="flex-1 overflow-y-auto px-4 pb-6">
         {loading && totalStreams === 0 && (

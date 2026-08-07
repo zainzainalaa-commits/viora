@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, ExternalLink, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -59,13 +60,13 @@ export function AnilistConnectModal({ onClose }: { onClose: () => void }) {
             </span>
             <h2 className="text-[20px] font-medium tracking-tight text-ink">{heading}</h2>
           </div>
-          <button
+          <FocusButton
             onClick={onCancel}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         {connectState.kind === "idle" && (
@@ -89,20 +90,20 @@ export function AnilistConnectModal({ onClose }: { onClose: () => void }) {
               rows={3}
               className="resize-none rounded-xl border border-edge bg-elevated px-4 py-3 font-mono text-[12.5px] leading-relaxed text-ink outline-none placeholder:font-sans placeholder:text-ink-subtle/55 focus:border-ink"
             />
-            <button
+            <FocusButton
               onClick={verify}
               disabled={!draftCode.trim()}
               className="flex h-11 items-center justify-center gap-2 rounded-xl bg-ink text-[13.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97] disabled:opacity-40 disabled:hover:scale-100"
             >
               {t("Connect")}
-            </button>
-            <button
+            </FocusButton>
+            <FocusButton
               onClick={beginConnect}
               className="flex items-center gap-1.5 self-start text-[12.5px] text-ink-subtle transition-colors hover:text-ink"
             >
               {t("Open AniList again")}
               <ExternalLink size={12} strokeWidth={2.2} />
-            </button>
+            </FocusButton>
           </div>
         )}
 
@@ -130,12 +131,12 @@ export function AnilistConnectModal({ onClose }: { onClose: () => void }) {
               <span className="text-[14px] font-medium text-ink">{t("Couldn't connect to AniList")}</span>
               <span className="text-[12.5px] text-ink-muted">{connectState.message}</span>
             </div>
-            <button
+            <FocusButton
               onClick={beginConnect}
               className="self-start rounded-lg bg-ink px-3.5 py-1.5 text-[12.5px] font-semibold text-canvas transition-transform hover:scale-[1.02] active:scale-[0.97]"
             >
               {t("Try again")}
-            </button>
+            </FocusButton>
           </div>
         )}
       </div>

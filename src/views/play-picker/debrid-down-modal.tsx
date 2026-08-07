@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import type { Meta } from "@/lib/cinemeta";
 
 export function DebridDownModal({
@@ -34,20 +35,20 @@ export function DebridDownModal({
           and try again, or check the service&apos;s status page.
         </p>
         <div className="flex items-center gap-3 pt-2">
-          <button
+          <FocusButton
             type="button"
             onClick={onTryAgain}
             className="flex h-12 items-center gap-2 rounded-xl bg-white px-6 text-[14px] font-semibold text-black transition-colors hover:bg-white/90"
           >
             Try again
-          </button>
-          <button
+          </FocusButton>
+          <FocusButton
             type="button"
             onClick={onBack}
             className="flex h-12 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 text-[14px] font-medium text-white/75 backdrop-blur-md transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
           >
             Back
-          </button>
+          </FocusButton>
         </div>
       </div>
     </main>

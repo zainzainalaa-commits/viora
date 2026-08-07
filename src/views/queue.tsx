@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FeedHero } from "@/components/feed-hero";
@@ -233,7 +234,7 @@ function NavArrow({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -255,7 +256,7 @@ function NavArrow({
           className="transition-transform duration-200 ease-out group-hover:translate-x-0.5"
         />
       )}
-    </button>
+    </FocusButton>
   );
 }
 
@@ -293,7 +294,7 @@ function Strip({
           const isActive = i === active;
           const isPast = i < active;
           return (
-            <button
+            <FocusButton
               key={`${item.meta.id}-${i}`}
               type="button"
               data-active={isActive}
@@ -328,7 +329,7 @@ function Strip({
               <span className="absolute start-1.5 top-1.5 rounded-md bg-canvas/85 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-ink">
                 {item.tag}
               </span>
-            </button>
+            </FocusButton>
           );
         })}
       </div>

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { useT } from "@/lib/i18n";
@@ -143,7 +144,7 @@ function Arrow({
 }) {
   const t = useT();
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       aria-label={t(side === "left" ? "Scroll left" : "Scroll right")}
@@ -157,6 +158,6 @@ function Arrow({
       ) : (
         <ChevronRight size={20} strokeWidth={2.4} className="dir-icon" />
       )}
-    </button>
+    </FocusButton>
   );
 }

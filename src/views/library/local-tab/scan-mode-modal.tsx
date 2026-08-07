@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FileText, Film, X } from "lucide-react";
@@ -46,13 +47,13 @@ export function ScanModeModal({
                 : t("No .nfo files detected. TMDB matching is recommended.")}
             </p>
           </div>
-          <button
+          <FocusButton
             onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas/40 text-ink-subtle transition-colors hover:bg-canvas/60 hover:text-ink"
             aria-label={t("Cancel")}
           >
             <X size={16} />
-          </button>
+          </FocusButton>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -93,7 +94,7 @@ function ModeButton({
   disabledHint?: string;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -108,6 +109,6 @@ function ModeButton({
           {disabled && disabledHint ? disabledHint : sub}
         </span>
       </span>
-    </button>
+    </FocusButton>
   );
 }

@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -70,7 +71,7 @@ export function AnimeSeasonPicker({
     const f = franchise[i];
     const isActive = i === currentIdx;
     return (
-      <button
+      <FocusButton
         key={f.meta.id}
         onClick={() => {
           if (!isActive) openMeta(f.meta);
@@ -96,13 +97,13 @@ export function AnimeSeasonPicker({
             {f.startDate ? f.startDate.slice(0, 4) : f.isUpcoming ? "TBA" : ""}
           </span>
         </div>
-      </button>
+      </FocusButton>
     );
   };
 
   return (
     <>
-      <button
+      <FocusButton
         ref={btnRef}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => (menu ? setMenu(null) : openMenu())}
@@ -115,7 +116,7 @@ export function AnimeSeasonPicker({
           size={15}
           className={`text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {menu &&
         createPortal(
           <div

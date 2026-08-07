@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
@@ -10,7 +11,7 @@ export function Signature() {
         <HeartGlyph />
         by the Harbor team
       </p>
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1 text-[11px] text-ink-subtle/80 transition-colors hover:text-ink-muted"
       >
@@ -19,7 +20,7 @@ export function Signature() {
           size={12}
           className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="mt-1 max-w-md space-y-3 px-2 text-[12.5px] leading-relaxed text-ink-subtle">
           <p>

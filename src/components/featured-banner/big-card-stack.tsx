@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -192,7 +193,7 @@ export function BigCardStack({
         <MetaAwardsCorner meta={current} imdbId={resolvedImdb} />
       </div>
       {onPrev && items.length > 1 && (
-        <button
+        <FocusButton
           type="button"
           data-no-drag
           aria-label={t("Previous")}
@@ -205,10 +206,10 @@ export function BigCardStack({
           className="flex h-12 w-12 items-center justify-center rounded-full bg-canvas/65 text-ink opacity-0 backdrop-blur-md transition-all duration-200 hover:bg-canvas/85 hover:scale-105 group-hover:opacity-100"
         >
           <ChevronLeft size={22} strokeWidth={2.2} className="dir-icon" />
-        </button>
+        </FocusButton>
       )}
       {onNext && items.length > 1 && (
-        <button
+        <FocusButton
           type="button"
           data-no-drag
           aria-label={t("Next")}
@@ -221,7 +222,7 @@ export function BigCardStack({
           className="flex h-12 w-12 items-center justify-center rounded-full bg-canvas/65 text-ink opacity-0 backdrop-blur-md transition-all duration-200 hover:bg-canvas/85 hover:scale-105 group-hover:opacity-100"
         >
           <ChevronRight size={22} strokeWidth={2.2} className="dir-icon" />
-        </button>
+        </FocusButton>
       )}
       <ThumbsDock meta={current} />
     </div>

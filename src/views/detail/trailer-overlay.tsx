@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Cast, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -97,7 +98,7 @@ export function TrailerOverlay({
       >
         {!extractFailed && <CastButton videoRef={videoRef} />}
         <Tooltip label={t("Close · Esc")}>
-          <button
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -107,7 +108,7 @@ export function TrailerOverlay({
             className="relative flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-colors duration-200 before:absolute before:-inset-3 before:content-[''] hover:bg-canvas active:scale-[0.94]"
           >
             <X size={18} strokeWidth={2.4} />
-          </button>
+          </FocusButton>
         </Tooltip>
       </div>
       <div
@@ -170,7 +171,7 @@ function YouTubeEmbed({ id, title }: { id: string; title: string }) {
         referrerPolicy="strict-origin-when-cross-origin"
         className="absolute inset-0 h-full w-full border-0"
       />
-      <button
+      <FocusButton
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -179,7 +180,7 @@ function YouTubeEmbed({ id, title }: { id: string; title: string }) {
         className="absolute bottom-4 end-4 z-10 flex items-center gap-1.5 rounded-full bg-canvas/90 px-3.5 py-2 text-[12.5px] font-semibold text-ink shadow-[0_8px_22px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-colors hover:bg-canvas"
       >
         {t("Watch on YouTube")}
-      </button>
+      </FocusButton>
     </>
   );
 }
@@ -202,7 +203,7 @@ function ExternalTrailerFallback({ id, title, logo }: { id: string; title: strin
       <p className="max-w-sm text-[14px] leading-relaxed text-white/55">
         {t("This trailer plays on YouTube.")}
       </p>
-      <button
+      <FocusButton
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -211,7 +212,7 @@ function ExternalTrailerFallback({ id, title, logo }: { id: string; title: strin
         className="flex h-11 items-center rounded-full bg-white px-6 text-[14px] font-semibold text-black shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-transform active:scale-[0.97]"
       >
         {t("Watch on YouTube")}
-      </button>
+      </FocusButton>
     </div>
   );
 }
@@ -278,7 +279,7 @@ function CastButton({ videoRef }: { videoRef: React.RefObject<HTMLVideoElement |
 
   return (
     <Tooltip label={t("Cast to a device")}>
-      <button
+      <FocusButton
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -290,7 +291,7 @@ function CastButton({ videoRef }: { videoRef: React.RefObject<HTMLVideoElement |
         className="flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-colors duration-200 hover:bg-canvas active:scale-[0.94]"
       >
         <Cast size={20} strokeWidth={2} />
-      </button>
+      </FocusButton>
     </Tooltip>
   );
 }

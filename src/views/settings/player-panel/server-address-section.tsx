@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Copy, ExternalLink, Loader2, Play, RotateCw, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
@@ -54,7 +55,7 @@ function AddressRow({ label, url, openable }: { label: string; url: string; open
         <span className="h-10 flex-1 truncate rounded-xl border border-edge-soft bg-canvas px-3.5 font-mono text-[13px] leading-10 text-ink">
           {url}
         </span>
-        <button
+        <FocusButton
           type="button"
           onClick={copy}
           className={`flex h-10 shrink-0 items-center gap-1.5 rounded-xl border px-3.5 text-[12.5px] font-medium transition-colors ${
@@ -65,16 +66,16 @@ function AddressRow({ label, url, openable }: { label: string; url: string; open
         >
           {copied ? <Check size={13} strokeWidth={2.4} /> : <Copy size={13} strokeWidth={1.9} />}
           {copied ? t("Copied") : t("Copy")}
-        </button>
+        </FocusButton>
         {openable && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => openUrl(url)}
             className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-edge px-3.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             <ExternalLink size={13} strokeWidth={1.9} />
             {t("Open")}
-          </button>
+          </FocusButton>
         )}
       </div>
     </div>
@@ -93,7 +94,7 @@ function ControlButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <FocusButton
       type="button"
       disabled={busy}
       onClick={onClick}
@@ -101,7 +102,7 @@ function ControlButton({
     >
       {busy ? <Loader2 size={13} strokeWidth={1.9} className="animate-spin" /> : icon}
       {label}
-    </button>
+    </FocusButton>
   );
 }
 

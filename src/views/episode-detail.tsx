@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Play } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
@@ -172,20 +173,20 @@ export function EpisodeDetailView({
           <h2 className="mb-4 text-[24px] font-semibold text-ink">{t("Episode Not Found")}</h2>
           <p className="mb-6 text-[14px] text-ink-muted">{error}</p>
           <div className="flex justify-center gap-3">
-            <button
+            <FocusButton
               onClick={goBack}
               className="flex items-center gap-2 rounded-lg bg-elevated px-5 py-2.5 text-[14px] font-semibold text-ink ring-1 ring-edge transition-colors hover:bg-raised"
             >
               <ArrowLeft size={16} />
               {t("Go Back")}
-            </button>
+            </FocusButton>
             {seriesMeta && (
-              <button
+              <FocusButton
                 onClick={handleSeriesClick}
                 className="rounded-lg bg-ink px-5 py-2.5 text-[14px] font-semibold text-canvas transition-colors hover:bg-ink/90"
               >
                 {t("View Series")}
-              </button>
+              </FocusButton>
             )}
           </div>
         </div>
@@ -234,13 +235,13 @@ export function EpisodeDetailView({
 
           <div className="absolute inset-x-0 bottom-0 px-12 pb-14">
             <div className="max-w-3xl">
-              <button
+              <FocusButton
                 onClick={handleSeriesClick}
                 className="mb-4 inline-flex items-center gap-1 text-[14px] font-semibold text-ink-muted transition-colors hover:text-ink"
               >
                 <ArrowLeft size={16} />
                 {seriesMeta.name}
-              </button>
+              </FocusButton>
 
               <TitlePlate
                 title={`S${episodeData.seasonNumber}E${episodeData.episodeNumber} — ${episodeData.name}`}
@@ -269,13 +270,13 @@ export function EpisodeDetailView({
 
               <div className="mt-9 flex gap-3">
                 <PlayModeHint>
-                  <button
+                  <FocusButton
                     onClick={handlePlay}
                     className="flex h-12 items-center gap-2.5 rounded-full bg-ink px-7 text-[15px] font-semibold text-canvas shadow-[0_8px_24px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(0,0,0,0.18)] transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
                   >
                     <Play size={18} fill="currentColor" />
                     {t("Play Episode")}
-                  </button>
+                  </FocusButton>
                 </PlayModeHint>
               </div>
             </div>

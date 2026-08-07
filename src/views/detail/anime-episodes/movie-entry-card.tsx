@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Check, Play } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import type { KitsuEpisode } from "@/lib/providers/kitsu";
@@ -19,7 +20,7 @@ export function MovieEntryCard({
   const { settings } = useSettings();
   const banner = meta.background || meta.poster;
   return (
-    <button
+    <FocusButton
       onClick={() =>
         openPicker(
           meta,
@@ -61,6 +62,6 @@ export function MovieEntryCard({
           {t("Watched")}
         </span>
       )}
-    </button>
+    </FocusButton>
   );
 }

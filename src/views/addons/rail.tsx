@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import type { ResolvedAddon } from "@/lib/addons-store/store";
@@ -39,7 +40,7 @@ export function Rail({
           {blurb && <p className="mt-1.5 text-[14px] leading-relaxed text-ink-muted">{blurb}</p>}
         </div>
         {hasMore && (
-          <button
+          <FocusButton
             type="button"
             onClick={() => setExpanded((v) => !v)}
             className="shrink-0 text-[12.5px] font-semibold text-accent transition-opacity hover:opacity-70"
@@ -50,7 +51,7 @@ export function Rail({
               size={12}
               strokeWidth={2.6}
             />
-          </button>
+          </FocusButton>
         )}
       </header>
       {layout === "feature" ? (

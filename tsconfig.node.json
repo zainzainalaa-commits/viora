@@ -1,12 +1,24 @@
 {
   "compilerOptions": {
     "composite": true,
+    // Without an outDir, `tsc -b` writes vite.config.js beside vite.config.ts,
+    // and Vite loads the .js in preference to the .ts. The dev server then runs
+    // a stale snapshot of its own config: edits to the .ts do nothing at all,
+    // with no error to explain why. A composite project must emit something, so
+    // it emits where Vite will not look for it.
+    "outDir": "node_modules/.tmp/tsconfig-node",
     "skipLibCheck": true,
     "target": "ES2022",
     "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    // vite.config.ts reads the version out of package.json.
+    "resolveJsonModule": true
   },
-  "include": ["vite.config.ts"]
+  // package.json is listed because a composite project has to name every file it
+  // compiles. The omission was latent: `tsc -b` kept skipping this project on
+  // the strength of a stale build-info file, so the error only appeared once
+  // that file was cleared.
+  "include": ["vite.config.ts", "package.json"]
 }

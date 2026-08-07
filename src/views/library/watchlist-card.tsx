@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { Bookmark, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Poster, usePosterChain } from "@/components/poster";
@@ -99,7 +100,7 @@ export function WatchlistCard({ meta, onRemove }: { meta: Meta; onRemove?: () =>
           </span>
         )}
         {onRemove && (
-          <button
+          <FocusButton
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -119,17 +120,17 @@ export function WatchlistCard({ meta, onRemove }: { meta: Meta; onRemove?: () =>
           >
             <Trash2 size={12} strokeWidth={2.2} />
             {confirm && t("Remove")}
-          </button>
+          </FocusButton>
         )}
       </div>
-      <button type="button" onClick={open} className="text-start">
+      <FocusButton type="button" onClick={open} className="text-start">
         <p className="truncate text-[13px] font-medium text-ink transition-colors hover:text-accent">
           {display.name || meta.id}
         </p>
         {display.releaseInfo && (
           <p className="-mt-1.5 truncate text-[11.5px] text-ink-subtle">{display.releaseInfo}</p>
         )}
-      </button>
+      </FocusButton>
     </div>
   );
 }

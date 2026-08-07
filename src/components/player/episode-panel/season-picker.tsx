@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
@@ -36,7 +37,7 @@ export function SeasonPicker({
 
   return (
     <div ref={ref} className="relative shrink-0">
-      <button
+      <FocusButton
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -48,11 +49,11 @@ export function SeasonPicker({
           strokeWidth={2.4}
           className={`text-ink-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="absolute end-0 top-full z-30 mt-2 max-h-[52vh] w-44 overflow-y-auto rounded-2xl border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)] animate-in fade-in slide-in-from-top-1 duration-150">
           {seasons.map((n) => (
-            <button
+            <FocusButton
               key={n}
               onClick={() => {
                 onChange(n);
@@ -65,7 +66,7 @@ export function SeasonPicker({
               }`}
             >
               {t("Season {n}", { n })}
-            </button>
+            </FocusButton>
           ))}
         </div>
       )}

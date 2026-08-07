@@ -1,3 +1,4 @@
+import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Code2, Layout as LayoutIcon, Palette } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import type { CodeLang } from "@/components/code-editor";
@@ -46,7 +47,7 @@ export function Inspector({
         {TABS.map((t) => {
           const active = tab === t.id;
           return (
-            <button
+            <FocusButton
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
@@ -58,7 +59,7 @@ export function Inspector({
             >
               {t.icon}
               {t.label}
-            </button>
+            </FocusButton>
           );
         })}
       </div>
@@ -159,7 +160,7 @@ function Group({
   const [open, setOpen] = useState(defaultOpen);
   return (
     <section className="border-b border-edge-soft last:border-b-0">
-      <button
+      <FocusButton
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex h-[52px] w-full items-center gap-2 px-5 text-start transition-colors hover:bg-white/[0.03]"
@@ -174,7 +175,7 @@ function Group({
             open ? "rotate-180" : ""
           }`}
         />
-      </button>
+      </FocusButton>
       {open && (
         <div className="flex flex-col gap-3 px-5 pb-5 pt-3">
           {sub && <p className="text-[13px] leading-snug text-ink-muted">{sub}</p>}
