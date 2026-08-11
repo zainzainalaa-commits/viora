@@ -1,5 +1,4 @@
 import { lruSet } from "@/lib/cache";
-import { registerCache } from "@/lib/memory-profiler";
 
 const HOST = "https://anime-kitsu.strem.fun";
 const TTL = 6 * 60 * 60 * 1000;
@@ -8,7 +7,6 @@ const CACHE_MAX = 300;
 const cache = new Map<string, { v: AnimeKitsuMeta | null; t: number }>();
 const inflight = new Map<string, Promise<AnimeKitsuMeta | null>>();
 
-registerCache("anime-kitsu:meta", () => cache.size);
 
 export type AnimeKitsuVideo = {
   id: string;

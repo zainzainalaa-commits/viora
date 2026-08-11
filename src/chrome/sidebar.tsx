@@ -14,7 +14,11 @@ import { useView, type View } from "@/lib/view";
 import { KidsSidebarDoodles } from "./kids-sidebar-doodles";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
 import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-items";
-import { FocusSection, focusKeys, useFocusableControl } from "@/lib/tv-focus";
+import { Search as SearchIcon } from "lucide-react";
+import { useSearch } from "@/lib/search-context";
+import { isDpadPrimary } from "@/lib/platform";
+import { FocusSection, focusKeys, setFocusSafely, useFocusableControl } from "@/lib/tv-focus";
+import { focusInsideScope } from "@/lib/tv-focus/keys";
 
 const PRIMARY_IDS = new Set(["home", "discover", "catalogs", "movies", "shows", "kids", "anime", "live", "vod"]);
 
@@ -185,6 +189,8 @@ function ScrollableNav({
   const { settings } = useSettings();
   const kid = useActiveKid();
   const t = useT();
+  const search = useSearch();
+  const dpad = isDpadPrimary();
   const items = applyNavCustomization(NAV_ITEMS, settings.navCustomization);
   const isItemVisible = (item: NavItem) => {
     if (kid) return item.view === "kids";
@@ -236,9 +242,26 @@ function ScrollableNav({
       <FocusSection
         scrolls
         ref={ref}
+        preferredChildFocusKey={navFocusKey(view)}
         className="flex flex-1 flex-col overflow-y-auto px-4 pt-3 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <div className="flex flex-col gap-1.5">
+          {/* Search belongs with navigation, not floating in the topbar.
+              As a topbar control it was a sibling of the screen layer inside the
+              content region, and the layer's box encloses it — so no direction
+              led from it back into the screen and focus could strand there.
+              Here it is one more stop in a vertical list that already works. */}
+          {dpad && (
+            <NavItem
+              render={(active) => (
+                <SearchIcon size={20} strokeWidth={active ? 2.5 : 2} />
+              )}
+              label={t("Search")}
+              collapsed={collapsed}
+              big={!!kid}
+              onClick={() => search.setOpen(true)}
+            />
+          )}
           {primary.map((item) => (
             <NavItem
               key={item.id}
@@ -290,6 +313,44 @@ function ScrollableNav({
   );
 }
 
+/**
+ * Puts focus on the first control of the page beside the menu.
+ *
+ * Asking for the CONTENT region by name does not work: measured on the device it
+ * resolves to nothing usable, because the region is a wrapper whose own box is
+ * the whole window and whose child is a screen that may not have laid out its
+ * rows yet. The same search a dialog uses — first usable control inside this
+ * element, in reading order — does find one.
+ */
+function enterContent(): boolean {
+  const panes = [...document.querySelectorAll<HTMLElement>("main")].filter((m) => {
+    const r = m.getBoundingClientRect();
+    return r.width > window.innerWidth * 0.4 && r.height > 100;
+  });
+  const pane = panes[panes.length - 1];
+  if (pane && focusInsideScope(pane)) return true;
+  return setFocusSafely(focusKeys.content);
+}
+
+/**
+ * Which way the page lies from the menu.
+ *
+ * Read from the layout rather than assumed, because the interface mirrors: in a
+ * right-to-left language the column sits on the other side and the press that
+ * enters the page is the opposite one.
+ */
+function towardContent(): "left" | "right" {
+  const aside = document.querySelector("aside");
+  if (!aside) return "right";
+  const box = aside.getBoundingClientRect();
+  return box.left + box.width / 2 < window.innerWidth / 2 ? "right" : "left";
+}
+
+/** A stable name per destination, so the sidebar can prefer the active one. */
+function navFocusKey(view: View): string {
+  return `SIDEBAR_NAV_${String(view).toUpperCase()}`;
+}
+
 function NavItem({
   render,
   label,
@@ -315,7 +376,32 @@ function NavItem({
   // Opting in here is what makes this reachable by the remote. The chevron and
   // the section divider above never call this, so they simply do not exist as
   // far as the D-pad is concerned.
-  const { ref, focusProps } = useFocusableControl({ onSelect: onClick });
+  const { ref, focusProps } = useFocusableControl({
+    onSelect: onClick,
+    // Named after the screen it opens, so coming back from the content lands
+    // on the entry the viewer is actually inside rather than the top of the
+    // list. Entries with no view of their own keep a generated key.
+    focusKey: view ? navFocusKey(view) : undefined,
+    /*
+      The sidebar hands focus to the page itself.
+
+      A screen's box starts at the origin and encloses this column rather than
+      sitting beside it, so the engine sees no facing edge to move to: from an
+      entry here the page is not "that way", it is all around, and the press
+      lands nowhere. That is why switching screens used to yank the highlight
+      into the content — it was the only way in, and it cost the viewer their
+      place in the menu on every trip.
+
+      Saying it outright costs nothing and keeps both: the menu holds its
+      position, and one press still walks into the page.
+    */
+    onArrowPress: (direction) => {
+      if (direction !== towardContent()) return true;
+      // Consumed only when the page actually took the focus; otherwise the press
+      // is left to the engine rather than swallowed into nothing.
+      return !enterContent();
+    },
+  });
   return (
     <button
       ref={ref as React.Ref<HTMLButtonElement>}

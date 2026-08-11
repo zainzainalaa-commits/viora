@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvField } from "@/components/tv-controls";
 import { Check, Loader2, Wifi, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
@@ -96,19 +97,30 @@ export function RemoteServerSection() {
       </div>
 
       <div className="flex items-center gap-2">
-        <input
-          type="text"
+        <TvField
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") commit();
+          onCommit={(v) => {
+            setDraft(v);
+            update({ remoteStreamServerUrl: v.trim() });
           }}
-          onBlur={commit}
+          title={t("Streaming server address")}
           placeholder="http://192.168.1.50:11470"
-          spellCheck={false}
-          autoComplete="off"
-          className="h-11 flex-1 rounded-xl border border-edge bg-canvas px-3.5 font-mono text-[13px] text-ink transition-colors focus:border-accent"
-        />
+          className="flex-1"
+        >
+          <input
+            type="text"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commit();
+            }}
+            onBlur={commit}
+            placeholder="http://192.168.1.50:11470"
+            spellCheck={false}
+            autoComplete="off"
+            className="h-11 flex-1 rounded-xl border border-edge bg-canvas px-3.5 font-mono text-[13px] text-ink transition-colors focus:border-accent"
+          />
+        </TvField>
         {saved && (
           <FocusButton
             type="button"

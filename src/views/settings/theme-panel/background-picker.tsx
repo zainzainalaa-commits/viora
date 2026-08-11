@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvSlider } from "@/components/tv-controls";
 import { AlertCircle, ImageDown, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { processBackgroundImage } from "./image-utils";
@@ -136,14 +137,21 @@ export function BackgroundPicker({
           <label className="text-[13px] font-medium text-ink">Dim overlay</label>
           <span className="text-[12px] tabular-nums text-ink-subtle">{Math.round(dim * 100)}%</span>
         </div>
-        <input
-          type="range"
+        <TvSlider
+          value={Math.round(dim * 100)}
           min={0}
           max={100}
-          value={Math.round(dim * 100)}
-          onChange={(e) => onDimChange(parseInt(e.currentTarget.value, 10) / 100)}
-          className="w-full accent-[var(--color-accent)]"
-        />
+          onChange={(next) => onDimChange(next / 100)}
+        >
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={Math.round(dim * 100)}
+            onChange={(e) => onDimChange(parseInt(e.currentTarget.value, 10) / 100)}
+            className="w-full accent-[var(--color-accent)]"
+          />
+        </TvSlider>
         <p className="text-[11.5px] leading-relaxed text-ink-subtle">
           0% shows the raw image. 100% covers it with the theme color. 60-80% is the readable sweet spot.
         </p>

@@ -1,15 +1,12 @@
-import { FocusButton } from "@/lib/tv-focus";
-import { Check, Loader2, Settings2, X } from "lucide-react";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
+import { Check, Loader2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   fetchManifestAt,
   findHostnameMatch,
   isInstalled,
-  manifestToConfigureUrl,
   parseAddonUrl,
 } from "@/lib/addon-store";
-import { openInstallerViewport } from "@/components/installer-viewport";
-import { isWeb } from "@/lib/platform";
 import { useT } from "@/lib/i18n";
 import type { Addon } from "@/lib/addons";
 
@@ -153,7 +150,20 @@ export function AddonInstallModal({
         if (!installStage && !done && e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="flex max-h-[90vh] w-[min(92vw,560px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated/97 shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)] animate-in zoom-in-95 fade-in duration-150 backdrop-blur-xl">
+      {/*
+        The panel is the dialog, declared as one.
+
+        It behaved like a dialog and said so to nobody: no boundary, so the D-pad
+        was kept inside only by the coverage hit-test noticing the backdrop —
+        true by geometry rather than by declaration — and Back was handled by a
+        synthesised Escape rather than by the sheet itself. Naming it makes the
+        remote's containment, the Back key and the return of focus to whatever
+        opened it all follow from one place.
+      */}
+      <FocusModal
+        onClose={onClose}
+        className="flex max-h-[90vh] w-[min(92vw,560px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated/97 shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)] animate-in zoom-in-95 fade-in duration-150 backdrop-blur-xl"
+      >
         <header className="flex items-center justify-between gap-4 border-b border-edge-soft px-6 py-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             {mode.kind === "manage" && (
@@ -205,21 +215,6 @@ export function AddonInstallModal({
             />
           ) : (
             <>
-              {mode.kind === "manage" && (
-                <ManageStep1
-                  name={mode.existing.name}
-                  hasResolved={!!resolved}
-                  onOpenSetup={() => {
-                    openInstallerViewport(
-                      manifestToConfigureUrl(mode.existing.transportUrl),
-                      mode.existing.name,
-                      mode.existing.logo ?? null,
-                    );
-                    onClose();
-                  }}
-                />
-              )}
-
               <PasteRow
                 value={pasted}
                 onChange={(v) => {
@@ -232,6 +227,17 @@ export function AddonInstallModal({
                 step={mode.kind === "manage" ? 2 : 1}
                 managing={mode.kind === "manage"}
               />
+
+              {loading && !resolved && !error && (
+                // Reading a manifest took eight seconds on the addon measured,
+                // and the sheet said nothing for all of them but the word
+                // "Reading" on a button at the bottom. From across the room that
+                // is indistinguishable from a screen that has stopped.
+                <p className="mt-3 flex items-center gap-2 rounded-lg bg-canvas/40 px-3 py-2.5 text-[12.5px] text-ink-muted ring-1 ring-edge-soft">
+                  <Loader2 size={13} className="animate-spin text-ink-subtle" />
+                  {t("Reading the addon's manifest…")}
+                </p>
+              )}
 
               {error && (
                 <p className="mt-3 rounded-lg bg-danger/15 px-3 py-2 text-[12.5px] text-danger ring-1 ring-danger/30">
@@ -261,6 +267,10 @@ export function AddonInstallModal({
             <FocusButton
               onClick={onSubmit}
               disabled={(!resolved && !pasted.trim()) || loading}
+              // Where the remote enters the sheet. It used to open on the close
+              // cross in the header — the first thing a viewer sees highlighted
+              // being the way out of the thing they just asked for.
+              data-focus-primary
               className="flex h-10 items-center gap-1.5 rounded-full bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {!resolved
@@ -273,49 +283,7 @@ export function AddonInstallModal({
             </FocusButton>
           </footer>
         )}
-      </div>
-    </div>
-  );
-}
-
-function ManageStep1({
-  name,
-  hasResolved,
-  onOpenSetup,
-}: {
-  name: string;
-  hasResolved: boolean;
-  onOpenSetup: () => void;
-}) {
-  const t = useT();
-  return (
-    <div
-      className={`mb-5 flex flex-col gap-3 rounded-xl border border-edge-soft bg-canvas/40 p-4 transition-opacity ${
-        hasResolved ? "opacity-50" : ""
-      }`}
-    >
-      <div className="flex items-baseline gap-2">
-        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink text-[10.5px] font-bold text-canvas">
-          1
-        </span>
-        <p className="text-[13.5px] font-semibold text-ink">{t("Configure on the addon's setup page")}</p>
-      </div>
-      <p className="ps-7 text-[12.5px] leading-relaxed text-ink-muted">
-        {isWeb()
-          ? t("Click below to open {name}'s setup page. Pick your options, then copy the install link it gives you and paste it below to update the addon.", { name })
-          : t("Click below to open {name}'s setup page in Harbor's built-in browser. Pick your options. When you click Install on their page, Harbor catches the link automatically and updates the addon.", { name })}
-      </p>
-      <FocusButton
-        type="button"
-        onClick={onOpenSetup}
-        className="ms-7 flex h-9 w-fit items-center gap-1.5 rounded-full bg-raised px-3.5 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
-      >
-        <Settings2 size={12} strokeWidth={2.2} />
-        {t("Open setup page")}
-      </FocusButton>
-      <p className="mt-1 ps-7 text-[11.5px] leading-relaxed text-ink-subtle">
-        {t("Heads-up: a few addons (like AIOStatus) don't pre-fill from the URL. If the form loads blank, paste the existing manifest URL into their \"Import from URL\" field to restore your settings.")}
-      </p>
+      </FocusModal>
     </div>
   );
 }

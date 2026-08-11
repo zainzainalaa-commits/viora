@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import {
+  GetBoundingClientRectAdapter,
   init,
   pause,
   resume,
@@ -46,7 +47,7 @@ function startEngine(): void {
   started = true;
 
   init({
-    debug: false,
+    debug: (() => { try { return localStorage.getItem("viora.focusDebug") === "on"; } catch { return false; } })(),
     visualDebug: false,
 
     // Holding a direction should keep moving. Norigin throttles by default,
@@ -63,6 +64,22 @@ function startEngine(): void {
     // card should sit. Letting the WebView also scroll produces two competing
     // animations and a card that lands somewhere neither of them intended.
     domNodeFocusOptions: { preventScroll: true },
+
+    // One rect read per control instead of a walk up its ancestors.
+    //
+    // The engine's default measures a node by reading offsetTop, offsetLeft,
+    // offsetHeight, offsetWidth and then climbing the offsetParent chain reading
+    // two more properties at every step. Each of those reads forces the browser
+    // to recompute layout, and a press re-measures every focusable sibling — for
+    // a card inside a Home row that is thirty to sixty cards on a page with
+    // eleven hundred registered nodes.
+    //
+    // Profiled on device: that one function was 24% of the entire sampled
+    // window, and a press blocked the main thread for ~185ms against 45ms in the
+    // sidebar, whose rows are short. `getBoundingClientRect` answers the same
+    // question in a single call, so the browser lays out once and every
+    // subsequent read in the same batch is free.
+    layoutAdapter: GetBoundingClientRectAdapter,
 
     // Posters, action buttons and list rows are not the same size, and
     // center-to-center distance punishes a wide neighbour for being wide.
@@ -384,6 +401,14 @@ function useTitleTooltips(enabled: boolean): void {
       if (!(el instanceof HTMLElement)) return hide();
       const text = (el.getAttribute("title") || el.getAttribute("data-title") || "").trim();
       if (!text) return hide();
+
+      // A control that already says what it is does not need to be told again.
+      // Sidebar items carry both a label and a matching `title`, so every one of
+      // them was opening a floating box repeating its own word over whatever sat
+      // underneath it. Only controls with no visible text of their own — icon
+      // buttons — have anything to explain.
+      const visible = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (visible && visible.toLowerCase().includes(text.toLowerCase())) return hide();
 
       tip.textContent = text;
       tip.hidden = false;

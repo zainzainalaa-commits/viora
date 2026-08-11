@@ -40,6 +40,7 @@ import { ExtLink, KeyField, Section, Segmented, ToggleRow } from "./shared";
 import { TmdbGuideModal } from "./tmdb-tutorial-modal";
 import { TvdbGuideModal } from "./tvdb-tutorial-modal";
 import { EpisodeOrderSetting } from "./episode-order-setting";
+import { HomeRowsEditor } from "./home-rows-editor";
 
 export type LibraryKey = "tmdb" | "omdb" | "rpdb" | "fanart" | "tvdb";
 
@@ -134,6 +135,12 @@ export function LibraryPanel({
           value={settings.homeMode}
           onChange={(v) => update({ homeMode: v })}
         />
+        <Section
+          title={t("Arrange rows")}
+          subtitle={t("Reorder, rename or hide the rails on Home, and choose which one feeds the hero.")}
+        >
+          <HomeRowsEditor />
+        </Section>
         <ToggleRow
           label={t("Show every addon row")}
           sub={t("By default, addon rails that duplicate the built-in ones (Trending, Popular, Top Rated, etc.) are merged so you don't see the same row twice. Turn this on to show every one, duplicates and all.")}

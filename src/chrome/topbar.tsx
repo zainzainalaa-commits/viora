@@ -23,9 +23,7 @@ import { useSelfIdentity } from "@/lib/together/use-self-identity";
 import { activeLayout } from "@/lib/theme";
 import { useThemePreview } from "@/lib/theme-preview";
 import { useView } from "@/lib/view";
-import { useWindowFullscreen } from "@/lib/use-window-fullscreen";
-import { toggleWindowFullscreen } from "@/lib/fullscreen-state";
-import { close, minimize } from "@/lib/window";
+import { close } from "@/lib/window";
 import { can } from "@/lib/capabilities";
 
 const HAS_WINDOW_CHROME = can("customTitlebar");
@@ -37,7 +35,6 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
   const t = useT();
   const [closeConfirm, setCloseConfirm] = useState(false);
   const preview = useThemePreview();
-  const fullscreen = useWindowFullscreen();
   if (chromeHidden && !connecting) return null;
   const layout = kid ? "sidebar" : preview ? preview.layout : activeLayout(settings.theme);
   const onLiveRoot = topKind === "live";
@@ -52,7 +49,7 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
   const searchWidth = canGoBack
     ? "w-[14rem] sm:w-[18rem] lg:w-[22rem] xl:w-[24rem]"
     : "w-[14rem] sm:w-[20rem] lg:w-[24rem] xl:w-[28rem] hover:w-[18rem] sm:hover:w-[24rem] lg:hover:w-[28rem] xl:hover:w-[34rem] focus-within:w-[18rem] sm:focus-within:w-[24rem] lg:focus-within:w-[28rem] xl:focus-within:w-[34rem]";
-  const dragProps = HAS_WINDOW_CHROME && !fullscreen ? { "data-tauri-drag-region": true } : {};
+  const dragProps = HAS_WINDOW_CHROME ? { "data-tauri-drag-region": true } : {};
   return (
     <header className={`fixed inset-x-0 top-0 ${topKind === "picker" || connecting ? "z-[130]" : "z-[55]"} h-20`}>
       <div
@@ -91,7 +88,8 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
           {...dragProps}
           className={`min-w-0 max-w-full transition-[width] duration-200 ease-out ${searchWidth}`}
         >
-          {!hideSearch && !kid && <SearchPill />}
+          {/* On a remote the search entry lives in the sidebar. */}
+          {!hideSearch && !kid && !isDpadPrimary() && <SearchPill />}
         </div>
         <div
           {...dragProps}
@@ -100,32 +98,6 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
           <RecordingPill />
           <DownloadsButton />
           {!onLiveRoot && !kid && <TogetherButton />}
-          {HAS_WINDOW_CHROME && !settings.useNativeTitleBar && (
-            <div className="ms-1 flex items-center gap-2">
-              <Control label={t("chrome.minimize")} onClick={minimize}>
-                <svg width="18" height="18" viewBox="0 0 13 13" fill="none">
-                  <path d="M3 6.5h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                </svg>
-              </Control>
-              <Control label={fullscreen ? t("chrome.restore") : t("chrome.maximize")} onClick={() => void toggleWindowFullscreen()}>
-                <svg width="18" height="18" viewBox="0 0 13 13" fill="none">
-                  {fullscreen ? (
-                    <>
-                      <rect x="2.5" y="4.5" width="6" height="6" stroke="currentColor" strokeWidth="1.4" rx="1" />
-                      <path d="M5 4.5V3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5H9" stroke="currentColor" strokeWidth="1.4" fill="none" />
-                    </>
-                  ) : (
-                    <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="1.4" rx="1.2" />
-                  )}
-                </svg>
-              </Control>
-              <Control label={t("common.close")} onClick={kid ? () => setCloseConfirm(true) : close} danger>
-                <svg width="18" height="18" viewBox="0 0 13 13" fill="none">
-                  <path d="M3.5 3.5l6 6M9.5 3.5l-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                </svg>
-              </Control>
-            </div>
-          )}
         </div>
       </div>
       {closeConfirm && (
@@ -179,15 +151,32 @@ function CloseConfirmKids({ onConfirm, onCancel }: { onConfirm: () => void; onCa
 
 const TOPBAR_MAX_AVATARS = 3;
 
-export function TogetherButton({
-  variant = "chip",
-  popoverPlacement = "below-right",
-  connectStyle = "popover",
-}: {
+type TogetherButtonProps = {
   variant?: "chip" | "ghost";
   popoverPlacement?: "below-right" | "above-left";
   connectStyle?: "tab" | "popover";
-} = {}) {
+};
+
+/**
+ * Withdrawn from the TV chrome.
+ *
+ * Retired at the component rather than at its six mount sites: those live in six
+ * different chrome layouts, deleting each would leave dangling imports behind,
+ * and a seventh layout added later would quietly bring it back. Gating here
+ * covers every surface at once and keeps the feature's code intact for whenever
+ * it is wanted again. A wrapper is used because the implementation calls hooks —
+ * returning early from inside it would make those calls conditional.
+ */
+export function TogetherButton(props: TogetherButtonProps = {}) {
+  if (isDpadPrimary()) return null;
+  return <TogetherButtonImpl {...props} />;
+}
+
+function TogetherButtonImpl({
+  variant = "chip",
+  popoverPlacement = "below-right",
+  connectStyle = "popover",
+}: TogetherButtonProps = {}) {
   const { snapshot, modalOpen, openModal, closeModal, clientId } = useTogether();
   const { avatar: selfAvatar, color: selfColor } = useSelfIdentity();
   const t = useT();
@@ -343,30 +332,6 @@ function SearchPill() {
       <kbd className="hidden shrink-0 rounded-md border border-edge-soft bg-canvas/50 px-1.5 py-0.5 font-mono text-[10.5px] font-medium text-ink-subtle sm:inline">
         {formatBindingForDisplay(binding)}
       </kbd>
-    </FocusButton>
-  );
-}
-
-function Control({
-  label,
-  onClick,
-  danger = false,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  danger?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <FocusButton
-      aria-label={label}
-      onClick={onClick}
-      className={`harbor-win-control ${danger ? "harbor-win-close" : ""} flex h-11 w-12 items-center justify-center rounded-xl bg-elevated/70 text-ink-muted transition-colors duration-150 ${
-        danger ? "hover:bg-[#e5484d] hover:text-white" : "hover:bg-elevated hover:text-ink"
-      }`}
-    >
-      {children}
     </FocusButton>
   );
 }

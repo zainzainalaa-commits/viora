@@ -6,7 +6,6 @@ import { languageName } from "@/lib/subtitles/language";
 import type { SubResult } from "@/lib/subtitles/types";
 import { useT } from "@/lib/i18n";
 import type { PlayEpisode, PlayerSrc } from "@/lib/view";
-import { useWindowFullscreen } from "@/lib/use-window-fullscreen";
 import { BackdropLayer } from "./backdrop-layer";
 import { useSubtitleChoices } from "./hooks/use-subtitle-choices";
 
@@ -22,7 +21,6 @@ export function SubtitleSelectStep({
   onCancel: () => void;
 }) {
   const t = useT();
-  const fs = useWindowFullscreen();
   const { loading, error, results, groups, bestId } = useSubtitleChoices(src);
   const [selected, setSelected] = useState<Selection>(null);
   const [activeLang, setActiveLang] = useState<string>("all");
@@ -72,7 +70,6 @@ export function SubtitleSelectStep({
   return (
     <main className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-canvas">
       <BackdropLayer src={src.episode?.still || src.meta.background || src.meta.poster} />
-      <div aria-hidden data-tauri-drag-region={fs ? "false" : "true"} className="absolute inset-x-0 top-0 z-10 h-20" />
 
       <div className="relative mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col gap-6 px-10 pb-10 pt-24">
         <header className="flex items-start gap-4">

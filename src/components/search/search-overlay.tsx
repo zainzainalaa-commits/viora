@@ -1,4 +1,8 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal, FocusSection } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
+import { TvKeyboard } from "./tv-keyboard";
+import { SearchSuggestions } from "./search-suggestions";
+import { ResultGrid } from "./result-grid";
 import { Search, X, Loader2, CornerDownLeft, CalendarRange, Tag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -110,6 +114,76 @@ export function SearchOverlay() {
         className="harbor-search-backdrop absolute inset-0 cursor-default"
       />
 
+      {isDpadPrimary() ? (
+        /*
+          A different screen, not the desktop one with a keyboard bolted on.
+
+          The desktop overlay is built around a text field, with shortcut and
+          genre chips filling the space while it is empty. All of that is useful
+          with a pointer and noise with a remote, where the same space has to
+          carry the only way to type. So the TV gets the layout every TV app
+          converged on: typing on the left, what you typed and what it found on
+          the right.
+
+          It is also a dialog, declared rather than merely looking like one: the
+          remote must not walk out of it onto the page behind, Back must close it
+          before the screen underneath reads Back as "go back a view", and
+          something inside it has to take focus — the overlay covers the screen,
+          so whatever still holds focus underneath is a control the viewer cannot
+          see.
+        */
+        <FocusModal onClose={close} className="relative flex h-full w-full gap-8 px-10 py-8">
+          <div className="flex w-[300px] shrink-0 flex-col gap-4">
+            <FocusButton
+              onClick={close}
+              className="flex h-11 shrink-0 items-center justify-center rounded-lg border border-edge-soft/60 text-[13.5px] font-medium text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
+            >
+              {t("Back to Browse")}
+            </FocusButton>
+            <TvKeyboard
+              focusKey="SEARCH_KEYBOARD"
+              primary
+              onKey={(ch) => setQuery(query + ch)}
+              onSpace={() => setQuery(query + " ")}
+              onBackspace={() => setQuery(query.slice(0, -1))}
+            />
+            <SearchSuggestions query={trimmed} results={results} onPick={(s) => setQuery(s)} />
+          </div>
+
+          <div className="flex min-w-0 flex-1 flex-col">
+            <h2 className="mb-4 shrink-0 text-[26px] font-semibold tracking-tight text-ink" dir="auto">
+              {trimmed || t("Search")}
+            </h2>
+            {trimmed && !directInput && hasResults && results ? (
+              // Declared as the scrolling container rather than left as a plain
+              // div: the reveal that walks up the DOM only runs once a control
+              // is already off screen, which is too late for a grid whose next
+              // row is clipped by this column while still inside the window.
+              <FocusSection
+                scrolls
+                className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
+                <div className="flex flex-col gap-8">
+                  {results.topMatch && <TopMatch match={results.topMatch} onClose={close} />}
+                  <LiveTvRow items={results.liveTv} onClose={close} />
+                  <PeopleRow people={results.people} onClose={close} />
+                  <ResultGrid
+                    results={results}
+                    query={trimmed}
+                    onClose={close}
+                    excludeId={results.topMatch?.meta.id}
+                  />
+                  <AddonResults groups={results.addonGroups} onClose={close} />
+                </div>
+              </FocusSection>
+            ) : (
+              <p className="flex-1 pt-10 text-[15px] text-ink-subtle">
+                {trimmed ? t("Looking…") : t("Start typing to search.")}
+              </p>
+            )}
+          </div>
+        </FocusModal>
+      ) : (
       <div
         data-tauri-drag-region
         className="relative mx-auto flex h-full w-full max-w-[1080px] flex-col px-6 py-6 sm:px-10 sm:py-10"
@@ -267,6 +341,7 @@ export function SearchOverlay() {
           )}
         </div>
       </div>
+      )}
       {guideOpen && <GuideModal onClose={() => setGuideOpen(false)} />}
     </div>,
     document.body,

@@ -1,10 +1,8 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { Check, Languages, RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { Flag } from "@/components/flag";
 import type { TrackInfo } from "@/lib/player/bridge";
-import { modalOverlayClose, modalOverlayEmitState, modalOverlayOpen } from "@/lib/modal-overlay";
 import { languageName } from "@/lib/subtitles/language";
 import { useT } from "@/lib/i18n";
 import { useMenuSide } from "./menu-side";
@@ -18,91 +16,35 @@ type Props = {
   onSelect: (id: string) => void;
   onDelay: (sec: number) => void;
   onOpenChange?: (open: boolean) => void;
-  useOverlayPopup?: boolean;
 };
-
-function buildAudioOverlayState(props: Props) {
-  return {
-    tracks: props.tracks,
-    selectedId: props.selectedId,
-    delaySec: props.delaySec,
-    engine: props.engine,
-  };
-}
 
 export function AudioMenu(props: Props) {
   const t = useT();
   const [open, setOpen] = useState(false);
-  const [forceInline, setForceInline] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const { side, measure } = useMenuSide(wrap, 360);
-  const useOverlay = props.useOverlayPopup === true;
   const propsRef = useRef(props);
   propsRef.current = props;
   const onOpenChange = props.onOpenChange;
   useEffect(() => {
-    onOpenChange?.(open && (forceInline || !useOverlay));
-  }, [open, forceInline, useOverlay, onOpenChange]);
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
 
   useEffect(() => {
-    if (useOverlay) return;
     if (!open) return;
     const close = (e: MouseEvent) => {
       if (!wrap.current?.contains(e.target as Node)) setOpen(false);
     };
     window.addEventListener("mousedown", close);
     return () => window.removeEventListener("mousedown", close);
-  }, [open, useOverlay]);
+  }, [open]);
 
-  useEffect(() => {
-    if (!useOverlay) return;
-    const offs: Array<Promise<UnlistenFn>> = [];
-    offs.push(
-      listen<{ id: string }>("modal://audio/select", (e) => {
-        propsRef.current.onSelect(e.payload.id);
-      }),
-    );
-    offs.push(
-      listen<{ sec: number }>("modal://audio/delay", (e) => {
-        propsRef.current.onDelay(e.payload.sec);
-      }),
-    );
-    offs.push(listen("modal://closed", () => setOpen(false)));
-    return () => offs.forEach((p) => p.then((fn) => fn()).catch(() => {}));
-  }, [useOverlay]);
 
-  useEffect(() => {
-    if (!useOverlay || !open) return;
-    void modalOverlayEmitState("audio", buildAudioOverlayState(props));
-  }, [useOverlay, open, props.tracks, props.selectedId, props.delaySec, props.engine]);
 
-  useEffect(() => {
-    return () => {
-      if (useOverlay && open) void modalOverlayClose();
-    };
-  }, [useOverlay, open]);
 
   const handleClick = () => {
     if (!open) measure();
-    if (!useOverlay) {
-      setOpen((v) => !v);
-      return;
-    }
-    if (open) {
-      void modalOverlayClose();
-      setOpen(false);
-      setForceInline(false);
-    } else {
-      void modalOverlayOpen("audio", buildAudioOverlayState(propsRef.current))
-        .then(() => {
-          setOpen(true);
-          setForceInline(false);
-        })
-        .catch(() => {
-          setOpen(true);
-          setForceInline(true);
-        });
-    }
+    setOpen((v) => !v);
   };
 
   return (
@@ -119,7 +61,7 @@ export function AudioMenu(props: Props) {
           <Languages size={19} strokeWidth={2} />
         </FocusButton>
       </Tooltip>
-      {open && (forceInline || !useOverlay) && (
+      {open && (
         <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex max-h-[400px] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>
           <AudioMenuBody {...props} onClose={() => setOpen(false)} />
         </div>

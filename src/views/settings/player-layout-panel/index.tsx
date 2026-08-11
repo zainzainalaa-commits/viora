@@ -40,7 +40,6 @@ import { EditorOverlay } from "./editor-overlay";
 import { OptionsSection } from "./options-section";
 import { EditLayoutCard, FooterBar, ThemeTabs } from "./panel-bars";
 import { ToggleRow } from "../shared";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
 import { useT } from "@/lib/i18n";
 
 const THEME_BASELINES: Record<ThemeId, PlayerChromeConfig> = {
@@ -91,12 +90,6 @@ export function PlayerLayoutPanel() {
     return () => window.removeEventListener("storage", onStorage);
   }, [bumpProfiles]);
 
-  useEffect(() => {
-    return pushActivityHint({
-      details: editorOpen ? t("Designing the player layout") : t("Customizing the player"),
-      state: t("Player layout"),
-    });
-  }, [editorOpen]);
 
   useEffect(() => {
     if (!confirmingReset) return;

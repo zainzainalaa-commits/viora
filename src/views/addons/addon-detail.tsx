@@ -1,15 +1,12 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { Check, Copy, Eye, EyeOff, ExternalLink, Loader2, Settings2, Star, Trash2, TrendingUp } from "lucide-react";
+import { Check, Copy, Eye, EyeOff, ExternalLink, Loader2, Star, Trash2, TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
 import { setActiveAddon } from "@/lib/active-addon";
-import { manifestToConfigureUrl, manifestToShareUrl } from "@/lib/addon-store";
-import { categorizeAddon, isAdultAddon, type ResolvedAddon } from "@/lib/addons-store/store";
+import { manifestToShareUrl } from "@/lib/addon-store";
+import { categorizeAddon, type ResolvedAddon } from "@/lib/addons-store/store";
 import { addonSiteUrl, rateOnSiteUrl, risingEntryFor, useRising } from "@/lib/providers/stremio-addons";
 import { useCommunity } from "@/lib/providers/stremio-addons-index";
-import { openInstallerViewport } from "@/components/installer-viewport";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
-import { isWeb } from "@/lib/platform";
 import { openUrl } from "@/lib/window";
 import { useT } from "@/lib/i18n";
 import { AddonDescription } from "./addon-description";
@@ -44,10 +41,6 @@ export function AddonDetail({
   const t = useT();
   const m = resolved.manifest;
   const c = resolved.curated;
-  const isConfigurable =
-    m?.behaviorHints?.configurable === true || m?.behaviorHints?.configurationRequired === true;
-  const web = isWeb();
-  const configureUrl = manifestToConfigureUrl(resolved.transportUrl);
   const stremioShareUrl = manifestToShareUrl(resolved.transportUrl, "stremio");
 
   const [copied, setCopied] = useState<"https" | "stremio" | null>(null);
@@ -82,19 +75,6 @@ export function AddonDetail({
     if (resolved.installed === optimisticInstalled) setOptimisticInstalled(null);
   }, [resolved.installed, optimisticInstalled]);
 
-  useEffect(() => {
-    const addonName = nameOf(resolved);
-    if (isAdultAddon(resolved))
-      return pushActivityHint({ details: "Browsing the addon store", state: "Stremio addons" });
-    const rawLogo = resolveAddonLogo(m?.logo, resolved.transportUrl);
-    const largeImage = rawLogo && rawLogo.startsWith("https://") ? rawLogo : undefined;
-    const shared = { largeImage, largeText: addonName };
-    const hint =
-      busy === "install"
-        ? { details: `Installing ${addonName}`, ...shared }
-        : { details: `Browsing ${addonName}`, state: "Stremio addon", ...shared };
-    return pushActivityHint(hint);
-  }, [resolved, m?.logo, busy]);
 
   useEffect(() => {
     const onChange = (e: Event) => {
@@ -240,37 +220,12 @@ export function AddonDetail({
                 <span className="block group-hover/pill:hidden">{t("Installed")}</span>
                 <span className="hidden group-hover/pill:block">{t("Remove")}</span>
               </FocusButton>
-            ) : isConfigurable ? (
-              <FocusButton
-                onClick={() => openInstallerViewport(configureUrl, nameOf(resolved), resolveAddonLogo(m?.logo, resolved.transportUrl))}
-                className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
-              >
-                <Settings2 size={14} strokeWidth={2.2} />
-                {t("Configure & install")}
-              </FocusButton>
             ) : (
               <FocusButton
                 onClick={() => void handleInstall()}
                 className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
               >
                 {t("Install")}
-              </FocusButton>
-            )}
-            {!installed && isConfigurable && !busy && !web && (
-              <FocusButton
-                onClick={() => void handleInstall()}
-                className="flex h-11 items-center gap-2 rounded-full border border-edge-soft px-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
-              >
-                {t("Install default")}
-              </FocusButton>
-            )}
-            {installed && isConfigurable && !busy && (
-              <FocusButton
-                onClick={() => openInstallerViewport(configureUrl, nameOf(resolved), resolveAddonLogo(m?.logo, resolved.transportUrl))}
-                className="flex h-11 items-center gap-2 rounded-full border border-edge-soft px-5 text-[13.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
-              >
-                <Settings2 size={14} strokeWidth={2.2} />
-                {t("Reconfigure")}
               </FocusButton>
             )}
             <FocusButton

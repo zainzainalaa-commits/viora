@@ -6,6 +6,7 @@ import type { AddonResultGroup } from "@/lib/search-addons";
 import type { AddonHit } from "@/lib/search-addon-index";
 import { getCachedPlaylist } from "@/lib/iptv/store";
 import { arabicAwareMatch } from "@/lib/iptv/rtl";
+import { rankMetas, titleRank } from "@/lib/search-rank";
 import type { Settings } from "@/lib/settings";
 import { safeFetch } from "@/lib/safe-fetch";
 
@@ -114,6 +115,27 @@ type JikanAnime = {
   score?: number;
 };
 
+/**
+ * An anime hit as the rest of the app already understands a title.
+ *
+ * Jikan is the one source that does not speak in `Meta`, so everything that
+ * wants to show an anime next to a film — a results grid, a detail view — has to
+ * translate it. Doing that in one place keeps the id scheme (`mal:`) in one
+ * place too, which is what the poster and rating providers key off.
+ */
+export function animeHitMeta(hit: AnimeHit): Meta {
+  return {
+    id: `mal:${hit.malId}`,
+    type: "anime",
+    name: hit.name,
+    poster: hit.poster ?? undefined,
+    background: hit.background ?? hit.poster ?? undefined,
+    description: hit.overview,
+    releaseInfo: hit.year ?? undefined,
+    imdbRating: hit.score > 0 ? hit.score.toFixed(1) : undefined,
+  };
+}
+
 export async function searchAnime(query: string, limit = 8): Promise<AnimeHit[]> {
   const q = query.trim();
   if (q.length < 2) return [];
@@ -186,21 +208,34 @@ export async function searchAll(
     | (RawMovie & { media_type: "movie"; popularity?: number })
     | (RawSeries & { media_type: "tv"; popularity?: number });
   let topRaw: Watchable | null = null;
+  // The headline result is the one that answers the query, not the one with the
+  // largest audience. Popularity used to decide this alone, which is how three
+  // letters of "Spider-Man" produced a blockbuster that merely happened to match
+  // — so it now only breaks a tie between titles that match equally well.
+  let topRank = Number.POSITIVE_INFINITY;
   let topPop = -1;
 
   for (const r of results) {
     if (r.media_type === "movie" && r.poster_path) {
-      movies.push(movieMeta(r));
+      const meta = movieMeta(r);
+      movies.push(meta);
+      // Judged on the name the viewer will read, which is not always TMDB's
+      // `title` — the mapper prefers the original title when translation is off.
+      const rank = titleRank(meta.name, trimmed);
       const pop = r.popularity ?? 0;
-      if (pop > topPop) {
+      if (rank < topRank || (rank === topRank && pop > topPop)) {
         topRaw = r;
+        topRank = rank;
         topPop = pop;
       }
     } else if (r.media_type === "tv" && r.poster_path) {
-      series.push(seriesMeta(r));
+      const meta = seriesMeta(r);
+      series.push(meta);
+      const rank = titleRank(meta.name, trimmed);
       const pop = r.popularity ?? 0;
-      if (pop > topPop) {
+      if (rank < topRank || (rank === topRank && pop > topPop)) {
         topRaw = r;
+        topRank = rank;
         topPop = pop;
       }
     } else if (r.media_type === "person") {
@@ -246,8 +281,11 @@ export async function searchAll(
     query: trimmed,
     topMatch,
     people: people.slice(0, 10),
-    movies: movies.slice(0, 12),
-    series: series.slice(0, 12),
+    // Ranked before the cap, not after: TMDB returns its page in popularity
+    // order, so cutting first can throw away the exact title the viewer typed
+    // because thirteen better-known films matched it too.
+    movies: rankMetas(movies, trimmed).slice(0, 12),
+    series: rankMetas(series, trimmed).slice(0, 12),
     liveTv: [],
     anime: [],
     addonGroups: [],

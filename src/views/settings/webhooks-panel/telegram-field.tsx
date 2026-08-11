@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvField } from "@/components/tv-controls";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StatusBadge, TelegramMark, TelegramTutorial, type FieldStatus } from "./webhook-field";
@@ -120,17 +121,19 @@ function SubField({
       <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
         {label}
       </span>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        spellCheck={false}
-        autoComplete="off"
-        className={`h-10 rounded-lg border border-edge bg-canvas px-3 text-[12.5px] text-ink outline-none transition-colors focus:border-ink-subtle ${
-          monospace ? "font-mono text-[12px]" : ""
-        }`}
-      />
+      <TvField value={value} onCommit={onChange} title={label} placeholder={placeholder}>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          spellCheck={false}
+          autoComplete="off"
+          className={`h-10 rounded-lg border border-edge bg-canvas px-3 text-[12.5px] text-ink outline-none transition-colors focus:border-ink-subtle ${
+            monospace ? "font-mono text-[12px]" : ""
+          }`}
+        />
+      </TvField>
     </label>
   );
 }

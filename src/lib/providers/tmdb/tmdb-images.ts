@@ -1,5 +1,4 @@
 import { lruSet } from "@/lib/cache";
-import { registerCache } from "@/lib/memory-profiler";
 import { get, IMG } from "./tmdb-client";
 import { imageLangParam, imageLangRank, pickedImageLangs } from "./tmdb-image-lang";
 
@@ -15,7 +14,6 @@ const MOVIE_ASSETS_MAX = 400;
 const movieAssetsCache = new Map<string, RawImages>();
 const movieAssetsInflight = new Map<string, Promise<RawImages | null>>();
 
-registerCache("tmdb:movieAssets", () => movieAssetsCache.size);
 
 export async function fetchMovieAssets(
   key: string,

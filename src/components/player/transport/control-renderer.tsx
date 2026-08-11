@@ -344,7 +344,6 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
           onSelect={ctx.onAudio}
           onDelay={ctx.onAudioDelay}
           onOpenChange={ctx.setAudioMenuOpen}
-          useOverlayPopup={ctx.useOverlayPopups}
         />
       );
     }
@@ -364,7 +363,6 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
           metaReleaseDate={ctx.metaReleaseDate}
           season={ctx.season}
           episode={ctx.episode}
-          useOverlayPopup={ctx.useOverlayPopups}
           onOpenChange={ctx.setSubtitleMenuOpen}
         />
       );

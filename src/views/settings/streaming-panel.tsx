@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvField } from "@/components/tv-controls";
 import { Check, Download, ExternalLink, Key, Loader2, Search, Trash2, X, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddonLogo } from "@/components/addon-logo";
@@ -289,13 +290,15 @@ export function LanguagesPicker({
           strokeWidth={2.2}
           className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-ink-subtle"
         />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={placeholder}
-          spellCheck={false}
-          className="h-10 w-full rounded-xl border border-edge bg-canvas ps-9 pe-3 text-[13.5px] text-ink outline-none transition-colors focus:border-ink placeholder:text-ink-subtle/60"
-        />
+        <TvField value={query} onCommit={setQuery} title={placeholder} placeholder={placeholder}>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={placeholder}
+            spellCheck={false}
+            className="h-10 w-full rounded-xl border border-edge bg-canvas ps-9 pe-3 text-[13.5px] text-ink outline-none transition-colors focus:border-ink placeholder:text-ink-subtle/60"
+          />
+        </TvField>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {shown.map((lang) => (

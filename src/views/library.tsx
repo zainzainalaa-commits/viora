@@ -23,7 +23,6 @@ import { SimklTab } from "./library/simkl-tab";
 import { TraktTab } from "./library/trakt-tab";
 import { WatchlistTab } from "./library/watchlist-tab";
 import { LetterboxdTab } from "./library/letterboxd-tab";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
 
 const LIBRARY_TAB_KEY = "harbor.library.tab";
 
@@ -82,26 +81,6 @@ export function LibraryView({ active }: { active: boolean }) {
     if (tab === "mal" && !malConnected) setTab("watchlist");
   }, [tab, malConnected]);
 
-  useEffect(() => {
-    if (!active) return;
-    const label =
-      tab === "watchlist"
-        ? "Browsing their watchlist"
-        : tab === "history"
-          ? "Browsing their watch history"
-          : tab === "lists"
-            ? "Browsing their lists"
-            : tab === "trakt"
-            ? "Browsing their Trakt library"
-            : tab === "simkl"
-              ? "Browsing their Simkl library"
-              : tab === "letterboxd"
-                ? "Browsing their Letterboxd library"
-              : tab === "mal"
-                ? "Browsing their MyAnimeList library"
-                : "Browsing their Stremio library";
-    return pushActivityHint({ details: label, state: "Library" });
-  }, [active, tab]);
 
   return (
     <main

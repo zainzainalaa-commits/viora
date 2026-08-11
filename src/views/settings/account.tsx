@@ -9,6 +9,7 @@ import { useTogether } from "@/lib/together/provider";
 import { useT } from "@/lib/i18n";
 import { ColorPicker } from "./color-picker";
 import { Section } from "./shared";
+import { DesktopOnly } from "@/components/tv-controls";
 import { AvatarRing } from "./account/avatar-ring";
 import { resizeAvatar } from "./account/avatar-utils";
 import { SyncedAddonsCard } from "./account/synced-addons-card";
@@ -77,6 +78,15 @@ export function AccountStub() {
 
   return (
     <div className="flex flex-col gap-5">
+      {/*
+        Identity is a desktop card.
+
+        A photo upload with no file manager to open, a strip of 624 avatars to
+        scroll past with a D-pad, and a colour swatch for a cursor that a
+        television does not have — none of it is reachable or useful here, and
+        all of it sits between the viewer and the account they came for.
+      */}
+      <DesktopOnly>
       <Section
         title={t("Harbor identity")}
         subtitle={t("How you appear in Watch Together, sessions, and chat. Sits on top of your Stremio account.")}
@@ -179,6 +189,7 @@ export function AccountStub() {
           </div>
         </div>
       </Section>
+      </DesktopOnly>
 
       <Section
         title={t("Profiles")}

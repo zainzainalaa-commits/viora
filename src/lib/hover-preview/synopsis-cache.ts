@@ -1,6 +1,5 @@
 import { lruSet } from "../cache";
 import { meta as cinemetaMeta, narrowMediaType, type Meta, type MetaType } from "../cinemeta";
-import { registerCache } from "../memory-profiler";
 
 export type PreviewMeta = {
   description?: string;
@@ -16,7 +15,6 @@ const cache = new Map<string, { v: PreviewMeta | null; t: number }>();
 const inflight = new Map<string, Promise<PreviewMeta | null>>();
 let chain: Promise<unknown> = Promise.resolve();
 
-registerCache("hover-preview:synopsis", () => cache.size);
 
 function prune(full: Meta): PreviewMeta {
   return {

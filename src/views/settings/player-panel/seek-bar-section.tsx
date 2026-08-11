@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvSlider } from "@/components/tv-controls";
 import { RotateCcw } from "lucide-react";
 import { useRef, useState } from "react";
 import seekPreviewBg from "@/assets/preview/seek-preview.png";
@@ -77,15 +78,23 @@ export function SeekBarPanel() {
       </SubField>
 
       <SubField label={t("Bar height")} value={`${heightVal}px`}>
-        <input
-          type="range"
+        <TvSlider
+          value={heightVal}
           min={3}
           max={14}
           step={1}
-          value={heightVal}
-          onChange={(e) => update({ seekBarHeight: Number(e.target.value) })}
-          className="w-full accent-ink"
-        />
+          onChange={(next) => update({ seekBarHeight: next })}
+        >
+          <input
+            type="range"
+            min={3}
+            max={14}
+            step={1}
+            value={heightVal}
+            onChange={(e) => update({ seekBarHeight: Number(e.target.value) })}
+            className="w-full accent-ink"
+          />
+        </TvSlider>
       </SubField>
 
       <SubField label={t("Bar color")}>
@@ -158,16 +167,24 @@ export function SeekBarPanel() {
         label={t("Buffer fill brightness")}
         value={`${Math.round((settings.seekBarFillOpacity ?? 0.35) * 100)}%`}
       >
-        <input
-          type="range"
+        <TvSlider
+          value={Math.round((settings.seekBarFillOpacity ?? 0.35) * 100)}
           min={5}
           max={100}
           step={5}
-          value={Math.round((settings.seekBarFillOpacity ?? 0.35) * 100)}
-          onChange={(e) => update({ seekBarFillOpacity: Number(e.target.value) / 100 })}
-          disabled={settings.seekBarFill === false}
-          className="w-full accent-ink disabled:opacity-40"
-        />
+          onChange={(next) => update({ seekBarFillOpacity: next / 100 })}
+        >
+          <input
+            type="range"
+            min={5}
+            max={100}
+            step={5}
+            value={Math.round((settings.seekBarFillOpacity ?? 0.35) * 100)}
+            onChange={(e) => update({ seekBarFillOpacity: Number(e.target.value) / 100 })}
+            disabled={settings.seekBarFill === false}
+            className="w-full accent-ink disabled:opacity-40"
+          />
+        </TvSlider>
       </SubField>
 
       <SubField label={t("Seek dot shape")}>
@@ -192,16 +209,24 @@ export function SeekBarPanel() {
       </SubField>
 
       <SubField label={currentShape === "image" ? t("Image size") : t("Dot size")} value={`${dotVal}px`}>
-        <input
-          type="range"
+        <TvSlider
+          value={dotVal}
           min={8}
           max={currentShape === "image" ? 200 : 64}
           step={1}
-          value={dotVal}
-          onChange={(e) => update({ seekDotSize: Number(e.target.value) })}
-          disabled={currentShape === "hidden"}
-          className="w-full accent-ink disabled:opacity-40"
-        />
+          onChange={(next) => update({ seekDotSize: next })}
+        >
+          <input
+            type="range"
+            min={8}
+            max={currentShape === "image" ? 200 : 64}
+            step={1}
+            value={dotVal}
+            onChange={(e) => update({ seekDotSize: Number(e.target.value) })}
+            disabled={currentShape === "hidden"}
+            className="w-full accent-ink disabled:opacity-40"
+          />
+        </TvSlider>
       </SubField>
 
       <SubField label={t("Dot image")}>

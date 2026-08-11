@@ -1,6 +1,5 @@
 import { lruSet } from "@/lib/cache";
 import type { Meta } from "@/lib/cinemeta";
-import { registerCache } from "@/lib/memory-profiler";
 import { registerEvictable } from "@/lib/maintenance";
 import { anilistArtById, anilistArtByMalId } from "@/lib/anilist/browse";
 import { anilistFranchise } from "@/lib/anilist/relations";
@@ -14,7 +13,6 @@ const CACHE_MAX = 600;
 const cache = new Map<string, string | undefined>();
 const inflight = new Map<string, Promise<string | undefined>>();
 
-registerCache("anime:backdrop", () => cache.size);
 registerEvictable("anime-backdrop", (aggressive) => {
   if (aggressive) cache.clear();
 });

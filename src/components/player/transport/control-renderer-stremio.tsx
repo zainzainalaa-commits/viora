@@ -357,7 +357,6 @@ export function RenderedStremioControl({
           metaReleaseDate={ctx.metaReleaseDate}
           season={ctx.season}
           episode={ctx.episode}
-          useOverlayPopup={ctx.useOverlayPopups}
           onOpenChange={ctx.setSubtitleMenuOpen}
         />
       );
@@ -372,7 +371,6 @@ export function RenderedStremioControl({
           onSelect={ctx.onAudio}
           onDelay={ctx.onAudioDelay}
           onOpenChange={ctx.setAudioMenuOpen}
-          useOverlayPopup={ctx.useOverlayPopups}
         />
       );
     case "draw-toggle":

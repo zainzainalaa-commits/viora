@@ -1,29 +1,32 @@
-import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { HeroCarousel, type Slide } from "@/components/hero-carousel";
+import { publishHomeRowCatalog } from "@/lib/home-row-catalog";
+
+/**
+ * Where the remote lands when Home opens.
+ *
+ * The hero is the one thing on the screen that is always present, always in the
+ * same place, and is what the viewer came to look at — the entry every TV app
+ * uses. Exported because the screen's layer declares it, and the layer lives in
+ * the router.
+ */
+export const HOME_HERO = "HOME_HERO";
 import { CollectionsRow } from "@/components/collections-row";
-import { TmdbNudge } from "@/components/nudge";
 import { Row, ScrollRootContext } from "@/components/row";
 import {
   applyHomeRowCustomization,
   effectiveOrder,
-  moveRow,
-  renameRow,
-  resetHomeRows,
-  toggleHeroSource,
-  toggleRowHidden,
-  toggleRowNumerals,
   type HomeRowCustomization,
 } from "@/lib/home-customization";
 import { StreamingRail } from "@/components/streaming-rail";
 import { TopRankCard } from "@/components/top-rank-card";
-import { hasTmdbProviderAddon, loadAddonRows, userAddons, type AddonRow } from "@/lib/addons";
+import { loadAddonRows, type AddonRow } from "@/lib/addons";
 import { isAnimeRow } from "@/views/anime";
 import { buildArabicHomeRows } from "@/lib/arabic/home-rows";
 import { useAuth } from "@/lib/auth";
 import { type Meta } from "@/lib/cinemeta";
-import { t, useT, useUiLanguage } from "@/lib/i18n";
+import { useT, useUiLanguage } from "@/lib/i18n";
 import { useSettings, type StreamingService } from "@/lib/settings";
 import { trackEvent } from "@/lib/discover";
 import { publishResumeStates } from "@/lib/hover-preview/store";
@@ -57,7 +60,6 @@ import { useMediaFavorites, type MediaEntry } from "@/lib/media-favorites";
 import { useLocalWatchlist } from "@/lib/local-watchlist";
 import { useScrollMemory, useView } from "@/lib/view";
 import { CustomizableRows } from "./home/customizable-rows";
-import { CustomizeBar } from "./home/customize-bar";
 import { CWSection } from "./home/cw-section";
 import { useCwAdvance } from "./home/hooks/use-cw-advance";
 import { usePinnedRows } from "./home/hooks/use-pinned-rows";
@@ -71,7 +73,6 @@ import {
 } from "./home/home-rows";
 import type { HomeRow } from "./home/home-types";
 import { RowSkeleton } from "./home/row-skeleton";
-import { AddSourceModal } from "@/components/add-source-modal";
 import type { SourceRow } from "@/lib/custom-sources";
 
 export function Home({ active = true }: { active?: boolean }) {
@@ -79,8 +80,6 @@ export function Home({ active = true }: { active?: boolean }) {
   const { settings, update } = useSettings();
   const t = useT();
   const uiLang = useUiLanguage();
-  const [editMode, setEditMode] = useState(false);
-  const [isAddSourceModalOpen, setAddSourceModalOpen] = useState(false);
   const [rows, setRows] = useState<HomeRow[]>([]);
   const [animeRows, setAnimeRows] = useState<HomeRow[]>([]);
   const [arabicRows, setArabicRows] = useState<HomeRow[]>([]);
@@ -97,7 +96,6 @@ export function Home({ active = true }: { active?: boolean }) {
   const [heroPool, setHeroPool] = useState<Meta[]>([]);
   const [items, setItems] = useState<LibraryItem[]>([]);
   const cwVersion = useCwDismissVersion();
-  const [tmdbProvidedByAddon, setTmdbProvidedByAddon] = useState(false);
   const [addonsTick, setAddonsTick] = useState(0);
   const { isConnected: traktConnected } = useTrakt();
   const { isConnected: simklConnected } = useSimkl();
@@ -174,12 +172,6 @@ export function Home({ active = true }: { active?: boolean }) {
         ? addons
         : addons.filter((a) => !isAnimeRow(a) && !isStreamingServiceRow(a.name));
       setRows(mergeRows(built.rows, filtered, { dedup: dedupRows }));
-
-      if (authKey) {
-        const installed = await userAddons(authKey).catch(() => []);
-        if (cancelled) return;
-        setTmdbProvidedByAddon(hasTmdbProviderAddon(installed));
-      }
     })().catch(console.error);
     return () => {
       cancelled = true;
@@ -661,45 +653,20 @@ export function Home({ active = true }: { active?: boolean }) {
     [editRows, homeRowsCustom],
   );
 
+  // Settings edits these rows but cannot assemble them: they come from the
+  // installed addons and a dozen settings, asynchronously, and only here. Home
+  // publishes their shape so the editor has something to list.
+  useEffect(() => {
+    publishHomeRowCatalog(
+      allCustomizableRows.map((r) => ({ key: r.key, name: r.name, type: r.type })),
+    );
+  }, [allCustomizableRows]);
+
   const mutateHomeRows = useCallback(
     (next: HomeRowCustomization) => update({ homeRows: next }),
     [update],
   );
-  const handleMove = useCallback(
-    (key: string, delta: -1 | 1) =>
-      mutateHomeRows(moveRow(homeRowsCustom, editRows, key, delta)),
-    [homeRowsCustom, editRows, mutateHomeRows],
-  );
-  const handleToggleHidden = useCallback(
-    (key: string) => mutateHomeRows(toggleRowHidden(homeRowsCustom, key)),
-    [homeRowsCustom, mutateHomeRows],
-  );
-  const handleRename = useCallback(
-    (key: string, label: string) => mutateHomeRows(renameRow(homeRowsCustom, key, label)),
-    [homeRowsCustom, mutateHomeRows],
-  );
-  const handleToggleNumerals = useCallback(
-    (key: string) => mutateHomeRows(toggleRowNumerals(homeRowsCustom, key)),
-    [homeRowsCustom, mutateHomeRows],
-  );
-  const handleToggleHero = useCallback(
-    (key: string) => mutateHomeRows(toggleHeroSource(homeRowsCustom, key)),
-    [homeRowsCustom, mutateHomeRows],
-  );
 
-  const handleSaveCustomSources = useCallback((newSources: SourceRow[]) => {
-    const existing = homeRowsCustom.customSources || [];
-    const next = [...existing];
-    for (const ns of newSources) {
-      const idx = next.findIndex((s) => s.id === ns.id);
-      if (idx >= 0) {
-        next[idx] = ns;
-      } else {
-        next.push(ns);
-      }
-    }
-    mutateHomeRows({ ...homeRowsCustom, customSources: next });
-  }, [homeRowsCustom, mutateHomeRows]);
 
   const handleDeleteCustomSource = useCallback((key: string) => {
     const id = key.replace(/^source-/, "");
@@ -742,67 +709,16 @@ export function Home({ active = true }: { active?: boolean }) {
     >
       <ScrollRootContext.Provider value={scrollEl}>
         <div data-tauri-drag-region className="relative flex flex-col gap-12">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-30">
-            <div className="pointer-events-auto">
-              <TmdbNudge suppress={tmdbProvidedByAddon || settings.homeMode === "classic"} />
-            </div>
-          </div>
-          {editMode && (
-            <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
-              <div className="pointer-events-auto rounded-xl border border-edge-soft bg-canvas/95 px-3 py-2 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.75)] backdrop-blur-md">
-                <CustomizeBar
-                  editMode={editMode}
-                  customization={homeRowsCustom}
-                  onToggleEdit={() => setEditMode((v) => !v)}
-                  onReset={() => mutateHomeRows(resetHomeRows())}
-                  onAddSource={() => setAddSourceModalOpen(true)}
-                />
-              </div>
-            </div>
-          )}
           {settings.homeMode !== "classic" && !homeRowsCustom.hidden.includes("hero") && (
             <div
               data-scroll-anchor="hero"
-              className={`relative ${settings.heroFull ? "-mt-24 lg:-mt-28 -mb-12 harbor-hero-full" : ""}`}
+              className={`relative -mt-24 lg:-mt-28 ${settings.heroFull ? "-mb-12 harbor-hero-full" : ""}`}
             >
-              {editMode && (
-                <PinnedRowControls
-                  label={t("Featured hero")}
-                  hidden={false}
-                  onToggleHidden={() => handleToggleHidden("hero")}
-                />
-              )}
               <HeroCarousel
                 slides={heroSlides}
                 full={settings.heroFull}
                 fullQuality={settings.heroFullQuality}
-              />
-              {!editMode && (
-                <div className="pointer-events-none absolute -bottom-3 end-5 z-20 flex justify-end [&>*]:pointer-events-auto">
-                  <CustomizeBar
-                    editMode={editMode}
-                    customization={homeRowsCustom}
-                    onToggleEdit={() => setEditMode((v) => !v)}
-                    onReset={() => mutateHomeRows(resetHomeRows())}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-          {editMode && homeRowsCustom.hidden.includes("hero") && (
-            <PinnedRowControls
-              label={t("Featured hero")}
-              hidden
-              onToggleHidden={() => handleToggleHidden("hero")}
-            />
-          )}
-          {!editMode && settings.homeMode !== "classic" && homeRowsCustom.hidden.includes("hero") && (
-            <div className="pointer-events-none absolute end-5 top-0 z-20 [&>*]:pointer-events-auto">
-              <CustomizeBar
-                editMode={editMode}
-                customization={homeRowsCustom}
-                onToggleEdit={() => setEditMode((v) => !v)}
-                onReset={() => mutateHomeRows(resetHomeRows())}
+                zoneKey={HOME_HERO}
               />
             </div>
           )}
@@ -821,13 +737,6 @@ export function Home({ active = true }: { active?: boolean }) {
           )}
           {settings.homeMode !== "classic" && top10.length >= 10 && !homeRowsCustom.hidden.includes("top10") && (
             <div data-scroll-anchor="top10">
-              {editMode && (
-                <PinnedRowControls
-                  label={t("Top 10 Trending This Week")}
-                  hidden={false}
-                  onToggleHidden={() => handleToggleHidden("top10")}
-                />
-              )}
               <Row
                 title={rows[0].name.toLowerCase().includes("top") ? t(rows[0].name) : t("Top 10 {name}", { name: t(rows[0].name) })}
                 min={180}
@@ -839,45 +748,18 @@ export function Home({ active = true }: { active?: boolean }) {
               </Row>
             </div>
           )}
-          {editMode && settings.homeMode !== "classic" && top10.length >= 10 && homeRowsCustom.hidden.includes("top10") && (
-            <PinnedRowControls
-              label={t("Top 10 Trending This Week")}
-              hidden
-              onToggleHidden={() => handleToggleHidden("top10")}
-            />
-          )}
           {settings.homeMode !== "classic" && settings.tmdbKey && !homeRowsCustom.hidden.includes("collections") && (
             <div data-scroll-anchor="collections">
-              {editMode && (
-                <PinnedRowControls
-                  label={t("Collections")}
-                  hidden={false}
-                  onToggleHidden={() => handleToggleHidden("collections")}
-                />
-              )}
               <CollectionsRow />
             </div>
-          )}
-          {editMode && settings.homeMode !== "classic" && settings.tmdbKey && homeRowsCustom.hidden.includes("collections") && (
-            <PinnedRowControls
-              label={t("Collections")}
-              hidden
-              onToggleHidden={() => handleToggleHidden("collections")}
-            />
           )}
           {rows.length === 0 && traktRows.length === 0 && simklRows.length === 0 && animeRows.length === 0 && arabicRows.length === 0 ? (
             Array.from({ length: 7 }).map((_, i) => <RowSkeleton key={`skel-${i}`} />)
           ) : (
             <CustomizableRows
-              rows={editMode ? editRows : visibleRows}
-              editMode={editMode}
+              rows={visibleRows}
               customization={homeRowsCustom}
               orderKeys={orderKeys}
-              onMove={handleMove}
-              onToggleHidden={handleToggleHidden}
-              onRename={handleRename}
-              onToggleNumerals={handleToggleNumerals}
-              onToggleHero={handleToggleHero}
               onLoadMore={loadMore}
               onDeleteCustomSource={handleDeleteCustomSource}
               onEditFolderImages={handleEditFolderImages}
@@ -891,41 +773,7 @@ export function Home({ active = true }: { active?: boolean }) {
         </div>
       </ScrollRootContext.Provider>
       <BackToTop scrollRef={scrollRef} />
-
-      <AddSourceModal
-        isOpen={isAddSourceModalOpen}
-        onClose={() => setAddSourceModalOpen(false)}
-        onSave={handleSaveCustomSources}
-      />
     </main>
   );
 }
 
-function PinnedRowControls({
-  label,
-  hidden,
-  onToggleHidden,
-}: {
-  label: string;
-  hidden: boolean;
-  onToggleHidden: () => void;
-}) {
-  return (
-    <div className="mb-3 flex items-center justify-between gap-3 rounded-xl border border-edge-soft/60 bg-elevated/40 px-4 py-2">
-      <span className="flex items-center gap-2 text-[13px] font-semibold text-ink">
-        <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-accent">
-          {t("Pinned")}
-        </span>
-        {label}
-        {hidden && <span className="text-[11.5px] font-normal text-ink-subtle">{t("· currently hidden")}</span>}
-      </span>
-      <FocusButton
-        type="button"
-        onClick={onToggleHidden}
-        className="h-8 rounded-md border border-edge-soft/60 bg-canvas/70 px-3 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
-      >
-        {hidden ? t("Show") : t("Hide")}
-      </FocusButton>
-    </div>
-  );
-}

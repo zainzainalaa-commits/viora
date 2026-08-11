@@ -11,7 +11,6 @@ import { useTopRankModal, type TopRankDept } from "@/lib/top-rank-modal";
 import { useView } from "@/lib/view";
 import { useT } from "@/lib/i18n";
 import { openUrl } from "@/lib/window";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
 import type { Meta } from "@/lib/cinemeta";
 
 const DEPT_LABELS: Record<TopRankDept, { title: string; subtitle: string }> = {
@@ -61,11 +60,6 @@ export function TopRankModal() {
     return () => el.removeEventListener("scroll", onScroll);
   }, [openDept]);
 
-  useEffect(() => {
-    if (!openDept) return;
-    const meta = DEPT_LABELS[openDept];
-    return pushActivityHint({ details: `Browsing ${meta.title}`, state: meta.subtitle });
-  }, [openDept]);
 
   const list = useMemo<PersonEntry[]>(() => (openDept ? topList(openDept) : []), [openDept, topList]);
   const filtered = useMemo(() => {

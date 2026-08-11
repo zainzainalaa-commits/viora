@@ -116,13 +116,19 @@ export function CustomizableRows({
   homeLanguages,
 }: {
   rows: HomeRow[];
-  editMode: boolean;
+  /**
+   * Optional, with the callbacks below, because arranging rows is no longer
+   * something every caller does: Home sends the user to Settings for it, while
+   * the catalog pages keep their own inline editor. A screen that cannot edit
+   * should not have to hand over editing callbacks it will never call.
+   */
+  editMode?: boolean;
   customization: HomeRowCustomization;
   orderKeys: string[];
-  onMove: (key: string, delta: -1 | 1) => void;
-  onToggleHidden: (key: string) => void;
-  onRename: (key: string, label: string) => void;
-  onToggleNumerals: (key: string) => void;
+  onMove?: (key: string, delta: -1 | 1) => void;
+  onToggleHidden?: (key: string) => void;
+  onRename?: (key: string, label: string) => void;
+  onToggleNumerals?: (key: string) => void;
   onToggleHero?: (key: string) => void;
   onLoadMore: (key: string) => void;
   onDeleteCustomSource?: (key: string) => void;
@@ -226,15 +232,15 @@ export function CustomizableRows({
                 hidden={hidden}
                 canMoveUp={idx > 0}
                 canMoveDown={idx >= 0 && idx < orderKeys.length - 1}
-                onMoveUp={() => onMove(row.key, -1)}
-                onMoveDown={() => onMove(row.key, 1)}
-                onToggleHidden={() => onToggleHidden(row.key)}
-                onRename={(label) => onRename(row.key, label)}
-                onResetName={() => onRename(row.key, "")}
+                onMoveUp={() => onMove?.(row.key, -1)}
+                onMoveDown={() => onMove?.(row.key, 1)}
+                onToggleHidden={() => onToggleHidden?.(row.key)}
+                onRename={(label) => onRename?.(row.key, label)}
+                onResetName={() => onRename?.(row.key, "")}
                 isRenamed={row.key in customization.renamed}
                 numeralsActive={(customization.numerals ?? []).includes(row.key)}
                 canNumerals={row.metas.length >= 10}
-                onToggleNumerals={() => onToggleNumerals(row.key)}
+                onToggleNumerals={() => onToggleNumerals?.(row.key)}
                 heroActive={customization.heroSource === row.key}
                 canHero={row.metas.some((m) => m.background || m.poster)}
                 onToggleHero={() => onToggleHero?.(row.key)}

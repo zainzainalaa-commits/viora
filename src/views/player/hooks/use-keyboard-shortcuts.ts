@@ -4,7 +4,6 @@ import { writePlayerPrefs } from "@/lib/player-prefs";
 import { writePlayerVolume } from "@/lib/player-volume";
 import { effectiveBinding, eventToBinding, isTypingTarget, type HotkeyId } from "@/lib/hotkeys";
 import { useSettings } from "@/lib/settings";
-import { isAnyFullscreen, exitAnyFullscreen } from "@/lib/fullscreen-state";
 import { getLeaveConfirm, openLeaveConfirm } from "@/lib/player/leave-confirm";
 import { round2 } from "../player-utils";
 
@@ -123,10 +122,6 @@ export function useKeyboardShortcuts(params: {
           return;
         }
         void (async () => {
-          if (settings.playerEscExitsFullscreen && (await isAnyFullscreen())) {
-            await exitAnyFullscreen();
-            return;
-          }
           if (settings.playerConfirmLeave) {
             openLeaveConfirm((remember) => {
               if (remember) update({ playerConfirmLeave: false });

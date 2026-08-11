@@ -42,15 +42,91 @@ function treeOf(): Record<string, TreeNode> {
  * present and a control being reachable, and it needs no guess about which
  * full-screen elements are "really" modal.
  */
+/**
+ * True when a scrolling ancestor is simply not showing this element yet.
+ *
+ * Clipped is not the same as covered. An item below the fold of a scrolling
+ * column is painted nowhere, so asking the document what sits at its centre
+ * answers with whatever is behind the column — and calling that "covered"
+ * rejects it. That closes a loop with no way out: the control cannot be focused
+ * because it is not visible, and it is never scrolled into view because nothing
+ * ever focuses it.
+ *
+ * Measured on the sidebar: its content is 859px inside a 500px window, so
+ * Calendar, My Library, Downloads, Add-ons, Settings and the account row were
+ * all unreachable by remote — the D-pad stopped dead at Live TV.
+ */
+function isClippedByScroller(el: HTMLElement, box: DOMRect): boolean {
+  let parent = el.parentElement;
+  while (parent && parent !== document.body) {
+    const style = getComputedStyle(parent);
+    const scrollsY = parent.scrollHeight > parent.clientHeight + 1 &&
+      (style.overflowY === "auto" || style.overflowY === "scroll");
+    const scrollsX = parent.scrollWidth > parent.clientWidth + 1 &&
+      (style.overflowX === "auto" || style.overflowX === "scroll");
+    if (scrollsY || scrollsX) {
+      // Judged at the point the hit test actually samples — the centre — not on
+      // the whole box. An item straddling the fold has its top inside the
+      // column and its centre outside it, so testing the box says "visible"
+      // while the hit test still lands past the edge and reports a cover. That
+      // gap is exactly where the sidebar's D-pad stopped.
+      const view = parent.getBoundingClientRect();
+      const cx = box.left + box.width / 2;
+      const cy = box.top + box.height / 2;
+      return cy < view.top || cy > view.bottom || cx < view.left || cx > view.right;
+    }
+    parent = parent.parentElement;
+  }
+  return false;
+}
+
 function isCovered(el: HTMLElement, box: DOMRect): boolean {
-  const x = box.left + box.width / 2;
-  const y = box.top + box.height / 2;
-  if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) return false;
-  const hit = document.elementFromPoint(x, y);
-  if (!hit) return false;
-  // The hit is normally a child of the control (its label or icon); an ancestor
-  // means nothing foreign is stacked in between. Anything else is a cover.
-  return !(el === hit || el.contains(hit) || hit.contains(el));
+  // Out of its scroller's window, not underneath anything: reachable as soon as
+  // focus asks for it, because landing there scrolls it in.
+  if (isClippedByScroller(el, box)) return false;
+
+  // Five points, because one point is a rumour.
+  //
+  // The centre alone is exactly where a card puts its own overlay control, and a
+  // control that is not a descendant reads as foreign no matter how small it is
+  // or who it belongs to. Measured on Home: every Continue Watching card is a
+  // 322x211 button with a 56x56 play button floating over its middle, so all of
+  // them were "covered", the whole row was unreachable, and down from the hero
+  // had nowhere to go — the engine picked the row, the guard rejected the card
+  // it landed on, and focus was put straight back on the hero. From the sofa
+  // that is a remote that ignores you.
+  //
+  // What the guard is actually asking is whether the viewer would see a
+  // highlight here, and the highlight is drawn on the border. So the corners are
+  // sampled too, and one clear point is enough. A dialog backdrop still covers
+  // every point of everything behind it, which is the case this exists for.
+  //
+  // The centre is tested first and returns on the spot when it is clear, so the
+  // ordinary control still costs the one hit-test it always did.
+  const spots = [
+    [0.5, 0.5],
+    [0.15, 0.15],
+    [0.85, 0.15],
+    [0.15, 0.85],
+    [0.85, 0.85],
+  ];
+
+  let tested = 0;
+  for (const [fx, fy] of spots) {
+    const x = box.left + box.width * fx;
+    const y = box.top + box.height * fy;
+    if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) continue;
+    const hit = document.elementFromPoint(x, y);
+    if (!hit) return false;
+    tested += 1;
+    // The hit is normally a child of the control (its label or icon); an ancestor
+    // means nothing foreign is stacked in between. Anything else is a cover.
+    if (el === hit || el.contains(hit) || hit.contains(el)) return false;
+  }
+
+  // Nothing could be sampled — the control is off screen rather than buried, and
+  // that is `isElementOffscreen`'s question, not this one.
+  return tested > 0;
 }
 
 /**
@@ -85,13 +161,40 @@ export function isElementCovered(el: HTMLElement): boolean {
   return isCovered(el, box);
 }
 
-/** A control that exists, is on screen, and can actually be seen. */
+/**
+ * Whether the DOM would actually give this element focus.
+ *
+ * The engine moves focus by calling `.focus()`, and on an element the document
+ * does not consider focusable that call silently does nothing. The engine's key
+ * advances anyway, so from that moment it is computing every direction from a
+ * node the user's highlight is not on — and the remote appears to freeze while
+ * the engine behaves correctly from the wrong place.
+ *
+ * This is not hypothetical. A section wrapping the Home hero became an empty
+ * registered leaf once the controls inside it were taken out of the focus tree:
+ * pressing right out of the sidebar moved the engine onto that `div`, `.focus()`
+ * did nothing, and the highlight sat in the sidebar while every later press was
+ * measured from the hero.
+ */
+function canHoldDomFocus(el: HTMLElement): boolean {
+  // An explicit tabindex counts even at -1: that value keeps an element out of
+  // the tab order while still letting `.focus()` place focus on it, which is
+  // exactly what a container-shaped control like a hero carousel wants.
+  if (el.hasAttribute("tabindex")) return true;
+  if (el.isContentEditable) return true;
+  return ["BUTTON", "A", "INPUT", "SELECT", "TEXTAREA", "SUMMARY", "VIDEO", "AUDIO", "IFRAME"].includes(
+    el.tagName,
+  );
+}
+
+/** A control that exists, is on screen, can actually be seen, and can take focus. */
 function isUsableLeaf(key: string): boolean {
   const node = treeOf()[key];
   if (!node || !node.focusable) return false;
   if (!isLeaf(key)) return false;
   const el = node.node;
   if (!(el instanceof HTMLElement)) return false;
+  if (!canHoldDomFocus(el)) return false;
   const box = el.getBoundingClientRect();
   if (box.width <= 0 || box.height <= 0) return false;
   const style = getComputedStyle(el);
@@ -119,10 +222,32 @@ function resolveUsable(key: string, depth = 0): string | null {
     const found = resolveUsable(candidate, depth + 1);
     if (found) return found;
   }
+  // Falling back to a child means picking where the screen *opens*, so the order
+  // has to be the one the viewer sees: topmost, then leftmost.
+  //
+  // `Object.keys` is registration order, which is the order things happened to
+  // mount — and on a network-backed page that changes between launches. Home
+  // opened on whichever row won the race, so the same app opened on a different
+  // row each time and the top of the page was never where focus began. Ordering
+  // by geometry makes the entry point deterministic on every screen without any
+  // of them having to declare one.
+  const children: { key: string; top: number; left: number }[] = [];
   for (const childKey of Object.keys(tree)) {
     const child = tree[childKey];
     if (child.parentFocusKey !== key || !child.focusable) continue;
-    const found = resolveUsable(childKey, depth + 1);
+    const el = child.node;
+    const box = el instanceof HTMLElement ? el.getBoundingClientRect() : null;
+    // A child with no box yet has not laid out; it sorts last rather than
+    // winning by accident of being registered first.
+    children.push({
+      key: childKey,
+      top: box && (box.width > 0 || box.height > 0) ? box.top : Number.POSITIVE_INFINITY,
+      left: box && (box.width > 0 || box.height > 0) ? box.left : Number.POSITIVE_INFINITY,
+    });
+  }
+  children.sort((a, b) => (Math.abs(a.top - b.top) > 1 ? a.top - b.top : a.left - b.left));
+  for (const child of children) {
+    const found = resolveUsable(child.key, depth + 1);
     if (found) return found;
   }
   return null;

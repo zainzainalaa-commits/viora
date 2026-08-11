@@ -15,6 +15,15 @@ import type { CinemanaItem } from "./cinemana-api";
  * get the title for the id, search on it, then confirm the match by IMDb id.
  * The confirmation is the important half — a title search for "Obsession"
  * returns a dozen unrelated films.
+ *
+ * Nothing here swallows a failure, and that is the whole discipline of the file.
+ * Opening a title runs the stream pipeline twice and the second run aborts the
+ * first, so an abort arrives on the ordinary path every single time. While the
+ * search was wrapped in `.catch(() => [])`, that abort became an empty result,
+ * an empty result became "Cinemana does not have this film", and that answer was
+ * cached for half an hour — so Cinemana reported nothing for Spider-Man:
+ * Homecoming, a film it has in six resolutions. A question that was never asked
+ * has no answer worth remembering.
  */
 
 const HIT_TTL_MS = 6 * 60 * 60 * 1000;
@@ -48,11 +57,15 @@ function normalize(title: string): string {
 async function titleFor(
   type: "movie" | "series",
   imdb: string,
+  signal?: AbortSignal,
 ): Promise<{ name: string; year: number | null } | null> {
   // Imported at call time to break a cycle: cinemeta reaches the network through
   // safeFetch, and safeFetch is what dispatches `local://` back into this addon.
   const { meta } = await import("@/lib/cinemeta");
-  const m = await meta(type, imdb).catch(() => null);
+  // Deliberately uncaught. `meta` answers null when Cinemeta genuinely has no
+  // record, which is a real answer and a legitimate miss; a rejection means the
+  // lookup did not happen, and the two must not end up looking the same.
+  const m = await meta(type, imdb, signal);
   if (!m?.name) return null;
   // Cinemeta carries the year in `releaseInfo`, as "2019" or a range "2019-2023".
   const year = parseInt(String(m.releaseInfo ?? m.releaseDate ?? "").slice(0, 4), 10);
@@ -96,9 +109,9 @@ async function findTitle(
   signal?: AbortSignal,
 ): Promise<CinemanaItem | null> {
   const type = series ? "series" : "movie";
-  const info = await titleFor(type, imdb);
+  const info = await titleFor(type, imdb, signal);
   if (!info) return null;
-  const results = await api.search(info.name, { type }, signal).catch(() => []);
+  const results = await api.search(info.name, { type }, signal);
   if (results.length === 0) return null;
   return pickMatch(results, { imdb, name: info.name, year: info.year, series });
 }
@@ -117,7 +130,7 @@ async function resolveUncached(id: string, signal?: AbortSignal): Promise<string
   const show = await findTitle(parsed.imdb, true, signal);
   if (!show) return null;
 
-  const episodes = await api.seasonEpisodes(api.rootIdOf(show), signal).catch(() => []);
+  const episodes = await api.seasonEpisodes(api.rootIdOf(show), signal);
   const match = episodes.find(
     (ep) => Number(ep.season) === parsed.season && Number(ep.episodeNummer) === parsed.episode,
   );
@@ -142,7 +155,11 @@ export async function resolveToCinemanaId(
 
   try {
     const nb = await resolveUncached(id, signal);
-    cache.set(id, { at: Date.now(), nb });
+    // An aborted lookup can still finish tidily — a step that had already
+    // resolved, a `null` handed back before the next call was made — so the
+    // signal is checked rather than trusting that abandonment always arrives as
+    // an exception. Nothing learned under an abort is worth keeping.
+    if (!signal?.aborted) cache.set(id, { at: Date.now(), nb });
     return nb;
   } catch {
     // A failed lookup is not a miss: caching it would hide the title until the

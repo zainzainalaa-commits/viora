@@ -1,7 +1,6 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { useState } from "react";
 import { LogIn } from "lucide-react";
-import stremioWordmark from "@/assets/stremio-wordmark.png";
 import { AuthModal } from "@/components/auth-modal";
 import { ContinueCard } from "@/components/continue-card";
 import { Row } from "@/components/row";
@@ -60,29 +59,19 @@ export function CWSection({ signedIn, items, watchedSet, onDismiss }: Props) {
     <div className="flex flex-col gap-4">
       <h3 className="text-[17px] font-medium tracking-tight text-ink">{t("Continue Watching")}</h3>
       <div className="flex items-center justify-center rounded-2xl border border-dashed border-edge px-6 py-14 text-center">
-        {signedIn ? (
-          <p className="text-[15.5px] leading-relaxed text-ink-muted">
-            {t("Nothing in progress yet. Press Play on something.")}
-          </p>
-        ) : (
-          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[15.5px] leading-relaxed text-ink-muted">
-            <span>{t("Sign in to")}</span>
-            <FocusButton
-              type="button"
-              onClick={() => setShowAuth(true)}
-              className="rounded-md transition-opacity hover:opacity-80"
-              aria-label={t("profile.signIn")}
-            >
-              <img
-                src={stremioWordmark}
-                alt="Stremio"
-                className="relative top-0.5 h-7 w-auto select-none grayscale invert"
-                draggable={false}
-              />
-            </FocusButton>
-            <span>{t("to bring in your library.")}</span>
-          </p>
-        )}
+        {/*
+          One neutral line either way.
+
+          The signed-out state used to invite the viewer to sign in to Stremio
+          right here, which duplicated Settings -> Stremio account and put a
+          control between the hero and the first row that a remote had to step
+          over on every trip down the page and back up.
+        */}
+        <p className="text-[15.5px] leading-relaxed text-ink-muted">
+          {signedIn
+            ? t("Nothing in progress yet. Press Play on something.")
+            : t("Nothing in progress yet. Sign in from Settings to bring in your library.")}
+        </p>
       </div>
       {authModal}
     </div>

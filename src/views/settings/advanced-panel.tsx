@@ -1,10 +1,9 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { VioraWordmark } from "@/components/icons/viora-wordmark";
 import { WEBSITE_URL, REPO_URL, SUPPORT_EMAIL } from "@/lib/brand";
-import { Check, Download, FlaskConical, Github, Link2, Loader2, Lock, RotateCw, Wrench } from "lucide-react";
+import { Check, Download, Github, Loader2, Lock, RotateCw, Wrench } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import cornerSvg from "@/assets/corner.svg";
-import harborDiscord from "@/assets/harbor-discord.svg";
 import { useAuth } from "@/lib/auth";
 import { useOnboarding } from "@/lib/onboarding";
 import {
@@ -19,21 +18,10 @@ import { findCorruptAnimeEntries, healCorruptAnimeEntries } from "@/lib/anime-cw
 import { clearResurfaceCache } from "@/lib/cw-resurface";
 import type { LibraryItem } from "@/lib/stremio";
 import { openUrl } from "@/lib/window";
-import {
-  checkForUpdate,
-  clearStagedUpdate,
-  openUpdatePanel,
-  updateAvailable,
-  useUpdate,
-} from "@/lib/updater/use-update";
-import { BetaTag } from "@/components/beta-tag";
 import { IS_BETA_BUILD } from "@/lib/build-info";
 import { BackupRow } from "./backup-row";
 import { SettingsRecoverRow } from "./settings-recover-row";
-import { BuildFeedback } from "./build-feedback";
-import { RollbackRow } from "./rollback-row";
 import { PrivacyRow } from "./privacy-row";
-import { TrayRow } from "./tray-row";
 import { Section } from "./shared";
 import { Signature } from "./signature";
 import { CustomCodeCard, DownloadsSection } from "./player-panel";
@@ -49,20 +37,6 @@ export function AdvancedPanel() {
   return (
     <>
       {!isTauri && <WebBuildBanner />}
-
-      {isTauri && (
-        <Section
-          title={t("Updates")}
-          subtitle={t("Checks for new versions and installs them in place. Nothing installs until you choose to, and a dismissed update never nags you again.")}
-        >
-          <div className="flex flex-col gap-2.5">
-            <UpdatesRow />
-            <BetaChannelRow />
-            <RollbackRow />
-            <BuildFeedback />
-          </div>
-        </Section>
-      )}
 
       <Section
         title={t("Backup & restore")}
@@ -85,33 +59,6 @@ export function AdvancedPanel() {
       >
         <PrivacyRow />
       </Section>
-
-      {isTauri && (
-        <Section
-          title={t("System tray")}
-          subtitle={t("Keep Harbor a click away. Close it to the system tray instead of quitting, and control it from the tray menu. These also mirror into the tray menu live.")}
-        >
-          <TrayRow />
-        </Section>
-      )}
-
-      {isTauri && (
-        <Section
-          title={t("Stremio install links")}
-          subtitle={t("Harbor catches stremio:// install links so the configure-and-install flow stays inside the app. Every install also syncs to your Stremio account, so the official app remains the canonical home for your library.")}
-        >
-          <StremioDeeplinkRow />
-        </Section>
-      )}
-
-      {isTauri && (
-        <Section
-          title={t("Discord Rich Presence")}
-          subtitle={t("Let your Discord friends see what you are watching, with the show poster and a live progress bar. Desktop only, and only your own Discord client is involved (nothing touches a Harbor server).")}
-        >
-          <DiscordPresenceRow />
-        </Section>
-      )}
 
       <Section
         title={t("API budget")}
@@ -231,274 +178,6 @@ function WebBuildBanner() {
         </div>
       </div>
     </section>
-  );
-}
-
-function BetaChannelRow() {
-  const t = useT();
-  const { settings, update } = useSettings();
-  const on = settings.betaUpdates;
-  return (
-    <div className="flex items-start gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3.5">
-      <span
-        className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-          on ? "bg-accent/15 text-accent" : "bg-raised text-ink-subtle"
-        }`}
-      >
-        <FlaskConical size={15} strokeWidth={2.2} />
-      </span>
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="text-[14px] font-medium text-ink">{t("Get beta updates")}</span>
-        <p className="text-[12.5px] leading-relaxed text-ink-subtle">
-          {t("Receive early builds with the newest fixes before they reach the stable release. Betas can be rough around the edges; switch this off to return to stable at the next update.")}
-        </p>
-      </div>
-      <FocusButton
-        type="button"
-        role="switch"
-        aria-checked={on}
-        onClick={() => {
-          if (on) clearStagedUpdate();
-          update({ betaUpdates: !on });
-        }}
-        className={`mt-1 flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition-colors ${
-          on ? "bg-accent" : "bg-raised"
-        }`}
-      >
-        <span
-          className={`h-5 w-5 rounded-full bg-canvas shadow-sm transition-transform ${
-            on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
-          }`}
-        />
-      </FocusButton>
-    </div>
-  );
-}
-
-function StremioDeeplinkRow() {
-  const t = useT();
-  const { settings, update } = useSettings();
-  const on = settings.stremioDeeplinkInstall;
-  return (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex items-start gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3.5">
-        <span
-          className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-            on ? "bg-accent/15 text-accent" : "bg-raised text-ink-subtle"
-          }`}
-        >
-          <Link2 size={15} strokeWidth={2.2} />
-        </span>
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="text-[14px] font-medium text-ink">
-            {t("Catch stremio:// install links inside Harbor")}
-          </span>
-          <p className="text-[12.5px] leading-relaxed text-ink-subtle">
-            {t("Harbor's in-app installer animates the manifest install and keeps you in context. Anything Harbor installs is also synced to your Stremio account, so the official app stays the canonical library. Turn this off and Stremio becomes the only handler for stremio:// links; Harbor still installs anything you trigger from inside the app (Configure & install, paste, drag-and-drop).")}
-          </p>
-        </div>
-        <FocusButton
-          type="button"
-          role="switch"
-          aria-checked={on}
-          onClick={() => update({ stremioDeeplinkInstall: !on })}
-          className={`mt-1 flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition-colors ${
-            on ? "bg-accent" : "bg-raised"
-          }`}
-        >
-          <span
-            className={`h-5 w-5 rounded-full bg-canvas shadow-sm transition-transform ${
-              on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
-            }`}
-          />
-        </FocusButton>
-      </div>
-      {on ? (
-        <p className="px-1 text-[11.5px] leading-relaxed text-ink-subtle">
-          {t("Heads up: if Stremio is also installed, Windows may ask which app to use the first time a stremio:// link fires. Pick Harbor to make it stick.")}
-        </p>
-      ) : (
-        <p className="px-1 text-[11.5px] leading-relaxed text-ink-subtle">
-          {t("stremio:// links now open in the Stremio app. Harbor will only install when you trigger it from inside Harbor.")}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function UpdatesRow() {
-  const t = useT();
-  const u = useUpdate();
-  const ready = updateAvailable(u);
-  const busy = u.status === "checking";
-  const status =
-    u.status === "checking"
-      ? t("Checking for a newer build.")
-      : u.status === "downloading"
-        ? t("Downloading {pct}%", { pct: Math.round(u.progress * 100) })
-        : u.status === "downloaded"
-          ? t("Downloaded. Ready to install and restart.")
-          : u.status === "installing"
-            ? t("Installing. Harbor will restart.")
-            : u.status === "available"
-              ? t("A new version is ready to download.")
-              : u.status === "uptodate"
-                ? t("You're on the latest version.")
-                : u.status === "error" && u.manualCheck
-                  ? t("Couldn't reach the update server. Try again in a moment.")
-                  : t("Harbor checks automatically every few hours.");
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3.5">
-      <div
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
-          ready ? "bg-accent/15 text-accent" : "bg-raised text-ink-muted"
-        }`}
-      >
-        <RotateCw size={18} strokeWidth={2} className={busy ? "animate-spin" : ""} />
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <span className="flex items-center gap-2 text-[14px] font-medium text-ink">
-          {ready && u.version ? t("Harbor {version} available", { version: u.version }) : `Harbor ${__APP_VERSION__}`}
-          <BetaTag />
-        </span>
-        <span className="text-[12.5px] text-ink-subtle">{status}</span>
-      </div>
-      {ready ? (
-        <FocusButton
-          onClick={openUpdatePanel}
-          className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 text-[13px] font-semibold text-[#1b1304] transition-[filter] hover:brightness-105"
-        >
-          <Download size={15} strokeWidth={2.2} /> {t("Update now")}
-        </FocusButton>
-      ) : (
-        <FocusButton
-          onClick={() => void checkForUpdate(true)}
-          disabled={busy}
-          className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg border border-edge px-3.5 text-[13px] font-medium text-ink transition-colors hover:bg-raised disabled:opacity-60"
-        >
-          {busy ? <Loader2 size={15} className="animate-spin" /> : <RotateCw size={15} strokeWidth={2.2} />}
-          {busy ? t("Checking") : t("Check for updates")}
-        </FocusButton>
-      )}
-    </div>
-  );
-}
-
-function DiscordPresenceRow() {
-  const t = useT();
-  const { settings, update } = useSettings();
-  const on = settings.discordRichPresence;
-  return (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex items-start gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3.5">
-        <img
-          src={harborDiscord}
-          alt=""
-          draggable={false}
-          className="h-14 w-auto shrink-0 self-center object-contain"
-        />
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="text-[14px] font-medium text-ink">{t("Show on Discord")}</span>
-          <p className="text-[12.5px] leading-relaxed text-ink-subtle">
-            {t("Display what you are watching on your Discord profile, with the show poster and a live progress bar. Requires the Discord desktop app to be running.")}
-          </p>
-        </div>
-        <FocusButton
-          type="button"
-          role="switch"
-          aria-checked={on}
-          onClick={() => update({ discordRichPresence: !on })}
-          className={`mt-1 flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition-colors ${
-            on ? "bg-accent" : "bg-raised"
-          }`}
-        >
-          <span
-            className={`h-5 w-5 rounded-full bg-canvas shadow-sm transition-transform ${
-              on ? "translate-x-5 rtl:-translate-x-5" : "translate-x-0"
-            }`}
-          />
-        </FocusButton>
-      </div>
-      {on && (
-        <div className="flex flex-col gap-1.5 ps-4">
-          <DiscordSubToggle
-            label={t("Hide the title")}
-            hint={t("Show 'Watching something' with no show name or poster.")}
-            on={settings.discordHideTitle}
-            onToggle={() => update({ discordHideTitle: !settings.discordHideTitle })}
-          />
-          <DiscordSubToggle
-            label={t("Show while paused")}
-            hint={t("Keep the presence visible when playback is paused.")}
-            on={settings.discordShowWhenPaused}
-            onToggle={() => update({ discordShowWhenPaused: !settings.discordShowWhenPaused })}
-          />
-          <DiscordSubToggle
-            label={t("Show while browsing")}
-            hint={t("Display 'Browsing Harbor' when nothing is playing.")}
-            on={settings.discordShowWhenBrowsing}
-            onToggle={() => update({ discordShowWhenBrowsing: !settings.discordShowWhenBrowsing })}
-          />
-          <DiscordSubToggle
-            label={t("Show poster")}
-            hint={t("Reveal the show or movie artwork. Off keeps the title but hides the poster.")}
-            on={settings.discordShowPoster}
-            onToggle={() => update({ discordShowPoster: !settings.discordShowPoster })}
-          />
-          <DiscordSubToggle
-            label={t("Show elapsed time")}
-            hint={t("Display the live progress bar showing how far into the title you are.")}
-            on={settings.discordShowTimestamp}
-            onToggle={() => update({ discordShowTimestamp: !settings.discordShowTimestamp })}
-          />
-          <DiscordSubToggle
-            label={t("Watch party join button")}
-            hint={t("Add a Join button with your room link while you're in a watch party.")}
-            on={settings.discordShowPartyJoin}
-            onToggle={() => update({ discordShowPartyJoin: !settings.discordShowPartyJoin })}
-          />
-          <p className="px-1 pt-1 text-[11.5px] leading-snug text-ink-subtle">
-            {t("And for the naughty ones: browsing or rating an adult addon never shows on Discord.")}
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function DiscordSubToggle({
-  label,
-  hint,
-  on,
-  onToggle,
-}: {
-  label: string;
-  hint: string;
-  on: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-lg border border-edge-soft/60 bg-canvas/30 px-3.5 py-2.5">
-      <div className="flex min-w-0 flex-1 flex-col">
-        <span className="text-[13px] font-medium text-ink">{label}</span>
-        <span className="text-[11.5px] leading-snug text-ink-subtle">{hint}</span>
-      </div>
-      <FocusButton
-        type="button"
-        role="switch"
-        aria-checked={on}
-        onClick={onToggle}
-        className={`flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition-colors ${
-          on ? "bg-accent" : "bg-raised"
-        }`}
-      >
-        <span
-          className={`h-4 w-4 rounded-full bg-canvas shadow-sm transition-transform ${
-            on ? "translate-x-4 rtl:-translate-x-4" : "translate-x-0"
-          }`}
-        />
-      </FocusButton>
-    </div>
   );
 }
 

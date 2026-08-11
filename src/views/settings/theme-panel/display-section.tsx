@@ -1,5 +1,6 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { useEffect, useState } from "react";
+import { TvSlider } from "@/components/tv-controls";
 import { FormatBadge, type BadgeKind } from "@/components/format-badge";
 import previewPoster from "@/assets/preview/poster1.webp";
 import { useSettings } from "@/lib/settings";
@@ -126,15 +127,26 @@ export function DisplaySection() {
       >
         <div className="flex items-center gap-4 px-1 py-1.5">
           <span className="w-32 shrink-0 text-[13.5px] font-medium text-ink">{t("Interface scale")}</span>
-          <input
-            type="range"
+          <TvSlider
+            value={settings.uiScale}
             min={0.8}
             max={1.6}
             step={0.05}
-            value={settings.uiScale}
-            onChange={(e) => update({ uiScale: parseFloat(e.target.value) })}
-            className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
-          />
+            onChange={(v) => update({ uiScale: v })}
+            label={t("Interface scale")}
+            format={(v) => `${Math.round(v * 100)}%`}
+            className="flex-1"
+          >
+            <input
+              type="range"
+              min={0.8}
+              max={1.6}
+              step={0.05}
+              value={settings.uiScale}
+              onChange={(e) => update({ uiScale: parseFloat(e.target.value) })}
+              className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
+            />
+          </TvSlider>
           <span className="w-14 shrink-0 text-end text-[13px] tabular-nums text-ink-muted">
             {Math.round(settings.uiScale * 100)}%
           </span>
@@ -186,15 +198,26 @@ export function DisplaySection() {
       >
         <div className="flex items-center gap-4 px-1 py-1.5">
           <span className="w-32 shrink-0 text-[13.5px] font-medium text-ink">{t("Shadow")}</span>
-          <input
-            type="range"
+          <TvSlider
+            value={settings.heroShadow}
             min={0}
             max={100}
             step={5}
-            value={settings.heroShadow}
-            onChange={(e) => update({ heroShadow: parseInt(e.target.value, 10) })}
-            className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
-          />
+            onChange={(v) => update({ heroShadow: v })}
+            label={t("Shadow")}
+            format={(v) => `${v}%`}
+            className="flex-1"
+          >
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={settings.heroShadow}
+              onChange={(e) => update({ heroShadow: parseInt(e.target.value, 10) })}
+              className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
+            />
+          </TvSlider>
           <span className="w-14 shrink-0 text-end text-[13px] tabular-nums text-ink-muted">
             {settings.heroShadow}%
           </span>
@@ -256,15 +279,26 @@ function SizeSlider({
   return (
     <div className="flex items-center gap-4 px-1 py-1.5">
       <span className="w-32 shrink-0 text-[13.5px] font-medium text-ink">{label}</span>
-      <input
-        type="range"
+      <TvSlider
+        value={value}
         min={0.8}
         max={1.6}
         step={0.05}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
-      />
+        onChange={onChange}
+        label={label}
+        format={(v) => `${Math.round(v * 100)}%`}
+        className="flex-1"
+      >
+        <input
+          type="range"
+          min={0.8}
+          max={1.6}
+          step={0.05}
+          value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value))}
+          className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
+        />
+      </TvSlider>
       <span className="w-14 shrink-0 text-end text-[13px] tabular-nums text-ink-muted">
         {Math.round(value * 100)}%
       </span>

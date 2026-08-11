@@ -2,6 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { X } from "lucide-react";
 import { useRef } from "react";
 import { useOnboarding } from "@/lib/onboarding";
+import { isDpadPrimary } from "@/lib/platform";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
 import { useT } from "@/lib/i18n";
@@ -11,7 +12,17 @@ export function PlayModeHint({ children }: { children: React.ReactNode }) {
   const { settings } = useSettings();
   const { isDismissed, dismiss } = useOnboarding();
   const { openSettings } = useView();
-  const visible = settings.instantPlay && !isDismissed("play-mode-hint");
+  /*
+    Not on a television.
+
+    It is a popover anchored above the Play button, dismissed by clicking
+    somewhere else — a pointer's idea of "somewhere else", which a remote does
+    not have. So it sits over the artwork explaining a setting nobody asked
+    about, and the two controls inside it are two extra stops between the viewer
+    and Play. The setting it describes is still in Settings, where it belongs.
+  */
+  const visible =
+    !isDpadPrimary() && settings.instantPlay && !isDismissed("play-mode-hint");
   const popoverRef = useRef<HTMLDivElement>(null);
 
   return (

@@ -1,7 +1,6 @@
 import { lruSet } from "@/lib/cache";
 import { meta as fetchCinemeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
 import { registerEvictable } from "@/lib/maintenance";
-import { registerCache } from "@/lib/memory-profiler";
 import { animeKitsuMeta } from "@/lib/providers/anime-kitsu-addon";
 import { tmdbAnimeLogo, tmdbIdFromImdb, tmdbImdbId, tmdbLogo } from "@/lib/providers/tmdb";
 import { shouldLocalizePosters } from "@/lib/providers/tmdb/tmdb-image-lang";
@@ -10,8 +9,6 @@ const CACHE_MAX = 1200;
 const cache = new Map<string, string | undefined>();
 const inflight = new Map<string, Promise<string | undefined>>();
 
-registerCache("logo:url", () => cache.size);
-registerCache("logo:inflight", () => inflight.size);
 
 registerEvictable("logo", (aggressive) => {
   if (!aggressive) return;

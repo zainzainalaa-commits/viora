@@ -1,11 +1,10 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { Sparkles, Star } from "lucide-react";
 import { usePosterChain } from "@/components/poster";
-import type { AnimeHit } from "@/lib/search";
+import { animeHitMeta, type AnimeHit } from "@/lib/search";
 import { useT } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
-import type { Meta } from "@/lib/cinemeta";
 
 export function AnimeRow({ items, onClose }: { items: AnimeHit[]; onClose: () => void }) {
   const { openMeta } = useView();
@@ -13,18 +12,8 @@ export function AnimeRow({ items, onClose }: { items: AnimeHit[]; onClose: () =>
   if (items.length === 0) return null;
 
   const open = (hit: AnimeHit) => {
-    const meta: Meta = {
-      id: `mal:${hit.malId}`,
-      type: "anime",
-      name: hit.name,
-      poster: hit.poster ?? undefined,
-      background: hit.background ?? hit.poster ?? undefined,
-      description: hit.overview,
-      releaseInfo: hit.year ?? undefined,
-      imdbRating: hit.score > 0 ? hit.score.toFixed(1) : undefined,
-    } as Meta;
     onClose();
-    openMeta(meta);
+    openMeta(animeHitMeta(hit));
   };
 
   return (

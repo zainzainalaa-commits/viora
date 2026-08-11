@@ -16,7 +16,7 @@ export function FocusSection({
   className,
   onFocus,
   rememberChild = true,
-  autoRestoreFocus = true,
+  autoRestoreFocus = false,
   isFocusBoundary = false,
   inert = false,
   scrolls = false,
@@ -30,6 +30,25 @@ export function FocusSection({
   onFocus?: () => void;
   /** Off for regions where focus should always enter at the first control. */
   rememberChild?: boolean;
+  /**
+   * Whether *any* focus arriving at this region is redirected to the child it
+   * remembers. Off by default, and that is deliberate.
+   *
+   * Remembering the child and auto-restoring it are two different things.
+   * Remembering is what makes returning to a screen land where you left, and it
+   * still happens — `resolveUsable` reads the remembered child when focus is
+   * placed explicitly. Auto-restoring also fires when directional navigation
+   * merely passes *through* the region, and then a press that should have
+   * carried focus onward is redirected back to where it came from.
+   *
+   * That is the loop reported on Home: up out of a row found no sibling above,
+   * bubbled to the parent, and the parent handed focus back to the row just
+   * left — so two rows traded focus forever and the top of the page could never
+   * be reached. The same mechanism froze the sidebar, whose parent remembered
+   * the very item focus was sitting on.
+   *
+   * Layers still opt in: a screen you leave and come back to *should* restore.
+   */
   autoRestoreFocus?: boolean;
   /** True for modals: the D-pad must not walk out into the page underneath. */
   isFocusBoundary?: boolean;
@@ -42,7 +61,7 @@ export function FocusSection({
   inert?: boolean;
   /** True when this element is the vertical scroll container for its content. */
   scrolls?: boolean;
-  as?: "div" | "aside" | "nav" | "section" | "main";
+  as?: "div" | "aside" | "nav" | "section" | "main" | "header" | "footer";
   /** Callers that already measure this element keep their own handle on it. */
   ref?: Ref<HTMLElement>;
 } & Record<string, unknown>) {
@@ -59,7 +78,10 @@ export function FocusSection({
     isFocusBoundary,
     saveLastFocusedChild: rememberChild,
     autoRestoreFocus,
-    trackChildren: true,
+    // See `useFocusRow`: this only feeds a `hasFocusedChild` no region reads, at
+    // the price of re-rendering the region — and a region is a whole page body,
+    // a sidebar, a settings panel — every time focus enters or leaves it.
+    trackChildren: false,
     onFocus,
   });
 

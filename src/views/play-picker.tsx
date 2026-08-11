@@ -19,8 +19,6 @@ import type { ScoredStream, Tier } from "@/lib/streams/types";
 import { isAddonRanked } from "@/lib/streams/addon-detect";
 import { useView, type PlayEpisode, type PlayerSrc } from "@/lib/view";
 import { prefetchSegments } from "@/lib/skip-intro";
-import { exitWindowFullscreen } from "@/lib/fullscreen-state";
-import { useWindowFullscreen } from "@/lib/use-window-fullscreen";
 import { AutoExhaustedModal } from "./play-picker/auto-exhausted-modal";
 import { AutoPlayTransition } from "./play-picker/auto-play-transition";
 import { BackdropLayer } from "./play-picker/backdrop-layer";
@@ -79,11 +77,9 @@ export function PlayPicker({
   const isDownload = intent === "download" || intent === "download-season";
   const { openPlayer, openSettings, exitPickerToDetail, setView } = useView();
   const backToDetail = () => {
-    void exitWindowFullscreen();
     exitPickerToDetail(meta);
   };
   const { settings, update } = useSettings();
-  const fs = useWindowFullscreen();
   const { authKey } = useAuth();
   const debrids = useDebridClients();
   const { snapshot: roomSnapshot, sendInvite, claimHost, wasInvitedTo, clientId, hostSource, roomGuestPick, lastInviteProto } = useTogether();
@@ -640,7 +636,6 @@ const streamIds = useStreamIds(meta, episode, imdbId, intent === "download-seaso
     >
       <BackdropLayer src={backdropSrc} />
 
-      <div aria-hidden data-tauri-drag-region={fs ? "false" : "true"} className="absolute inset-x-0 top-0 z-10 h-20" />
 
       <div className="relative mx-auto flex min-h-full w-full max-w-5xl flex-col gap-12 px-12 pb-32 pt-32">
         <PickerHeader meta={meta} episode={episode} onBack={backToDetail} onRefresh={refresh} refreshing={loading} />

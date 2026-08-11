@@ -53,6 +53,42 @@ function toMeta(item: CinemanaItem, arabic: boolean) {
   };
 }
 
+/**
+ * A release-style filename, because the pipeline reads one.
+ *
+ * Cinemana names its files after the CDN object — `9C7F3304-…_video.mp4` — and
+ * the stream parser is built for torrent releases, so it read that as the title
+ * of the film. Every rendition then failed the check that a stream's title
+ * matches the title being opened, and six perfectly good files were discarded as
+ * belonging to some other film. Measured against the shipped pipeline: with the
+ * GUID, 0 of 6 survive with `title-mismatch`; with this name, all of them do.
+ *
+ * Which language the name is built in is decided by who is asking. A `cnm:` id
+ * is checked against Cinemana's own meta, which follows the interface language;
+ * a `tt` id is checked against Cinemeta's, which is English. Writing the wrong
+ * one is the same defect again in the other direction.
+ */
+function releaseFilename(item: CinemanaItem, file: api.CinemanaFile, arabic: boolean): string {
+  const title = api
+    .titleOf(item, arabic)
+    .replace(/[\\/:*?"<>|]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const container = (file.container || "mp4").toLowerCase();
+  const resolution = file.resolution ? ` ${file.resolution}` : "";
+  if (api.isSeries(item)) {
+    const season = Number(item.season) || 1;
+    const episode = Number(item.episodeNummer);
+    const tag =
+      Number.isFinite(episode) && episode > 0
+        ? ` S${String(season).padStart(2, "0")}E${String(episode).padStart(2, "0")}`
+        : "";
+    return `${title}${tag}${resolution}.${container}`;
+  }
+  const year = item.year ? ` (${item.year})` : "";
+  return `${title}${year}${resolution}.${container}`;
+}
+
 /** Best-resolution-first, so the player's default pick is the good one. */
 function resolutionRank(file: api.CinemanaFile): number {
   const n = parseInt(String(file.resolution ?? file.name ?? "").replace(/\D/g, ""), 10);
@@ -215,10 +251,16 @@ export const cinemanaAddon: LocalAddon = {
     const nb = await resolveToCinemanaId(id, signal);
     if (!nb) return { streams: [] };
     const arabic = arabicUi();
-    const [files, subtitles] = await Promise.all([
+    // The record is fetched for its title: the files carry only CDN object
+    // names, and a stream that cannot say which film it belongs to is thrown
+    // away downstream. Not caught, for the same reason nothing else here is —
+    // a failed lookup must not be dressed up as an answer.
+    const [files, subtitles, item] = await Promise.all([
       api.transcodedFiles(nb, signal),
       subtitlesFor(nb, arabic, signal),
+      api.videoInfo(nb, signal),
     ]);
+    const nameArabic = id.startsWith(ID_PREFIX) ? arabic : false;
 
     const streams = files
       .filter((f) => !!f.videoUrl)
@@ -235,7 +277,7 @@ export const cinemanaAddon: LocalAddon = {
             // which is what makes this source work on Android where mpv is absent.
             notWebReady: false,
             bingeGroup: `cinemana-${label}`,
-            filename: f.transcoddedFileName,
+            filename: releaseFilename(item, f, nameArabic),
           },
         };
       });

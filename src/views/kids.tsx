@@ -3,7 +3,6 @@ import { BackToTop } from "@/components/back-to-top";
 import { CatalogRows } from "@/components/catalog/catalog-rows";
 import { CatalogCustomizeBar } from "@/components/catalog/customize-bar";
 import { ScrollRootContext } from "@/components/row";
-import { TmdbNudge } from "@/components/nudge";
 import { topMovies, type Meta } from "@/lib/cinemeta";
 import { recentlyPlayed } from "@/lib/playback-history";
 import { listPager } from "@/lib/list-pager";
@@ -177,7 +176,6 @@ export function Kids({ active = true }: { active?: boolean }) {
               kids
             />
           </div>
-          {!settings.tmdbKey && <TmdbNudge />}
           <CatalogRows
             rows={restRows}
             editMode={pageRows.editMode}

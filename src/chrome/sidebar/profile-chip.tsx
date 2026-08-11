@@ -1,11 +1,13 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
 import { Lock, LogIn, LogOut, Pencil, Plus, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AuthModal } from "@/components/auth-modal";
 import { CatAvatar } from "@/components/icons/cat-avatar";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { isDpadPrimary } from "@/lib/platform";
 import { verifyProfilePassword } from "@/lib/profile-password";
 import { useProfiles, type Profile } from "@/lib/profiles";
 import { useSettings } from "@/lib/settings";
@@ -21,6 +23,8 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
   const t = useT();
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  /** Signing out is one press from the chip on a TV, so it asks first. */
+  const [signOutOpen, setSignOutOpen] = useState(false);
   const [pendingSwitch, setPendingSwitch] = useState<Profile | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -52,10 +56,28 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
     ? null
     : settings.harborAvatar;
 
+  /*
+    On a television the chip is the action, not a menu.
+
+    The menu is drawn above the chip, inside the sidebar's scrolling column, so
+    pressing up from the chip reaches the sidebar entry above it and never the
+    popup — it is unreachable by remote, which makes signing in unreachable too.
+    A dialog does not have that problem, so the chip opens one directly: sign in
+    when signed out, sign out when signed in.
+  */
+  const tv = isDpadPrimary();
+
   return (
     <div ref={ref} className="relative">
       <FocusButton
-        onClick={() => setMenuOpen((o) => !o)}
+        onClick={() => {
+          if (!tv) {
+            setMenuOpen((o) => !o);
+            return;
+          }
+          if (user) setSignOutOpen(true);
+          else setAuthOpen(true);
+        }}
         aria-label={activeProfile?.name ?? user?.email ?? t("profile.fallback")}
         className={`flex w-full items-center justify-center gap-3.5 rounded-xl py-2.5 text-start transition-colors hover:bg-elevated/60 ${
           collapsed ? "" : "lg:justify-start lg:px-3"
@@ -72,7 +94,7 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
         </div>
       </FocusButton>
 
-      {menuOpen && (
+      {menuOpen && !tv && (
         <div
           className={`absolute bottom-full mb-1.5 overflow-hidden rounded-xl border border-edge bg-elevated shadow-[0_20px_40px_-10px_rgba(0,0,0,0.6)] ${
             collapsed ? "start-0 w-64" : "start-2 end-2 lg:start-4 lg:end-4"
@@ -114,39 +136,52 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
           )}
           {!kid && (
           <div className="flex flex-col">
-            <FocusButton
-              onClick={() => {
-                openPicker({ kind: "list" });
-                setMenuOpen(false);
-              }}
-              className="flex items-center gap-2.5 px-4 py-3 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
-            >
-              <Users size={14} strokeWidth={2.2} />
-              {t("profile.whoWatching")}
-            </FocusButton>
-            {activeProfile && (
-              <FocusButton
-                onClick={() => {
-                  openPicker({ kind: "edit", profileId: activeProfile.id });
-                  setMenuOpen(false);
-                }}
-                className="flex items-center gap-2.5 px-4 py-3 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
-              >
-                <Pencil size={14} strokeWidth={2.2} />
-                {t("profile.editThis")}
-              </FocusButton>
-            )}
-            {activeProfile?.isPrimary && (
-              <FocusButton
-                onClick={() => {
-                  openPicker({ kind: "create" });
-                  setMenuOpen(false);
-                }}
-                className="flex items-center gap-2.5 px-4 py-3 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
-              >
-                <Plus size={14} strokeWidth={2.2} />
-                {t("profile.new")}
-              </FocusButton>
+            {/*
+              Profile management is not a television feature.
+
+              Naming a profile, picking its colour and editing its avatar are
+              forms — text fields and pickers built for a pointer — and they sit
+              in the one menu a remote reaches constantly on its way to signing
+              in. On a TV the menu is the account and nothing else; the profile
+              screens stay exactly as they are on the desktop.
+            */}
+            {!isDpadPrimary() && (
+              <>
+                <FocusButton
+                  onClick={() => {
+                    openPicker({ kind: "list" });
+                    setMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2.5 px-4 py-3 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
+                >
+                  <Users size={14} strokeWidth={2.2} />
+                  {t("profile.whoWatching")}
+                </FocusButton>
+                {activeProfile && (
+                  <FocusButton
+                    onClick={() => {
+                      openPicker({ kind: "edit", profileId: activeProfile.id });
+                      setMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2.5 px-4 py-3 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
+                  >
+                    <Pencil size={14} strokeWidth={2.2} />
+                    {t("profile.editThis")}
+                  </FocusButton>
+                )}
+                {activeProfile?.isPrimary && (
+                  <FocusButton
+                    onClick={() => {
+                      openPicker({ kind: "create" });
+                      setMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2.5 px-4 py-3 text-start text-[13.5px] text-ink-muted transition-colors hover:bg-raised hover:text-ink"
+                  >
+                    <Plus size={14} strokeWidth={2.2} />
+                    {t("profile.new")}
+                  </FocusButton>
+                )}
+              </>
             )}
             {user ? (
               <FocusButton
@@ -177,6 +212,41 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
       )}
 
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
+      {/* Portalled: a `fixed` sheet rendered inside the sidebar is positioned
+          against the sidebar, not the screen, and lands half off the edge. */}
+      {signOutOpen && createPortal(
+        <div className="fixed inset-0 z-[220] flex items-center justify-center bg-black/72 backdrop-blur-md">
+          <FocusModal
+            onClose={() => setSignOutOpen(false)}
+            className="flex w-[min(92vw,460px)] flex-col gap-5 rounded-2xl border border-edge bg-elevated/97 p-7 shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)]"
+          >
+            <div className="flex flex-col gap-1">
+              <h2 className="text-[19px] font-semibold text-ink">{t("profile.signOut")}</h2>
+              <p className="text-[13px] text-ink-muted">{user?.email}</p>
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <FocusButton
+                onClick={() => setSignOutOpen(false)}
+                data-focus-primary
+                className="flex h-11 items-center rounded-full bg-raised px-5 text-[13px] font-semibold text-ink-muted transition-colors hover:bg-canvas/55 hover:text-ink"
+              >
+                {t("Cancel")}
+              </FocusButton>
+              <FocusButton
+                onClick={() => {
+                  signOut();
+                  setSignOutOpen(false);
+                }}
+                className="flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
+              >
+                <LogOut size={14} strokeWidth={2.2} />
+                {t("profile.signOut")}
+              </FocusButton>
+            </div>
+          </FocusModal>
+        </div>,
+        document.body,
+      )}
       {pendingSwitch && activeProfile?.kid?.parentPinHash && (
         <ParentalPinModal
           mode={{

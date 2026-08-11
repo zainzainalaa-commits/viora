@@ -24,7 +24,6 @@ import {
 } from "@/lib/theme";
 import { useSettings } from "@/lib/settings";
 import { pushOverlayPin } from "@/lib/overlay-pin";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
 
 function cssColorToHex(input: string): string {
   const s = input.trim();
@@ -123,13 +122,6 @@ export function ThemeStudio({ seed, onClose }: { seed?: ThemePreset; onClose: ()
 
   useEffect(() => pushOverlayPin(), []);
 
-  useEffect(() => {
-    const name = draft.name.trim();
-    return pushActivityHint({
-      details: name ? `Designing "${name}"` : "Designing a theme",
-      state: "Theme Studio",
-    });
-  }, [draft.name]);
 
   const draftPreset = useMemo<ThemePreset>(
     () => ({

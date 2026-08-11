@@ -8,7 +8,6 @@ import { useSettings } from "@/lib/settings";
 import { useScrollMemory, useView } from "@/lib/view";
 import { FAVORITES_GROUP_KEY, useFavorites } from "@/lib/iptv/favorites";
 import { clearPlaylistCache, getCachedPlaylist } from "@/lib/iptv/store";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
 import type { IptvChannel, IptvPlaylistSource } from "@/lib/iptv/types";
 import { CategorySidebar } from "./live/category-sidebar";
 import { ChannelGrid, EmptyResult, ErrorBlock } from "./live/channel-grid";
@@ -23,9 +22,7 @@ import { useChannelPipeline } from "./live/hooks/use-channel-pipeline";
 import { useEpg, useNowTick } from "./live/hooks/use-epg";
 import { useXtreamEpgFallback } from "./live/hooks/use-xtream-epg-fallback";
 import { useIptvPlaylist } from "./live/hooks/use-iptv-playlist";
-import { MultiviewView } from "./multiview";
 import { ViewModeToggle, type ViewMode } from "./live/view-mode-toggle";
-import { isWindowsDesktop } from "@/lib/platform";
 
 const ACTIVE_KEY = "harbor.iptv.active";
 const MODE_KEY = "harbor.iptv.viewMode";
@@ -51,7 +48,6 @@ function readMode(): ViewMode {
     const v = localStorage.getItem(MODE_KEY);
     if (v === "grid") return "grid";
     if (v === "guide") return "guide";
-    if (v === "multiview" && isWindowsDesktop()) return "multiview";
     return "home";
   } catch {
     return "home";
@@ -149,7 +145,7 @@ export function LiveView({ active }: { active: boolean }) {
     return () => window.removeEventListener("harbor:immersive", onImm);
   }, []);
   useEffect(() => {
-    if (mode !== "multiview" && immersive) setImmersive(false);
+    if (immersive) setImmersive(false);
   }, [mode, immersive]);
   useEffect(() => {
     setGroup(favoritesCountRef.current > 0 ? FAVORITES_GROUP_KEY : null);
@@ -194,10 +190,9 @@ export function LiveView({ active }: { active: boolean }) {
     return allSources.filter((s) => ids.has(s.id));
   }, [favorites.items, allSources]);
 
-  const multiview = mode === "multiview";
   const allPlaylists = useAllPlaylists(
-    multiview ? allSources : stubSources,
-    multiview || (inFavorites && stubSources.length > 0),
+    stubSources,
+    inFavorites && stubSources.length > 0,
   );
 
   const {
@@ -206,7 +201,6 @@ export function LiveView({ active }: { active: boolean }) {
     showTopRows,
     regionChannels,
     shownChannels,
-    mvChannels,
     visible,
     counts,
     groupLogos,
@@ -239,10 +233,6 @@ export function LiveView({ active }: { active: boolean }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   useScrollMemory("live", scrollRef, active);
 
-  useEffect(() => {
-    if (!active || mode !== "guide") return;
-    return pushActivityHint({ details: "Browsing the TV guide", state: "Live TV" });
-  }, [active, mode]);
 
   if (sources.length === 0) {
     return (
@@ -254,7 +244,7 @@ export function LiveView({ active }: { active: boolean }) {
 
   return (
     <main data-rail-flush className={`relative flex min-h-0 flex-1 ${immersive ? "pt-0" : "pt-20"}`}>
-      {playlist && sortedGroups.length > 0 && mode !== "multiview" && mode !== "home" && state.kind !== "error" && (
+      {playlist && sortedGroups.length > 0 && mode !== "home" && state.kind !== "error" && (
         <CategorySidebar
           groups={sortedGroups}
           active={group}
@@ -292,11 +282,7 @@ export function LiveView({ active }: { active: boolean }) {
             channelCount={playlist?.channels.length ?? null}
             loading={state.kind === "loading"}
           />
-          {mode === "multiview" ? (
-            <div className="flex h-11 flex-1 min-w-[220px] items-center px-1 text-[13px] text-ink-subtle">
-              {t("Pick channels into the grid below. Audio follows the highlighted tile.")}
-            </div>
-          ) : (
+          {(
             <div className="flex h-11 flex-1 min-w-[220px] items-center gap-2.5 rounded-xl border border-edge-soft/55 bg-elevated px-3.5">
               <Search size={15} strokeWidth={2} className="text-ink-subtle" />
               <input
@@ -328,18 +314,6 @@ export function LiveView({ active }: { active: boolean }) {
             <span className="min-w-0 flex-1 truncate">{epgError}</span>
           </div>
         )}
-        {mode === "multiview" ? (
-          <div className="flex min-h-0 flex-1 flex-col pt-2">
-            <MultiviewView
-              channels={mvChannels}
-              epg={epg}
-              active={active}
-              sources={allSources}
-              playlists={allPlaylists}
-              loading={allSources.length > 0 && allPlaylists.size < allSources.length}
-            />
-          </div>
-        ) : (
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 pt-5">
           {state.kind === "error" ? (
             <ErrorBlock
@@ -399,7 +373,6 @@ export function LiveView({ active }: { active: boolean }) {
             </>
           )}
         </div>
-        )}
       </div>
     </main>
   );

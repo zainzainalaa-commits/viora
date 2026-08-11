@@ -1,5 +1,4 @@
 import { lruSet } from "@/lib/cache";
-import { registerCache } from "@/lib/memory-profiler";
 import { safeFetch as tauriFetch } from "@/lib/safe-fetch";
 
 const BASE = "https://api4.thetvdb.com/v4";
@@ -126,7 +125,6 @@ const RESPONSE_CACHE_MAX = 200;
 const responseCache = new Map<string, unknown>();
 const responseInflight = new Map<string, Promise<unknown>>();
 
-registerCache("tvdb:response", () => responseCache.size);
 
 async function getJson<T>(apiKey: string, path: string): Promise<T | null> {
   const key = `${apiKey.slice(0, 6)}::${path}`;

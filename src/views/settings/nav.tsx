@@ -1,5 +1,7 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusSection } from "@/lib/tv-focus";
+import { TvTextEntry } from "@/components/tv-text-entry";
 import { useMemo, useState } from "react";
+import { isDpadPrimary } from "@/lib/platform";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 import { activeLayout } from "@/lib/theme";
@@ -308,7 +310,25 @@ type NavItem = {
   keywords?: string[];
 };
 
-const NAV_GROUPS: Array<{ heading: string | null; items: NavItem[] }> = [
+/**
+ * Sections with nothing behind them on a television.
+ *
+ * Not a judgement about what a viewer wants — a fact about what the build
+ * contains. `src-tauri/src/lib.rs` puts `mpv`, `anime4k`, `svp`, `pip`,
+ * `hdr_overlay`, `discord_rp`, `tray` and `multiview` behind `#[cfg(desktop)]`,
+ * so none of them are compiled into the Android binary. Asking the device
+ * confirms it: `mpv_available` answers "command not found". Video tuning is five
+ * sliders and a tone-mapping field for an engine that is not there.
+ *
+ * Hotkeys is the same emptiness from the other side: it binds keyboard
+ * shortcuts and listens on `keydown` to record them, and a remote has no
+ * keyboard to bind.
+ *
+ * The desktop build keeps both, untouched.
+ */
+const TV_HIDDEN_SECTIONS = new Set<string>(["mpv", "hotkeys"]);
+
+const NAV_GROUPS_ALL: Array<{ heading: string | null; items: NavItem[] }> = [
   {
     heading: null,
     items: [
@@ -536,6 +556,21 @@ const NAV_GROUPS: Array<{ heading: string | null; items: NavItem[] }> = [
 ];
 
 type SettingsOption = { label: string; section: SectionId; anchorTitle?: string; keywords?: string[] };
+
+/** True when this device does not build the panel behind that section. */
+/** A stable name per section, so the list can point at the active one. */
+function navFocusKey(id: string): string {
+  return 'SETTINGS_NAV_' + id.toUpperCase();
+}
+
+export function isSectionHiddenHere(id: string): boolean {
+  return isDpadPrimary() && TV_HIDDEN_SECTIONS.has(id);
+}
+
+const NAV_GROUPS = NAV_GROUPS_ALL.map((g) => ({
+  ...g,
+  items: g.items.filter((it) => !(isDpadPrimary() && TV_HIDDEN_SECTIONS.has(it.id))),
+})).filter((g) => g.items.length > 0);
 
 const SETTINGS_OPTIONS: SettingsOption[] = [
   { label: "Play button behavior", section: "player", anchorTitle: "Play button behavior", keywords: ["play mode", "instant", "instant play", "autoplay", "auto start", "manual picker", "choose stream", "source picker", "quality picker"] },
@@ -1081,6 +1116,8 @@ export function SettingsNav({
   const navLayout = activeLayout(settings.theme);
   const showBack = navLayout === "custom" || navLayout === "minui";
   const [query, setQuery] = useState("");
+  /** Open while the remote types a settings search on the on-screen keyboard. */
+  const [tvSearchOpen, setTvSearchOpen] = useState(false);
   const trimmed = query.trim().toLowerCase();
   const sectionLabel = useMemo(() => {
     const m = new Map<SectionId, string>();
@@ -1219,7 +1256,20 @@ export function SettingsNav({
   };
 
   return (
-    <nav className="relative flex w-72 shrink-0 flex-col bg-surface pt-24 shadow-[1px_0_0_var(--color-edge)]">
+    /*
+      The section list is a region with a declared way in.
+
+      Measured before this: walking down the panel and pressing left landed on
+      "Letterboxd" — the entry that happened to sit level with the scroll
+      position, not the section on screen. Naming the active item as the
+      region's preferred child makes leaving the panel land where the viewer
+      already is.
+    */
+    <FocusSection
+      as="nav"
+      preferredChildFocusKey={navFocusKey(active)}
+      className="relative flex w-72 shrink-0 flex-col bg-surface pt-24 shadow-[1px_0_0_var(--color-edge)]"
+    >
       <div data-tauri-drag-region className="h-3 shrink-0" />
       {showBack && (
         <div className="px-3 pb-1.5">
@@ -1236,6 +1286,29 @@ export function SettingsNav({
         </div>
       )}
       <div className="px-3 pb-3">
+        {isDpadPrimary() ? (
+          /*
+            The whole pill is the control, not a button sitting inside one.
+
+            Wrapping only the text left the icon outside the focus ring and a gap
+            where the ring stopped short of the pill's own edge — two nested
+            boxes, one highlighted. A remote has one thing to select here, so
+            there is one control, and the ring is the shape the viewer sees.
+          */
+          <FocusButton
+            onClick={() => setTvSearchOpen(true)}
+            aria-label={t("Search settings")}
+            className="flex h-10 w-full items-center gap-2 rounded-xl bg-elevated/70 px-3 text-start shadow-[inset_0_0_0_1px_var(--color-edge-soft)] transition-colors hover:bg-elevated"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink-subtle">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <span className={`min-w-0 flex-1 truncate text-[13px] ${query ? "text-ink" : "text-ink-subtle"}`}>
+              {query || t("Search settings")}
+            </span>
+          </FocusButton>
+        ) : (
         <div className="flex h-10 items-center gap-2 rounded-xl bg-elevated/70 px-3 shadow-[inset_0_0_0_1px_var(--color-edge-soft)]">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink-subtle">
             <circle cx="11" cy="11" r="7" />
@@ -1275,7 +1348,17 @@ export function SettingsNav({
             </FocusButton>
           )}
         </div>
+        )}
       </div>
+      {tvSearchOpen && (
+        <TvTextEntry
+          title={t("Search settings")}
+          initial={query}
+          placeholder={t("Search settings")}
+          onCommit={setQuery}
+          onClose={() => setTvSearchOpen(false)}
+        />
+      )}
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-3 pb-8">
         {matches && (
           <div className="flex flex-col gap-1">
@@ -1338,6 +1421,10 @@ export function SettingsNav({
               return (
                 <FocusButton
                   key={id}
+                  // Named, so the region can say where focus lands when it comes
+                  // back from the panel: the section being read, rather than
+                  // whichever one happens to sit level with the scroll position.
+                  focusKey={navFocusKey(id)}
                   onClick={() => {
                     onChange(id);
                     markSectionSeen(id);
@@ -1390,6 +1477,6 @@ export function SettingsNav({
           </div>
         ))}
       </div>
-    </nav>
+    </FocusSection>
   );
 }

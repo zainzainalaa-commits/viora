@@ -18,6 +18,15 @@ export type FocusableControlOptions = {
   autoFocus?: boolean;
   /** Called when focus arrives, for previews and scroll-into-view. */
   onFocus?: () => void;
+  /**
+   * Lets a control answer a direction itself instead of surrendering focus.
+   *
+   * Return `false` to consume the press. A carousel uses this so left and right
+   * change the slide while up and down still leave — the control is one stop on
+   * the page that happens to have internal state, rather than one stop per
+   * slide, which is how a TV hero is expected to behave.
+   */
+  onArrowPress?: (direction: string) => boolean;
 };
 
 const LONG_PRESS_MS = 550;
@@ -31,7 +40,7 @@ const LONG_PRESS_MS = 550;
  * than a filter applied afterwards.
  */
 export function useFocusableControl(options: FocusableControlOptions = {}) {
-  const { onSelect, onLongPress, focusKey, disabled = false, autoFocus = false, onFocus } = options;
+  const { onSelect, onLongPress, focusKey, disabled = false, autoFocus = false, onFocus, onArrowPress } = options;
 
   const longPressFired = useRef(false);
   const timer = useRef(0);
@@ -133,6 +142,7 @@ export function useFocusableControl(options: FocusableControlOptions = {}) {
     onEnterPress: onLongPress ? handleEnterPress : undefined,
     onEnterRelease: onLongPress ? handleEnterRelease : () => onSelect?.(),
     onFocus: handleFocus,
+    onArrowPress: onArrowPress ? (direction: string) => onArrowPress(direction) : undefined,
     // A control is a leaf; there is nothing below it to remember.
     saveLastFocusedChild: false,
   });

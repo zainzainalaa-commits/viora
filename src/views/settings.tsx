@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { FocusSection } from "@/lib/tv-focus";
 import { AccountStub } from "./settings/account";
 import { AdvancedPanel } from "./settings/advanced-panel";
 import { BasicsPanel } from "./settings/basics-panel";
 import { BugReportPanel } from "./settings/bug-report-panel";
 import { LibraryPanel, type LibraryKey } from "./settings/library-panel";
 import { LanguagePanel } from "./settings/language-panel";
-import { SettingsNav } from "./settings/nav";
-import { SettingsJumpBar } from "./settings/jump-bar";
-import { HotkeysPanel } from "./settings/hotkeys-panel";
+import { SettingsNav, isSectionHiddenHere } from "./settings/nav";
 import { PlayerLayoutPanel } from "./settings/player-layout-panel";
 import { QualityPanel } from "./settings/quality-panel";
-import { MpvPanel } from "./settings/mpv-panel";
 import { P2PPanel } from "./settings/p2p-panel";
 import { AnimePanel } from "./settings/anime-panel";
 import { TraktPanel } from "./settings/trakt-panel";
@@ -29,7 +27,6 @@ import { resetOmdbBudget } from "@/lib/providers/omdb";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
 import { useT } from "@/lib/i18n";
-import { SettingsUnsavedChanges } from "./settings/unsaved-changes";
 
 const IS_WEB = typeof window !== "undefined" && !("__TAURI_INTERNALS__" in window);
 
@@ -128,7 +125,7 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
 
 type SavedKey = LibraryKey | DebridKey;
 
-export function Settings({ active: activeView = true }: { active?: boolean }) {
+export function Settings(_: { active?: boolean } = {}) {
   const t = useT();
   const { settings, update } = useSettings();
   const [tmdbDraft, setTmdbDraft] = useState(settings.tmdbKey);
@@ -143,9 +140,17 @@ export function Settings({ active: activeView = true }: { active?: boolean }) {
   const [dlDraft, setDlDraft] = useState(settings.dlKey);
   const [savedKey, setSavedKey] = useState<SavedKey | null>(null);
   const { settingsSectionRequest } = useView();
-  const [active, setActive] = useState<SectionId>(
-    (settingsSectionRequest.section as SectionId | null) ?? "account",
-  );
+  /*
+    A section the navigation does not show must not be the one on screen.
+    Deep links, the jump bar and the remembered section can all name Video
+    tuning or Hotkeys, and on a television those panels are not built — landing
+    on one would be a page with a heading and nothing under it.
+  */
+  const [active, setActive] = useState<SectionId>(() => {
+    const requested = settingsSectionRequest.section as SectionId | null;
+    if (requested && !isSectionHiddenHere(requested)) return requested;
+    return "account";
+  });
   const [relayMode, setRelayMode] = useState<RelayMode>("panel");
   const [pendingAnchor, setPendingAnchor] = useState<string | null>(null);
   const scrollRef = useRef<HTMLElement>(null);
@@ -156,7 +161,8 @@ export function Settings({ active: activeView = true }: { active?: boolean }) {
   };
 
   useEffect(() => {
-    if (settingsSectionRequest.section) setActive(settingsSectionRequest.section as SectionId);
+    const requested = settingsSectionRequest.section as SectionId | null;
+    if (requested && !isSectionHiddenHere(requested)) setActive(requested);
   }, [settingsSectionRequest]);
 
   useEffect(() => {
@@ -239,8 +245,18 @@ export function Settings({ active: activeView = true }: { active?: boolean }) {
     <SettingsActiveContext.Provider value={{ setActive }}>
     <div className="flex h-full bg-canvas">
       <SettingsNav active={active} onChange={handleNav} />
-      <main
-        ref={scrollRef}
+      {/*
+        The panel body is a declared region, not a scrolling div.
+
+        It gives the focus engine a container to reveal into — settings cards run
+        far below the fold — and it separates the panel from the section list on
+        the left, so moving between them is a step between two regions rather
+        than a geometric guess among every control on the screen.
+      */}
+      <FocusSection
+        scrolls
+        as="main"
+        ref={scrollRef as React.Ref<HTMLElement>}
         className="flex-1 overflow-y-auto pt-28 pb-16"
       >
         <div data-tauri-drag-region className="mx-auto flex max-w-3xl flex-col gap-10 px-12">
@@ -303,13 +319,11 @@ export function Settings({ active: activeView = true }: { active?: boolean }) {
 
           {active === "player" && <QualityPanel />}
 
-          {active === "mpv" && <MpvPanel />}
 
           {active === "anime" && <AnimePanel />}
 
           {active === "playerLayout" && <PlayerLayoutPanel />}
 
-          {active === "hotkeys" && <HotkeysPanel />}
 
           {active === "trakt" && <TraktPanel />}
 
@@ -329,10 +343,8 @@ export function Settings({ active: activeView = true }: { active?: boolean }) {
 
           {active === "advanced" && <AdvancedPanel />}
         </div>
-      </main>
+      </FocusSection>
       <BackToTop scrollRef={scrollRef} />
-      <SettingsJumpBar scrollRef={scrollRef} activeSection={active} />
-      <SettingsUnsavedChanges active={activeView} />
     </div>
     </SettingsActiveContext.Provider>
   );

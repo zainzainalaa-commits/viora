@@ -44,6 +44,36 @@ export function ScrollProvider({
 }
 
 /**
+ * Where the container is actually visible, rather than where its box is.
+ *
+ * A scrolling page usually runs underneath the fixed chrome — the topbar is
+ * painted over the top of it, not above it — so revealing a control at the box's
+ * top edge parks it behind that chrome. The control is focused, on screen by
+ * every geometric test, and completely invisible: the highlight is simply gone,
+ * which is what "up from a row lands nowhere" looked like on Home.
+ *
+ * The obstruction is measured rather than configured. Asking the document what
+ * is painted at the top edge costs one hit test, needs no cooperation from the
+ * page, and follows the chrome automatically when a theme changes its height or
+ * drops the topbar entirely. `scroll-padding-top` is honoured first, because a
+ * container that has declared its own inset has said something more reliable
+ * than anything that can be inferred.
+ */
+function visibleTop(container: HTMLElement, box: DOMRect, x: number): number {
+  const declared = parseFloat(getComputedStyle(container).scrollPaddingTop);
+  if (Number.isFinite(declared) && declared > 0) return box.top + declared;
+
+  const hit = document.elementFromPoint(x, box.top + 1);
+  if (!hit || container.contains(hit) || hit.contains(container)) return box.top;
+  const cover = hit.getBoundingClientRect();
+  // Only something genuinely lying across the top counts. A cover taller than
+  // half the container is not chrome, it is a dialog, and scrolling past it
+  // would be the wrong answer to the wrong question.
+  if (cover.bottom <= box.top || cover.bottom > box.top + box.height * 0.5) return box.top;
+  return cover.bottom;
+}
+
+/**
  * Nudges a container so the node sits inside it with room to spare.
  *
  * The margin is what makes a carousel feel like it is ahead of the user: the
@@ -55,8 +85,12 @@ export function revealWithin(
   node: HTMLElement,
   axis: "horizontal" | "vertical",
 ): void {
-  const box = container.getBoundingClientRect();
+  const rect = container.getBoundingClientRect();
   const item = node.getBoundingClientRect();
+  const top = axis === "vertical" ? visibleTop(container, rect, item.left + item.width / 2) : rect.top;
+  const box = axis === "vertical" && top !== rect.top
+    ? new DOMRect(rect.x, top, rect.width, rect.bottom - top)
+    : rect;
 
   if (axis === "horizontal") {
     const lead = Math.min(item.width * 0.6, box.width * 0.25);

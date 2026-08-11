@@ -3,11 +3,30 @@ import { Check, ExternalLink, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/lib/auth";
+import { isDpadPrimary } from "@/lib/platform";
 import { useT } from "@/lib/i18n";
 import { openUrl } from "@/lib/window";
 import { StremioWebButton } from "./auth-modal/stremio-web-button";
+import { TvSignIn } from "./tv-sign-in";
 
+/**
+ * Every way into signing in ends up here — the sidebar's profile menu, the
+ * topbar, Continue Watching, the calendar, the add-on screen — so the choice of
+ * form belongs here rather than at each of those call sites.
+ *
+ * A remote gets the pairing flow: the desktop form is two text fields, and a
+ * D-pad cannot fill them.
+ *
+ * Split into a wrapper and the form so the decision sits above every hook. A
+ * conditional return with `useState` under it is a crash waiting for the first
+ * render that takes the other branch.
+ */
 export function AuthModal({ onClose }: { onClose: () => void }) {
+  if (isDpadPrimary()) return <TvSignIn onClose={onClose} />;
+  return <DesktopAuthModal onClose={onClose} />;
+}
+
+function DesktopAuthModal({ onClose }: { onClose: () => void }) {
   const { signIn } = useAuth();
   const t = useT();
   const [email, setEmail] = useState("");

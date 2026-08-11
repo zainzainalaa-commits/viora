@@ -6,7 +6,6 @@ import { CinemaHero } from "@/components/cinema-hero";
 import { Row, ScrollRootContext } from "@/components/row";
 import { TopRankCard } from "@/components/top-rank-card";
 import { PickCard } from "@/components/pick-card";
-import { TmdbNudge } from "@/components/nudge";
 import { topMovies, type Meta } from "@/lib/cinemeta";
 import { recentlyPlayed } from "@/lib/playback-history";
 import { useT } from "@/lib/i18n";
@@ -240,7 +239,6 @@ export function Movies({ active = true }: { active?: boolean }) {
             onToggleEdit={() => pageRows.setEditMode((v) => !v)}
             onReset={() => pageRows.persist(resetPageRows())}
           />
-          {!settings.tmdbKey && <TmdbNudge />}
           {letterboxdRows.map((row, i) => {
             const catalogId = row.key.replace("letterboxd-", "");
             return (

@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvField } from "@/components/tv-controls";
 import { REPO_URL } from "@/lib/brand";
 import { Github } from "lucide-react";
 import { useState } from "react";
@@ -84,21 +85,34 @@ export function LanguagePanel() {
         <p className="text-[12px] leading-relaxed text-ink-subtle">
           {t("Comma-separated words. Audio or subtitle tracks whose name matches any of these are skipped during automatic selection. You can still pick them by hand in the player.")}
         </p>
-        <input
-          type="text"
+        <TvField
           value={blockDraft}
-          onChange={(e) => {
-            setBlockDraft(e.target.value);
+          onCommit={(v) => {
+            setBlockDraft(v);
             update({
-              trackBlockWords: e.target.value
-                .split(",")
-                .map((w) => w.trim())
-                .filter(Boolean),
+              trackBlockWords: v.split(",").map((w) => w.trim()).filter(Boolean),
             });
           }}
+          title={t("Skip tracks whose name matches")}
           placeholder={t("commentary, descriptive")}
-          className="h-11 w-full max-w-[340px] rounded-xl border border-edge-soft bg-canvas/40 px-3.5 text-[13.5px] text-ink outline-none transition-colors focus:border-edge"
-        />
+          className="max-w-[340px]"
+        >
+          <input
+            type="text"
+            value={blockDraft}
+            onChange={(e) => {
+              setBlockDraft(e.target.value);
+              update({
+                trackBlockWords: e.target.value
+                  .split(",")
+                  .map((w) => w.trim())
+                  .filter(Boolean),
+              });
+            }}
+            placeholder={t("commentary, descriptive")}
+            className="h-11 w-full max-w-[340px] rounded-xl border border-edge-soft bg-canvas/40 px-3.5 text-[13.5px] text-ink outline-none transition-colors focus:border-edge"
+          />
+        </TvField>
       </div>
     </Section>
 

@@ -1,7 +1,8 @@
-import { FocusButton, FocusSection } from "@/lib/tv-focus";
+import { useFocusableControl } from "@/lib/tv-focus";
 import { useEffect, useRef, useState } from "react";
 import { observe, usePageVisible } from "@/lib/visibility";
 import { isRtl, useT, useUiLanguage } from "@/lib/i18n";
+import { useView } from "@/lib/view";
 import { Hero } from "./hero";
 import type { Meta } from "@/lib/cinemeta";
 
@@ -13,7 +14,19 @@ const SNAP_RATIO = 0.18;
 const FLICK_VELOCITY = 0.45;
 const SLIDE_GAP_PX = 22;
 
-export function HeroCarousel({ slides, full = false, fullQuality = false }: { slides: Slide[]; full?: boolean; fullQuality?: boolean }) {
+export function HeroCarousel({
+  slides,
+  full = false,
+  fullQuality = false,
+  zoneKey,
+}: {
+  slides: Slide[];
+  full?: boolean;
+  fullQuality?: boolean;
+  /** Names the hero as a zone so a screen can point its entry point at it. */
+  zoneKey?: string;
+}) {
+  const { openMeta } = useView();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -47,9 +60,40 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
     if (active >= slides.length) setActive(0);
   }, [slides.length, active]);
 
+  // The hero is one stop on the page, not one per slide.
+  //
+  // Left and right belong to the carousel while focus is here, so the viewer
+  // browses the posters with the same two keys they use everywhere else. Up and
+  // down are handed back to the engine, and so is left on the first slide —
+  // without that last exception the hero would be a trap with no way back to the
+  // navigation.
+  //
+  // Declared above the early return below: hooks must run on every render, and
+  // putting this after it crashed the app.
+  const heroFocus = useFocusableControl({
+    focusKey: zoneKey,
+    onSelect: () => {
+      const m = slides[active]?.meta;
+      if (m) openMeta(m);
+    },
+    onArrowPress: (direction) => {
+      if (slides.length < 2) return true;
+      if (direction === "right") {
+        setActive((i) => Math.min(i + 1, slides.length - 1));
+        return false;
+      }
+      if (direction === "left") {
+        if (active === 0) return true;
+        setActive((i) => Math.max(i - 1, 0));
+        return false;
+      }
+      return true;
+    },
+  });
+
   if (slides.length === 0) {
     return (
-      <div className={`animate-pulse border border-edge-soft bg-elevated/30 ${full ? "min-h-[clamp(560px,82vh,920px)] rounded-none" : "min-h-[560px] rounded-[28px]"}`} />
+      <div className={`animate-pulse border border-edge-soft bg-elevated/30 ${full ? "min-h-[clamp(420px,62vh,720px)] rounded-none" : "min-h-[420px] rounded-[28px]"}`} />
     );
   }
 
@@ -121,13 +165,31 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
   const trackTransform = `translate3d(calc(${-active * 100}% + ${offset - active * SLIDE_GAP_PX}px), 0, 0)`;
 
   return (
+    // A plain element, and that is the whole point.
+    //
+    // A region rendered *here* does not become the parent of `heroFocus`: the
+    // hook above runs in whatever context wraps this component, so the region and
+    // the stage registered as siblings — two focusables over one rectangle, the
+    // outer 30px taller. Pressing down off the hero found that twin as the
+    // nearest thing below, moved to it, and since a region is not a leaf the
+    // engine descended into its only stop, the hero. Focus never left, and Home
+    // had no way down to the rows at all.
+    //
+    // Nothing inside a slide registers, so neither wrapper was buying anything to
+    // begin with: the hero is one stop, as declared above.
     <div
       className={full ? "relative" : "flex flex-col gap-5"}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <div
-        ref={viewportRef}
+        ref={(node) => {
+          viewportRef.current = node;
+          (heroFocus.ref as { current: HTMLElement | null }).current = node;
+        }}
+        tabIndex={-1}
+        {...heroFocus.focusProps}
+        data-hero-stage=""
         dir="ltr"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -154,16 +216,18 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
             const distance = Math.abs(i - active);
             const shouldMount = distance <= 1 || dragging;
             return (
-              // `inert` is what keeps the remote on the slide the viewer is
-              // looking at. The slides sit side by side, so the ones that are
-              // not active are off the edge of the screen — already excluded
-              // from the mouse by `pointer-events: none` and from screen
-              // readers by `aria-hidden`, but the focus engine reads neither,
-              // and would happily move to a Play button nobody can see.
-              <FocusSection
+              // Native `inert`, not a focus region.
+              //
+              // The slides sit side by side, so the ones that are not active are
+              // off the edge of the screen — excluded from the mouse by
+              // `pointer-events: none` and from screen readers by `aria-hidden`.
+              // A region here was meant to hide them from the remote too, but a
+              // slide holds no focusable of its own: it was registering one
+              // container per slide to guard nothing, under a parent that broke
+              // the way down. The attribute covers what is actually inside.
+              <div
                 key={`${s.meta.id}-${i}`}
                 inert={!isActive}
-                rememberChild={false}
                 dir={rtl ? "rtl" : "ltr"}
                 aria-hidden={!isActive}
                 className="w-full shrink-0"
@@ -184,9 +248,9 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
                     fullQuality={fullQuality}
                   />
                 ) : (
-                  <div className={`w-full bg-elevated/30 ${full ? "h-[clamp(560px,82vh,920px)] rounded-none" : "h-[560px] rounded-[28px]"}`} />
+                  <div className={`w-full bg-elevated/30 ${full ? "h-[clamp(420px,62vh,720px)] rounded-none" : "h-[420px] rounded-[28px]"}`} />
                 )}
-              </FocusSection>
+              </div>
             );
           })}
         </div>
@@ -198,7 +262,12 @@ export function HeroCarousel({ slides, full = false, fullQuality = false }: { sl
           }`}
         >
           {slides.map((_, i) => (
-            <FocusButton
+            // Out of the focus tree with the hero's actions: the slide already
+            // advances on its own, and a remote had to step through one stop per
+            // slide to get past it.
+            <button
+              type="button"
+              tabIndex={-1}
               key={i}
               onClick={() => setActive(i)}
               aria-label={t("Slide {n}", { n: i + 1 })}

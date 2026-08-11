@@ -30,6 +30,7 @@ const DOUBLE_FIRE_WINDOW_MS = 400;
 export function FocusButton({
   onClick,
   onLongPress,
+  onArrowPress,
   focusKey,
   autoFocus,
   disabled,
@@ -37,6 +38,17 @@ export function FocusButton({
   ...rest
 }: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "autoFocus"> & {
   onLongPress?: () => void;
+  /**
+   * Lets the control answer a direction itself. Return `false` to keep the
+   * press; anything else lets focus move on as usual.
+   *
+   * This is how a value becomes one stop instead of three. A slider offered as
+   * a minus button, a readout and a plus button costs three stops on every pass
+   * down a settings panel, for a control the viewer adjusts once a year — and it
+   * still cannot be dragged with a remote. One stop that takes left and right is
+   * both fewer stops and the gesture people already expect from a television.
+   */
+  onArrowPress?: (direction: string) => boolean;
   focusKey?: string;
   autoFocus?: boolean;
   ref?: Ref<HTMLButtonElement>;
@@ -52,6 +64,7 @@ export function FocusButton({
       if (node instanceof HTMLElement) node.click();
     },
     onLongPress,
+    onArrowPress,
     focusKey,
     autoFocus,
     disabled,

@@ -1,6 +1,5 @@
-import { FocusButton } from "@/lib/tv-focus";
 import { memo, useEffect, useRef, useState } from "react";
-import { Check, Play, Plus, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
 import { MetaAwardsCorner } from "@/components/meta-awards-corner";
 import { RtBadge } from "@/components/rt-badge";
@@ -14,7 +13,6 @@ import { useLocalizedOverview } from "@/lib/use-localized-overview";
 import { fetchTrailer, prefetchTrailer, trailerSrc, type TrailerInfo } from "@/lib/trailer";
 import { useView } from "@/lib/view";
 import { usePageVisible } from "@/lib/visibility";
-import { toggleWatchlist, useInWatchlist } from "@/lib/watchlist";
 
 export const Hero = memo(function Hero({
   meta,
@@ -38,14 +36,12 @@ export const Hero = memo(function Hero({
   const t = useT();
   const description = useLocalizedOverview(meta);
   const resolvedImdb = useTmdbImdbId(meta.id);
-  const inWatchlist = useInWatchlist(meta.id, [resolvedImdb]);
   const [bgUrl, setBgUrl] = useState<string | undefined>(meta.background);
   const [bgResolved, setBgResolved] = useState<boolean>(!!meta.background);
   const bg = bgUrl ? upsizeTmdb(bgUrl, fullQuality) : bgResolved ? meta.poster : undefined;
   const [trailerCandidates, setTrailerCandidates] = useState<string[]>([]);
   const [trailerInfo, setTrailerInfo] = useState<TrailerInfo | null>(null);
   const [videoReady, setVideoReady] = useState(false);
-  const [overControls, setOverControls] = useState(false);
   const [logo, setLogo] = useState<string | undefined>(meta.logo);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const [logoResolved, setLogoResolved] = useState<boolean>(!!meta.logo);
@@ -53,7 +49,7 @@ export const Hero = memo(function Hero({
   const omdb = useOmdbScores(resolvedImdb ?? undefined);
   const imdbRating = useImdbRating(meta, resolvedImdb);
   const pageVisible = usePageVisible();
-  const wantsPlayback = !!playTrailer && !!trailerInfo && !overControls && pageVisible;
+  const wantsPlayback = !!playTrailer && !!trailerInfo && pageVisible;
 
   useEffect(() => {
     setTrailerCandidates([]);
@@ -178,7 +174,7 @@ export const Hero = memo(function Hero({
   return (
     <section
       onClick={() => openMeta({ ...meta, logo: logo ?? meta.logo })}
-      className={`group relative cursor-pointer overflow-hidden bg-canvas ${full ? "h-[clamp(560px,82vh,920px)] rounded-none" : "h-[560px] rounded-[28px]"}`}
+      className={`group relative cursor-pointer overflow-hidden bg-canvas ${full ? "h-[clamp(420px,62vh,720px)] rounded-none" : "h-[420px] rounded-[28px]"}`}
       style={{ isolation: "isolate" }}
     >
       {bg && loadBackdrop && (
@@ -246,38 +242,6 @@ export const Hero = memo(function Hero({
               </span>
             )}
             {meta.runtime && <Stat label={t("Runtime")} value={meta.runtime} />}
-          </div>
-          <div
-            className="mt-9 flex gap-3"
-            onMouseEnter={() => setOverControls(true)}
-            onMouseLeave={() => setOverControls(false)}
-          >
-            <FocusButton
-              onClick={(e) => {
-                e.stopPropagation();
-                openMeta({ ...meta, logo: logo ?? meta.logo });
-              }}
-              className="flex h-12 items-center gap-2.5 rounded-full bg-ink px-7 text-[15px] font-semibold text-canvas shadow-[0_8px_24px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(0,0,0,0.18)] transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Play size={18} fill="currentColor" />
-              {t("Play")}
-            </FocusButton>
-            <FocusButton
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleWatchlist({
-                  id: meta.id,
-                  type: meta.type,
-                  name: meta.name,
-                  poster: meta.poster,
-                  imdbId: resolvedImdb,
-                });
-              }}
-              className="flex h-12 items-center gap-2.5 rounded-full border border-edge bg-canvas/55 px-6 text-[15px] font-medium text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-colors duration-200 hover:border-ink-subtle hover:bg-canvas/75"
-            >
-              {inWatchlist ? <Check size={18} strokeWidth={2.4} /> : <Plus size={18} strokeWidth={2} />}
-              {inWatchlist ? t("In Watchlist") : t("Add to Watchlist")}
-            </FocusButton>
           </div>
         </div>
       </div>

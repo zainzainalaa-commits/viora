@@ -6,7 +6,6 @@ import { ContinueCard } from "@/components/continue-card";
 import { dismissCw, isCwDismissed, useCwDismissVersion } from "@/lib/cw-dismiss";
 import { PeekHero } from "@/components/peek-hero";
 import { Row, ScrollRootContext } from "@/components/row";
-import { TmdbNudge } from "@/components/nudge";
 import { TopRankCard } from "@/components/top-rank-card";
 import { useAuth } from "@/lib/auth";
 import { topSeries, type Meta } from "@/lib/cinemeta";
@@ -251,7 +250,6 @@ export function Shows({ active = true }: { active?: boolean }) {
               />
             </div>
           </div>
-          {!settings.tmdbKey && <TmdbNudge />}
           {cwItems.length > 0 && (
             <Row title={t("Pick up where you left off")} min={260} shape="landscape" scrollKey="shows:cw">
               {cwItems.map((it) => (

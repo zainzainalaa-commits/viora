@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvSelect } from "@/components/tv-controls";
 import { Check, ExternalLink, Link2, LogOut, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SimklDeviceModal } from "@/components/simkl/simkl-device-modal";
@@ -179,15 +180,27 @@ export function SimklPanel() {
               <p className="text-[12px] leading-relaxed text-ink-subtle">
                 {t("Preferred language for anime titles displayed on poster cards.")}
               </p>
-              <select
+              <TvSelect
                 value={settings.simklAnimeTitleLanguage}
-                onChange={(e) => update({ simklAnimeTitleLanguage: e.target.value as "english" | "romaji" | "native" })}
-                className="h-11 w-full max-w-[340px] rounded-xl border border-edge-soft bg-canvas/40 px-3.5 text-[13.5px] text-ink outline-none transition-colors hover:border-edge focus:border-accent cursor-pointer"
+                title={t("Anime Title Language")}
+                onChange={(v) => update({ simklAnimeTitleLanguage: v })}
+                className="w-full max-w-[340px]"
+                options={[
+                  { value: "english" as const, label: t("English") },
+                  { value: "romaji" as const, label: t("Romaji") },
+                  { value: "native" as const, label: t("Native/Japanese") },
+                ]}
               >
-                <option value="english" className="bg-elevated text-ink">{t("English")}</option>
-                <option value="romaji" className="bg-elevated text-ink">{t("Romaji")}</option>
-                <option value="native" className="bg-elevated text-ink">{t("Native/Japanese")}</option>
-              </select>
+                <select
+                  value={settings.simklAnimeTitleLanguage}
+                  onChange={(e) => update({ simklAnimeTitleLanguage: e.target.value as "english" | "romaji" | "native" })}
+                  className="h-11 w-full max-w-[340px] rounded-xl border border-edge-soft bg-canvas/40 px-3.5 text-[13.5px] text-ink outline-none transition-colors hover:border-edge focus:border-accent cursor-pointer"
+                >
+                  <option value="english" className="bg-elevated text-ink">{t("English")}</option>
+                  <option value="romaji" className="bg-elevated text-ink">{t("Romaji")}</option>
+                  <option value="native" className="bg-elevated text-ink">{t("Native/Japanese")}</option>
+                </select>
+              </TvSelect>
             </div>
             {!confirmDisconnect ? (
               <FocusButton

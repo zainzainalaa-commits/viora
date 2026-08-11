@@ -4,7 +4,7 @@ import { RotateCcw, Tv } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
 import type { IptvChannel } from "@/lib/iptv/types";
-import { MultiPlayer } from "@/views/multiview/multi-player";
+import { MultiPlayer } from "@/views/live/multi-player";
 import { fmtLeft } from "./now-format";
 import { hydrationKey, type NowItem } from "./use-live-home";
 

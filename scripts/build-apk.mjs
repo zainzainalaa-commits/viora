@@ -9,7 +9,7 @@
 //   node scripts/build-apk.mjs [--release] [--arch arm64|arm|x86|x86_64] [--skip-web]
 
 import { execFileSync, execSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, unlinkSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -153,6 +153,17 @@ console.log(`\nViora ${version} — Android ${arch.abi} (${profile})`);
 
 if (!skipWeb) {
   step(++n, total, "Building the web bundle");
+  // Emptied first, because Vite writes a content-hashed name and never removes
+  // the one it replaced. Any build that changes the bundle leaves the previous
+  // index-<hash>.js sitting in dist, and everything in dist is copied into the
+  // APK — so the archive carries bundles nothing points at, and a device that
+  // cached the old index.html loads one of them. That is the "BUILD SUCCESSFUL
+  // but the old screen is still there" trap this project has been bitten by.
+  //
+  // A single build legitimately emits several chunks — one large bundle and a
+  // few small lazy ones — so counting files in dist proves nothing on its own;
+  // only their timestamps do.
+  rmSync(join(ROOT, "dist"), { recursive: true, force: true });
   // pnpm refuses to purge a node_modules whose recorded paths no longer match
   // (after the project directory is moved, say) unless it can ask — and this
   // script has no TTY. CI=true is pnpm's documented way to answer yes.
@@ -182,6 +193,19 @@ console.log(`    ${(statSync(built).size / 1024 / 1024).toFixed(1)} MB -> jniLib
 
 step(++n, total, "Packaging the APK");
 ensureTauriSettings();
+// Gradle updates an existing APK in place rather than rewriting it, and the
+// entry it replaces stays in the file as unreferenced bytes. With a 200 MB
+// native library that is 200 MB of dead weight per rebuild: measured at 409 MB
+// on disk for an archive whose contents add up to 207 MB. Deleting the previous
+// output costs nothing and keeps the number honest.
+{
+  const prev = join(ANDROID, "app", "build", "outputs", "apk", archKey === "arm64" ? "arm64" : archKey, profile);
+  if (existsSync(prev)) {
+    for (const f of readdirSync(prev)) {
+      if (f.endsWith(".apk")) unlinkSync(join(prev, f));
+    }
+  }
+}
 const gradlew = process.platform === "win32" ? ".\\gradlew.bat" : "./gradlew";
 // The excluded task is the one that shells back out to tauri and symlinks;
 // stage 3 already produced its output.

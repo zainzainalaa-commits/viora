@@ -1,6 +1,8 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusSection } from "@/lib/tv-focus";
 import { Check, ExternalLink, Eye, Key, Lock } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { isDpadPrimary } from "@/lib/platform";
+import { TvTextEntry } from "@/components/tv-text-entry";
 import { openUrl } from "@/lib/window";
 import { useT } from "@/lib/i18n";
 import { HoverPreviewCard } from "./setting-preview";
@@ -52,6 +54,15 @@ export function settingsAnchor(title: string): string {
   return "set-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-+|-+$)/g, "");
 }
 
+/**
+ * One card of settings — and one place for the remote.
+ *
+ * Every panel in Settings is built from these, 110 of them across 30 files, so
+ * declaring the card is what gives the whole screen its structure in one change.
+ * Without it a panel is a single flat run of controls: measured at 270 siblings
+ * under one parent on Library & metadata, which is the shape that cost the
+ * Add-ons screen 521ms per key press before it was broken up the same way.
+ */
 export function Section({
   title,
   subtitle,
@@ -62,13 +73,17 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={settingsAnchor(title)} className="scroll-mt-28 flex flex-col gap-4 rounded-2xl border border-edge-soft bg-elevated/40 p-7">
+    <FocusSection
+      as="section"
+      id={settingsAnchor(title)}
+      className="scroll-mt-28 flex flex-col gap-4 rounded-2xl border border-edge-soft bg-elevated/40 p-7"
+    >
       <div className="flex flex-col gap-1">
         <h2 className="text-[19px] font-medium tracking-tight text-ink">{title}</h2>
         {subtitle && <p className="text-[13.5px] leading-relaxed text-ink-muted">{subtitle}</p>}
       </div>
       {children}
-    </section>
+    </FocusSection>
   );
 }
 
@@ -100,6 +115,8 @@ export function KeyField({
   const t = useT();
   const [reveal, setReveal] = useState(false);
   const [focused, setFocused] = useState(false);
+  /** Open while the remote is typing this key on the on-screen keyboard. */
+  const [tvEntry, setTvEntry] = useState(false);
   const [initialValue, setInitialValue] = useState(value);
   useEffect(() => {
     if (saved) setInitialValue(value);
@@ -177,26 +194,60 @@ export function KeyField({
             <Key size={14} />
           </span>
         )}
-        <input
-          type={reveal ? "text" : "password"}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => {
-            setFocused(false);
-            if (stateRef.current.dirty) onSaveRef.current();
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && dirty) {
-              e.preventDefault();
+        {isDpadPrimary() ? (
+          /*
+            A key is not typed on a television.
+
+            The field is a `<input type=password>`, which a D-pad cannot fill at
+            all: this is what made every API key on this screen — TMDB, RPDB,
+            Real-Debrid, TorBox, fanart, TVDB — unreachable from the sofa. The
+            control becomes a button that opens the on-screen keyboard, where the
+            realistic route is the Paste button reading what was copied on the
+            device rather than spelling out forty characters of hex.
+          */
+          <FocusButton
+            type="button"
+            onClick={() => setTvEntry(true)}
+            className="h-full flex-1 truncate bg-transparent text-start text-[15px] tracking-wide text-ink"
+          >
+            {value ? (reveal ? value : "•".repeat(Math.min(value.length, 28))) : (
+              <span className="text-ink-subtle/55">{placeholder}</span>
+            )}
+          </FocusButton>
+        ) : (
+          <input
+            type={reveal ? "text" : "password"}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => {
+              setFocused(false);
+              if (stateRef.current.dirty) onSaveRef.current();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && dirty) {
+                e.preventDefault();
+                onSave();
+              }
+            }}
+            placeholder={placeholder}
+            spellCheck={false}
+            autoComplete="off"
+            className="h-full flex-1 bg-transparent text-[15px] tracking-wide text-ink placeholder:text-ink-subtle/55 outline-none"
+          />
+        )}
+        {tvEntry && (
+          <TvTextEntry
+            title={label}
+            initial={value}
+            placeholder={placeholder}
+            onCommit={(v) => {
+              onChange(v);
               onSave();
-            }
-          }}
-          placeholder={placeholder}
-          spellCheck={false}
-          autoComplete="off"
-          className="h-full flex-1 bg-transparent text-[15px] tracking-wide text-ink placeholder:text-ink-subtle/55 outline-none"
-        />
+            }}
+            onClose={() => setTvEntry(false)}
+          />
+        )}
         {value.length > 0 && (
           <FocusButton
             type="button"

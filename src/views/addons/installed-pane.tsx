@@ -1,6 +1,7 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusSection } from "@/lib/tv-focus";
 import { ArrowUpDown, Lock, Settings2 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { isDpadPrimary } from "@/lib/platform";
 import { AddonLogo, resolveAddonLogo } from "@/components/addon-logo";
 import { APP_NAME } from "@/lib/brand";
 import { HoverTooltip } from "@/components/hover-tooltip";
@@ -68,7 +69,9 @@ export function InstalledPane({
           </FocusButton>
         </div>
       )}
-      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+      {/* One zone for the list, so a press compares the focused row against the
+          other rows rather than against every control on the screen. */}
+      <FocusSection className="grid grid-cols-1 gap-2 lg:grid-cols-2">
         {filtered.map((r) => (
           <InstalledRow
             key={addonKey(r)}
@@ -78,8 +81,35 @@ export function InstalledPane({
             onManage={onManage}
           />
         ))}
-      </div>
+      </FocusSection>
     </div>
+  );
+}
+
+/** The row's label area: a control where a pointer can use it, plain text where
+ *  only a remote can, so the TV does not get a focus ring around a paragraph. */
+function Body({
+  asButton,
+  onClick,
+  disabled,
+  children,
+}: {
+  asButton: boolean;
+  onClick: () => void;
+  disabled: boolean;
+  children: ReactNode;
+}) {
+  const className = "flex min-w-0 flex-1 items-center gap-3.5 text-start";
+  if (!asButton) return <div className={className}>{children}</div>;
+  return (
+    <FocusButton
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`${className} cursor-pointer`}
+    >
+      {children}
+    </FocusButton>
   );
 }
 
@@ -126,31 +156,49 @@ function InstalledRow({
   };
 
   return (
+    /*
+      Opening the addon is a control, not a div pretending to be one.
+
+      The row was `role="button"` with a tabindex and never registered with the
+      focus engine, so the remote could reach the switch and the remove button
+      inside it but never the row itself — the one thing that opens the addon.
+    */
     <div
-      role="button"
-      tabIndex={0}
-      onClick={() => !busy && onOpen(idOf(r))}
-      onKeyDown={(e) => !busy && (e.key === "Enter" || e.key === " ") && onOpen(idOf(r))}
       className={`flex items-center gap-3.5 rounded-xl border bg-elevated px-4 py-3 text-start transition-all ${
         busy
           ? "border-edge-soft cursor-wait opacity-60"
-          : "border-edge-soft cursor-pointer hover:border-edge hover:bg-raised"
+          : "border-edge-soft hover:border-edge hover:bg-raised"
       }`}
     >
-      <div className={enabled ? "" : "opacity-45 transition-opacity"}>
-        <AddonLogo
-          addonId={idOf(r)}
-          addonName={nameOf(r)}
-          manifestLogo={resolveAddonLogo(r.manifest?.logo, r.transportUrl)}
-          size="lg"
-        />
-      </div>
-      <div className={`flex min-w-0 flex-1 flex-col gap-0.5 ${enabled ? "" : "opacity-55"}`}>
-        <span className="truncate text-[14px] font-medium text-ink">{nameOf(r)}</span>
-        <span className="truncate text-[11.5px] text-ink-subtle">
-          {enabled ? subtitleFromManifest(r) : t("Off · catalogs and streams hidden")}
-        </span>
-      </div>
+      {/*
+        On a television the row's body is not a stop.
+
+        Making it one put a 4px ring around the logo, the name and the
+        description at once — a frame the width of the screen for what is really
+        just a label. The controls that matter on this screen are the switch, the
+        setup button and remove, and each of those is its own stop; the detail
+        page behind the row is a desktop surface that adds nothing here.
+      */}
+      <Body
+        asButton={!isDpadPrimary()}
+        onClick={() => !busy && onOpen(idOf(r))}
+        disabled={busy}
+      >
+        <div className={enabled ? "" : "opacity-45 transition-opacity"}>
+          <AddonLogo
+            addonId={idOf(r)}
+            addonName={nameOf(r)}
+            manifestLogo={resolveAddonLogo(r.manifest?.logo, r.transportUrl)}
+            size="lg"
+          />
+        </div>
+        <div className={`flex min-w-0 flex-1 flex-col gap-0.5 ${enabled ? "" : "opacity-55"}`}>
+          <span className="truncate text-[14px] font-medium text-ink">{nameOf(r)}</span>
+          <span className="truncate text-[11.5px] text-ink-subtle">
+            {enabled ? subtitleFromManifest(r) : t("Off · catalogs and streams hidden")}
+          </span>
+        </div>
+      </Body>
       {!busy && (
         <HoverTooltip
           side="top"

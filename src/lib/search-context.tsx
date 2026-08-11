@@ -2,7 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { MOVIE_GENRES } from "@/lib/feed/tags";
 import { useParental } from "@/lib/parental";
 import { searchAll, searchAnime, searchCinemeta, searchLiveTvChannels, type SearchResults } from "@/lib/search";
+import { dedupeByTitle, rankMetas } from "@/lib/search-rank";
 import { searchAddonCatalogs, searchAddonGroups, mergeMetas } from "@/lib/search-addons";
+import type { Meta } from "@/lib/cinemeta";
 import { searchAddonIndex } from "@/lib/search-addon-index";
 import { gatherCatalogAddons, type Addon } from "@/lib/addons";
 import { useAuth } from "@/lib/auth";
@@ -28,6 +30,10 @@ type SearchValue = SearchState & {
 const Ctx = createContext<SearchValue | null>(null);
 const RECENT_KEY = "harbor.search.recent";
 const MAX_RECENT = 8;
+/** How many candidates survive the merge to be ranked against each other. */
+const MERGE_POOL = 60;
+/** How many the viewer is actually shown, taken off the top of the ranking. */
+const RESULT_CAP = 20;
 
 function loadRecent(): string[] {
   try {
@@ -115,8 +121,15 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       };
       const publish = () => {
         if (id !== reqIdRef.current || !tmdbResult) return;
-        const mergedMovies = mergeMetas(mergeMetas(tmdbResult.movies, acc.addon.movies), acc.cine.movies);
-        const mergedSeries = mergeMetas(mergeMetas(tmdbResult.series, acc.addon.series), acc.cine.series);
+        // Merged wide, then ranked, then cut. Each source arrives in its own
+        // idea of "best first" and `mergeMetas` only appends, so capping at the
+        // merge would keep whichever source answered first rather than whichever
+        // answered best.
+        const merge = (a: Meta[], b: Meta[], c: Meta[]) =>
+          dedupeByTitle(rankMetas(mergeMetas(mergeMetas(a, b, MERGE_POOL), c, MERGE_POOL), trimmed))
+            .slice(0, RESULT_CAP);
+        const mergedMovies = merge(tmdbResult.movies, acc.addon.movies, acc.cine.movies);
+        const mergedSeries = merge(tmdbResult.series, acc.addon.series, acc.cine.series);
         const shown = new Set<string>([...mergedMovies, ...mergedSeries].map((m) => m.id));
         const dedupedGroups = acc.groups
           .map((g) => ({ ...g, metas: g.metas.filter((m) => !shown.has(m.id)) }))

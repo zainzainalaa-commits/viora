@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvSlider } from "@/components/tv-controls";
 import { Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import godfatherStill from "@/assets/godfather-offer.svg";
@@ -114,29 +115,45 @@ export function SubtitleStylePanel() {
 
       {settings.subStyle === "box" && (
         <SubField label={t("Background opacity")} value={`${Math.round(settings.subBoxOpacity * 100)}%`}>
-          <input
-            type="range"
+          <TvSlider
+            value={settings.subBoxOpacity}
             min={0.2}
             max={1}
             step={0.05}
-            value={settings.subBoxOpacity}
-            onChange={(e) => update({ subBoxOpacity: parseFloat(e.target.value) })}
-            className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
-          />
+            onChange={(next) => update({ subBoxOpacity: next })}
+          >
+            <input
+              type="range"
+              min={0.2}
+              max={1}
+              step={0.05}
+              value={settings.subBoxOpacity}
+              onChange={(e) => update({ subBoxOpacity: parseFloat(e.target.value) })}
+              className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
+            />
+          </TvSlider>
         </SubField>
       )}
 
       {settings.subStyle === "outline" && (
         <SubField label={t("Outline thickness")} value={`${settings.subBorderSize}px`}>
-          <input
-            type="range"
+          <TvSlider
+            value={Math.max(1, settings.subBorderSize)}
             min={1}
             max={6}
             step={1}
-            value={Math.max(1, settings.subBorderSize)}
-            onChange={(e) => update({ subBorderSize: parseInt(e.target.value, 10) })}
-            className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
-          />
+            onChange={(next) => update({ subBorderSize: next })}
+          >
+            <input
+              type="range"
+              min={1}
+              max={6}
+              step={1}
+              value={Math.max(1, settings.subBorderSize)}
+              onChange={(e) => update({ subBorderSize: parseInt(e.target.value, 10) })}
+              className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
+            />
+          </TvSlider>
         </SubField>
       )}
 
@@ -157,15 +174,23 @@ export function SubtitleStylePanel() {
       />
 
       <SubField label={t("Size")} value={`${settings.subFontSize}px`}>
-        <input
-          type="range"
+        <TvSlider
+          value={settings.subFontSize}
           min={16}
           max={120}
           step={1}
-          value={settings.subFontSize}
-          onChange={(e) => update({ subFontSize: parseInt(e.target.value, 10) })}
-          className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
-        />
+          onChange={(next) => update({ subFontSize: next })}
+        >
+          <input
+            type="range"
+            min={16}
+            max={120}
+            step={1}
+            value={settings.subFontSize}
+            onChange={(e) => update({ subFontSize: parseInt(e.target.value, 10) })}
+            className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
+          />
+        </TvSlider>
       </SubField>
 
       <SubField label={t("Opacity")} value={`${Math.round((settings.subOpacity ?? 1) * 100)}%`}>
@@ -184,15 +209,23 @@ export function SubtitleStylePanel() {
       </SubField>
 
       <SubField label={t("Distance from bottom")} value={`${settings.subMarginY}%`}>
-        <input
-          type="range"
+        <TvSlider
+          value={settings.subMarginY}
           min={0}
           max={100}
           step={1}
-          value={settings.subMarginY}
-          onChange={(e) => update({ subMarginY: parseInt(e.target.value, 10) })}
-          className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
-        />
+          onChange={(next) => update({ subMarginY: next })}
+        >
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={settings.subMarginY}
+            onChange={(e) => update({ subMarginY: parseInt(e.target.value, 10) })}
+            className="h-1 w-full appearance-none rounded-full bg-edge-soft accent-ink"
+          />
+        </TvSlider>
       </SubField>
 
       <div className="flex flex-col gap-2.5">

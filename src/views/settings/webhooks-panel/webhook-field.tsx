@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvField } from "@/components/tv-controls";
 import { Check, ExternalLink, Loader2, X } from "lucide-react";
 import { openUrl } from "@/lib/window";
 import type { ReactNode } from "react";
@@ -37,15 +38,23 @@ export function WebhookField({
         <StatusBadge status={status} />
       </div>
       <div className="flex items-stretch gap-2">
-        <input
-          type="text"
+        <TvField
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onCommit={onChange}
+          title={label}
           placeholder={placeholder}
-          spellCheck={false}
-          autoComplete="off"
-          className="h-10 flex-1 rounded-lg border border-edge bg-canvas px-3 font-mono text-[12px] text-ink outline-none transition-colors focus:border-ink-subtle"
-        />
+          className="flex-1"
+        >
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            spellCheck={false}
+            autoComplete="off"
+            className="h-10 flex-1 rounded-lg border border-edge bg-canvas px-3 font-mono text-[12px] text-ink outline-none transition-colors focus:border-ink-subtle"
+          />
+        </TvField>
         <FocusButton
           onClick={onTest}
           disabled={!value || status.state === "busy"}

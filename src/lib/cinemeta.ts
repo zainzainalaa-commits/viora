@@ -76,8 +76,12 @@ export const topMovies = (genre?: string, skip = 0) =>
 export const topSeries = (genre?: string, skip = 0) =>
   catalog(cinemetaTopPath("series", genre, skip));
 
-export async function meta(type: "movie" | "series", id: string): Promise<Meta | null> {
-  const res = await fetch(`${CINEMETA}/meta/${type}/${id}.json`);
+export async function meta(
+  type: "movie" | "series",
+  id: string,
+  signal?: AbortSignal,
+): Promise<Meta | null> {
+  const res = await fetch(`${CINEMETA}/meta/${type}/${id}.json`, signal ? { signal } : undefined);
   if (!res.ok) return null;
   const json = await res.json();
   return json.meta ?? null;

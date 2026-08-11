@@ -4,7 +4,6 @@ import { profileFromMeta, trackEvent } from "./discover";
 import type { StreamingService } from "./settings";
 import { useTogether } from "./together/provider";
 import type { SportsGame } from "./sports/espn";
-import { beginMarathonAdvance } from "./fullscreen-state";
 import { runNavGuard } from "./nav-guard";
 export type View = "home" | "settings" | "anime" | "discover" | "catalogs" | "addons" | "calendar" | "movies" | "shows" | "kids" | "library" | "live" | "vod" | "downloads";
 
@@ -470,9 +469,6 @@ export function ViewProvider({ children }: { children: ReactNode }) {
   });
 
   const setViewNow = useCallback((v: View) => {
-    if (typeof window !== "undefined") {
-      window.__harborProfiler?.recordNav(`view:${v}`);
-    }
     if (v === "home") setHomeResetTick((n) => n + 1);
     if (typeof window !== "undefined" && v !== "settings") {
       window.dispatchEvent(
@@ -728,7 +724,6 @@ export function ViewProvider({ children }: { children: ReactNode }) {
 
   const openPicker = useCallback(
     (m: Meta, ep?: PlayEpisode, opts?: { autoPlay?: boolean; attempt?: number; intent?: "play" | "download" | "download-season"; resume?: boolean }) => {
-      if (opts?.autoPlay) beginMarathonAdvance();
       setNavStack((cur) => {
         const t = cur[cur.length - 1];
         if (

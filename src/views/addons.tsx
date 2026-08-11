@@ -1,14 +1,14 @@
-import { FocusButton } from "@/lib/tv-focus";
-import { Check, ChevronRight, Library, Sparkles, Star, TrendingUp } from "lucide-react";
+import { FocusButton, FocusSection } from "@/lib/tv-focus";
+import { Check, ChevronRight, Library, Link as LinkIcon, Sparkles, Star, TrendingUp } from "lucide-react";
+import { isDpadPrimary } from "@/lib/platform";
+import { TvAddAddon } from "./addons/tv-add-addon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AgeGateModal } from "@/components/age-gate-modal";
 import { HarborLoader } from "@/components/harbor-loader";
 import { useScrollMemory, useView } from "@/lib/view";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
-import { AddonsMosaicBackdrop } from "@/components/addons-mosaic-backdrop";
-import { CURATED_RAILS, heroEntry } from "@/lib/addons-store/curated";
-import { useAddonsCatalog, buildRail, type ResolvedAddon } from "@/lib/addons-store/store";
+import { useAddonsCatalog, type ResolvedAddon } from "@/lib/addons-store/store";
 import { useCategories } from "@/lib/providers/stremio-addons";
 import { prefetchTopAddonLogos } from "@/lib/providers/addon-logo-prefetch";
 import { relatedAddons, recommendedAddons } from "@/lib/addons-store/recommend";
@@ -29,13 +29,22 @@ import { AddonDetail } from "./addons/addon-detail";
 import { AddonInstallModal } from "./addons/install-modal";
 import { OrganizeAddonsPage } from "./addons/organize/page";
 import { consumeAddonsTab, type Tab, type ToastInfo } from "./addons/addons-types";
-import { BrowsePane } from "./addons/browse-pane";
-import { DiscoverPane } from "./addons/discover-pane";
 import { InstalledPane } from "./addons/installed-pane";
 import { SearchBar } from "./addons/search-bar";
 import { Toaster } from "./addons/toaster";
 
 export { requestAddonsTab } from "./addons/addons-types";
+
+/**
+ * Where the remote lands when this screen opens.
+ *
+ * Measured without it: arriving on Addons left the highlight in the sidebar, on
+ * the Search item the viewer had walked past — the screen was on display and
+ * nothing on it was selected. A screen with no declared entry point is entered
+ * by whatever recovery finds first, which is an accident of mount order rather
+ * than a decision.
+ */
+export const ADDONS_ADD = "ADDONS_ADD";
 
 void streamsIcon;
 void catalogsIcon;
@@ -67,11 +76,29 @@ export function AddonsView() {
   const { authKey } = useAuth();
   const { byId, installedIds, loading, refetch } = useAddonsCatalog(settings.showAdultAddons);
   const { addonDetailId, openAddonDetail, goBack } = useView();
-  const [tab, setTab] = useState<Tab>(() => consumeAddonsTab() ?? "discover");
+  /*
+    Discover does not exist on a TV.
+
+    It is a browsing surface built for a pointer: a hero, a decorative mosaic
+    behind the whole page, hover tooltips, and a community rail carrying every
+    card in one flat run — measured at 247 stops under a single parent, which is
+    where this screen's 448ms-per-press came from. Its one piece of real value,
+    the curated picks, is what Browse already sorts by rating.
+    Dropping it here removes the rail, the backdrop that was painting over two
+    sidebar entries, and the tooltip nobody with a remote can see.
+  */
+  const TABS: Tab[] = isDpadPrimary() ? ["installed"] : ["discover", "browse", "installed"];
+  const [tab, setTab] = useState<Tab>(() => {
+    const requested = consumeAddonsTab();
+    if (requested && TABS.includes(requested)) return requested;
+    // What a viewer opens this screen for on a TV is what they already have.
+    return isDpadPrimary() ? "installed" : "discover";
+  });
 
   useEffect(() => {
     const requested = consumeAddonsTab();
-    if (requested) setTab(requested);
+    // Another screen can ask for a tab that this device does not have.
+    if (requested && TABS.includes(requested)) setTab(requested);
     void prefetchTopAddonLogos();
     void import("@/lib/providers/stremio-addons-index").then((m) =>
       m.ensureCommunityIndex().catch(() => undefined),
@@ -81,6 +108,8 @@ export function AddonsView() {
   const [browseMode, setBrowseMode] = useState<BrowseModeId>("top");
   const saCategories = useCategories();
   const [filtersOpen, setFiltersOpen] = useState(true);
+  /** The TV's whole "get an addon" flow: account pairing, or a pasted link. */
+  const [addOpen, setAddOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   useScrollMemory("addons", scrollRef);
 
@@ -91,10 +120,6 @@ export function AddonsView() {
     if (!settings.showAdultAddons && categoryFilter === "nsfw") setCategoryFilter(null);
   }, [settings.showAdultAddons, categoryFilter]);
   const [query, setQuery] = useState("");
-  const goToCategory = (cat: string) => {
-    setCategoryFilter(cat);
-    setTab("browse");
-  };
   const [ageGateOpen, setAgeGateOpen] = useState(false);
   const [toast, setToast] = useState<ToastInfo | null>(null);
   const toastTimerRef = useRef<number | null>(null);
@@ -142,21 +167,6 @@ export function AddonsView() {
     if (toastTimerRef.current != null) window.clearTimeout(toastTimerRef.current);
   }, []);
 
-  const hero = useMemo(() => {
-    const h = heroEntry();
-    if (!h) return null;
-    const r = byId.get(h.id);
-    return r ? { entry: h, resolved: r } : null;
-  }, [byId]);
-
-  const railsData = useMemo(
-    () =>
-      CURATED_RAILS.map((rail) => ({
-        rail,
-        items: buildRail(byId, rail.id, 16),
-      })).filter((r) => r.items.length > 0),
-    [byId],
-  );
 
   const allAddons = useMemo(() => [...byId.values()], [byId]);
 
@@ -287,16 +297,41 @@ export function AddonsView() {
 
   return (
     <main className="relative flex h-full flex-col overflow-hidden">
-      {tab === "discover" && <AddonsMosaicBackdrop />}
       <AgeGateModal
         open={ageGateOpen}
         onClose={() => setAgeGateOpen(false)}
         onPass={() => update({ showAdultAddons: true })}
       />
       <header className="shrink-0 px-12 pt-20 pb-3">
+        {isDpadPrimary() ? (
+          /*
+            The whole screen, on a television: what you have, and one way to get
+            more. The catalogue, its search field, the category chips and the
+            adult toggle are all pointer furniture — a thousand community addons
+            is a list nobody walks with a D-pad — so none of them are built here.
+          */
+          <div className="flex items-center gap-4">
+            <h1 className="font-display text-[30px] font-medium tracking-tight text-ink">
+              {t("Addons")}
+            </h1>
+            <span className="rounded-full bg-edge px-2.5 py-1 text-[12.5px] font-bold tabular-nums text-ink-muted">
+              {installedIds.size}
+            </span>
+            <FocusButton
+              onClick={() => setAddOpen(true)}
+              focusKey={ADDONS_ADD}
+              data-focus-primary
+              className="ms-auto flex h-12 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-opacity hover:opacity-90"
+            >
+              <LinkIcon size={15} strokeWidth={2.4} />
+              {t("Add addon")}
+            </FocusButton>
+          </div>
+        ) : (
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-          <nav className="flex flex-wrap items-center gap-1">
-            {(["discover", "browse", "installed"] as Tab[]).map((tabId) => {
+          {/* The tab row is its own place: three stops, not three of 252. */}
+          <FocusSection as="nav" className="flex flex-wrap items-center gap-1">
+            {TABS.map((tabId) => {
               const active = tab === tabId;
               if (tabId === "installed") {
                 return (
@@ -337,6 +372,10 @@ export function AddonsView() {
                 </FocusButton>
               );
               if (tabId === "discover") {
+                // The explanation is a hover tooltip, and a remote never hovers,
+                // so on a TV it is dead markup in the focus path's way. Dropped
+                // there rather than shown in a form nobody can reach.
+                if (isDpadPrimary()) return <span key={tabId}>{btn}</span>;
                 return (
                   <div key={tabId} className="group relative">
                     {btn}
@@ -348,8 +387,9 @@ export function AddonsView() {
               }
               return <span key={tabId}>{btn}</span>;
             })}
-          </nav>
-          <div className="flex min-w-0 flex-1 items-center gap-3">
+          </FocusSection>
+          {/* The tools beside the tabs: search, add-by-URL, and the toggles. */}
+          <FocusSection className="flex min-w-0 flex-1 items-center gap-3">
             <div className="min-w-0 max-w-72 flex-1">
               <SearchBar value={query} onChange={setQuery} />
             </div>
@@ -397,8 +437,9 @@ export function AddonsView() {
                 {filtersOpen ? t("Hide") : t("Filters")}
               </FocusButton>
             )}
-          </div>
+          </FocusSection>
         </div>
+        )}
         {tab === "browse" && (
           <div
             className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-out ${
@@ -406,7 +447,10 @@ export function AddonsView() {
             }`}
           >
             <div className="overflow-hidden">
-              <div className="flex flex-wrap items-center gap-2 pb-1">
+              {/* Category and mode chips — one zone, and only while open: the
+                  collapsed state gives them zero height, which already keeps
+                  them out of the search. */}
+              <FocusSection className="flex flex-wrap items-center gap-2 pb-1">
                 <FocusButton
                   onClick={() => setCategoryFilter(null)}
                   className={`flex h-10 items-center gap-2 rounded-full px-4 text-[13.5px] font-semibold transition-colors ${
@@ -453,46 +497,37 @@ export function AddonsView() {
                     </FocusButton>
                   );
                 })}
-              </div>
+              </FocusSection>
             </div>
           </div>
         )}
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-12 pb-20 pt-6">
+      {/*
+        The page body is a region, and it says so.
+
+        Declaring it does two things the plain div could not: it becomes the
+        scroll container the focus engine reveals into, and it separates the
+        content from the header — which is what gives `down` from a tab somewhere
+        to go. Before this, the tabs and every card were siblings, so pressing
+        down from a tab was a geometric guess among 252 candidates and usually
+        moved nothing at all.
+      */}
+      <FocusSection
+        scrolls
+        ref={scrollRef as React.Ref<HTMLElement>}
+        className="flex-1 overflow-y-auto px-12 pb-20 pt-6"
+      >
         {loading && allAddons.length === 0 ? (
           <div className="flex h-full items-center justify-center py-24">
             <HarborLoader size="lg" caption={t("Loading the catalog")} keyed />
           </div>
-        ) : tab === "discover" ? (
-          <DiscoverPane
-            hero={hero}
-            rails={railsData}
-            installedIds={installedIds}
-            onOpen={openAddonDetail}
-            onInstall={onInstall}
-            onUninstall={onUninstall}
-            onCategorySelect={goToCategory}
-            authKey={authKey}
-            onRefetch={refetch}
-          />
-        ) : tab === "browse" ? (
-          <BrowsePane
-            mode={browseMode}
-            category={trimmedQuery ? null : categoryFilter}
-            search={trimmedQuery || null}
-            allowAdult={settings.showAdultAddons}
-            installedIds={installedIds}
-            onOpen={openAddonDetail}
-            onRefetch={refetch}
-          />
         ) : (
           <InstalledPane
             installed={installed}
             search={trimmedQuery || null}
             onOpen={openAddonDetail}
             onUninstall={onUninstall}
-            onReorder={() => setReorderOpen(true)}
             onManage={(r) => {
               const id = r.manifest?.id ?? r.curated?.id;
               if (!id) return;
@@ -508,8 +543,17 @@ export function AddonsView() {
             }}
           />
         )}
-      </div>
+      </FocusSection>
       <Toaster toast={toast} />
+      {addOpen && (
+        <TvAddAddon
+          onUrl={(url) => {
+            setAddOpen(false);
+            setInstallModal({ kind: "install", url });
+          }}
+          onClose={() => setAddOpen(false)}
+        />
+      )}
       {installModal && (
         <AddonInstallModal
           mode={installModal}

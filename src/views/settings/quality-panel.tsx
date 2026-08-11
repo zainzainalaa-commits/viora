@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { TvSelect } from "@/components/tv-controls";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
 import { listMpvAudioDevices, type MpvAudioDevice } from "@/lib/player/mpv";
@@ -207,19 +208,31 @@ function AudioOutputRow() {
             : t("Send audio to specific speakers, headphones or a receiver. System default follows Windows.")}
         </span>
       </div>
-      <select
+      <TvSelect
         value={settings.audioDevice}
-        onChange={(e) => update({ audioDevice: e.target.value })}
-        className="h-9 max-w-[200px] shrink-0 rounded-lg border border-edge bg-raised px-2.5 text-[12.5px] text-ink outline-none transition-colors focus:border-ink"
+        title={t("Output device")}
+        onChange={(v) => update({ audioDevice: v })}
+        className="max-w-[280px] shrink-0"
+        options={[
+          { value: "", label: t("System default") },
+          ...devices.map((d) => ({ value: d.name, label: d.description || d.name })),
+          ...(known ? [] : [{ value: settings.audioDevice, label: settings.audioDevice }]),
+        ]}
       >
-        <option value="">{t("System default")}</option>
-        {devices.map((d) => (
-          <option key={d.name} value={d.name}>
-            {d.description || d.name}
-          </option>
-        ))}
-        {!known && <option value={settings.audioDevice}>{settings.audioDevice}</option>}
-      </select>
+        <select
+          value={settings.audioDevice}
+          onChange={(e) => update({ audioDevice: e.target.value })}
+          className="h-9 max-w-[200px] shrink-0 rounded-lg border border-edge bg-raised px-2.5 text-[12.5px] text-ink outline-none transition-colors focus:border-ink"
+        >
+          <option value="">{t("System default")}</option>
+          {devices.map((d) => (
+            <option key={d.name} value={d.name}>
+              {d.description || d.name}
+            </option>
+          ))}
+          {!known && <option value={settings.audioDevice}>{settings.audioDevice}</option>}
+        </select>
+      </TvSelect>
     </div>
   );
 }

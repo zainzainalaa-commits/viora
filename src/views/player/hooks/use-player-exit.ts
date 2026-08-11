@@ -4,7 +4,6 @@ import { clearPlayback, readPlayback, savePlayback, streamMatchesEntry } from "@
 import type { PlayerBridge } from "@/lib/player/bridge";
 import { getPlaybackPosition } from "@/lib/player/playback-clock";
 import { saveResumeMs } from "@/lib/resume";
-import { exitWindowFullscreenOnPlayerClose } from "@/lib/fullscreen-state";
 import type { PartialSyncState } from "@/lib/together/provider";
 import { useView, type PlayerSrc, type PlayerStreamRef } from "@/lib/view";
 import { MAX_AUTORETRY_ATTEMPTS } from "../player-utils";
@@ -68,7 +67,6 @@ export function usePlayerExit(params: {
     }
     await exitPip();
     if (castActiveRef.current) await stopCast().catch(() => {});
-    await exitWindowFullscreenOnPlayerClose();
     if (inRoom && isHost) {
       publishState({
         mediaId: null,

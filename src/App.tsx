@@ -1,7 +1,5 @@
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { FloatingBack } from "@/chrome/floating-back";
-import { WindowControls } from "@/chrome/window-controls";
-import { WindowResizeEdges } from "@/chrome/window-resize-edges";
 import { MinUIDock } from "@/chrome/minui-dock";
 import { Sidebar } from "@/chrome/sidebar";
 import { DraculaSidebar } from "@/chrome/dracula-sidebar";
@@ -15,9 +13,7 @@ import { CinematicOverlay } from "@/chrome/cinematic-overlay";
 import { Topbar } from "@/chrome/topbar";
 import { startMaintenance, subscribeMemoryPressure } from "@/lib/maintenance";
 import { MiddleClickScroll } from "@/lib/use-middle-click-scroll";
-import { exitWindowFullscreenOnPlayerClose, toggleWindowFullscreen } from "@/lib/fullscreen-state";
 import { flushCloudSync } from "@/views/player/hooks/use-stremio-sync";
-import { setNativeMemoryActive } from "@/lib/native-memory";
 import { useOverlayPinned } from "@/lib/overlay-pin";
 import { isMobileDevice, isWeb } from "@/lib/platform";
 import { useIsPhone } from "@/lib/use-form-factor";
@@ -35,10 +31,7 @@ import { CurfewGuard } from "@/components/curfew-guard";
 import { HoverPreview } from "@/components/hover-preview";
 import { CustomHoverCssMount } from "@/components/custom-hover-css-mount";
 import { EmbedViewportRoot } from "@/components/embed-viewport";
-import { InstallerViewportRoot } from "@/components/installer-viewport";
-import { UpdateRoot } from "@/components/update/update-root";
 import { CustomCodeMount } from "@/components/custom-code-mount";
-import { MemoryHud } from "@/components/memory-hud";
 import { OfflineBanner } from "@/chrome/offline-banner";
 import { MobileNotice } from "@/components/mobile-notice";
 import { WebhookLoopMount } from "@/components/webhook-loop-mount";
@@ -80,8 +73,7 @@ import { useSettings } from "@/lib/settings";
 import { effectiveBinding, eventToBinding } from "@/lib/hotkeys";
 import { ViewProvider, useView, type Frame, type MetaFilter, type View } from "@/lib/view";
 import type { MetaType } from "@/lib/cinemeta";
-import { useDiscordPresence } from "@/lib/discord/use-discord-presence";
-import { Home } from "@/views/home";
+import { Home, HOME_HERO } from "@/views/home";
 import { ParentalProvider } from "@/lib/parental";
 import { TraktProvider } from "@/lib/trakt/provider";
 import { AnilistProvider } from "@/lib/anilist/provider";
@@ -294,8 +286,6 @@ export function App() {
                       <SearchOverlay />
                       <SearchHotkey />
                       <EmbedViewportRoot />
-                      <InstallerViewportRoot />
-                      <UpdateRoot />
                     </HarborErrorBoundary>
                     <ErrorView />
                     <DevErrorTrigger />
@@ -406,7 +396,6 @@ function TogetherLocationPublisher() {
 }
 
 function DiscordPresence() {
-  useDiscordPresence();
   return null;
 }
 
@@ -566,12 +555,7 @@ function Shell() {
   }, [player, settings.hotkeys, update]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "F11") {
-        e.preventDefault();
-        void toggleWindowFullscreen();
-      }
-    };
+    const onKey = (_e: KeyboardEvent) => {};
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
@@ -605,14 +589,6 @@ function Shell() {
       search: () => setSearchOpen(true),
     };
   }, [setView, goBack, setSearchOpen]);
-
-  useEffect(() => {
-    if (topKind !== "live") {
-      void import("@/lib/multiview/bridge").then(({ mvStopAll }) =>
-        mvStopAll().catch(() => {}),
-      );
-    }
-  }, [topKind]);
 
   useEffect(() => {
     void import("@/lib/addon-store").then(({ ensureBuiltInAddons }) => ensureBuiltInAddons());
@@ -668,10 +644,6 @@ function Shell() {
   }, [activeProfile?.id]);
 
   const playerActive = !!player;
-  useEffect(() => setNativeMemoryActive(playerActive), [playerActive]);
-  useEffect(() => {
-    if (!playerActive) void exitWindowFullscreenOnPlayerClose();
-  }, [playerActive]);
   const pickerTop = topKind === "picker";
   const personTop = topKind === "person";
   const collectionTop = topKind === "collection";
@@ -727,7 +699,15 @@ function Shell() {
     });
   }, [topKind]);
 
-  const layer = (top: boolean) => (top ? "contents" : "hidden");
+  // The active screen needs a box of its own, not `display: contents`.
+  //
+  // `contents` removes the element from layout entirely, so it measures 0x0 at
+  // the origin. The engine navigates by comparing geometry, and a screen that
+  // reports itself as a point in the top-left corner is never "below" the
+  // topbar or "right of" the sidebar — so focus that stepped out of the content
+  // could never step back into it, and the remote froze. Its children already
+  // filled the parent this way, so the rendered layout is unchanged.
+  const layer = (top: boolean) => (top ? "flex min-h-0 min-w-0 flex-1 flex-col" : "hidden");
 
   const overlayPinned = useOverlayPinned();
   const settingsAlive = useIdleEvict(settingsTop, overlayPinned);
@@ -783,12 +763,6 @@ function Shell() {
       {!playerActive && !pickerTop && layout === "royal" && <FloatingBack offsetTop={92} />}
       {!playerActive && !pickerTop && layout === "rail" && <FloatingBack offsetLeft={settings.sidebarCollapsed ? 88 : 220} offsetTop={28} />}
       {!playerActive && !pickerTop && layout === "custom" && <FloatingBack offsetLeft={20} offsetTop={20} />}
-      {!playerActive && !pickerTop && layout === "custom" && (
-        <div className="fixed end-3 top-3 z-[120]">
-          <WindowControls />
-        </div>
-      )}
-      {!playerActive && <WindowResizeEdges />}
       {/* The content half of the app is one region, so leaving it for the
           sidebar and coming back lands where you were, and so focus always has
           somewhere to return to when a view unmounts under it. */}
@@ -797,7 +771,7 @@ function Shell() {
         inert={playerActive}
         className={`relative flex min-h-0 min-w-0 flex-1 flex-col ${playerActive ? "invisible" : ""}`}
       >
-        <FocusLayer top={homeTop} className={layer(homeTop)}>
+        <FocusLayer top={homeTop} className={layer(homeTop)} preferredChildFocusKey={HOME_HERO}>
           <Home active={homeTop} />
         </FocusLayer>
         {settingsAlive && (
@@ -829,7 +803,11 @@ function Shell() {
           </FocusLayer>
         )}
         {addonsAlive && (
-          <FocusLayer top={addonsTop} className={layer(addonsTop)}>
+          // Named rather than inferred: without it the screen opened with the
+          // highlight still in the sidebar. The key is a string constant, not an
+          // import of the lazy view, so naming the destination does not pull the
+          // whole Addons bundle into the initial load.
+          <FocusLayer top={addonsTop} className={layer(addonsTop)} preferredChildFocusKey="ADDONS_ADD">
             <Suspense fallback={null}>
               <AddonsView />
             </Suspense>
@@ -1000,11 +978,6 @@ function Shell() {
             </Suspense>
           </FocusLayer>
         )}
-        {pickerTop && !themeHasTopbar && (
-          <div className="fixed end-3 top-3 z-[120]">
-            <WindowControls />
-          </div>
-        )}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-canvas/85 via-canvas/40 to-transparent"
@@ -1024,7 +997,6 @@ function Shell() {
       )}
       <CustomCodeMount />
       <WebhookLoopMount />
-      <MemoryHud />
       {!player && <OfflineBanner />}
     </div>
   );

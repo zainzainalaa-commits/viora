@@ -1,5 +1,4 @@
 import { lruSet } from "@/lib/cache";
-import { registerCache } from "@/lib/memory-profiler";
 import { safeFetch as fetch } from "@/lib/safe-fetch";
 import type { Meta } from "./cinemeta";
 import type { PlayEpisode } from "./view";
@@ -110,10 +109,6 @@ const tmdbSeasonCache = new Map<string, PlayEpisode[]>();
 const addonEpsCache = new Map<string, PlayEpisode[]>();
 const cinemetaListCache = new Map<string, PlayEpisode[]>();
 
-registerCache("episodes:tt", () => ttCache.size);
-registerCache("episodes:tmdbSeason", () => tmdbSeasonCache.size);
-registerCache("episodes:addon", () => addonEpsCache.size);
-registerCache("episodes:cinemetaList", () => cinemetaListCache.size);
 
 function readAuthKey(): string | null {
   try {

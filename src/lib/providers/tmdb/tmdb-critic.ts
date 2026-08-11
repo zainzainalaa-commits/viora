@@ -1,5 +1,4 @@
 import { lruSet } from "@/lib/cache";
-import { registerCache } from "@/lib/memory-profiler";
 import { get } from "./tmdb-client";
 
 const CRITIC_CACHE_MAX = 400;
@@ -37,7 +36,6 @@ const CRITIC_KEY_JOBS = new Set([
 const criticCache = new Map<string, CriticData | null>();
 const criticInflight = new Map<string, Promise<CriticData | null>>();
 
-registerCache("tmdb:critic", () => criticCache.size);
 
 export async function tmdbCriticData(
   key: string,

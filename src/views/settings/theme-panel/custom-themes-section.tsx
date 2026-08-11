@@ -19,7 +19,6 @@ import { downloadText } from "@/lib/download-text";
 import { importForeignTheme } from "@/lib/theme-import";
 import { isHarborStyleName, parseHarborStyle, serializeHarborStyle } from "@/lib/harborstyle";
 import { useSettings } from "@/lib/settings";
-import { pushActivityHint } from "@/lib/discord/activity-hint";
 import {
   FEATURED_CUSTOM_THEMES,
   getThemeById,
@@ -40,10 +39,6 @@ export function CustomThemesSection() {
 
   useEffect(() => subscribeCustomThemes(() => setThemes(getCustomThemes())), []);
 
-  useEffect(() => {
-    if (!libraryOpen || studioOpen) return;
-    return pushActivityHint({ details: "Browsing the theme library" });
-  }, [libraryOpen, studioOpen]);
 
   const activeId = settings.theme.preset;
   const activeTheme = activeId === "custom" ? null : getThemeById(activeId);

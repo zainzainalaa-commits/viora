@@ -17,7 +17,6 @@ import { withinAdWindow } from "@/lib/ad-report/window";
 import { isLocalUrl } from "@/lib/player/local-url";
 import { useAuth } from "@/lib/auth";
 import { embedFlags } from "./player/player-utils";
-import { useFullscreen } from "./player/hooks/use-fullscreen";
 import { useSvpGuard } from "./player/hooks/use-svp-guard";
 import { usePlayerCast } from "./player/hooks/use-player-cast";
 import { useCastReturnPublish } from "./player/hooks/use-cast-return-publish";
@@ -55,9 +54,7 @@ import { useGifRecorder } from "./player/hooks/use-gif-recorder";
 import { useSleepTimer } from "./player/hooks/use-sleep-timer";
 import { useAutoEndExit } from "./player/hooks/use-auto-end-exit";
 import { useQueueAdvance } from "./player/hooks/use-queue-advance";
-import { usePipMode } from "./player/hooks/use-pip-mode";
 import { usePlaybackControls } from "./player/hooks/use-playback-controls";
-import { usePlaybackPresence } from "./player/hooks/use-playback-presence";
 import { usePlayerExit } from "./player/hooks/use-player-exit";
 import { usePendingSeekApply } from "./player/hooks/use-pending-seek-apply";
 import { usePlayerHotkeys } from "./player/hooks/use-player-hotkeys";
@@ -69,11 +66,9 @@ import { useBridgeLoad } from "./player/hooks/use-bridge-load";
 import { useVideoFill } from "./player/hooks/use-video-fill";
 import { useLivePictureEq } from "./player/hooks/use-live-picture-eq";
 import { useAnime4k } from "./player/hooks/use-anime4k";
-import { useHdrStage } from "./player/hooks/use-hdr-stage";
 import { useSdrBoostGate } from "./player/hooks/use-sdr-boost-gate";
 import { PlayerOverlayLayers, type PlayerOverlayLayersProps } from "./player/player-overlay-layers";
 import { LeaveConfirmModal } from "@/components/player/leave-confirm-modal";
-import { HdrStageBridge } from "./player/hdr-stage-bridge";
 import { setSkipSegmentsView } from "@/lib/skip-intro/segment-store";
 import { markStreamDead, STUB_TTL_MS } from "@/lib/dead-streams";
 import type { VolumeIndicatorState } from "@/components/player/volume-indicator";
@@ -132,7 +127,9 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   const videoMountRef = useRef<HTMLDivElement>(null);
   const bridgeRef = useRef<PlayerBridge | null>(null);
   const selfFrameReadyRef = useRef(false);
-  const { fullscreen, toggleFullscreen } = useFullscreen();
+  // Always: there is one window and it is the screen.
+  const fullscreen = true;
+  const toggleFullscreen = () => {};
   const { snap, engine, bridgeReady, bridgeKey, embedActive } = usePlayerBridge({
     bridgeRef,
     videoMountRef,
@@ -169,7 +166,10 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   const [hasStarted, setHasStarted] = useState(false);
   const cast = usePlayerCast({ src, debrids, snapRef, bridgeRef, settings });
   const [now, setNow] = useState(() => Date.now());
-  const { pipMode, togglePipMode, exitPip } = usePipMode({ bridgeRef, setChromeHidden });
+  // Picture-in-picture was a second OS window; Android has no counterpart.
+  const pipMode = false;
+  const togglePipMode = () => {};
+  const exitPip = async () => {};
   const { slowLoad, transcodedUrl } = useAutoRetry({
     bridgeRef,
     src,
@@ -374,7 +374,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     replacePlayerSrc,
   });
 
-  usePlaybackPresence({ src, snap, season, episode, liveGuideOpen: liveOverlay.open });
   useCastReturnPublish({
     casting: !!cast.castDevice,
     inRoom,
@@ -722,20 +721,9 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     enabled: settings.mpvTweaks?.["inverse-tone-mapping"] === "yes",
   });
 
-  const { requested: hdrStageRequested, confirmed: hdrStageActive } = useHdrStage({
-    engine,
-    embedActive,
-    hdrGamma: snap.hdrGamma,
-    playerHdrStage: settings.playerHdrStage,
-    playerHdrToSdr: settings.playerHdrToSdr,
-    onFallback: () =>
-      showSyncToast(
-        "error",
-        t(
-          "HDR controls could not load. Showing the video with controls. For reliable HDR, switch to True HDR, separate window in Settings.",
-        ),
-      ),
-  });
+  // The HDR stage was a dedicated always-on-top window that rendered the video
+  // while the page kept only the controls. There is no second window here.
+  const hdrStageActive = false;
 
   const { mpvEmbedWindowsActive, stageBg } = embedFlags(
     engine,
@@ -966,39 +954,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
       />
       {!hdrStageActive && <PlayerOverlayLayers {...overlayProps} />}
       <LeaveConfirmModal />
-      <HdrStageBridge
-        active={hdrStageRequested}
-        payload={{
-          snap,
-          src,
-          shellId: settings.playerShellId,
-          engine,
-          visible: showChrome,
-          fullscreen,
-          resolvedImdbId,
-          tmdbKey: settings.tmdbKey ?? null,
-          canChangeEpisode,
-          hasPrevEp: canChangeEpisode && !!adjacent.prev,
-          hasNextEp: canChangeEpisode && !!adjacent.next,
-          pipMode,
-        }}
-        handlers={{
-          playPause: playPauseToggle,
-          fullscreen: toggleFullscreen,
-          seek: seekTo,
-          seekStep,
-          rememberSub: rememberSubChoice,
-          pip: togglePipMode,
-          cast: () => cast.openCastMenu(null),
-          back: closePlayer,
-          prevEp: () => goToEpisode(adjacent.prev),
-          nextEp: () => goToEpisode(adjacent.next),
-          pickAnother: pickAnotherOrGuide,
-          screenshot: () => frameGrab.trigger(),
-          menuOpen: setAnyMenuOpen,
-          activity: wakeChrome,
-        }}
-      />
     </FocusSection>
   );
 }
