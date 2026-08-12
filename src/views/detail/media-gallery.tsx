@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { useCallback, useMemo, useState } from "react";
 import { Check } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -81,7 +82,25 @@ export function MediaGallery({ detail, title, logo }: { detail: TmdbDetail; titl
       <div className="flex items-center gap-2.5 pe-1">
         <h3 className="text-[17px] font-medium tracking-tight text-ink">{t("Media")}</h3>
         <div className="flex flex-wrap items-center gap-1.5">
+          {/* One tab, no chooser, on a remote.
+
+              The chips pick which kind of media the strip below shows. Each is
+              a 28px pill level with the section heading, so walking down the
+              page stops on them before reaching anything worth looking at — and
+              the strip underneath already shows the first kind. Choosing between
+              videos, images and logos is a browsing luxury for a pointer. */}
           {tabs.map((tab) => (
+            isDpadPrimary() ? (
+              tab.id === current ? (
+                <span
+                  key={tab.id}
+                  className="flex h-7 items-center gap-1.5 rounded-full bg-elevated px-3 text-[12.5px] font-semibold text-ink ring-1 ring-edge"
+                >
+                  {tab.label}
+                  <span className="text-[11px] tabular-nums text-ink-subtle">{tab.count}</span>
+                </span>
+              ) : null
+            ) : (
             <FocusButton
               key={tab.id}
               type="button"
@@ -95,6 +114,7 @@ export function MediaGallery({ detail, title, logo }: { detail: TmdbDetail; titl
               {tab.label}
               <span className="text-[11px] tabular-nums text-ink-subtle">{tab.count}</span>
             </FocusButton>
+            )
           ))}
         </div>
       </div>

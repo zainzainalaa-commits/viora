@@ -1,3 +1,4 @@
+import type { PlayerEngine } from "@/lib/player/bridge";
 import { useEffect } from "react";
 import { isLinuxDesktop } from "@/lib/platform";
 import type { Settings } from "@/lib/settings";
@@ -10,7 +11,7 @@ import type { Settings } from "@/lib/settings";
  * construct; on Android there is one WebView and nothing to follow, so only the
  * attribute survives.
  */
-export function useMpvEmbed(params: { engine: "html5" | "mpv"; settings: Settings }) {
+export function useMpvEmbed(params: { engine: PlayerEngine; settings: Settings }) {
   const { engine, settings } = params;
 
   useEffect(() => {

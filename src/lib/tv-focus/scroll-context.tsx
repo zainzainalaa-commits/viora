@@ -108,6 +108,20 @@ export function revealWithin(
   } else if (item.bottom > box.bottom - lead) {
     container.scrollTop += item.bottom - (box.bottom - lead);
   }
+
+  // Anything inside the first screenful shows the page from its start.
+  //
+  // Revealing with a lead is right in the middle of a long page and wrong at the
+  // top of one: it parks the first control near the top edge and leaves whatever
+  // sits above it — on a title's page, the artwork and the name — scrolled out
+  // of sight. Measured on a film: walking down the page and back up left the
+  // backdrop at y=-432, so two thirds of the poster was gone and the screen read
+  // as having lost its picture. Nothing above the fold needs scrolling to reach,
+  // so the honest position for it is zero.
+  if (container.scrollTop > 0) {
+    const offsetWithin = item.top + container.scrollTop - box.top;
+    if (offsetWithin < container.clientHeight) container.scrollTop = 0;
+  }
 }
 
 function scrolls(el: HTMLElement, axis: "horizontal" | "vertical"): boolean {

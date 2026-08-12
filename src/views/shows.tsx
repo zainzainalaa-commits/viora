@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { CatalogRows } from "@/components/catalog/catalog-rows";
-import { CatalogCustomizeBar } from "@/components/catalog/customize-bar";
 import { ContinueCard } from "@/components/continue-card";
 import { dismissCw, isCwDismissed, useCwDismissVersion } from "@/lib/cw-dismiss";
 import { PeekHero } from "@/components/peek-hero";
@@ -12,7 +11,7 @@ import { topSeries, type Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
 import { publishResumeStates } from "@/lib/hover-preview/store";
 import { listPager } from "@/lib/list-pager";
-import { hasPageRowChanges, resetPageRows, usePageRows } from "@/lib/page-rows";
+import { usePageRows } from "@/lib/page-rows";
 import { useSettings } from "@/lib/settings";
 import { cwSortKey, isAnimeCwItem, isCwMember, library, type LibraryItem } from "@/lib/stremio";
 import { clearLocalCw } from "@/lib/local-cw";
@@ -239,17 +238,7 @@ export function Shows({ active = true }: { active?: boolean }) {
       <ScrollRootContext.Provider value={scrollEl}>
         <div className="relative flex w-full flex-col gap-12 px-12 pb-32 pt-32">
           <PageMast />
-          <div className="relative">
-            <PeekHero slides={hero} />
-            <div className="absolute bottom-3 end-3 z-20">
-              <CatalogCustomizeBar
-                editMode={pageRows.editMode}
-                hasChanges={hasPageRowChanges(pageRows.custom)}
-                onToggleEdit={() => pageRows.setEditMode((v) => !v)}
-                onReset={() => pageRows.persist(resetPageRows())}
-              />
-            </div>
-          </div>
+          <PeekHero slides={hero} />
           {cwItems.length > 0 && (
             <Row title={t("Pick up where you left off")} min={260} shape="landscape" scrollKey="shows:cw">
               {cwItems.map((it) => (

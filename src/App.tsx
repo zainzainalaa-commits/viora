@@ -74,6 +74,9 @@ import { effectiveBinding, eventToBinding } from "@/lib/hotkeys";
 import { ViewProvider, useView, type Frame, type MetaFilter, type View } from "@/lib/view";
 import type { MetaType } from "@/lib/cinemeta";
 import { Home, HOME_HERO } from "@/views/home";
+import { MOVIES_HERO } from "@/components/cinema-hero";
+import { SHOWS_HERO } from "@/components/peek-hero";
+import { SETTINGS_NAV } from "@/views/settings/nav";
 import { ParentalProvider } from "@/lib/parental";
 import { TraktProvider } from "@/lib/trakt/provider";
 import { AnilistProvider } from "@/lib/anilist/provider";
@@ -87,7 +90,6 @@ const importCalendar = () => import("@/views/calendar");
 const importDetail = () => import("@/views/detail");
 const importAddons = () => import("@/views/addons");
 const importDiscover = () => import("@/views/discover");
-const importCatalogs = () => import("@/views/catalogs");
 const importAward = () => import("@/views/award");
 const importAnimeAward = () => import("@/views/anime-award");
 const importFilter = () => import("@/views/filter");
@@ -115,7 +117,6 @@ const CalendarView = lazy(() => importCalendar().then((m) => ({ default: m.Calen
 const DetailView = lazy(() => importDetail().then((m) => ({ default: m.DetailView })));
 const AddonsView = lazy(() => importAddons().then((m) => ({ default: m.AddonsView })));
 const Discover = lazy(() => importDiscover().then((m) => ({ default: m.Discover })));
-const Catalogs = lazy(() => importCatalogs().then((m) => ({ default: m.Catalogs })));
 const AwardView = lazy(() => importAward().then((m) => ({ default: m.AwardView })));
 const AnimeAwardView = lazy(() => importAnimeAward().then((m) => ({ default: m.AnimeAwardView })));
 const FilterView = lazy(() => importFilter().then((m) => ({ default: m.FilterView })));
@@ -662,7 +663,6 @@ function Shell() {
   const settingsTop = topKind === "settings";
   const animeTop = topKind === "anime";
   const discoverTop = topKind === "discover";
-  const catalogsTop = topKind === "catalogs";
   const addonsTop = topKind === "addons" || topKind === "addon-detail";
   const calendarTop = topKind === "calendar";
   const queueTop = topKind === "queue";
@@ -713,7 +713,6 @@ function Shell() {
   const settingsAlive = useIdleEvict(settingsTop, overlayPinned);
   const animeAlive = useIdleEvict(animeTop);
   const discoverAlive = useIdleEvict(discoverTop);
-  const catalogsAlive = useIdleEvict(catalogsTop);
   const addonsAlive = useIdleEvict(addonsTop);
   const calendarAlive = useIdleEvict(calendarTop);
   const queueAlive = useKeepAlive(queueTop, queueTop);
@@ -775,14 +774,14 @@ function Shell() {
           <Home active={homeTop} />
         </FocusLayer>
         {settingsAlive && (
-          <FocusLayer top={settingsTop} className={layer(settingsTop)}>
+          <FocusLayer top={settingsTop} className={layer(settingsTop)} preferredChildFocusKey={SETTINGS_NAV}>
             <Suspense fallback={null}>
               <Settings active={settingsTop} />
             </Suspense>
           </FocusLayer>
         )}
         {animeAlive && (
-          <FocusLayer top={animeTop} className={layer(animeTop)}>
+          <FocusLayer top={animeTop} className={layer(animeTop)} preferredChildFocusKey="row:anime:topPicks">
             <Suspense fallback={null}>
               <AnimeView active={animeTop} />
             </Suspense>
@@ -792,13 +791,6 @@ function Shell() {
           <FocusLayer top={discoverTop} className={layer(discoverTop)}>
             <Suspense fallback={null}>
               <Discover active={discoverTop} />
-            </Suspense>
-          </FocusLayer>
-        )}
-        {catalogsAlive && (
-          <FocusLayer top={catalogsTop} className={layer(catalogsTop)}>
-            <Suspense fallback={null}>
-              <Catalogs active={catalogsTop} />
             </Suspense>
           </FocusLayer>
         )}
@@ -821,7 +813,7 @@ function Shell() {
           </FocusLayer>
         )}
         {moviesAlive && (
-          <FocusLayer top={moviesTop} className={layer(moviesTop)}>
+          <FocusLayer top={moviesTop} className={layer(moviesTop)} preferredChildFocusKey={MOVIES_HERO}>
             <Suspense fallback={null}>
               <Movies active={moviesTop} />
             </Suspense>
@@ -835,7 +827,7 @@ function Shell() {
           </FocusLayer>
         )}
         {showsAlive && (
-          <FocusLayer top={showsTop} className={layer(showsTop)}>
+          <FocusLayer top={showsTop} className={layer(showsTop)} preferredChildFocusKey={SHOWS_HERO}>
             <Suspense fallback={null}>
               <Shows active={showsTop} />
             </Suspense>

@@ -1780,32 +1780,94 @@ html[data-input="dpad"] select:focus,
 html[data-input="dpad"] summary:focus,
 html[data-input="dpad"] [tabindex]:focus,
 html[data-input="dpad"] [data-focusable="true"]:focus {
-  outline: 4px solid var(--color-accent) !important;
-  outline-offset: 3px;
+  /* One ring, one weight, everywhere.
+     It was two lines for a while — an outline plus an inner one — because a
+     focused control used to be scaled up six percent and burst out of whatever
+     held it, so the outline got cropped and the inner line was insurance. The
+     scale is gone, so the insurance is too: doubling them only made the frame
+     look heavy, and on a full-width row like a stream result it read as a slab
+     of orange rather than a highlight. Three pixels, hugging the control, with
+     a soft halo for depth. */
+  outline: 3px solid var(--color-accent) !important;
+  outline-offset: 0;
   border-radius: 6px;
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-accent) 28%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 18%, transparent);
   z-index: 2;
 }
 
-/* The hero says it has focus without a ring around it.
-
-   A 4px accent outline is right for a card in a row; drawn around a poster that
-   fills most of the screen it frames the whole picture and reads as a border on
-   the artwork rather than a cursor. An inset hairline and a small lift carry the
-   same information at a distance without cutting the image. */
-html[data-input="dpad"] [data-hero-stage]:focus {
+/* Controls that show focus in their text instead of around their edge.
+   Used by the options inside the Type and Catalog menus on Discover: an option
+   is a full-width band in a list that already draws its own boundaries, so a
+   ring around one is a box inside a box. The line the viewer is on turns the
+   focus colour, and nothing about the menu's shape changes. */
+html[data-input="dpad"] [data-tv-text-focus]:focus,
+html[data-input="dpad"] [data-tv-text-focus][data-tv-focused="true"] {
   outline: none !important;
-  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-accent) 60%, transparent);
-  border-radius: inherit;
+  box-shadow: none !important;
 }
+html[data-input="dpad"] [data-tv-text-focus]:focus,
+html[data-input="dpad"] [data-tv-text-focus]:focus *,
+html[data-input="dpad"] [data-tv-text-focus][data-tv-focused="true"],
+html[data-input="dpad"] [data-tv-text-focus][data-tv-focused="true"] * {
+  color: var(--color-accent) !important;
+}
+
+/* The hero carries no frame at all.
+
+   A ring is a cursor, and a cursor drawn around artwork that fills the top of
+   the screen stops reading as one: it reads as a border on the picture. The
+   hero is also the only thing up there, so its position is never in question. */
 html[data-input="dpad"] [data-hero-stage]:focus,
 html[data-input="dpad"] [data-hero-stage][data-tv-focused="true"] {
+  outline: none !important;
+  box-shadow: none !important;
   transform: none;
 }
 
-/* Lift the focused tile so it separates from its row at a distance. */
-html[data-input="dpad"] [data-focusable="true"]:focus,
-html[data-input="dpad"] [data-tv-focused="true"],
+/* A card rings its poster, and its title stays outside the frame.
+
+   The focusable is the whole card — the artwork with the name underneath it —
+   so a ring on the element encircles both, and the caption ends up inside a box
+   that is meant to be around a picture. Every television interface draws it the
+   other way: the frame belongs to the poster, the name sits below it in the
+   clear. `[data-preview-anchor]` is exactly that poster block, the artwork and
+   its badges, with the title as its sibling. */
+html[data-input="dpad"] button:has(> [data-preview-anchor]):focus,
+html[data-input="dpad"] [data-tv-focused="true"]:has(> [data-preview-anchor]),
+html[data-input="dpad"] [data-focusable="true"]:has(> [data-preview-anchor]):focus {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+/* The card's own poster, and only that one.
+   A descendant match rings every poster underneath whatever holds focus, and a
+   hero is an ancestor of the row beneath it — so standing on the anime hero lit
+   up all six cards in "Top Picks for You" at once. A card is the direct parent
+   of its artwork, so that is the relationship to name. */
+html[data-input="dpad"] button:focus > [data-preview-anchor],
+html[data-input="dpad"] [data-tv-focused="true"] > [data-preview-anchor] {
+  /* Same three pixels as every other stop, so a card and a button are the same
+     kind of thing to the eye. Offset here because a poster's ring sits around
+     artwork rather than around a control, and a hair of space keeps it off the
+     image. */
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: calc(var(--poster-radius, 12px) + 4px);
+  /* Up a little, so the card separates from its row across a room. The poster
+     alone moves; the name below it stays on its line, which is what keeps a row
+     of captions readable while one of them is picked out. */
+  transform: translate3d(0, -8px, 0) scale(1.03);
+  transition: transform 140ms ease-out;
+  z-index: 2;
+}
+
+/* Lift the focused tile so it separates from its row at a distance.
+   Only a tile. Growing every focusable by six percent pushed plain controls out
+   of whatever holds them: measured on the Discover type menu, the focused item
+   went from its container's 298px to 316px and hung 9px past each edge, where
+   the list clipped it — so the ring lost its sides and showed as two orange
+   lines above and below the row. Cards get their lift on the poster itself. */
 html[data-input="dpad"] [role="gridcell"]:focus {
   transform: scale(1.06);
   transition: transform 120ms ease-out;

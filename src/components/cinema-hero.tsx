@@ -1,5 +1,15 @@
-import { FocusButton } from "@/lib/tv-focus";
-import { ChevronRight, Info, Play } from "lucide-react";
+import { useFocusableControl } from "@/lib/tv-focus";
+
+/**
+ * Where the remote enters this screen.
+ *
+ * Named, because otherwise arrival is decided by geometry the moment focus is
+ * placed, and on this screen that is a race: measured on the device, entering
+ * landed on the hero's Play button when the rows were slow and on the
+ * "Customize page" chip in the corner when they were quick. The home screen has
+ * always named its hero; this is the same promise for this one.
+ */
+export const MOVIES_HERO = "MOVIES_HERO";
 import { useEffect, useRef, useState } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
 import { MetaAwardsCorner } from "@/components/meta-awards-corner";
@@ -8,7 +18,6 @@ import { tmdbLogo, tmdbTrailerList, useTmdbImdbId } from "@/lib/providers/tmdb";
 import { useImdbRating } from "@/lib/imdb-rating";
 import { useSettings } from "@/lib/settings";
 import { useLocalizedOverview } from "@/lib/use-localized-overview";
-import { smartPlayEpisode } from "@/lib/smart-play";
 import { fetchTrailer, prefetchTrailer, trailerSrc, type TrailerInfo } from "@/lib/trailer";
 import { useT } from "@/lib/i18n";
 import { useView } from "@/lib/view";
@@ -32,6 +41,7 @@ export function CinemaHero({
   eyebrow?: string;
 }) {
   const t = useT();
+  const { openMeta } = useView();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -39,6 +49,31 @@ export function CinemaHero({
   const [inViewport, setInViewport] = useState(true);
   const pageVisible = usePageVisible();
   const ref = useRef<HTMLElement>(null);
+
+  // One stop for the whole hero, and the same contract the home screen's uses:
+  // left and right belong to the carousel while focus is here so the viewer
+  // browses with the two keys they already use, left on the first slide is
+  // handed back so the hero can never be a trap, and up and down always leave.
+  const heroFocus = useFocusableControl({
+    focusKey: MOVIES_HERO,
+    onSelect: () => {
+      const m = slides[active];
+      if (m) openMeta(m);
+    },
+    onArrowPress: (direction) => {
+      if (slides.length < 2) return true;
+      if (direction === "right") {
+        setActive((i) => Math.min(i + 1, slides.length - 1));
+        return false;
+      }
+      if (direction === "left") {
+        if (active === 0) return true;
+        setActive((i) => Math.max(i - 1, 0));
+        return false;
+      }
+      return true;
+    },
+  });
   const viewportRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
   const lastX = useRef(0);
@@ -127,7 +162,16 @@ export function CinemaHero({
 
   if (slides.length === 0) {
     return (
-      <section className="harbor-bleed-stremio relative h-[78vh] min-h-[640px] animate-pulse bg-elevated/30" />
+      <section
+        ref={(node) => {
+          (ref as { current: HTMLElement | null }).current = node;
+          (heroFocus.ref as { current: HTMLElement | null }).current = node;
+        }}
+        tabIndex={-1}
+        data-hero-stage=""
+        {...heroFocus.focusProps}
+        className="harbor-bleed-stremio relative h-[420px] animate-pulse bg-elevated/30"
+      />
     );
   }
 
@@ -135,8 +179,14 @@ export function CinemaHero({
 
   return (
     <section
-      ref={ref}
-      className="harbor-bleed-stremio relative h-[78vh] min-h-[640px] overflow-hidden bg-canvas"
+      ref={(node) => {
+        (ref as { current: HTMLElement | null }).current = node;
+        (heroFocus.ref as { current: HTMLElement | null }).current = node;
+      }}
+      tabIndex={-1}
+      data-hero-stage=""
+      {...heroFocus.focusProps}
+      className="harbor-bleed-stremio relative h-[420px] overflow-hidden bg-canvas"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -180,12 +230,18 @@ export function CinemaHero({
       {slides.length > 1 && (
         <div className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 gap-2.5">
           {slides.map((_, i) => (
-            <FocusButton
+            // Out of the focus tree, like the home hero's: the slide advances on
+            // its own and left/right already move through them, so as stops they
+            // only made the remote walk one press per slide to get past the top
+            // of the screen.
+            <button
+              type="button"
+              tabIndex={-1}
               key={i}
               onClick={() => setActive(i)}
               aria-label={t("Slide {n}", { n: i + 1 })}
               className={`h-1.5 rounded-full transition-all duration-500 ${
-                i === active ? "w-10 bg-ink" : "w-1.5 bg-ink-muted/55 hover:bg-ink-muted"
+                i === active ? "w-10 bg-accent" : "w-1.5 bg-ink-muted/55 hover:bg-ink-muted"
               }`}
             />
           ))}
@@ -206,7 +262,6 @@ function CinemaSlide({
 }) {
   const t = useT();
   const { settings } = useSettings();
-  const { openMeta, openPicker } = useView();
   const description = useLocalizedOverview(meta);
   const resolvedImdb = useTmdbImdbId(meta.id);
   const imdbRating = useImdbRating(meta, resolvedImdb);
@@ -383,23 +438,6 @@ function CinemaSlide({
               {description}
             </p>
           )}
-          <div className="mt-2 flex items-center gap-3">
-            <FocusButton
-              onClick={() => openPicker(meta, smartPlayEpisode(meta), { autoPlay: settings.instantPlay })}
-              className="flex h-12 items-center gap-2.5 rounded-md bg-ink px-7 text-[14.5px] font-semibold text-canvas shadow-[0_8px_24px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.5)] transition-transform duration-200 hover:scale-[1.03] active:scale-[0.97]"
-            >
-              <Play size={17} fill="currentColor" />
-              {t("Play")}
-            </FocusButton>
-            <FocusButton
-              onClick={() => openMeta(meta)}
-              className="flex h-12 items-center gap-2.5 rounded-md border border-edge bg-canvas/50 px-6 text-[14.5px] font-medium text-ink backdrop-blur-sm transition-colors duration-200 hover:bg-canvas/70"
-            >
-              <Info size={16} strokeWidth={2} />
-              {t("More info")}
-              <ChevronRight size={15} strokeWidth={2} className="dir-icon opacity-65" />
-            </FocusButton>
-          </div>
         </div>
       </div>
     </div>

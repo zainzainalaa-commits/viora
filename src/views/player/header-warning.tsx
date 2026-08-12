@@ -1,8 +1,11 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { can } from "@/lib/capabilities";
 import { useT } from "@/lib/i18n";
 
 export function NoAudioWarning(props: { onUseMpv: () => void; onDismiss: () => void }) {
   const t = useT();
+  // The offer has to name the engine this device actually has.
+  const nativeLabel = can("exoEngine") ? t("Use the native player") : t("Use mpv engine");
   return (
     <div className="pointer-events-auto absolute inset-x-0 bottom-32 z-30 mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-white/15 bg-black/75 px-6 py-5 text-center text-white backdrop-blur-xl">
       <p className="text-[14px] leading-snug">
@@ -13,7 +16,7 @@ export function NoAudioWarning(props: { onUseMpv: () => void; onDismiss: () => v
           onClick={props.onUseMpv}
           className="rounded-full bg-accent px-4 py-1.5 text-[13px] font-semibold text-canvas transition-colors hover:bg-accent/90"
         >
-          {t("Use mpv engine")}
+          {nativeLabel}
         </FocusButton>
         <FocusButton
           onClick={props.onDismiss}
@@ -31,7 +34,9 @@ export function HeaderWarning(props: { onPickAnother: () => void }) {
   return (
     <div className="pointer-events-auto absolute inset-x-0 bottom-32 z-30 mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-white/15 bg-black/75 px-6 py-5 text-center text-white backdrop-blur-xl">
       <p className="text-[14px] leading-snug">
-        {t("This file is flagged as not web-playable. Try the mpv backend in Settings or pick another stream.")}
+        {can("exoEngine")
+          ? t("This file is flagged as not web-playable. Switch to the native player in Settings, or pick another stream.")
+          : t("This file is flagged as not web-playable. Try the mpv backend in Settings or pick another stream.")}
       </p>
       <FocusButton
         onClick={props.onPickAnother}

@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { MOVIE_GENRES, TV_GENRES } from "@/lib/feed/tags";
 import type { TmdbDetail } from "@/lib/providers/tmdb";
 import { useView } from "@/lib/view";
@@ -135,6 +136,13 @@ export function InfoBlock({ detail, isAnime = false }: { detail: TmdbDetail; isA
                 ? row.value
                 : row.chips.map((c, i) => (
                     <span key={c.label} className="flex items-center">
+                      {/* Text on a remote, for the same reason as the pills in
+                          the hero: this is a line of facts about the title, and
+                          a link inside it is a stop the viewer has to walk past
+                          rather than something they came here for. */}
+                      {isDpadPrimary() ? (
+                        <span className="text-ink">{c.label}</span>
+                      ) : (
                       <FocusButton
                         type="button"
                         onClick={c.onClick}
@@ -142,6 +150,7 @@ export function InfoBlock({ detail, isAnime = false }: { detail: TmdbDetail; isA
                       >
                         {c.label}
                       </FocusButton>
+                      )}
                       {i < row.chips.length - 1 && (
                         <span className="ms-1.5 text-ink-subtle">·</span>
                       )}

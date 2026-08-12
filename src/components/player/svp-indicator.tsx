@@ -1,3 +1,4 @@
+import type { PlayerEngine } from "@/lib/player/bridge";
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useSettings } from "@/lib/settings";
@@ -13,7 +14,7 @@ export function SvpIndicator({
   chromeVisible,
   suppressed = false,
 }: {
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   chromeVisible: boolean;
   suppressed?: boolean;
 }) {

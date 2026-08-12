@@ -1,5 +1,11 @@
-import { FocusButton } from "@/lib/tv-focus";
-import { Play } from "lucide-react";
+import { useFocusableControl } from "@/lib/tv-focus";
+
+/**
+ * Where the remote enters this screen, named for the same reason the other two
+ * heroes are: arrival should be a decision, not a race with whatever finishes
+ * loading first.
+ */
+export const SHOWS_HERO = "SHOWS_HERO";
 import { useEffect, useRef, useState } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
 import { MetaAwardsCorner } from "@/components/meta-awards-corner";
@@ -8,7 +14,6 @@ import { useT } from "@/lib/i18n";
 import { tmdbLogo, useTmdbImdbId } from "@/lib/providers/tmdb";
 import { useImdbRating } from "@/lib/imdb-rating";
 import { useSettings } from "@/lib/settings";
-import { smartPlayEpisode } from "@/lib/smart-play";
 import { useView } from "@/lib/view";
 import { observe, usePageVisible } from "@/lib/visibility";
 
@@ -21,6 +26,7 @@ const FLICK_VELOCITY = 0.45;
 
 export function PeekHero({ slides }: { slides: Meta[] }) {
   const t = useT();
+  const { openMeta } = useView();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -52,9 +58,42 @@ export function PeekHero({ slides }: { slides: Meta[] }) {
     if (active >= slides.length) setActive(0);
   }, [slides.length, active]);
 
+  // One stop, like the heroes on Home and Movies: OK opens the show, left and
+  // right browse the slides, up and down always leave. Declared above the early
+  // return below — hooks must run on every render.
+  const heroFocus = useFocusableControl({
+    focusKey: SHOWS_HERO,
+    onSelect: () => {
+      const m = slides[active];
+      if (m) openMeta(m);
+    },
+    onArrowPress: (direction) => {
+      if (slides.length < 2) return true;
+      if (direction === "right") {
+        setActive((i) => Math.min(i + 1, slides.length - 1));
+        return false;
+      }
+      if (direction === "left") {
+        if (active === 0) return true;
+        setActive((i) => Math.max(i - 1, 0));
+        return false;
+      }
+      return true;
+    },
+  });
+
   if (slides.length === 0) {
     return (
-      <div className="flex h-[440px] animate-pulse items-center justify-center rounded-[24px] border border-edge-soft bg-elevated/20" />
+      <div
+        ref={(node) => {
+          (ref as { current: HTMLDivElement | null }).current = node;
+          (heroFocus.ref as { current: HTMLElement | null }).current = node;
+        }}
+        tabIndex={-1}
+        data-hero-stage=""
+        {...heroFocus.focusProps}
+        className="flex h-[440px] animate-pulse items-center justify-center rounded-[24px] border border-edge-soft bg-elevated/20"
+      />
     );
   }
 
@@ -117,7 +156,13 @@ export function PeekHero({ slides }: { slides: Meta[] }) {
 
   return (
     <div
-      ref={ref}
+      ref={(node) => {
+        (ref as { current: HTMLDivElement | null }).current = node;
+        (heroFocus.ref as { current: HTMLElement | null }).current = node;
+      }}
+      tabIndex={-1}
+      data-hero-stage=""
+      {...heroFocus.focusProps}
       className="flex flex-col gap-5"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -153,12 +198,14 @@ export function PeekHero({ slides }: { slides: Meta[] }) {
       {slides.length > 1 && (
         <div className="flex justify-center gap-2 pt-1">
           {slides.map((_, i) => (
-            <FocusButton
+            <button
+              type="button"
+              tabIndex={-1}
               key={i}
               onClick={() => setActive(i)}
               aria-label={t("Slide {n}", { n: i + 1 })}
               className={`h-1.5 rounded-full transition-all duration-500 ${
-                i === active ? "w-8 bg-ink" : "w-1.5 bg-ink-muted/55 hover:bg-ink-muted"
+                i === active ? "w-8 bg-accent" : "w-1.5 bg-ink-muted/55 hover:bg-ink-muted"
               }`}
             />
           ))}
@@ -192,9 +239,8 @@ function PeekSlide({
   trackWidth: number;
   onSelect: () => void;
 }) {
-  const t = useT();
   const { settings } = useSettings();
-  const { openMeta, openPicker } = useView();
+  const { openMeta } = useView();
   const resolvedImdb = useTmdbImdbId(meta.id);
   const imdbRating = useImdbRating(meta, resolvedImdb);
   const [logo, setLogo] = useState<string | undefined>(meta.logo);
@@ -288,27 +334,6 @@ function PeekSlide({
               {meta.genres && meta.genres.length > 0 && (
                 <span>{meta.genres.slice(0, 2).join(" · ")}</span>
               )}
-            </div>
-            <div className="flex items-center gap-2.5 pt-1">
-              <FocusButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openPicker(meta, smartPlayEpisode(meta), { autoPlay: settings.instantPlay });
-                }}
-                className="flex h-10 items-center gap-2 rounded-full bg-white px-5 text-[13px] font-semibold text-black transition-transform hover:scale-[1.04] active:scale-[0.97]"
-              >
-                <Play size={14} fill="currentColor" />
-                {t("Play")}
-              </FocusButton>
-              <FocusButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openMeta(meta);
-                }}
-                className="flex h-10 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 text-[13px] font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
-              >
-                {t("Episodes")}
-              </FocusButton>
             </div>
           </>
         )}

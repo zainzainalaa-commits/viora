@@ -8,7 +8,7 @@ import { isAssTrack, isImageSubTrack } from "@/lib/player/sub-format";
 import { clearImportedSubs } from "@/lib/player/imported-subs";
 import { readPlayerVolume } from "@/lib/player-volume";
 import { setPlayerActions } from "@/lib/player-actions";
-import type { PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
 import { useSettings } from "@/lib/settings";
 import { isLocalEngineUrl } from "@/lib/stremio-server";
 import { useSimklScrobble } from "@/lib/simkl/scrobble-hook";
@@ -31,7 +31,7 @@ const HDR_NATIVE_GAMMAS = new Set(["pq", "hlg"]);
 export function usePlayerMedia(params: {
   src: PlayerSrc;
   snap: PlayerSnapshot;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   settings: ReturnType<typeof useSettings>["settings"];
   authKey: ReturnType<typeof useAuth>["authKey"];
   bridgeRef: RefObject<PlayerBridge | null>;

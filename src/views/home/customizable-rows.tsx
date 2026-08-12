@@ -9,6 +9,7 @@ import { TopRankCard } from "@/components/top-rank-card";
 import { LetterboxdRowMenu } from "@/components/letterboxd/letterboxd-row-menu";
 import { useLetterboxd } from "@/lib/stremboxd/provider";
 import { useT } from "@/lib/i18n";
+import { isDpadPrimary } from "@/lib/platform";
 import type { HomeRowCustomization } from "@/lib/home-customization";
 import { useView } from "@/lib/view";
 import type { HomeRow } from "./home-types";
@@ -61,7 +62,10 @@ function RowTitle({ row }: { row: HomeRow }) {
     />
   ) : null;
 
-  if (!row.fetcher) return <>{t(row.name)}{badge}{menu}</>;
+  // See `RowTitle` in catalog-rows: on a remote a row's title is a label, not a
+  // button. It sits above the cards as their sibling and swallowed every press
+  // down the page.
+  if (!row.fetcher || isDpadPrimary()) return <>{t(row.name)}{badge}{menu}</>;
   return (
     <FocusButton
       onClick={() =>

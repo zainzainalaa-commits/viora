@@ -40,7 +40,6 @@ import { ExtLink, KeyField, Section, Segmented, ToggleRow } from "./shared";
 import { TmdbGuideModal } from "./tmdb-tutorial-modal";
 import { TvdbGuideModal } from "./tvdb-tutorial-modal";
 import { EpisodeOrderSetting } from "./episode-order-setting";
-import { HomeRowsEditor } from "./home-rows-editor";
 
 export type LibraryKey = "tmdb" | "omdb" | "rpdb" | "fanart" | "tvdb";
 
@@ -127,238 +126,14 @@ export function LibraryPanel({
     <>
       <TmdbGuideModal open={tmdbGuide} onClose={() => setTmdbGuide(false)} />
       <TvdbGuideModal open={tvdbGuide} onClose={() => setTvdbGuide(false)} />
-      <Section
-        title={t("Home layout")}
-        subtitle={t("How the Home page assembles its rails.")}
-      >
-        <HomeModePicker
-          value={settings.homeMode}
-          onChange={(v) => update({ homeMode: v })}
-        />
-        <Section
-          title={t("Arrange rows")}
-          subtitle={t("Reorder, rename or hide the rails on Home, and choose which one feeds the hero.")}
-        >
-          <HomeRowsEditor />
-        </Section>
-        <ToggleRow
-          label={t("Show every addon row")}
-          sub={t("By default, addon rails that duplicate the built-in ones (Trending, Popular, Top Rated, etc.) are merged so you don't see the same row twice. Turn this on to show every one, duplicates and all.")}
-          value={settings.homeShowAllAddonRows}
-          onChange={(v) => update({ homeShowAllAddonRows: v })}
-          preview={<HomeRowPreview kind="all-addon-rows" />}
-        />
-        <ToggleRow
-          label={t("Watchlist shows only saved titles")}
-          sub={t("Keep the Library Watchlist tab limited to titles you added in Stremio. Turn this off to also include anything Stremio auto-added when you pressed play.")}
-          value={settings.libraryBookmarkedOnly}
-          onChange={(v) => update({ libraryBookmarkedOnly: v })}
-          preview={<HomeRowPreview kind="watchlist-saved" />}
-        />
-        <ToggleRow
-          label={t("Show Playlists tab")}
-          sub={t("Adds a Playlists item to the navigation for browsing movies and shows from your M3U or Xtream playlists (the same ones you add for Live TV). Off by default to keep the nav tidy.")}
-          value={settings.showPlaylistsTab}
-          onChange={(v) => update({ showPlaylistsTab: v })}
-          preview={<HomeRowPreview kind="playlists-tab" />}
-        />
-        <ToggleRow
-          label={t("Keep anime in the Anime room only")}
-          sub={t("Hides anime from the Home Continue Watching row. It still appears in the Anime tab's own Continue Watching.")}
-          value={settings.animeOnlyInAnimeRoom}
-          onChange={(v) => update({ animeOnlyInAnimeRoom: v })}
-          preview={<HomeRowPreview kind="anime-room" />}
-        />
-        <ToggleRow
-          label={t("Advance Continue Watching to the next episode")}
-          sub={t("When you finish an episode, the Home Continue Watching card moves on to the next episode instead of sitting at 0 minutes left.")}
-          value={settings.cwAdvanceNext}
-          onChange={(v) => update({ cwAdvanceNext: v })}
-          preview={<HomeRowPreview kind="cw-advance" />}
-        />
-        <ToggleRow
-          label={t("Hide watched titles in catalogs")}
-          sub={t("Movies you've watched and shows you've made progress on stop appearing in the built-in catalog rows, using your local watch history (and Trakt if connected). Continue Watching is never touched.")}
-          value={settings.hideWatchedInCatalogs}
-          onChange={(v) => update({ hideWatchedInCatalogs: v })}
-          preview={<HomeRowPreview kind="hide-watched" />}
-        />
-        <ToggleRow
-          label={t("Hide unreleased titles")}
-          sub={t("Movies and shows with a future release date stop appearing in the built-in home catalog rows, so Home only shows what you can watch right now.")}
-          value={settings.hideUnreleased}
-          onChange={(v) => update({ hideUnreleased: v })}
-        />
-      </Section>
+      {/* First, because it is the one setting the rest of the app waits on.
 
-      <Section
-        title={t("Home languages")}
-        subtitle={t("Only show titles in these original languages on the Home catalogs. Leave all off to show everything.")}
-      >
-        <HomeLanguagePicker />
-      </Section>
-
-      <Section
-        title={t("Spoilers")}
-        subtitle={t("Blur episode artwork, titles, and descriptions for episodes you have not watched yet, on both shows and anime. Hover an episode to peek.")}
-      >
-        <ToggleRow
-          label={t("Blur spoilers")}
-          sub={t("Hides spoiler-prone episode details in episode lists until you have watched them.")}
-          value={settings.hideSpoilers}
-          onChange={(v) => update({ hideSpoilers: v })}
-        />
-        {settings.hideSpoilers && (
-          <div className="ms-3 flex flex-col gap-1 border-s border-edge-soft/50 ps-4">
-            <ToggleRow
-              label={t("Blur thumbnails")}
-              value={settings.spoilerHideThumbnails}
-              onChange={(v) => update({ spoilerHideThumbnails: v })}
-            />
-            <ToggleRow
-              label={t("Blur titles")}
-              value={settings.spoilerHideTitles}
-              onChange={(v) => update({ spoilerHideTitles: v })}
-            />
-            <ToggleRow
-              label={t("Blur descriptions")}
-              value={settings.spoilerHideDescriptions}
-              onChange={(v) => update({ spoilerHideDescriptions: v })}
-            />
-            <ToggleRow
-              label={t("Blur episode images on detail page")}
-              sub={t("Blurs the hero image and stills on the episode detail page until you click reveal.")}
-              value={!!settings.blurEpisodes}
-              onChange={(v) => update({ blurEpisodes: v })}
-            />
-            <ToggleRow
-              label={t("Keep the next episode visible")}
-              sub={t("Leave the episode you are up to clear and only blur the ones after it.")}
-              value={settings.spoilerSkipNext}
-              onChange={(v) => update({ spoilerSkipNext: v })}
-            />
-            <ToggleRow
-              label={t("Blur stream backdrop")}
-              sub={t("Adds a blurred glass effect behind the stream picker panel.")}
-              value={settings.streamBackdropBlur}
-              onChange={(v) => update({ streamBackdropBlur: v })}
-            />
-          </div>
-        )}
-        <SpoilerPreview />
-      </Section>
-
-      <Section
-        title={t("Episode cards")}
-        subtitle={t("Show the IMDb rating and synopsis on episodes across the list, grid, and panel layouts.")}
-      >
-        <ToggleRow
-          label={t("Show IMDb rating on episodes")}
-          sub={t("Shows each episode's rating. Add your free OMDb API key for real IMDb scores; without it, ratings fall back to TMDB.")}
-          value={settings.showEpisodeRating}
-          onChange={(v) => update({ showEpisodeRating: v })}
-          preview={<EpisodeCardPreview kind="rating" />}
-        />
-        <ToggleRow
-          label={t("Show episode description")}
-          sub={t("Shows the episode synopsis on the cards. Turn it off to hide it.")}
-          value={settings.showEpisodeDescription}
-          onChange={(v) => update({ showEpisodeDescription: v })}
-          preview={<EpisodeCardPreview kind="description" />}
-        />
-        <ToggleRow
-          label={t("High-quality episode images")}
-          sub={t("Loads full-resolution episode artwork (original) instead of lighter w300 images. Turn off for slow connections or low-end devices.")}
-          value={settings.hdEpisodeImages}
-          onChange={(v) => update({ hdEpisodeImages: v })}
-          preview={<EpisodeCardPreview kind="hd" />}
-        />
-        <ToggleRow
-          label={t("Group episodes by story arc")}
-          sub={t("Adds a Seasons/Arcs switch on shows that have a story-arc grouping (like One Piece), so you can browse by saga instead of scrolling seasons. Needs a TMDB key. Off by default.")}
-          value={settings.episodeArcGroups}
-          onChange={(v) => update({ episodeArcGroups: v })}
-        />
-      </Section>
-
-      <SongCardStylePicker />
-
-      <Section
-        title={t("Hover preview")}
-        subtitle={t("Rest the cursor on a poster to peek at it without opening. Off by default.")}
-      >
-        <ToggleRow
-          label={t("Hover preview")}
-          sub={t("Rest the cursor on a poster to peek at the rating, story, and quick actions without opening it.")}
-          value={settings.hoverPreviewEnabled}
-          onChange={(v) => update({ hoverPreviewEnabled: v })}
-        />
-        {settings.hoverPreviewEnabled && (
-          <div className="mt-4 flex flex-col gap-3">
-            <HoverStyleGallery
-              value={settings.cardHoverStyle}
-              customHoverId={settings.customHoverId}
-              onChange={(style, customId) =>
-                update(customId != null ? { cardHoverStyle: style, customHoverId: customId } : { cardHoverStyle: style })
-              }
-            />
-            {settings.cardHoverStyle === "default" && (
-              <div className="flex items-center justify-between gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3">
-            <span className="text-[13px] text-ink-muted">{t("Open preview")}</span>
-            <div className="flex gap-1.5">
-              {(
-                [
-                  { v: "over", label: t("On the card") },
-                  { v: "side", label: t("To the side") },
-                ] as const
-              ).map((o) => (
-                <FocusButton
-                  key={o.v}
-                  type="button"
-                  onClick={() => update({ hoverPreviewPlacement: o.v })}
-                  className={`rounded-lg border px-3 py-1.5 text-[12.5px] font-semibold transition-colors ${
-                    settings.hoverPreviewPlacement === o.v
-                      ? "border-accent bg-accent/15 text-accent"
-                      : "border-edge-soft bg-canvas/60 text-ink-muted hover:border-edge hover:text-ink"
-                  }`}
-                >
-                  {o.label}
-                </FocusButton>
-              ))}
-            </div>
-              </div>
-            )}
-          </div>
-        )}
-      </Section>
-
-      <Section
-        title={t("Continue Watching screenshots")}
-        subtitle={t("When you back out of a title, Harbor saves a frame so the Continue Watching card looks like the spot you left. Tune how long they stick around, or wipe them all.")}
-      >
-        <CwSnapshotShowcase />
-        <RetentionPicker
-          value={settings.cwSnapshotRetentionDays}
-          onChange={(v) => update({ cwSnapshotRetentionDays: v })}
-        />
-        <ToggleRow
-          label={t("Full quality frames")}
-          sub={t("Save sharper frames instead of light thumbnails. They look crisper on the card but take more space, so fewer are kept before the oldest roll off.")}
-          value={settings.cwSnapshotFullQuality}
-          onChange={(v) => update({ cwSnapshotFullQuality: v })}
-        />
-        <ClearSnapshotsButton />
-      </Section>
-
-      <Section
-        title={t("Region & language")}
-        subtitle={t("Used for streaming availability and the Now Playing release window. Pick a country and Harbor can match the interface, metadata, and subtitle languages to it.")}
-      >
-        <RegionField />
-      </Section>
-
-      <AiSearchSection />
-
+          Without a TMDB key the screens fall back to plain Cinemeta genre
+          lists: no Top 10, no In Theatres, no collections, no Arabic rows.
+          This section used to sit eighth in a panel that measures nearly
+          twelve thousand pixels — the key field itself was at y=6892, some
+          seventeen screens down a list of six hundred controls. On a remote
+          that is not a setting, it is a rumour. */}
       <Section
         title={t("Metadata providers")}
         subtitle={t("A free TMDB key is highly recommended. It unlocks the full Harbor experience. The rest are optional, and Cinemeta works out of the box without any.")}
@@ -845,6 +620,232 @@ export function LibraryPanel({
           </div>
         </div>
       </Section>
+      <Section
+        title={t("Home layout")}
+        subtitle={t("How the Home page assembles its rails.")}
+      >
+        <HomeModePicker
+          value={settings.homeMode}
+          onChange={(v) => update({ homeMode: v })}
+        />
+        <ToggleRow
+          label={t("Show every addon row")}
+          sub={t("By default, addon rails that duplicate the built-in ones (Trending, Popular, Top Rated, etc.) are merged so you don't see the same row twice. Turn this on to show every one, duplicates and all.")}
+          value={settings.homeShowAllAddonRows}
+          onChange={(v) => update({ homeShowAllAddonRows: v })}
+          preview={<HomeRowPreview kind="all-addon-rows" />}
+        />
+        <ToggleRow
+          label={t("Watchlist shows only saved titles")}
+          sub={t("Keep the Library Watchlist tab limited to titles you added in Stremio. Turn this off to also include anything Stremio auto-added when you pressed play.")}
+          value={settings.libraryBookmarkedOnly}
+          onChange={(v) => update({ libraryBookmarkedOnly: v })}
+          preview={<HomeRowPreview kind="watchlist-saved" />}
+        />
+        <ToggleRow
+          label={t("Show Playlists tab")}
+          sub={t("Adds a Playlists item to the navigation for browsing movies and shows from your M3U or Xtream playlists (the same ones you add for Live TV). Off by default to keep the nav tidy.")}
+          value={settings.showPlaylistsTab}
+          onChange={(v) => update({ showPlaylistsTab: v })}
+          preview={<HomeRowPreview kind="playlists-tab" />}
+        />
+        <ToggleRow
+          label={t("Keep anime in the Anime room only")}
+          sub={t("Hides anime from the Home Continue Watching row. It still appears in the Anime tab's own Continue Watching.")}
+          value={settings.animeOnlyInAnimeRoom}
+          onChange={(v) => update({ animeOnlyInAnimeRoom: v })}
+          preview={<HomeRowPreview kind="anime-room" />}
+        />
+        <ToggleRow
+          label={t("Advance Continue Watching to the next episode")}
+          sub={t("When you finish an episode, the Home Continue Watching card moves on to the next episode instead of sitting at 0 minutes left.")}
+          value={settings.cwAdvanceNext}
+          onChange={(v) => update({ cwAdvanceNext: v })}
+          preview={<HomeRowPreview kind="cw-advance" />}
+        />
+        <ToggleRow
+          label={t("Hide watched titles in catalogs")}
+          sub={t("Movies you've watched and shows you've made progress on stop appearing in the built-in catalog rows, using your local watch history (and Trakt if connected). Continue Watching is never touched.")}
+          value={settings.hideWatchedInCatalogs}
+          onChange={(v) => update({ hideWatchedInCatalogs: v })}
+          preview={<HomeRowPreview kind="hide-watched" />}
+        />
+        <ToggleRow
+          label={t("Hide unreleased titles")}
+          sub={t("Movies and shows with a future release date stop appearing in the built-in home catalog rows, so Home only shows what you can watch right now.")}
+          value={settings.hideUnreleased}
+          onChange={(v) => update({ hideUnreleased: v })}
+        />
+      </Section>
+
+      <Section
+        title={t("Home languages")}
+        subtitle={t("Only show titles in these original languages on the Home catalogs. Leave all off to show everything.")}
+      >
+        <HomeLanguagePicker />
+      </Section>
+
+      <Section
+        title={t("Spoilers")}
+        subtitle={t("Blur episode artwork, titles, and descriptions for episodes you have not watched yet, on both shows and anime. Hover an episode to peek.")}
+      >
+        <ToggleRow
+          label={t("Blur spoilers")}
+          sub={t("Hides spoiler-prone episode details in episode lists until you have watched them.")}
+          value={settings.hideSpoilers}
+          onChange={(v) => update({ hideSpoilers: v })}
+        />
+        {settings.hideSpoilers && (
+          <div className="ms-3 flex flex-col gap-1 border-s border-edge-soft/50 ps-4">
+            <ToggleRow
+              label={t("Blur thumbnails")}
+              value={settings.spoilerHideThumbnails}
+              onChange={(v) => update({ spoilerHideThumbnails: v })}
+            />
+            <ToggleRow
+              label={t("Blur titles")}
+              value={settings.spoilerHideTitles}
+              onChange={(v) => update({ spoilerHideTitles: v })}
+            />
+            <ToggleRow
+              label={t("Blur descriptions")}
+              value={settings.spoilerHideDescriptions}
+              onChange={(v) => update({ spoilerHideDescriptions: v })}
+            />
+            <ToggleRow
+              label={t("Blur episode images on detail page")}
+              sub={t("Blurs the hero image and stills on the episode detail page until you click reveal.")}
+              value={!!settings.blurEpisodes}
+              onChange={(v) => update({ blurEpisodes: v })}
+            />
+            <ToggleRow
+              label={t("Keep the next episode visible")}
+              sub={t("Leave the episode you are up to clear and only blur the ones after it.")}
+              value={settings.spoilerSkipNext}
+              onChange={(v) => update({ spoilerSkipNext: v })}
+            />
+            <ToggleRow
+              label={t("Blur stream backdrop")}
+              sub={t("Adds a blurred glass effect behind the stream picker panel.")}
+              value={settings.streamBackdropBlur}
+              onChange={(v) => update({ streamBackdropBlur: v })}
+            />
+          </div>
+        )}
+        <SpoilerPreview />
+      </Section>
+
+      <Section
+        title={t("Episode cards")}
+        subtitle={t("Show the IMDb rating and synopsis on episodes across the list, grid, and panel layouts.")}
+      >
+        <ToggleRow
+          label={t("Show IMDb rating on episodes")}
+          sub={t("Shows each episode's rating. Add your free OMDb API key for real IMDb scores; without it, ratings fall back to TMDB.")}
+          value={settings.showEpisodeRating}
+          onChange={(v) => update({ showEpisodeRating: v })}
+          preview={<EpisodeCardPreview kind="rating" />}
+        />
+        <ToggleRow
+          label={t("Show episode description")}
+          sub={t("Shows the episode synopsis on the cards. Turn it off to hide it.")}
+          value={settings.showEpisodeDescription}
+          onChange={(v) => update({ showEpisodeDescription: v })}
+          preview={<EpisodeCardPreview kind="description" />}
+        />
+        <ToggleRow
+          label={t("High-quality episode images")}
+          sub={t("Loads full-resolution episode artwork (original) instead of lighter w300 images. Turn off for slow connections or low-end devices.")}
+          value={settings.hdEpisodeImages}
+          onChange={(v) => update({ hdEpisodeImages: v })}
+          preview={<EpisodeCardPreview kind="hd" />}
+        />
+        <ToggleRow
+          label={t("Group episodes by story arc")}
+          sub={t("Adds a Seasons/Arcs switch on shows that have a story-arc grouping (like One Piece), so you can browse by saga instead of scrolling seasons. Needs a TMDB key. Off by default.")}
+          value={settings.episodeArcGroups}
+          onChange={(v) => update({ episodeArcGroups: v })}
+        />
+      </Section>
+
+      <SongCardStylePicker />
+
+      <Section
+        title={t("Hover preview")}
+        subtitle={t("Rest the cursor on a poster to peek at it without opening. Off by default.")}
+      >
+        <ToggleRow
+          label={t("Hover preview")}
+          sub={t("Rest the cursor on a poster to peek at the rating, story, and quick actions without opening it.")}
+          value={settings.hoverPreviewEnabled}
+          onChange={(v) => update({ hoverPreviewEnabled: v })}
+        />
+        {settings.hoverPreviewEnabled && (
+          <div className="mt-4 flex flex-col gap-3">
+            <HoverStyleGallery
+              value={settings.cardHoverStyle}
+              customHoverId={settings.customHoverId}
+              onChange={(style, customId) =>
+                update(customId != null ? { cardHoverStyle: style, customHoverId: customId } : { cardHoverStyle: style })
+              }
+            />
+            {settings.cardHoverStyle === "default" && (
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3">
+            <span className="text-[13px] text-ink-muted">{t("Open preview")}</span>
+            <div className="flex gap-1.5">
+              {(
+                [
+                  { v: "over", label: t("On the card") },
+                  { v: "side", label: t("To the side") },
+                ] as const
+              ).map((o) => (
+                <FocusButton
+                  key={o.v}
+                  type="button"
+                  onClick={() => update({ hoverPreviewPlacement: o.v })}
+                  className={`rounded-lg border px-3 py-1.5 text-[12.5px] font-semibold transition-colors ${
+                    settings.hoverPreviewPlacement === o.v
+                      ? "border-accent bg-accent/15 text-accent"
+                      : "border-edge-soft bg-canvas/60 text-ink-muted hover:border-edge hover:text-ink"
+                  }`}
+                >
+                  {o.label}
+                </FocusButton>
+              ))}
+            </div>
+              </div>
+            )}
+          </div>
+        )}
+      </Section>
+
+      <Section
+        title={t("Continue Watching screenshots")}
+        subtitle={t("When you back out of a title, Harbor saves a frame so the Continue Watching card looks like the spot you left. Tune how long they stick around, or wipe them all.")}
+      >
+        <CwSnapshotShowcase />
+        <RetentionPicker
+          value={settings.cwSnapshotRetentionDays}
+          onChange={(v) => update({ cwSnapshotRetentionDays: v })}
+        />
+        <ToggleRow
+          label={t("Full quality frames")}
+          sub={t("Save sharper frames instead of light thumbnails. They look crisper on the card but take more space, so fewer are kept before the oldest roll off.")}
+          value={settings.cwSnapshotFullQuality}
+          onChange={(v) => update({ cwSnapshotFullQuality: v })}
+        />
+        <ClearSnapshotsButton />
+      </Section>
+
+      <Section
+        title={t("Region & language")}
+        subtitle={t("Used for streaming availability and the Now Playing release window. Pick a country and Harbor can match the interface, metadata, and subtitle languages to it.")}
+      >
+        <RegionField />
+      </Section>
+
+      <AiSearchSection />
+
 
       <Section
         title={t("Content filters")}

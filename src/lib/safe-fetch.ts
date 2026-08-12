@@ -106,12 +106,73 @@ async function tauriHarborFetch(input: string, init?: RequestInit): Promise<Resp
   });
 }
 
+/**
+ * Which transport a host is served by, once we have found out.
+ *
+ * Every request used to leave through the native client, and on Android that is
+ * the slow way round: `harbor_fetch` hands the whole body back across the IPC
+ * bridge as a JSON string, so a 130KB catalogue is serialised, escaped, copied
+ * and parsed again. Measured on the device against the same URLs the Movies
+ * screen asks for — 130KB each — the page's own fetch took 204-326ms serially
+ * and 853ms for three at once, while the bridge took eleven to thirteen
+ * seconds. That is the whole of "sections open slowly", and it is why the same
+ * build served from a dev server in a browser feels instant: a browser has no
+ * bridge to cross.
+ *
+ * The bridge is still needed. It exists to reach hosts that send no CORS
+ * headers, which a page cannot read no matter how fast it is. So the page is
+ * tried first for ordinary GETs and the answer is remembered per host: a host
+ * that refuses once goes over the bridge from then on, and pays the discovery
+ * cost a single time per session.
+ */
+const transportByHost = new Map<string, "web" | "native">();
+
+function hostOf(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+}
+
+function preferWebTransport(url: string | null): boolean {
+  if (!url || !/^https?:/i.test(url)) return false;
+  const host = hostOf(url);
+  return !!host && transportByHost.get(host) !== "native";
+}
+
+function rememberTransport(url: string | null, how: "web" | "native"): void {
+  const host = hostOf(url);
+  if (host) transportByHost.set(host, how);
+}
+
 function isIdempotent(method: string | undefined): boolean {
   const m = (method ?? "GET").toUpperCase();
   return m === "GET" || m === "HEAD" || m === "OPTIONS";
 }
 
 export const safeFetch: typeof fetch = (input, init) => {
+  const target = typeof input === "string" ? input : input instanceof URL ? input.href : null;
+  // Temporary: a window onto what a screen actually asks the network for. The
+  // browser's own tools cannot see these — they leave through the native HTTP
+  // plugin, not the WebView — so the only place to count them is here.
+  if (typeof window !== "undefined") {
+    const w = window as unknown as { __FETCHLOG?: Array<Record<string, unknown>> };
+    if (w.__FETCHLOG) {
+      const t0 = performance.now();
+      const entry: Record<string, unknown> = { url: String(target ?? input).slice(0, 70), start: Math.round(t0), ms: -1 };
+      w.__FETCHLOG.push(entry);
+      return safeFetchInner(input, init).then(
+        (r) => { entry.ms = Math.round(performance.now() - t0); entry.status = r.status; return r; },
+        (e) => { entry.ms = Math.round(performance.now() - t0); entry.status = "ERR"; throw e; },
+      );
+    }
+  }
+  return safeFetchInner(input, init);
+};
+
+const safeFetchInner: typeof fetch = (input, init) => {
   const target = typeof input === "string" ? input : input instanceof URL ? input.href : null;
   // Built-in addons are served in-process. Routing them here means the rest of
   // the app addresses them with an ordinary transport URL and never has to know
@@ -130,6 +191,21 @@ export const safeFetch: typeof fetch = (input, init) => {
   if (isTauri) {
     if (typeof input === "string") {
       if (isIdempotent(init?.method)) {
+        if (preferWebTransport(target)) {
+          return fetch(input, init)
+            .then((r) => {
+              rememberTransport(target, "web");
+              return r;
+            })
+            .catch(() => {
+              // Blocked or unreachable from the page: this host needs the native
+              // client, and now we know for the rest of the session.
+              rememberTransport(target, "native");
+              return tauriHarborFetch(input, init).catch(
+                () => tauriFetchImpl(input as string, init as RequestInit) as Promise<Response>,
+              );
+            });
+        }
         return tauriHarborFetch(input, init).catch(
           () => tauriFetchImpl(input as string, init as RequestInit) as Promise<Response>,
         );

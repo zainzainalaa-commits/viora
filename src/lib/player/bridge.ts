@@ -99,8 +99,18 @@ export type PlayerBridge = {
   destroy: () => void;
 };
 
+/**
+ * Which of the three decoders is behind the controls.
+ *
+ * `html5` is the webview's own `<video>`, `mpv` is libmpv on the desktop, and
+ * `exo` is ExoPlayer on Android — the device's hardware decoders driving a
+ * surface behind the page. Everything above this line is written once and works
+ * for all three; this type is what keeps the few places that must know honest.
+ */
+export type PlayerEngine = "html5" | "mpv" | "exo";
+
 export type PlayerCapabilities = {
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   pictureInPicture: boolean;
   airplay: boolean;
   chromecast: boolean;

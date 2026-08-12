@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import type { PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerSnapshot } from "@/lib/player/bridge";
 import { useT } from "@/lib/i18n";
 
 const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -46,7 +46,7 @@ export function StatsOverlay({
   engine,
 }: {
   snap: PlayerSnapshot;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
 }) {
   const tr = useT();
   const [stats, setStats] = useState<MpvStats>(EMPTY_STATS);
@@ -94,7 +94,10 @@ export function StatsOverlay({
   const fps = stats.estimatedFps ?? stats.containerFps;
 
   const rows: Array<[string, string]> = [];
-  rows.push([tr("Engine"), engine === "mpv" ? "libmpv" : "HTML5"]);
+  rows.push([
+    tr("Engine"),
+    engine === "mpv" ? "libmpv" : engine === "exo" ? "ExoPlayer" : "HTML5",
+  ]);
   rows.push([
     tr("Resolution"),
     snap.videoWidth && snap.videoHeight ? `${snap.videoWidth}×${snap.videoHeight}` : "—",

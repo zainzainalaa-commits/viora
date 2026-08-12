@@ -1,6 +1,6 @@
-import { FocusButton, FocusSection } from "@/lib/tv-focus";
+import { FocusButton, FocusSection, ScrollProvider, revealWithin } from "@/lib/tv-focus";
 import { TvTextEntry } from "@/components/tv-text-entry";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { isDpadPrimary } from "@/lib/platform";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -31,16 +31,6 @@ const IconBase = ({
   </svg>
 );
 
-function IconBasics(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M15.8 8.2l-2.3 5.3-5.3 2.3 2.3-5.3z" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="12" r="1" fill="var(--color-canvas)" stroke="none" />
-    </IconBase>
-  );
-}
-
 function IconAccount(p: IconProps) {
   return (
     <IconBase {...p}>
@@ -62,19 +52,6 @@ function IconLibrary(p: IconProps) {
   );
 }
 
-function IconRelay(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <path d="M10.5 10 Q 12 8 13.5 10" strokeWidth="1.4" />
-      <path d="M8 7.5 Q 12 4.5 16 7.5" strokeWidth="1.4" />
-      <path d="M5.5 5 Q 12 1 18.5 5" strokeWidth="1.4" />
-      <path d="M8 12 V 20" strokeWidth="2.4" />
-      <path d="M16 12 V 20" strokeWidth="2.4" />
-      <path d="M8 16 H 16" strokeWidth="2.4" />
-    </IconBase>
-  );
-}
-
 function IconStreaming(p: IconProps) {
   return (
     <IconBase {...p}>
@@ -88,20 +65,6 @@ function IconFilters(p: IconProps) {
   return (
     <IconBase {...p}>
       <path d="M4 5.5h16l-6.1 7.2v5.2l-3.8 1.9v-7.1z" />
-    </IconBase>
-  );
-}
-
-function IconP2P(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <path d="M16.6 6.8l2.8-1.2M16.8 10.4l2.6 1.1" strokeWidth="1.4" />
-      <path d="M7.4 6.8 4.6 5.6M7.2 10.4 4.6 11.5" strokeWidth="1.4" />
-      <path d="M12 3.2 13.7 6h-3.4z" fill="currentColor" stroke="none" />
-      <rect x="9.9" y="6" width="4.2" height="2.7" rx="0.5" />
-      <path d="M9 20.6 10.3 8.7h3.4L15 20.6z" />
-      <path d="M9.6 12.4h4.8" />
-      <path d="M7.3 20.6h9.4" strokeLinecap="round" />
     </IconBase>
   );
 }
@@ -151,48 +114,11 @@ function IconPlayer(p: IconProps) {
   );
 }
 
-function IconPlayerLayout(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <rect x="3" y="4.5" width="18" height="13" rx="2" />
-      <path d="M3 14.5h18" />
-      <circle cx="7" cy="17" r="0.9" fill="currentColor" stroke="none" />
-      <circle cx="10.5" cy="17" r="0.9" fill="currentColor" stroke="none" />
-      <circle cx="14" cy="17" r="0.9" fill="currentColor" stroke="none" />
-      <circle cx="17.5" cy="17" r="0.9" fill="currentColor" stroke="none" />
-    </IconBase>
-  );
-}
-
 function IconHotkeys(p: IconProps) {
   return (
     <IconBase {...p}>
       <rect x="2.5" y="6" width="19" height="12" rx="2" />
       <path d="M6 10h.01M9 10h.01M12 10h.01M15 10h.01M18 10h.01M6 14h12" strokeLinecap="round" />
-    </IconBase>
-  );
-}
-
-function IconAdvanced(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <path
-        d="M14.7 6.3a3.6 3.6 0 0 0-4.4 4.9l-5.7 5.7a1.7 1.7 0 0 0 2.4 2.4l5.7-5.7a3.6 3.6 0 0 0 4.9-4.4l-2.4 2.4-2-.5-.5-2z"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-    </IconBase>
-  );
-}
-
-function IconBug(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <rect x="7.5" y="7.5" width="9" height="11" rx="4.5" />
-      <path d="M9 4.5l1.5 2.5M15 4.5l-1.5 2.5" />
-      <path d="M3.5 11.5h4M16.5 11.5h4" />
-      <path d="M3.5 16.5l3-1.5M16.5 15l4 1.5" />
-      <path d="M3.5 7l3 2M20.5 7l-3 2" />
     </IconBase>
   );
 }
@@ -205,19 +131,6 @@ function IconTheme(p: IconProps) {
       <circle cx="10.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
       <circle cx="15" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
       <circle cx="17.5" cy="9.5" r="1.1" fill="currentColor" stroke="none" />
-    </IconBase>
-  );
-}
-
-function IconWebhooks(p: IconProps) {
-  return (
-    <IconBase {...p}>
-      <circle cx="6" cy="17.5" r="2.4" />
-      <circle cx="18" cy="17.5" r="2.4" />
-      <circle cx="12" cy="6.5" r="2.4" />
-      <path d="M10.4 8.4 7.2 15.4" />
-      <path d="M13.6 8.4 16.8 15.4" />
-      <path d="M8.4 17.5h7.2" />
     </IconBase>
   );
 }
@@ -328,16 +241,13 @@ type NavItem = {
  */
 const TV_HIDDEN_SECTIONS = new Set<string>(["mpv", "hotkeys"]);
 
+/** The settings menu, by name, so the screen can declare it as its way in. */
+export const SETTINGS_NAV = "SETTINGS_NAV";
+
 const NAV_GROUPS_ALL: Array<{ heading: string | null; items: NavItem[] }> = [
   {
     heading: null,
     items: [
-      {
-        id: "basics",
-        label: "Get started",
-        Icon: IconBasics,
-        keywords: ["basics", "get started", "getting started", "setup", "quick start", "essentials", "beginner", "new user", "first time", "easy"],
-      },
     ],
   },
   {
@@ -391,12 +301,6 @@ const NAV_GROUPS_ALL: Array<{ heading: string | null; items: NavItem[] }> = [
     heading: "Streaming",
     items: [
       {
-        id: "relay",
-        label: "Harbor Relay",
-        Icon: IconRelay,
-        keywords: ["together", "watch party", "p2p", "host", "share"],
-      },
-      {
         id: "streaming",
         label: "Streaming sources",
         Icon: IconStreaming,
@@ -434,43 +338,6 @@ const NAV_GROUPS_ALL: Array<{ heading: string | null; items: NavItem[] }> = [
           "only 4k",
         ],
       },
-      {
-        id: "p2p",
-        label: "P2P & servers",
-        Icon: IconP2P,
-        keywords: [
-          "p2p",
-          "peer to peer",
-          "torrent engine",
-          "local engine",
-          "librqbit",
-          "built-in engine",
-          "rust engine",
-          "self-test",
-          "self test",
-          "peer test",
-          "restart engine",
-          "clear and restart",
-          "streaming server",
-          "server address",
-          "localhost",
-          "11470",
-          "11471",
-          "remote server",
-          "stremio server",
-          "direct torrent",
-          "seeders",
-          "connecting",
-          "dht",
-          "download whole file",
-          "full download",
-          "prebuffer",
-          "buffer ahead",
-          "remux",
-          "scrub freely",
-          "webdav",
-        ],
-      },
     ],
   },
   {
@@ -493,12 +360,6 @@ const NAV_GROUPS_ALL: Array<{ heading: string | null; items: NavItem[] }> = [
         label: "Anime tweaks",
         Icon: IconAnime,
         keywords: ["anime", "anime4k", "anime 4k", "upscale", "upscaling", "shaders", "smooth motion", "motion smoothing", "interpolation", "svp", "smoothvideo", "frame interpolation", "60fps", "48fps", "fluid"],
-      },
-      {
-        id: "playerLayout",
-        label: "Player layout",
-        Icon: IconPlayerLayout,
-        keywords: ["controls", "ui", "overlay", "skip", "trickplay", "thumbnail"],
       },
       {
         id: "hotkeys",
@@ -528,29 +389,11 @@ const NAV_GROUPS_ALL: Array<{ heading: string | null; items: NavItem[] }> = [
   {
     heading: "Notifications",
     items: [
-      {
-        id: "webhooks",
-        label: "Webhooks",
-        Icon: IconWebhooks,
-        keywords: ["discord", "telegram", "calendar", "alerts", "notifications", "rules"],
-      },
-    ],
-  },
-  {
-    heading: "Help",
-    items: [
-      { id: "bug", label: "Report a bug", Icon: IconBug, keywords: ["report", "feedback", "issue", "crash"] },
     ],
   },
   {
     heading: "System",
     items: [
-      {
-        id: "advanced",
-        label: "Advanced",
-        Icon: IconAdvanced,
-        keywords: ["dev", "logs", "cache", "reset", "experimental", "ffmpeg", "yt-dlp"],
-      },
     ],
   },
 ];
@@ -1118,6 +961,7 @@ export function SettingsNav({
   const [query, setQuery] = useState("");
   /** Open while the remote types a settings search on the on-screen keyboard. */
   const [tvSearchOpen, setTvSearchOpen] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
   const trimmed = query.trim().toLowerCase();
   const sectionLabel = useMemo(() => {
     const m = new Map<SectionId, string>();
@@ -1267,6 +1111,11 @@ export function SettingsNav({
     */
     <FocusSection
       as="nav"
+      // Named, so the screen can point its entry at the menu rather than at
+      // whatever geometry puts first. Without it, arriving in Settings landed on
+      // the search pill in the corner — the topmost, leftmost control — instead
+      // of the section the viewer is actually in.
+      focusKey={SETTINGS_NAV}
       preferredChildFocusKey={navFocusKey(active)}
       className="relative flex w-72 shrink-0 flex-col bg-surface pt-24 shadow-[1px_0_0_var(--color-edge)]"
     >
@@ -1359,7 +1208,19 @@ export function SettingsNav({
           onClose={() => setTvSearchOpen(false)}
         />
       )}
-      <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-3 pb-8">
+      {/* The scrolling element declares itself, and it is this list — not the
+          <nav> around it.
+
+          A region only reveals a focused child inside the box it holds a ref to,
+          and the nav element does not scroll: the list inside it does. So every
+          landing fell through to the undeclared path, which finds a scrolling
+          ancestor by walking up and lands the item hard against an edge.
+          Measured walking back up the section list: the highlight went to y=574,
+          469, 409 … 123, 63, and then 3 — half cut off at the top — before the
+          list jumped. The sidebar, which does declare its scroller, walks up and
+          down without a wobble. */}
+      <ScrollProvider scroll={(node) => { const box = listRef.current; if (box) revealWithin(box, node, "vertical"); }}>
+      <div ref={listRef} className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-3 pb-8">
         {matches && (
           <div className="flex flex-col gap-1">
             {matches.length === 0 && (!optionMatches || optionMatches.length === 0) && (
@@ -1477,6 +1338,7 @@ export function SettingsNav({
           </div>
         ))}
       </div>
+      </ScrollProvider>
     </FocusSection>
   );
 }

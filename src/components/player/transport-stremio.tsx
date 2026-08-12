@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
 import {
   controlsInSlot,
@@ -71,7 +71,7 @@ export type TransportStremioProps = {
   tmdbKey?: string | null;
   season?: number | null;
   episode?: number | null;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   useOverlayPopups?: boolean;
   onMenuOpenChange?: (open: boolean) => void;
   download?: DownloadStatus;

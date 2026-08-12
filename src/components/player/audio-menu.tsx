@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { Check, Languages, RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Flag } from "@/components/flag";
-import type { TrackInfo } from "@/lib/player/bridge";
+import type { PlayerEngine, TrackInfo } from "@/lib/player/bridge";
 import { languageName } from "@/lib/subtitles/language";
 import { useT } from "@/lib/i18n";
 import { useMenuSide } from "./menu-side";
@@ -12,7 +12,7 @@ type Props = {
   tracks: TrackInfo[];
   selectedId: string | null;
   delaySec: number;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   onSelect: (id: string) => void;
   onDelay: (sec: number) => void;
   onOpenChange?: (open: boolean) => void;
@@ -107,7 +107,9 @@ function MenuBody(props: Props & { onClose: () => void }) {
         />
       </div>
 
-      <DelayRow delay={delaySec} onDelay={onDelay} disabled={engine === "html5"} />
+      {/* Only mpv can shift the audio clock against the video; the other two
+          engines would take the number and do nothing with it. */}
+      <DelayRow delay={delaySec} onDelay={onDelay} disabled={engine !== "mpv"} />
     </div>
   );
 }
@@ -120,18 +122,18 @@ function TrackSection({
 }: {
   tracks: TrackInfo[];
   selectedId: string | null;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   onSelect: (id: string) => void;
 }) {
   const tr = useT();
   if (tracks.length === 0) {
     return (
       <div className="px-3 py-4 text-[12.5px] leading-relaxed text-ink-muted">
-        {engine === "mpv"
-          ? tr("This file has one audio track.")
-          : tr(
+        {engine === "html5"
+          ? tr(
               "Track switching isn't supported on the current engine. The file's default audio is playing.",
-            )}
+            )
+          : tr("This file has one audio track.")}
       </div>
     );
   }

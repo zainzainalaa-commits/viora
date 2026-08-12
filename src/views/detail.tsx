@@ -1,7 +1,7 @@
 import { isDpadPrimary } from "@/lib/platform";
 import { FocusButton, FocusSection } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { Check, HardDrive, Layers, Pencil, Play, Plus, RotateCcw, Star } from "lucide-react";
+import { Check, HardDrive, Layers, Play, Plus, Star } from "lucide-react";
 import { animeDetails, franchiseTags, type FranchiseEntry } from "@/lib/providers/anime-detail";
 import { imdbToKitsu, tmdbTvToKitsu } from "@/lib/providers/anime-mapping";
 import { kitsuAnime } from "@/lib/providers/kitsu";
@@ -71,7 +71,6 @@ import {
   saveDetailCustomization,
   moveSection,
   toggleSectionHidden,
-  resetDetailCustomization,
   type DetailCustomization,
 } from "@/lib/detail-customization";
 import { EpisodeDownloadButton } from "./detail/episode-download-button";
@@ -186,7 +185,7 @@ export function DetailView({
   const [loading, setLoading] = useState(true);
   const [trailerOpen, setTrailerOpen] = useState(false);
   const [layout, setLayout] = useState<DetailCustomization>(loadDetailCustomization);
-  const [layoutEdit, setLayoutEdit] = useState(false);
+  const layoutEdit = false;
   const [scores, setScores] = useState<OmdbScores | null>(null);
   const [cinemetaRating, setCinemetaRating] = useState<string | null>(null);
   const [harborImdbRating, setHarborImdbRating] = useState<string | null>(null);
@@ -1594,31 +1593,8 @@ export function DetailView({
             setLayout(next);
             saveDetailCustomization(next);
           };
-          const hasChanges = layout.order.length > 0 || layout.hidden.length > 0;
           return (
             <>
-              <div className="flex items-center justify-end gap-2">
-                {layoutEdit && hasChanges && (
-                  <FocusButton
-                    onClick={() => persist(resetDetailCustomization())}
-                    className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/80 px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
-                  >
-                    <RotateCcw size={12} strokeWidth={2.2} />
-                    {t("Reset")}
-                  </FocusButton>
-                )}
-                <FocusButton
-                  onClick={() => setLayoutEdit((v) => !v)}
-                  className={`flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-[12px] font-medium transition-colors ${
-                    layoutEdit
-                      ? "border-ink bg-ink text-canvas hover:opacity-90"
-                      : "border-edge-soft/40 bg-canvas/80 text-ink-muted hover:bg-canvas hover:text-ink"
-                  }`}
-                >
-                  <Pencil size={12} strokeWidth={2.4} />
-                  {layoutEdit ? t("Done editing") : t("Customize layout")}
-                </FocusButton>
-              </div>
               <FadeInUp>
               <ContentRails
                 sections={railSections}

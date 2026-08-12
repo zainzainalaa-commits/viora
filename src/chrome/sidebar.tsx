@@ -17,10 +17,10 @@ import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-ite
 import { Search as SearchIcon } from "lucide-react";
 import { useSearch } from "@/lib/search-context";
 import { isDpadPrimary } from "@/lib/platform";
-import { FocusSection, focusKeys, setFocusSafely, useFocusableControl } from "@/lib/tv-focus";
-import { focusInsideScope } from "@/lib/tv-focus/keys";
+import { FocusSection, focusKeys, useFocusableControl } from "@/lib/tv-focus";
+import { focusInsideScope, focusWithin } from "@/lib/tv-focus/keys";
 
-const PRIMARY_IDS = new Set(["home", "discover", "catalogs", "movies", "shows", "kids", "anime", "live", "vod"]);
+const PRIMARY_IDS = new Set(["home", "discover", "movies", "shows", "kids", "anime", "live", "vod"]);
 
 export function Sidebar() {
   const { view, setView, chromeHidden } = useView();
@@ -43,6 +43,18 @@ export function Sidebar() {
       <FocusSection
         as="aside"
         focusKey={focusKeys.sidebar}
+        // Declared here, on the region focus is actually sent to, and not only
+        // on the scrolling list inside it.
+        //
+        // Every path that hands focus to the menu asks for SIDEBAR by name: the
+        // first placement of a session, and the engine itself when a press walks
+        // left out of the page and finds this region as the neighbour. Resolving
+        // a region reads the entry it declares — and this one declared nothing,
+        // so both paths fell through to "topmost, then leftmost" and landed on
+        // Search. That is why the app opened on Search, and why leaving a row
+        // for the menu put the highlight back at the top of the list instead of
+        // on the screen the viewer is looking at.
+        preferredChildFocusKey={navFocusKey(view)}
         // Hidden chrome is faded to zero opacity rather than unmounted, so
         // without this the remote can still walk into an invisible sidebar.
         inert={chromeHidden}
@@ -314,22 +326,70 @@ function ScrollableNav({
 }
 
 /**
- * Puts focus on the first control of the page beside the menu.
+ * Puts focus back where the viewer left the page, or on its first control.
  *
- * Asking for the CONTENT region by name does not work: measured on the device it
- * resolves to nothing usable, because the region is a wrapper whose own box is
- * the whole window and whose child is a screen that may not have laid out its
- * rows yet. The same search a dialog uses — first usable control inside this
- * element, in reading order — does find one.
+ * Asking for the CONTENT region by name is the right question and it is asked
+ * first: every region saves the child it last held, and resolving a region reads
+ * that memory before anything else. So leaving a row four screens down for the
+ * menu and pressing back into the page returns to that row — which is what every
+ * television interface does, and what makes the menu feel like somewhere you
+ * step aside to rather than somewhere that costs you your place.
+ *
+ * It has not always worked. Measured earlier, the same call resolved to nothing
+ * usable and this function reached straight for the first control instead: every
+ * card in a row was being judged "covered" because coverage was decided by a
+ * single hit-test at the card's centre, which is where the play button sits. The
+ * memory was intact all along; nothing it named could pass. With that test fixed
+ * the region answers, and the walk below is the fallback it was meant to be —
+ * for a screen focus has never visited.
  */
 function enterContent(): boolean {
+  if (tryEnterContent()) return true;
+
+  // The screen is still loading, so hold the press rather than drop it.
+  //
+  // Opening a screen and pressing right immediately is the normal thing to do,
+  // and screens that fetch before they can render anything — Shows waits on its
+  // hero — have nothing focusable for a second or two. Neither answer available
+  // in that instant is good: handing the press to the engine throws focus to the
+  // first control in the app, and swallowing it means the viewer presses a
+  // direction and the television does nothing at all.
+  //
+  // So the intent is remembered for a moment and carried out the instant the
+  // screen can take it. It gives up on its own, and it gives up immediately if
+  // the viewer has moved on — nothing is more startling than focus jumping into
+  // a page a second after you decided to stay in the menu.
+  cancelPendingEntry();
+  let tries = 0;
+  const stop = () => cancelPendingEntry();
+  window.addEventListener("keydown", stop, { capture: true, once: true });
+  pendingEntry = {
+    timer: window.setInterval(() => {
+      const stillInMenu = !!document.activeElement?.closest("aside");
+      if (!stillInMenu || ++tries > 40 || tryEnterContent()) cancelPendingEntry();
+    }, 120),
+    stop,
+  };
+  return false;
+}
+
+let pendingEntry: { timer: number; stop: () => void } | null = null;
+
+function cancelPendingEntry(): void {
+  if (!pendingEntry) return;
+  window.clearInterval(pendingEntry.timer);
+  window.removeEventListener("keydown", pendingEntry.stop, { capture: true });
+  pendingEntry = null;
+}
+
+function tryEnterContent(): boolean {
+  if (focusWithin(focusKeys.content)) return true;
   const panes = [...document.querySelectorAll<HTMLElement>("main")].filter((m) => {
     const r = m.getBoundingClientRect();
     return r.width > window.innerWidth * 0.4 && r.height > 100;
   });
   const pane = panes[panes.length - 1];
-  if (pane && focusInsideScope(pane)) return true;
-  return setFocusSafely(focusKeys.content);
+  return !!pane && focusInsideScope(pane);
 }
 
 /**
@@ -397,9 +457,20 @@ function NavItem({
     */
     onArrowPress: (direction) => {
       if (direction !== towardContent()) return true;
-      // Consumed only when the page actually took the focus; otherwise the press
-      // is left to the engine rather than swallowed into nothing.
-      return !enterContent();
+      // Consumed whether or not the page took it.
+      //
+      // Handing a failed entry back to the engine looks generous and is not: the
+      // engine finds the content region, cannot resolve anything inside a screen
+      // that is still loading either, and settles on the topmost control in the
+      // app — the search button at the top of this very menu. Measured on Shows,
+      // which fetches its hero before it can render anything: every press right
+      // threw the highlight from the entry the viewer had just chosen up to
+      // Search.
+      //
+      // This press means "go into the page". If the page is not ready yet, the
+      // honest answer is to stay put and let them press again.
+      enterContent();
+      return false;
     },
   });
   return (

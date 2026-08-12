@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
-import type { PlayerBridge } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerBridge } from "@/lib/player/bridge";
 import type { PlayerSnapshot } from "@/lib/player/bridge";
 import type { PlayerSrc } from "@/lib/view";
 import type { Settings } from "@/lib/settings";
@@ -15,7 +15,7 @@ export function useAutoSync(params: {
   bridgeRef: RefObject<PlayerBridge | null>;
   src: PlayerSrc;
   snap: PlayerSnapshot;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   settings: Settings;
 }) {
   const { bridgeRef, src, snap, engine, settings } = params;

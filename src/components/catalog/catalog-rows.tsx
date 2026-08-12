@@ -7,6 +7,7 @@ import { Row } from "@/components/row";
 import { RowControls } from "@/views/home/row-controls";
 import type { Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
+import { isDpadPrimary } from "@/lib/platform";
 import {
   applyPageRows,
   movePageRow,
@@ -28,7 +29,12 @@ export type CatalogRow = {
 function RowTitle({ row, kids = false }: { row: CatalogRow; kids?: boolean }) {
   const t = useT();
   const { openGrid } = useView();
-  if (!row.fetcher) return <>{t(row.title)}</>;
+  // A title that is also a button is a pointer idea. On a remote it sits at the
+  // left edge above the cards and registers as their sibling, so every press
+  // down through the page landed on a title instead of a poster — and the grid
+  // it opens is reachable by walking the row, which is what the direction pad is
+  // for. So on a D-pad the title is what it looks like: a label.
+  if (!row.fetcher || isDpadPrimary()) return <>{t(row.title)}</>;
   return (
     <FocusButton
       onClick={() => openGrid({ title: t(row.title), fetcher: row.fetcher!, initial: row.metas })}

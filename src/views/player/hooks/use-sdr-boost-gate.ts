@@ -1,7 +1,8 @@
+import type { PlayerEngine } from "@/lib/player/bridge";
 import { useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
-export function useSdrBoostGate(params: { engine: "html5" | "mpv"; hdrGamma: string; enabled: boolean }) {
+export function useSdrBoostGate(params: { engine: PlayerEngine; hdrGamma: string; enabled: boolean }) {
   const { engine, hdrGamma, enabled } = params;
   useEffect(() => {
     if (engine !== "mpv" || !enabled) return;

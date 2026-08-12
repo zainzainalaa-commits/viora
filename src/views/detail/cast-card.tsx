@@ -1,4 +1,5 @@
 import { Poster } from "@/components/poster";
+import { decodeEntities } from "@/lib/decode-entities";
 import { RankBadge } from "@/components/rank-badge";
 import type { CastEntry } from "@/lib/providers/tmdb";
 import { useRankings } from "@/lib/rankings";
@@ -36,9 +37,9 @@ export function CastCard({ cast }: { cast: CastEntry }) {
         {r && <RankBadge rank={r} dept="Acting" />}
       </div>
       <div className="flex flex-col gap-0.5">
-        <p className="line-clamp-1 text-[13px] font-medium text-ink">{cast.name}</p>
+        <p className="line-clamp-1 text-[13px] font-medium text-ink">{decodeEntities(cast.name)}</p>
         {cast.character && (
-          <p className="line-clamp-2 text-[12px] leading-tight text-ink-subtle">{cast.character}</p>
+          <p className="line-clamp-2 text-[12px] leading-tight text-ink-subtle">{decodeEntities(cast.character)}</p>
         )}
       </div>
     </Wrap>

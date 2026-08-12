@@ -1,8 +1,5 @@
-import { FocusButton } from "@/lib/tv-focus";
-import { Sparkles } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { AnimeGenrePicker } from "@/components/anime-genre-picker";
-import { AnimeHero } from "@/components/anime-hero";
 import { BackToTop } from "@/components/back-to-top";
 import { ContinueCard } from "@/components/continue-card";
 import { dismissCw, isCwDismissed, useCwDismissVersion } from "@/lib/cw-dismiss";
@@ -484,24 +481,20 @@ export function AnimeView({ active = true }: { active?: boolean }) {
     >
       <ScrollRootContext.Provider value={scrollEl}>
         <div data-tauri-drag-region className="flex flex-col gap-12">
-          {heroMetas.length > 0 && (
-            <div data-scroll-anchor="hero" className="relative harbor-anime-hero">
-              <AnimeHero slides={heroMetas} topPicks={topPicks} />
-              <FocusButton
-                type="button"
-                onClick={() => setShowPicker(true)}
-                title={t("Tune your Top Picks")}
-                className="absolute end-4 top-4 z-10 flex h-9 items-center gap-1.5 rounded-full border border-edge-soft/60 bg-canvas/80 px-3 text-[12px] font-semibold text-ink-muted shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)] backdrop-blur-md transition-colors hover:border-accent/50 hover:text-accent"
-              >
-                <Sparkles size={13} strokeWidth={2.1} />
-                {t("Tune picks")}
-                {favoriteGenres.length > 0 && (
-                  <span className="rounded-full bg-accent/15 px-1.5 text-[10px] font-bold text-accent">
-                    {favoriteGenres.length}
-                  </span>
-                )}
-              </FocusButton>
-            </div>
+          {/* No banner here.
+
+              The other screens open on a picture because a picture is the thing
+              they are showing. This one opened on a backdrop that carried the
+              "Top Picks" row inside it, which made the banner a focus stop
+              wrapped around the cards the viewer was actually reaching for, and
+              a stop that is deliberately drawn without a frame. The row is the
+              content; it stands on its own. */}
+          {topPicks.length > 0 && (
+            <Row title={t("Top Picks for You")} scrollKey="anime:topPicks">
+              {topPicks.map((m) => (
+                <PickCard key={m.id} meta={m} />
+              ))}
+            </Row>
           )}
           {cwItems.length > 0 && (
             <Row title={t("Continue Watching")} min={260} shape="landscape" scrollKey="anime:cw">

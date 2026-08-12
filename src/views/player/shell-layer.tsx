@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
 import type { Meta } from "@/lib/cinemeta";
-import type { PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
 import { getPlayerShell, type PlayerShellProps } from "@/lib/player-shells/registry";
 import { writePlayerPrefs } from "@/lib/player-prefs";
 import { writePlayerVolume } from "@/lib/player-volume";
@@ -66,7 +66,7 @@ export function ShellLayer({
   shellSnap: PlayerSnapshot;
   snapRef: RefObject<PlayerSnapshot>;
   bridgeRef: RefObject<PlayerBridge | null>;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   visible: boolean;
   fullscreen: boolean;
   drawMode: boolean;

@@ -9,7 +9,7 @@ import {
   type VolumeHudPosition,
   type VolumeIndicatorState,
 } from "@/components/player/volume-indicator";
-import type { PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerSnapshot } from "@/lib/player/bridge";
 import type { ParentalCategory } from "@/lib/providers/harbor-imdb";
 import { ContentAdvisoryToast } from "@/components/player/content-advisory-toast";
 import { useT } from "@/lib/i18n";
@@ -32,7 +32,7 @@ export function StageOverlays({
   chromeVisible,
 }: {
   snap: PlayerSnapshot;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   pipMode: boolean;
   subShowInPip: boolean;
   subAssNative: boolean;

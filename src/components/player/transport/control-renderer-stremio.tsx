@@ -14,7 +14,7 @@ import {
   Tv,
 } from "lucide-react";
 import { realQualityLabel } from "@/lib/player/resolution-label";
-import type { PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
 import { getCustomIcon, type CustomIconMap, type PlayerControlId, type TimeFormat, type VolumeStyle } from "@/lib/player-chrome";
 import type { DownloadStatus } from "@/views/player/hooks/use-video-download";
@@ -62,7 +62,7 @@ export type StremioRenderCtx = {
   canPickAnother: boolean;
   hasPrevEp: boolean;
   hasNextEp: boolean;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   useOverlayPopups?: boolean;
   editing?: boolean;
   customIcons?: CustomIconMap;
@@ -337,7 +337,9 @@ export function RenderedStremioControl({
         />
       );
     case "hdr-toggle":
-      if (ctx.engine === "html5") return null;
+      // Tone mapping is an mpv render option; the native engine has nothing
+      // here to toggle.
+      if (ctx.engine !== "mpv") return null;
       return <HdrToggleStremioBtn />;
     case "cast":
       return <CastButton onClick={ctx.onCast} capabilities={ctx.capabilities} />;

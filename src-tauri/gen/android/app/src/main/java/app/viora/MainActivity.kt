@@ -13,9 +13,42 @@ class MainActivity : TauriActivity() {
   /** Held so a window-focus change can hand the keyboard back to the page. */
   private var contentWebView: WebView? = null
 
+  /**
+   * The two native engines, and a drawing surface each.
+   *
+   * Separate stages rather than one shared surface, because the two engines want
+   * opposite things from it: ExoPlayer expresses aspect ratio by the size of the
+   * rectangle it draws into, mpv scales into a full-screen one. Only ever one is
+   * visible, and neither creates a view until something asks it to play.
+   */
+  private val exoStage by lazy { VideoStage(this, { contentWebView }, sizesSurface = true) }
+  private val mpvStage by lazy { VideoStage(this, { contentWebView }, sizesSurface = false) }
+  private val nativePlayer by lazy { VioraPlayer(this, exoStage) }
+  private val nativeMpv by lazy { VioraMpv(this, mpvStage) }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     enableEdgeToEdge()
     super.onCreate(savedInstanceState)
+  }
+
+  /**
+   * Playback should not follow the viewer out of the app.
+   *
+   * The page cannot be relied on for this: a WebView that has been backgrounded
+   * gets its timers throttled, so a `visibilitychange` handler may not run until
+   * the app is in the foreground again — by which point the audio has been
+   * playing over the launcher for as long as it took.
+   */
+  override fun onStop() {
+    super.onStop()
+    nativePlayer.onActivityStopped()
+    nativeMpv.onActivityStopped()
+  }
+
+  override fun onDestroy() {
+    nativePlayer.destroy()
+    nativeMpv.destroy()
+    super.onDestroy()
   }
 
   /**
@@ -109,6 +142,8 @@ class MainActivity : TauriActivity() {
     contentWebView = webView
     takeKeyboardFocus(webView)
     webView.addJavascriptInterface(ClipboardBridge(), "VioraClipboard")
+    webView.addJavascriptInterface(nativePlayer, "VioraPlayer")
+    webView.addJavascriptInterface(nativeMpv, "VioraMpv")
 
     onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
       override fun handleOnBackPressed() {

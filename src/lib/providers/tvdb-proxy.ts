@@ -12,6 +12,10 @@ export async function fetchTvdbProxyImages(opts: {
   kitsuId?: number | null;
   type?: string;
 }): Promise<TvdbImageMap> {
+  // Same trap as harbor-imdb: without this the null base becomes a relative URL
+  // the app's own server answers, and the call costs a round trip to learn
+  // nothing.
+  if (!PROXY) return {};
   let series: number | null = null;
   if (opts.kitsuId != null) series = await kitsuToTvdb(opts.kitsuId).catch(() => null);
   const q = new URLSearchParams();

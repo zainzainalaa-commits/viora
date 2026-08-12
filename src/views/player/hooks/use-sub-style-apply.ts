@@ -1,3 +1,4 @@
+import type { PlayerEngine } from "@/lib/player/bridge";
 import { useEffect } from "react";
 import { isLinuxDesktop, isMacDesktop } from "@/lib/platform";
 import { applyMotionInterp } from "@/lib/player/motion-interp";
@@ -6,7 +7,7 @@ import { applySubStyle } from "@/lib/player/sub-style";
 import type { useSettings } from "@/lib/settings";
 
 export function useSubStyleApply(params: {
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   settings: ReturnType<typeof useSettings>["settings"];
   assNativeActive: boolean;
   imageNativeActive: boolean;

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- libmpv declares minSdk 26. Rather than raise the app's own floor and
+         drop every Android TV 7 set still in service, the library is allowed in
+         and gated at runtime: VioraMpv.available() reports false below API 26,
+         so nothing ever loads it there and ExoPlayer stays the engine. -->
+    <uses-sdk tools:overrideLibrary="dev.jdtech.mpv" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- mDNS/SSDP discovery for Chromecast, DLNA and Roku: without the

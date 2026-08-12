@@ -3,6 +3,7 @@ import {
   setFocus,
   doesFocusableExist,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { revealInNearestScroller } from "./scroll-context";
 
 /**
  * Stable focus keys for the surfaces the app addresses by name — the ones focus
@@ -21,6 +22,8 @@ type TreeNode = {
   node?: unknown;
   lastFocusedChildKey?: string | null;
   preferredChildFocusKey?: string;
+  /** Whether the engine will honour `lastFocusedChildKey` when it descends. */
+  saveLastFocusedChild?: boolean;
 };
 
 function treeOf(): Record<string, TreeNode> {
@@ -155,6 +158,268 @@ export function isElementOffscreen(el: HTMLElement): boolean {
   );
 }
 
+/**
+ * Good enough to aim at: registered, participating, and laid out.
+ *
+ * Deliberately weaker than `isUsableLeaf`, which also demands the control be on
+ * screen and uncovered. A row you are moving to is very often off screen — that
+ * is what moving to it is for — and the card you left in a row above has
+ * scrolled out of view by definition. Judging those by visibility rejected every
+ * candidate and handed the press back to the engine's default, which is the
+ * behaviour this whole function exists to replace. Landing scrolls them in.
+ */
+function isAimable(key: string): boolean {
+  const node = treeOf()[key];
+  return !!node && node.focusable && !!boxOf(key);
+}
+
+/** The element a registered key stands on, when it has one. */
+function boxOf(key: string): DOMRect | null {
+  const el = treeOf()[key]?.node;
+  if (!(el instanceof HTMLElement)) return null;
+  const box = el.getBoundingClientRect();
+  return box.width > 0 && box.height > 0 ? box : null;
+}
+
+/**
+ * Keeps your column when a press crosses from one row to the next.
+ *
+ * The engine does not move between cards vertically. It moves between *rows*:
+ * finding nothing below the card you are on, it steps up to the row, picks the
+ * next row by distance, and then descends into it by that row's own rule — the
+ * child it remembers, or its first one. Your horizontal position is never part
+ * of the question. Measured on Home: standing on the third card and pressing
+ * down landed on the first card of the row below, every time, while pressing up
+ * came back to the third. Down loses your place and up restores it, which reads
+ * as the remote deciding on its own where you are.
+ *
+ * A television is expected to behave like tvOS, where movement is geometric at
+ * the level of the item: down goes to what is literally underneath. Apple's
+ * collection views ship with focus memory *off* for exactly this reason — the
+ * documentation says to leave it off "to ensure that focus moves geometrically"
+ * — and reserve remembering for a different moment, returning to a screen you
+ * left. This app now does both: regions remember (see `resolveUsable`), rows do
+ * not.
+ *
+ * Rather than reimplement navigation, this aims it. The engine is about to
+ * descend into some row and ask that row which child to take; so before the
+ * press reaches it, the row it is going to land in is told that the child it
+ * remembers is the one nearest your column. Every other rule the engine
+ * applies — which row, boundaries, participation — is left exactly as it was.
+ */
+let columnAnchor: number | null = null;
+
+/**
+ * The card this run left behind in each row it passed through.
+ *
+ * A column is a good guess for a row you are arriving at for the first time. For
+ * a row you are coming *back* to it is only a guess, and it does not have to be:
+ * the run knows exactly which card it left there. Rows carry several focusables
+ * at almost the same column — a poster and the control layered on it, and cards
+ * grow a little when focused, which moves their centres — so "nearest" can pick
+ * the neighbour of the card you were on, and a trip down and back lands one card
+ * over. Measured: two rows down and back returned to the card beside the one it
+ * started on, every time.
+ */
+const runMemory = new Map<string, string>();
+
+/**
+ * Ends the current vertical run, so the next one takes its column from wherever
+ * the viewer now is. Any horizontal press does this: moving along a row *is*
+ * choosing a new column.
+ */
+export function clearColumnAnchor(): void {
+  columnAnchor = null;
+  runMemory.clear();
+}
+
+export function aimVerticalMove(currentKey: string | null | undefined, direction: "up" | "down"): boolean {
+  if (!currentKey) return false;
+  const tree = treeOf();
+  const here = boxOf(currentKey);
+  if (!here) return false;
+
+  const rowKey = tree[currentKey]?.parentFocusKey;
+  const pageKey = rowKey ? tree[rowKey]?.parentFocusKey : undefined;
+  if (!rowKey || !pageKey) return false;
+
+  // Leaving the container is the only thing this helps with.
+  //
+  // If there is still somewhere to go inside the container you are in, the
+  // engine's own geometry is already right and aiming at the next container
+  // jumps over it. Measured on the Discover type menu: standing on "Movies",
+  // down skipped "Series" — the item directly beneath it — and landed in the row
+  // of posters below the menu, because this function went looking for the next
+  // container without first asking whether the current one was finished.
+  const downward = direction === "down";
+  for (const key of Object.keys(tree)) {
+    if (key === currentKey || tree[key].parentFocusKey !== rowKey) continue;
+    if (!isAimable(key)) continue;
+    const box = boxOf(key);
+    if (!box) continue;
+    const gap = downward ? box.top - here.bottom : here.top - box.bottom;
+    if (gap >= -1) return false;
+  }
+
+  // The rows this press could reach: the current row's siblings, on the side it
+  // is travelling towards. This mirrors how the engine picks, so the row aimed
+  // at is the row it lands in.
+  const down = direction === "down";
+  let best: { key: string; gap: number } | null = null;
+  for (const key of Object.keys(tree)) {
+    const node = tree[key];
+    if (node.parentFocusKey !== pageKey || !node.focusable || key === rowKey) continue;
+    const box = boxOf(key);
+    if (!box) continue;
+    const gap = down ? box.top - here.bottom : here.top - box.bottom;
+    if (gap < -1) continue;
+    if (!best || gap < best.gap) best = { key, gap };
+  }
+  if (!best) return false;
+
+  const target = tree[best.key];
+  if (!target.saveLastFocusedChild) return false;
+
+  // Leaving this row: note where, in case the run comes back.
+  runMemory.set(rowKey, currentKey);
+
+  // Coming back to a row this run has already been in: take the exact card, not
+  // the nearest one.
+  const remembered = runMemory.get(best.key);
+  if (remembered && tree[remembered]?.parentFocusKey === best.key && isAimable(remembered)) {
+    lastAim = { direction, anchor: columnAnchor ?? -1, row: best.key, card: remembered, via: "memory", mem: runMemory.size };
+    return land(remembered);
+  }
+
+  // The column is fixed when a vertical run starts and held until a horizontal
+  // press ends it.
+  //
+  // Re-reading it from the current card on every press compounds its own error:
+  // each row's cards sit at slightly different offsets, so each hop lands a few
+  // pixels off, and the next hop measures from *there*. Measured down and back
+  // up through the rows on Home: one row returned to the same card, two rows
+  // came back one card over, three rows came back at x=173 having left from
+  // x=1101 — the far side of the screen. Holding the column makes a run of any
+  // length end where it began, which is the property that makes the direction
+  // pad feel like it is moving in a straight line.
+  //
+  // Nearest by the centre of the card, not its edge: rows mix poster and
+  // landscape shapes, and an edge comparison shifts a column whenever they do.
+  const mid = columnAnchor ?? here.left + here.width / 2;
+  columnAnchor = mid;
+
+  // Bring the row into view before reading it.
+  //
+  // Rows below the fold carry `content-visibility: auto`, which is the browser
+  // being told it may skip their layout entirely — and it does. Their cards then
+  // measure zero by zero, so nothing in the row looks aimable except the heading,
+  // which sits outside the skipped subtree and keeps its size. Measured on the
+  // Movies screen: pressing down into the first row landed on its title every
+  // time, while the second row, already laid out by then, gave a card.
+  //
+  // Scrolling it in is what makes the browser lay it out, and it is what was
+  // going to happen a moment later anyway.
+  const rowEl = tree[best.key]?.node;
+  if (rowEl instanceof HTMLElement) revealInNearestScroller(rowEl);
+
+  const pick = pickColumn(tree, best.key, mid);
+  // A row with one stop is not a row. That leaves the engine's own choice alone.
+  if (!pick) return false;
+  lastAim = { direction, anchor: Math.round(mid), row: best.key, card: pick, via: "column", mem: runMemory.size };
+  return land(pick);
+}
+
+/**
+ * Whether these stops are laid out side by side rather than stacked.
+ *
+ * Everything about aiming a column assumes the destination is a row of cards:
+ * find the one nearest the column you were in. A settings panel is the opposite
+ * shape — a section is a vertical list, and its controls sit at the same left
+ * edge at different heights — so "nearest horizontally" picks whichever control
+ * happens to share an x, which is any of them. Measured on the Settings screen:
+ * pressing down walked from a control at x=1080 to one at x=412 and back, up and
+ * down landing on different columns each press.
+ *
+ * A row is recognised by its own geometry: several stops that overlap
+ * vertically and are spread out horizontally. When that does not hold, the aim
+ * declines and the engine's ordinary geometric navigation takes the press, which
+ * is the right behaviour for a list.
+ */
+function looksLikeRow(items: { key: string; box: DOMRect }[]): boolean {
+  if (items.length < 2) return false;
+  const first = items[0].box;
+  let sameBand = 0;
+  let spread = 0;
+  for (const { box } of items) {
+    if (Math.abs(box.top - first.top) <= Math.max(24, first.height * 0.5)) sameBand += 1;
+    spread = Math.max(spread, Math.abs(box.left - first.left));
+  }
+  return sameBand >= 2 && spread > first.width * 0.5;
+}
+
+/** Every stop belonging to one row, with the box each currently occupies. */
+function childBoxes(tree: Record<string, TreeNode>, rowKey: string): { key: string; box: DOMRect }[] {
+  const out: { key: string; box: DOMRect }[] = [];
+  for (const key of Object.keys(tree)) {
+    if (tree[key].parentFocusKey !== rowKey || !isAimable(key)) continue;
+    const box = boxOf(key);
+    if (box) out.push({ key, box });
+  }
+  return out;
+}
+
+/**
+ * The card in this row nearest the column — not the controls in its heading.
+ *
+ * The heading of a catalogue row is itself a button: the title opens the full
+ * grid, and it registers as a sibling of the cards, at the left edge above them.
+ * Measured on the Movies screen it is 27px tall at x=153 while the first card
+ * starts at x=330, so for any column left of centre the heading is the nearest
+ * thing — three presses down landed on three titles, on a screen made of cards.
+ *
+ * Height tells them apart with nothing to label: a heading is a line of text, a
+ * card is a poster. Comparing against the tallest stop in the row rather than a
+ * fixed number holds for rows of any shape, and a row whose stops are all one
+ * height — a list of settings — loses nothing.
+ */
+function pickColumn(tree: Record<string, TreeNode>, rowKey: string, mid: number): string | null {
+  const inRow = childBoxes(tree, rowKey);
+  if (!looksLikeRow(inRow)) return null;
+  const tallest = inRow.reduce((m, c) => Math.max(m, c.box.height), 0);
+  let pick: { key: string; dx: number } | null = null;
+  for (const { key, box } of inRow) {
+    if (box.height < tallest * 0.6) continue;
+    const dx = Math.abs(box.left + box.width / 2 - mid);
+    if (!pick || dx < pick.dx) pick = { key, dx };
+  }
+  return pick ? pick.key : null;
+}
+
+/**
+ * Brings the destination on screen, then puts focus on it.
+ *
+ * The order matters and it is not obvious. Focusing first looks fine and is not:
+ * a control arriving from off screen is checked the instant it takes focus, and
+ * a control still outside the viewport at that moment is treated as unreachable
+ * and handed straight back — the guard that stops focus disappearing into an
+ * overlay cannot tell the difference between hiding and merely not scrolled to
+ * yet. Traced on device: the card aimed at was the right one every time, focus
+ * moved to it, and it was bounced to a visible card in the same tick, so the
+ * screen showed a landing nobody chose.
+ *
+ * Revealing first makes the landing legal by the time it happens, which is also
+ * what the row would have done a moment later anyway.
+ */
+function land(key: string): boolean {
+  const el = treeOf()[key]?.node;
+  if (el instanceof HTMLElement) revealInNearestScroller(el);
+  void setFocus(key);
+  return true;
+}
+
+/** Diagnostic only: what the last vertical press aimed at. */
+export let lastAim: { direction: string; anchor: number; row: string; card: string; via: string; mem: number } | null = null;
+
 export function isElementCovered(el: HTMLElement): boolean {
   const box = el.getBoundingClientRect();
   if (box.width <= 0 || box.height <= 0) return false;
@@ -217,7 +482,21 @@ function resolveUsable(key: string, depth = 0): string | null {
   if (isUsableLeaf(key)) return key;
   // A node with no element of its own is a preset key awaiting a mount, not a
   // place to stand.
-  for (const candidate of [node.preferredChildFocusKey, node.lastFocusedChildKey]) {
+  // Where you were beats where the screen opens, and only ever for a region you
+  // have already stood in.
+  //
+  // A declared entry point answers "where does this screen begin"; the
+  // remembered child answers "where did I leave off". Asking the first question
+  // first meant Home always answered with its hero: step down four rows, go to
+  // the menu, come back — and you are at the top again, having lost your place
+  // for the crime of looking at the menu. On a television that is the difference
+  // between the menu being somewhere you step aside to and somewhere you pay to
+  // visit.
+  //
+  // The order is safe because the two never compete: a region focus has never
+  // visited has no remembered child, so a first arrival still lands exactly
+  // where the screen declared it should.
+  for (const candidate of [node.lastFocusedChildKey, node.preferredChildFocusKey]) {
     if (!candidate || !tree[candidate] || !tree[candidate].focusable) continue;
     const found = resolveUsable(candidate, depth + 1);
     if (found) return found;
@@ -405,6 +684,7 @@ export function installFocusDiagnostics(currentKey: () => string | null): void {
     },
     childrenOf: (key: string) =>
       Object.keys(treeOf()).filter((k) => treeOf()[k].parentFocusKey === key),
+    lastAim: () => lastAim,
   };
 }
 
@@ -447,7 +727,7 @@ export function topModalScope(): HTMLElement | null {
   return null;
 }
 
-function elementOf(key: string): HTMLElement | null {
+export function elementOf(key: string): HTMLElement | null {
   const node = treeOf()[key]?.node;
   return node instanceof HTMLElement ? node : null;
 }
@@ -477,6 +757,46 @@ function firstUsableLeafWithin(root: HTMLElement): string | null {
  * cannot see. Marking the affirmative control means focus lands somewhere that
  * makes sense rather than merely somewhere legal.
  */
+/**
+ * The entry point a region has declared for itself, if it has one yet.
+ *
+ * Asked before placing the very first highlight of a session. A region declares
+ * its entry as a name, and that name belongs to a control that mounts on its own
+ * schedule — the sidebar's active item is rendered from the current view, which
+ * is read from storage after the shell paints. Placing focus before it exists
+ * falls through to "topmost, then leftmost", and on the sidebar that is the
+ * search button rather than the entry the viewer is actually on.
+ */
+export function preferredChildOf(key: string): string | null {
+  const node = treeOf()[key];
+  const child = node?.preferredChildFocusKey;
+  return child && treeOf()[child] ? child : null;
+}
+
+/**
+ * Focus something inside this region, or nothing at all.
+ *
+ * `setFocusSafely` ends with a global fallback — anything usable anywhere —
+ * which is the right answer when focus is otherwise lost and the wrong one when
+ * the caller is asking a specific question. Pressing right out of the menu into
+ * a screen that has not laid out its rows yet resolved to nothing, fell through
+ * to that fallback, and landed on the topmost control in the app: the search
+ * button, back in the menu the viewer was just leaving. Refusing is better —
+ * the highlight stays where it is and the next press works.
+ */
+export function focusWithin(key: string): boolean {
+  if (!doesFocusableExist(key)) return false;
+  const leaf = resolveUsable(key);
+  if (!leaf) return false;
+  const scope = topModalScope();
+  if (scope) {
+    const el = elementOf(leaf);
+    if (!el || !scope.contains(el)) return false;
+  }
+  void setFocus(leaf);
+  return true;
+}
+
 export function focusInsideScope(root: HTMLElement): boolean {
   const primary = root.querySelector<HTMLElement>("[data-focus-primary]");
   if (primary) {

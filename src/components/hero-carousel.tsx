@@ -93,7 +93,16 @@ export function HeroCarousel({
 
   if (slides.length === 0) {
     return (
-      <div className={`animate-pulse border border-edge-soft bg-elevated/30 ${full ? "min-h-[clamp(420px,62vh,720px)] rounded-none" : "min-h-[420px] rounded-[28px]"}`} />
+      <div
+        ref={(node) => {
+          viewportRef.current = node;
+          (heroFocus.ref as { current: HTMLElement | null }).current = node;
+        }}
+        tabIndex={-1}
+        data-hero-stage=""
+        {...heroFocus.focusProps}
+        className={`animate-pulse border border-edge-soft bg-elevated/30 ${full ? "min-h-[clamp(420px,62vh,720px)] rounded-none" : "min-h-[420px] rounded-[28px]"}`}
+      />
     );
   }
 
@@ -272,7 +281,7 @@ export function HeroCarousel({
               onClick={() => setActive(i)}
               aria-label={t("Slide {n}", { n: i + 1 })}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === active ? "w-12 bg-ink" : "w-6 bg-ink-muted/70 hover:bg-ink-muted"
+                i === active ? "w-12 bg-accent" : "w-6 bg-ink-muted/70 hover:bg-ink-muted"
               }`}
             />
           ))}

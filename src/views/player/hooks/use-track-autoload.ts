@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import type { PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
 import { langScore, pickBestTrack } from "@/lib/subtitles/language";
 import { searchSubtitles } from "@/lib/subtitles/search";
 import { readPlayerPrefs, type PerShowPrefs } from "@/lib/player-prefs";
@@ -14,7 +14,7 @@ export function useTrackAutoload(params: {
   bridgeRef: RefObject<PlayerBridge | null>;
   src: PlayerSrc;
   snap: PlayerSnapshot;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   settings: Settings;
   authKey: string | null;
 }) {

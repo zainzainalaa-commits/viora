@@ -509,7 +509,7 @@ export function Row({
           {(onViewAll || headerRight) && (
             <div className="flex shrink-0 items-center gap-3">
               {headerRight}
-              {onViewAll && (
+              {onViewAll && !isDpadPrimary() && (
                 // "View all" is a destination, unlike the edge chevrons below
                 // it, which only do what a direction key already does.
                 <FocusButton

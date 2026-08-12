@@ -4,7 +4,6 @@ import { CollectionsRow } from "@/components/collections-row";
 import { CriticsPick } from "@/components/critics-pick";
 import { LazyMount } from "@/components/lazy-mount";
 import { DiscoveryQueueCta } from "@/components/discovery-queue-cta";
-import { FeaturedBanner } from "@/components/featured-banner";
 import { AwardTiles } from "@/components/award-tiles";
 import { GenreTiles } from "@/components/genre-tiles";
 import { LanguageTiles } from "@/components/language-tiles";
@@ -24,7 +23,6 @@ import { Rail } from "./discover/discover-rail";
 import { useDedupedRows } from "./discover/use-deduped-rows";
 import { ANCHOR_AWARDS, ANCHOR_TOP_RATED } from "@/lib/feed/daily-rows-anchors";
 import type { HomeRow } from "./home/home-types";
-import { CatalogCustomizeBar } from "@/components/catalog/customize-bar";
 import { CatalogBrowser } from "@/views/discover/catalog-browser";
 import { SurpriseMe } from "@/views/discover/surprise-me";
 import { SectionEditBar } from "@/views/discover/section-edit-bar";
@@ -32,11 +30,9 @@ import { RowControls } from "@/views/home/row-controls";
 import { useT } from "@/lib/i18n";
 import {
   applyPageRows,
-  hasPageRowChanges,
   movePageRow,
   orderedRowKeys,
   renamePageRow,
-  resetPageRows,
   togglePageRowHidden,
   usePageRows,
 } from "@/lib/page-rows";
@@ -338,36 +334,11 @@ export function Discover({ active = true }: { active?: boolean }) {
   const hiddenFeatured = pageRows.custom.hidden.includes("section-featured");
   const hiddenCatalog = pageRows.custom.hidden.includes("section-catalog");
   const hiddenSurprise = pageRows.custom.hidden.includes("section-surprise");
-  const customizeBar = (
-    <CatalogCustomizeBar
-      editMode={pageRows.editMode}
-      hasChanges={hasPageRowChanges(pageRows.custom)}
-      onToggleEdit={() => pageRows.setEditMode((v) => !v)}
-      onReset={() => pageRows.persist(resetPageRows())}
-    />
-  );
 
   return (
     <main ref={scrollCb} className="flex-1 overflow-y-auto px-12 pb-20 pt-28">
       <ScrollRootContext.Provider value={scrollEl}>
         <div data-tauri-drag-region className="flex flex-col gap-14">
-          {pageRows.editMode || !hiddenFeatured ? (
-            <div className="relative">
-              {pageRows.editMode && (
-                <SectionEditBar
-                  name={t("Featured & Recommended")}
-                  hidden={hiddenFeatured}
-                  onToggle={() => pageRows.persist(togglePageRowHidden(pageRows.custom, "section-featured"))}
-                />
-              )}
-              <div className={hiddenFeatured ? "pointer-events-none opacity-40" : ""}>
-                <FeaturedBanner items={featured} />
-              </div>
-              <div className="absolute end-0 bottom-4 z-10">{customizeBar}</div>
-            </div>
-          ) : (
-            <div className="flex justify-end">{customizeBar}</div>
-          )}
 
           {pageRows.editMode ? (
             <div className="flex flex-col gap-4">

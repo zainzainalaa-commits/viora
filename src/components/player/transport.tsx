@@ -1,6 +1,6 @@
 import { Settings2 } from "lucide-react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import type { PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
 import { CastModal } from "./cast-modal";
 import type { DownloadStatus } from "@/views/player/hooks/use-video-download";
@@ -143,7 +143,7 @@ export function Transport({
   tmdbKey?: string | null;
   season?: number | null;
   episode?: number | null;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   useOverlayPopups?: boolean;
   onMenuOpenChange?: (open: boolean) => void;
   download?: DownloadStatus;

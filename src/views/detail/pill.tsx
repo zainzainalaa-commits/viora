@@ -1,9 +1,18 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 
 /**
- * A pill only becomes a stop for the remote when it actually does something.
- * The metadata ones — runtime, year, certification — render as text and are
- * therefore absent from the focus tree rather than filtered out of it.
+ * A pill is a label, and on a remote it stays one.
+ *
+ * The ones that do something open a genre catalogue, and they sit in the middle
+ * of the line that reads "2017 · IMDb 7.4 · 133 min · Action · Adventure" —
+ * where the eye is reading facts, not looking for controls. Standing on one puts
+ * a bright frame around a word in a sentence, and every trip down the page has
+ * to step through three of them. The catalogues they open are what the Movies
+ * and Shows screens are for.
+ *
+ * The metadata ones — runtime, year, certification — were never in the focus
+ * tree to begin with: they render as text.
  */
 export function Pill({
   children,
@@ -12,7 +21,7 @@ export function Pill({
   children: React.ReactNode;
   onClick?: () => void;
 }) {
-  if (onClick) {
+  if (onClick && !isDpadPrimary()) {
     return (
       <FocusButton
         type="button"

@@ -20,6 +20,7 @@ export function FocusSection({
   isFocusBoundary = false,
   inert = false,
   scrolls = false,
+  preferredChildFocusKey,
   as: Tag = "div",
   ref: externalRef,
   ...rest
@@ -61,6 +62,18 @@ export function FocusSection({
   inert?: boolean;
   /** True when this element is the vertical scroll container for its content. */
   scrolls?: boolean;
+  /**
+   * Where focus enters this region the first time, by name.
+   *
+   * Callers have been passing this since the sidebar was written and it went
+   * nowhere: the prop was not declared, so it fell into `...rest` and was
+   * spread onto the DOM node as an attribute. The engine never heard of it, and
+   * every arrival resolved by geometry instead — which is why the app opened on
+   * the search button rather than on the entry the viewer was last using.
+   *
+   * Only consulted when the region has no remembered child; see `resolveUsable`.
+   */
+  preferredChildFocusKey?: string;
   as?: "div" | "aside" | "nav" | "section" | "main" | "header" | "footer";
   /** Callers that already measure this element keep their own handle on it. */
   ref?: Ref<HTMLElement>;
@@ -77,6 +90,7 @@ export function FocusSection({
     focusable: !inert,
     isFocusBoundary,
     saveLastFocusedChild: rememberChild,
+    preferredChildFocusKey,
     autoRestoreFocus,
     // See `useFocusRow`: this only feeds a `hasFocusedChild` no region reads, at
     // the price of re-rendering the region — and a region is a whole page body,

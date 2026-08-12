@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { t as translate } from "@/lib/i18n";
 import { Camera, ChevronLeft, Info, Maximize, Minimize, PauseCircle, PictureInPicture2, PlayCircle, Replace, Tv } from "lucide-react";
 import type { ReactNode } from "react";
-import type { PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
 import { getCustomIcon, type ControlVariant, type CustomIconMap, type PlayerControlId, type TimeFormat, type VolumeStyle } from "@/lib/player-chrome";
 import type { DownloadStatus } from "@/views/player/hooks/use-video-download";
@@ -69,7 +69,7 @@ export type ControlContext = {
   hasPrevEp: boolean;
   hasNextEp: boolean;
   canPickAnother: boolean;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   useOverlayPopups?: boolean;
   editing?: boolean;
   customIcons?: CustomIconMap;
@@ -399,7 +399,9 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "hdr-toggle": {
-      if (ctx.tight || ctx.engine === "html5") return null;
+      // Tone mapping is an mpv render option. The native engine hands HDR
+      // straight to the panel and has nothing here to toggle.
+      if (ctx.tight || ctx.engine !== "mpv") return null;
       return <HdrToggleBigBtn />;
     }
     case "draw-toggle": {

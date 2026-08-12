@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useDebridClients } from "@/lib/debrid/registry";
@@ -34,6 +35,18 @@ export function SourceDiagnostic({
   const sourceWord = counts.length === 1 ? "source" : "sources";
   return (
     <div className="flex flex-col gap-2">
+      {/* A tally, not a control.
+          It counts what the search found and expands to a per-source breakdown —
+          a diagnostic, and the first thing between the title and the list of
+          streams the viewer came for. On a remote it sat directly under the
+          heading and caught every trip down the page. */}
+      {isDpadPrimary() ? (
+        <span className="flex items-center gap-2 self-start text-[12px] text-ink-subtle/80">
+          <span className="font-semibold text-ink-muted">{cachedTotal} cached</span>
+          <span className="text-ink-subtle/40">·</span>
+          <span>{totalRaw} found across {counts.length} {sourceWord}</span>
+        </span>
+      ) : (
       <FocusButton
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -48,6 +61,7 @@ export function SourceDiagnostic({
           className={`transition-transform ${expanded ? "rotate-180" : ""}`}
         />
       </FocusButton>
+      )}
       {expanded && (
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 ps-1 text-[11px] text-ink-subtle/70">
           <span>{result.picker.all.length} kept after dedupe</span>

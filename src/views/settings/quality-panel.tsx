@@ -2,6 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { TvSelect } from "@/components/tv-controls";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
+import { can } from "@/lib/capabilities";
 import { listMpvAudioDevices, type MpvAudioDevice } from "@/lib/player/mpv";
 import { PlayModePanel, PlayerEnginePanel } from "./player-panel";
 import { Section, Segmented, ToggleRow, useSettingsActiveContext } from "./shared";
@@ -23,7 +24,11 @@ export function QualityPanel() {
 
       <Section
         title={t("Player engine")}
-        subtitle={t("HTML5 plays everything WebView2 supports. mpv handles TrueHD, DTS-HD, AV1, weird containers, and HDR. Auto picks based on the source.")}
+        subtitle={
+          can("exoEngine")
+            ? t("Which decoder plays your video. The controls, subtitles and menus are the same either way — only what happens behind them changes.")
+            : t("HTML5 plays everything WebView2 supports. mpv handles TrueHD, DTS-HD, AV1, weird containers, and HDR. Auto picks based on the source.")
+        }
       >
         <PlayerEnginePanel />
       </Section>
@@ -42,7 +47,7 @@ export function QualityPanel() {
 
       <Section
         title={t("Aspect ratio")}
-        subtitle={t("Default picture shape on the mpv engine. Fit keeps the source as-is with any black bars; the rest stretch or crop to fill, handy for old 4:3 shows on a widescreen TV.")}
+        subtitle={t("Default picture shape. Fit keeps the source as-is with any black bars; the rest stretch or crop to fill, handy for old 4:3 shows on a widescreen TV.")}
       >
         <Segmented
           value={settings.cropMode}

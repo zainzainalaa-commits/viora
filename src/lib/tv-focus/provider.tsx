@@ -12,8 +12,12 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 import { isDpadPrimary } from "@/lib/platform";
 import {
+  aimVerticalMove,
+  clearColumnAnchor,
+  elementOf,
   focusKeys,
   hasLiveFocus,
+  preferredChildOf,
   installFocusDiagnostics,
   isElementCovered,
   isElementOffscreen,
@@ -303,7 +307,19 @@ function useCoverageGuard(enabled: boolean): void {
       // focus legitimately — but never from the authority test below, which is
       // the whole point: an unasked-for landing in a text field is exactly the
       // interference being corrected.
-      if (!isEditable(target) && (isElementCovered(target) || isContainerFocus(target))) {
+      // A stop the engine registered is a stop, whatever it is made of.
+      //
+      // `isContainerFocus` exists to catch focus landing on a wrapper nobody
+      // declared — a panel that focused itself for a screen reader. It decides
+      // by asking whether the element contains anything focusable, and a hero
+      // does: the slide dots live inside it. So the hero, a leaf the engine
+      // deliberately chose, was read as a wrapper and thrown back — and the
+      // throw goes to the first usable control in the app, which is the search
+      // button at the top of the menu. Measured on Shows: every attempt to enter
+      // the screen ended up there.
+      const chosen = getCurrentFocusKey();
+      const engineTarget = chosen ? elementOf(chosen) : null;
+      if (target !== engineTarget && !isEditable(target) && (isElementCovered(target) || isContainerFocus(target))) {
         // Only bounce if somewhere better exists; during a transition the whole
         // screen can be briefly covered, and moving focus nowhere is worse.
         setFocusSafely();
@@ -438,6 +454,52 @@ function useTitleTooltips(enabled: boolean): void {
   }, [enabled]);
 }
 
+/**
+ * Vertical presses keep the column they started in.
+ *
+ * One listener for the whole app, in the capture phase so it runs before the
+ * engine reads anything. It moves no focus of its own — `aimVerticalMove` only
+ * tells the row the press is about to enter which card sits under the viewer —
+ * so every screen gets the behaviour without any of them knowing about it, and
+ * a screen with no rows is untouched.
+ */
+function useColumnAim(enabled: boolean): void {
+  useEffect(() => {
+    if (!enabled) return;
+    const aim = (event: KeyboardEvent) => {
+      const direction =
+        event.key === "ArrowDown" || KEY_MAP.down.includes(event.keyCode)
+          ? "down"
+          : event.key === "ArrowUp" || KEY_MAP.up.includes(event.keyCode)
+            ? "up"
+            : null;
+      // A field owns its arrows; so does a control the viewer has stepped into.
+      if (adjusting || isEditable(document.activeElement)) return;
+      if (!direction) {
+        // Moving along a row is choosing a new column, and so is pressing OK to
+        // open something. Either way the run is over.
+        clearColumnAnchor();
+        return;
+      }
+      // Moving focus here rather than nudging the engine towards it.
+      //
+      // The gentler version wrote the target row's remembered child and let the
+      // engine descend into it. Traced on device, the write was correct every
+      // time and the engine still landed elsewhere: by the moment it reads that
+      // field the row has re-registered its cards, and a card scrolled out of
+      // view is no longer one it will accept. Choosing the destination and then
+      // asking a second system to agree is a race; choosing it and going there
+      // is not.
+      if (aimVerticalMove(getCurrentFocusKey(), direction)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+    window.addEventListener("keydown", aim, { capture: true });
+    return () => window.removeEventListener("keydown", aim, { capture: true });
+  }, [enabled]);
+}
+
 function useFocusLifeline(enabled: boolean): void {
   useEffect(() => {
     if (!enabled) return;
@@ -448,6 +510,14 @@ function useFocusLifeline(enabled: boolean): void {
     // sidebar is always on screen and always in the same place; from there one
     // press of right enters the content deliberately.
     let firstPlacement = true;
+    let firstTries = 0;
+    // A press means the viewer has taken over; after that the opening highlight
+    // is no longer anyone's business but theirs.
+    let acted = false;
+    const onKey = () => {
+      acted = true;
+    };
+    window.addEventListener("keydown", onKey, true);
     const check = () => {
       // The engine's opinion and the DOM's can differ, and an overlay that opens
       // without any key being pressed produces no event to reconcile them. Until
@@ -462,7 +532,14 @@ function useFocusLifeline(enabled: boolean): void {
       if (
         active instanceof HTMLElement &&
         (isElementOffscreen(active) ||
-          (!isEditable(active) && (isElementCovered(active) || isContainerFocus(active))))
+          // Same exemption as the coverage guard: a stop the engine registered
+          // is a stop. Without it this poll undid a legal landing 200ms after it
+          // happened — measured on Shows, where entering the screen worked and
+          // then threw the highlight to the search button a fifth of a second
+          // later, which looks exactly like the remote deciding on its own.
+          (active !== elementOf(getCurrentFocusKey() ?? "") &&
+            !isEditable(active) &&
+            (isElementCovered(active) || isContainerFocus(active))))
       ) {
         setFocusSafely();
         timer = window.setTimeout(check, 400);
@@ -472,17 +549,44 @@ function useFocusLifeline(enabled: boolean): void {
       const key = getCurrentFocusKey();
       // Existing is not enough: focus can come to rest on a container that was
       // still empty when it was handed control, and a container cannot move.
-      if (!key || !doesFocusableExist(key) || !hasLiveFocus(key)) {
-        if (firstPlacement) {
-          if (setFocusSafely(focusKeys.sidebar)) firstPlacement = false;
-        } else {
-          setFocusSafely(focusKeys.content, focusKeys.sidebar);
+      // The opening highlight belongs on the entry the navigation names, and
+      // this is the one placement that corrects a landing rather than only
+      // filling a vacancy.
+      //
+      // Everything else here waits for focus to be *dead* before acting. That is
+      // too late for the first one: during the second or so a launch takes, the
+      // sidebar exists before its active item does — the item is rendered from
+      // the view read out of storage — so an early placement resolves the region
+      // by geometry and lands on the search button at the top. Focus is then
+      // perfectly alive and nothing looks wrong, except that the app has opened
+      // one row above where the viewer left it. Worse, that landing is written
+      // into the region as its remembered child, so every later trip back to the
+      // menu repeats it.
+      //
+      // So while the viewer has not yet pressed anything, this moves focus onto
+      // the declared entry as soon as it exists. A press cancels it for good,
+      // and a sidebar that declares nothing falls back to the old rule after a
+      // bounded wait.
+      if (firstPlacement && !acted) {
+        const entry = preferredChildOf(focusKeys.sidebar);
+        if (entry) {
+          if (key === entry || setFocusSafely(entry)) firstPlacement = false;
+          timer = window.setTimeout(check, 400);
+          return;
         }
+        if (++firstTries > 12) firstPlacement = false;
+      }
+
+      if (!key || !doesFocusableExist(key) || !hasLiveFocus(key)) {
+        setFocusSafely(focusKeys.content, focusKeys.sidebar);
       }
       timer = window.setTimeout(check, 400);
     };
     timer = window.setTimeout(check, 400);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("keydown", onKey, true);
+    };
   }, [enabled]);
 }
 
@@ -515,6 +619,7 @@ export function TVFocusProvider({ children }: { children: ReactNode }) {
   useRtlSync(active);
   useFocusRepairOnInput(active);
   useCoverageGuard(active);
+  useColumnAim(active);
   useHoverFollowsFocus(active);
   useTitleTooltips(active);
   useFocusLifeline(active);

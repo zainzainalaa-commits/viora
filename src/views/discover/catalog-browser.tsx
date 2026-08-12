@@ -111,6 +111,13 @@ function PillSelect({
               return (
                 <FocusButton
                   key={o.value}
+                  /* Focus shows in the writing, not as a frame.
+                     An option is a full-width band inside a list that already
+                     draws its own boundaries, and a ring around one is a box
+                     inside a box — it was the thing that read as a rendering
+                     fault rather than a cursor. The word itself changing colour
+                     says which line you are on and nothing else moves. */
+                  data-tv-text-focus
                   onClick={() => {
                     onChange(o.value);
                     setOpen(false);

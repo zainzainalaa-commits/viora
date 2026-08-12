@@ -1,11 +1,11 @@
 import { AudioMenuBody } from "@/components/player/audio-menu";
-import type { TrackInfo } from "@/lib/player/bridge";
+import type { PlayerEngine, TrackInfo } from "@/lib/player/bridge";
 
 export type AudioModalState = {
   tracks: TrackInfo[];
   selectedId: string | null;
   delaySec: number;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
 };
 
 type Props = {

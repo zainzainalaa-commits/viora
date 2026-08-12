@@ -1,5 +1,6 @@
 import { FocusSection, focusKeys, setFocusSafely } from "@/lib/tv-focus";
 import { isDpadPrimary } from "@/lib/platform";
+import { can } from "@/lib/capabilities";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resolveChromeTheme } from "@/lib/theme";
 import { useActiveKid } from "@/lib/profiles";
@@ -912,7 +913,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     acknowledgeResume,
     showHeaderWarning: showHeaderWarning && !streamPillVariant,
     showNoAudioWarning,
-    onUseMpv: () => update({ playerEngine: "mpv" }),
+    onUseMpv: () => update({ playerEngine: can("exoEngine") ? "exo" : "mpv" }),
     onDismissNoAudio: () => setNoAudioDismissed(true),
     // Text-sync props (preserved from fork)
     onEnterSync: handleEnterSync,

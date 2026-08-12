@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { CatalogRows } from "@/components/catalog/catalog-rows";
-import { CatalogCustomizeBar } from "@/components/catalog/customize-bar";
 import { CinemaHero } from "@/components/cinema-hero";
 import { Row, ScrollRootContext } from "@/components/row";
 import { TopRankCard } from "@/components/top-rank-card";
@@ -10,7 +9,7 @@ import { topMovies, type Meta } from "@/lib/cinemeta";
 import { recentlyPlayed } from "@/lib/playback-history";
 import { useT } from "@/lib/i18n";
 import { listPager } from "@/lib/list-pager";
-import { hasPageRowChanges, resetPageRows, usePageRows } from "@/lib/page-rows";
+import { usePageRows } from "@/lib/page-rows";
 import { useSettings } from "@/lib/settings";
 import { useScrollMemory, useView } from "@/lib/view";
 import { useLetterboxd } from "@/lib/stremboxd/provider";
@@ -233,12 +232,6 @@ export function Movies({ active = true }: { active?: boolean }) {
       <ScrollRootContext.Provider value={scrollEl}>
         <CinemaHero slides={hero} eyebrow={t("Featured tonight")} />
         <div className="relative flex w-full flex-col gap-12 px-12 pb-32 pt-12">
-          <CatalogCustomizeBar
-            editMode={pageRows.editMode}
-            hasChanges={hasPageRowChanges(pageRows.custom)}
-            onToggleEdit={() => pageRows.setEditMode((v) => !v)}
-            onReset={() => pageRows.persist(resetPageRows())}
-          />
           {letterboxdRows.map((row, i) => {
             const catalogId = row.key.replace("letterboxd-", "");
             return (

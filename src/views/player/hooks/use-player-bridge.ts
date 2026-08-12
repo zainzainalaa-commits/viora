@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { emptySnapshot, type PlayerBridge, type PlayerSnapshot } from "@/lib/player/bridge";
+import { type PlayerEngine, emptySnapshot, type PlayerBridge, type PlayerSnapshot } from "@/lib/player/bridge";
 import { probeMpv } from "@/lib/player/mpv";
+import { isMpvAndroidAvailable } from "@/lib/player/mpv-android";
+import { can } from "@/lib/capabilities";
 import { mergeMpvOptions } from "@/lib/player/mpv-tuning";
 import { anime4kShadersFor, type Anime4kChoice } from "./use-anime4k";
 import type { PlayerSrc } from "@/lib/view";
@@ -43,7 +45,7 @@ export function usePlayerBridge(params: {
 
   const [snap, setSnap] = useState<PlayerSnapshot>(emptySnapshot);
   const prevSnapRef = useRef<PlayerSnapshot>(emptySnapshot);
-  const [engine, setEngine] = useState<"html5" | "mpv">("html5");
+  const [engine, setEngine] = useState<PlayerEngine>("html5");
   const [autoFallbackTried, setAutoFallbackTried] = useState(false);
 
   const hdrOpaqueWindow = isWindowsDesktop() && settings.playerHdrOpaqueWindow;
@@ -68,8 +70,17 @@ export function usePlayerBridge(params: {
   const isLiveLike =
     !!src.meta.id?.startsWith("iptv:") ||
     (!!src.meta.type && !["movie", "series", "anime"].includes(String(src.meta.type).toLowerCase()));
-  const chosenEngine =
-    isLiveLike && !src.notWebReady ? "html5" : autoFallbackTried ? "mpv" : settings.playerEngine;
+  // Where to escalate when the chosen engine cannot decode what it was handed:
+  // whichever engine on this device plays the most, which is mpv wherever mpv
+  // exists — compiled into the app on Android, installed alongside it on the
+  // desktop. ExoPlayer is the answer only where there is no mpv at all.
+  const fallbackEngine: PlayerEngine =
+    can("mpvEngine") || isMpvAndroidAvailable() ? "mpv" : "exo";
+  const chosenEngine = isLiveLike && !src.notWebReady
+    ? "html5"
+    : autoFallbackTried
+      ? fallbackEngine
+      : settings.playerEngine;
   const bridgeKey = `${chosenEngine}|${anime4kOn}|${settings.playerHdrToSdr}|${embedActive}|${anime4kOn ? settings.playerAnime4kShaders.join(",") : ""}|${svpOn}|${svpOn ? settings.svpVpyPath : ""}`;
   const [bridgeReady, setBridgeReady] = useState(false);
   useEffect(() => {
@@ -134,15 +145,22 @@ export function usePlayerBridge(params: {
   }, [bridgeKey]);
 
   useEffect(() => {
-    if (engine !== "html5") return;
     if (autoFallbackTried) return;
+    // Already on the most capable engine this device has: there is nowhere
+    // left to escalate to, and retrying would only loop.
+    if (engine === fallbackEngine) return;
     if (settings.playerEngine !== "auto") return;
     if (snap.errorCode !== "decode" && snap.errorCode !== "codec" && !snap.noAudio) return;
+    if (isMpvAndroidAvailable()) {
+      // Nothing to probe: the engine is compiled into the app.
+      setAutoFallbackTried(true);
+      return;
+    }
     (async () => {
       const probe = await probeMpv();
       if (probe.available) setAutoFallbackTried(true);
     })();
-  }, [engine, autoFallbackTried, snap.errorCode, snap.noAudio, settings.playerEngine]);
+  }, [engine, fallbackEngine, autoFallbackTried, snap.errorCode, snap.noAudio, settings.playerEngine]);
 
   return { snap, engine, bridgeReady, bridgeKey, embedActive };
 }

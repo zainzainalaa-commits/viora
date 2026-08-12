@@ -1,6 +1,8 @@
 import { createHtml5Bridge } from "@/lib/player/html5";
+import { createExoBridge, isExoAvailable } from "@/lib/player/exo";
+import { createMpvAndroidBridge, isMpvAndroidAvailable } from "@/lib/player/mpv-android";
 import { createMpvBridge, probeMpv, type MpvRect } from "@/lib/player/mpv";
-import type { PlayerBridge } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerBridge } from "@/lib/player/bridge";
 import { isLinuxDesktop, isMacDesktop } from "@/lib/platform";
 import { can } from "@/lib/capabilities";
 
@@ -28,7 +30,7 @@ export function round2(v: number): number {
 }
 
 export function embedFlags(
-  engine: "html5" | "mpv",
+  engine: PlayerEngine,
   mpvEmbed: boolean,
   videoWidth: number,
   videoHeight: number,
@@ -41,9 +43,15 @@ export function embedFlags(
   const hasFrame = videoWidth > 0 && videoHeight > 0;
   const macShowing = embedOn && isMacDesktop() && hasFrame;
   const linuxShowing = embedOn && isLinuxDesktop() && hasFrame;
+  // Both Android engines draw on a surface *behind* the page. A black stage
+  // would be a black screen with working controls on top of it, so the stage
+  // keeps no background of its own and the picture comes through from
+  // underneath. Desktop mpv is a different arrangement entirely, handled above.
+  const nativeSurface = engine === "exo" || (engine === "mpv" && isMpvAndroidAvailable());
   return {
     mpvEmbedWindowsActive,
-    stageBg: mpvEmbedWindowsActive || macShowing || linuxShowing ? "" : "bg-black",
+    stageBg:
+      mpvEmbedWindowsActive || macShowing || linuxShowing || nativeSurface ? "" : "bg-black",
   };
 }
 
@@ -55,7 +63,7 @@ export function formatNames(names: string[]): string {
 }
 
 export async function pickBridge(
-  want: "auto" | "html5" | "mpv",
+  want: "auto" | PlayerEngine,
   notWebReady: boolean,
   mpvOpts: {
     anime4k: boolean;
@@ -67,7 +75,23 @@ export async function pickBridge(
     extraOptions?: string;
     getEmbedRect?: () => Promise<MpvRect | null> | MpvRect | null;
   },
-): Promise<{ bridge: PlayerBridge; engine: "html5" | "mpv" }> {
+): Promise<{ bridge: PlayerBridge; engine: PlayerEngine }> {
+  // Android first, because there the choice is real: both engines are compiled
+  // into the app rather than probed for on the machine.
+  //
+  // `auto` means ExoPlayer here. On a television that is not a preference but
+  // the point — it is the hardware's own decoder, and mpv's advantage only
+  // shows on the files that hardware turns down.
+  if (can("exoEngine") && isExoAvailable()) {
+    if (want === "html5") return { bridge: createHtml5Bridge(), engine: "html5" };
+    if (want === "mpv") {
+      if (isMpvAndroidAvailable()) return { bridge: createMpvAndroidBridge(), engine: "mpv" };
+      console.warn("[viora] mpv requested but libmpv is missing for this ABI; using ExoPlayer");
+    }
+    return { bridge: createExoBridge(), engine: "exo" };
+  }
+  // Asked for the native engine on a host that has no such thing.
+  if (want === "exo") return { bridge: createHtml5Bridge(), engine: "html5" };
   // Android/iOS ship no libmpv, and the Tauri bridge is present there too, so
   // `__TAURI_INTERNALS__` alone cannot stand in for "desktop" any more.
   if (!can("mpvEngine")) return { bridge: createHtml5Bridge(), engine: "html5" };

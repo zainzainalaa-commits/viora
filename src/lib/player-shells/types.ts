@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import type { Meta } from "@/lib/cinemeta";
-import type { PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 
 export type PlayerShellProps = {
   snap: PlayerSnapshot;
@@ -55,7 +55,7 @@ export type PlayerShellProps = {
   tmdbKey?: string | null;
   season?: number | null;
   episode?: number | null;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   useOverlayPopups?: boolean;
   onMenuOpenChange?: (open: boolean) => void;
   download?: import("@/views/player/hooks/use-video-download").DownloadStatus;

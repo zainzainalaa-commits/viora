@@ -7,6 +7,7 @@ import { formFactor, isIOS, isMobileOS, platformOS } from "@/lib/platform";
 export type Capability =
   // playback
   | "mpvEngine"
+  | "exoEngine"
   | "html5Engine"
   | "hdrPassthrough"
   | "shaderUpscale"
@@ -53,6 +54,7 @@ function desktopTable(): Table {
   const os = platformOS();
   return {
     mpvEngine: true,
+    exoEngine: false,
     html5Engine: true,
     hdrPassthrough: os === "windows",
     shaderUpscale: true,
@@ -99,8 +101,14 @@ function mobileTable(): Table {
   const ios = isIOS();
   const tv = formFactor() === "tv";
   return {
-    // No libmpv on either mobile OS: the HTML5 bridge is the only engine.
+    // No libmpv on either mobile OS: building it for the NDK is a separate
+    // project, and nothing here ships the .so.
     mpvEngine: false,
+    // Android has its own answer to the same problem. ExoPlayer drives the
+    // device's hardware decoders, which is the whole reason a television plays
+    // HEVC and 4K that a webview <video> turns down. iOS has no equivalent the
+    // app can reach from a WKWebView host.
+    exoEngine: !ios,
     html5Engine: true,
     hdrPassthrough: false,
     shaderUpscale: false,
@@ -154,6 +162,7 @@ function webTable(): Table {
   const base = mobileTable();
   return {
     ...base,
+    exoEngine: false,
     nativePip: true,
     documentPip: true,
     deepLinks: false,

@@ -88,6 +88,26 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.activity:activity-ktx:1.10.1")
     implementation("com.google.android.material:material:1.12.0")
+
+    // The Android-native playback path. Media3 is ExoPlayer: it decodes with the
+    // device's own hardware decoders, which is what makes 4K and HEVC work on a
+    // television that would refuse the same file through a WebView <video>.
+    // HLS and DASH are separate artifacts because the core does not carry them.
+    //
+    // media3-ui is deliberately absent. The interface is the web page — the
+    // transport, the menus, the subtitles are all drawn there — and the only
+    // native view involved is a bare SurfaceView, so PlayerView and its
+    // dependencies would be weight with nothing on the screen to show for it.
+    implementation("androidx.media3:media3-exoplayer:1.4.1")
+    implementation("androidx.media3:media3-exoplayer-hls:1.4.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.4.1")
+
+    // The second engine: libmpv, with ffmpeg, libass and libplacebo inside it.
+    //
+    // This is the same mpv the desktop build used, cross-compiled for Android
+    // and published as an ordinary AAR, so it arrives through Gradle like every
+    // other dependency rather than as a binary someone dropped into the tree.
+    implementation("dev.jdtech.mpv:libmpv:1.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")

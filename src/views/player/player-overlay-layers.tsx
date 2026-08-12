@@ -6,7 +6,7 @@ import { AdReportButton } from "@/components/player/ad-report-button";
 import { P2pStatusChip } from "@/components/player/p2p-status-chip";
 import type { VolumeHudPosition, VolumeIndicatorState } from "@/components/player/volume-indicator";
 import type { ParentalCategory } from "@/lib/providers/harbor-imdb";
-import type { PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
+import type { PlayerEngine, PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
 import type { PlayerSrc, PlayEpisode } from "@/lib/view";
 import { CastLayer } from "./cast-layer";
 import { DragClickStage } from "./drag-click-stage";
@@ -34,7 +34,7 @@ type Loader = ComponentProps<typeof LoaderLayer>;
 
 export type PlayerOverlayLayersProps = {
   snap: PlayerSnapshot;
-  engine: "html5" | "mpv";
+  engine: PlayerEngine;
   src: PlayerSrc;
   adStreamRef: PlayerSrc["streamRef"];
   adUrl: string;

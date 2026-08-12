@@ -1,3 +1,4 @@
+import { isDpadPrimary } from "@/lib/platform";
 import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -30,6 +31,19 @@ export function ProfilePickerModal() {
   }, [pickerView.kind, pickerOpen]);
 
   if (!pickerOpen) return null;
+
+  // Profile management is not a television feature.
+  //
+  // Naming a profile, uploading a photo, picking a colour from a swatch strip —
+  // these are forms built for a pointer, and the screenshot of them on a TV is
+  // the argument against them. The menu that used to open this from the sidebar
+  // was already closed on a remote, but the same modal has entrances in every
+  // other chrome layout the themes offer, so it kept surfacing. Closing it here
+  // shuts all of them at once.
+  //
+  // Unlocking stays: a locked profile has to be openable, and its PIN pad is
+  // built for exactly this input.
+  if (isDpadPrimary() && pickerView.kind !== "unlock") return null;
 
   const goList = () => setPickerView({ kind: "list" });
   const showClose = pickerView.kind === "create" || pickerView.kind === "edit";

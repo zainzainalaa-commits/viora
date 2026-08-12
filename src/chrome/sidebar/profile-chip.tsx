@@ -83,10 +83,23 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
           collapsed ? "" : "lg:justify-start lg:px-3"
         }`}
       >
-        <ProfileAvatar profile={activeProfile} user={user} fallbackAvatar={harborAvatar} />
+        <ProfileAvatar profile={activeProfile} user={user} fallbackAvatar={harborAvatar} preferUser={tv && !!user} />
         <div className={`hidden min-w-0 flex-1 ${collapsed ? "" : "lg:block"}`}>
           <div className="truncate text-[14.5px] font-medium tracking-tight text-ink">
-            {activeProfile?.name ?? user?.fullname ?? user?.email?.split("@")[0] ?? t("profile.fallback")}
+            {/*
+              Signed in means signed in, and the name shown is the account's.
+
+              A local profile normally wins here, and on a desktop that is right:
+              profiles are a thing you make and name. On a television they are
+              not — the editor for them is gone, so the profile is an
+              unconfigurable leftover called "Guest 4471", and it was sitting on
+              top of the Stremio account the viewer had just signed into. There
+              was no way to correct it from the sofa, because correcting it is
+              exactly the screen that does not exist here.
+            */}
+            {tv && user
+              ? (user.fullname || user.email?.split("@")[0] || t("profile.fallback"))
+              : (activeProfile?.name ?? user?.fullname ?? user?.email?.split("@")[0] ?? t("profile.fallback"))}
           </div>
           <div className="truncate text-[12px] text-ink-subtle">
             <SubtitleText active={activeProfile} profiles={profiles} user={user} />
@@ -271,14 +284,19 @@ function ProfileAvatar({
   user,
   fallbackAvatar,
   compact,
+  preferUser,
 }: {
   profile: Profile | null;
   user: User | null;
   fallbackAvatar: string | null;
   compact?: boolean;
+  /** Show the signed-in account's picture ahead of the local profile's. */
+  preferUser?: boolean;
 }) {
   const dim = compact ? "h-9 w-9" : "h-12 w-12";
-  const src = profile?.avatar ?? fallbackAvatar ?? user?.avatar ?? null;
+  const src = preferUser
+    ? (user?.avatar ?? profile?.avatar ?? fallbackAvatar ?? null)
+    : (profile?.avatar ?? fallbackAvatar ?? user?.avatar ?? null);
   const ringStyle = profile?.color ? { boxShadow: `0 0 0 2px ${profile.color}` } : undefined;
   return (
     <div

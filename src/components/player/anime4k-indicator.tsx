@@ -1,3 +1,4 @@
+import type { PlayerEngine } from "@/lib/player/bridge";
 import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
@@ -9,7 +10,7 @@ function shadersActive(v: unknown): boolean {
   return typeof v === "string" && v.trim().length > 0;
 }
 
-export function Anime4kIndicator({ engine, chromeVisible, suppressed = false }: { engine: "html5" | "mpv"; chromeVisible: boolean; suppressed?: boolean }) {
+export function Anime4kIndicator({ engine, chromeVisible, suppressed = false }: { engine: PlayerEngine; chromeVisible: boolean; suppressed?: boolean }) {
   const { settings } = useSettings();
   const enabled = settings.playerAnime4kIndicator && engine === "mpv" && isTauri;
   const [active, setActive] = useState(false);

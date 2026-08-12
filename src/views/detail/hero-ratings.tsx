@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { Popcorn } from "lucide-react";
 import type { ReactNode } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
@@ -33,7 +34,12 @@ function ScoreItem({
   );
   return (
     <HoverTooltip label={label} sublabel={sublabel} side="top" align="center">
-      {onClick ? (
+      {/* A score is a fact, not a control.
+          Its click opens the rating's page in a browser — something a television
+          has no use for — and it sits in the same line of facts as the year and
+          the runtime, where a frame around it reads as the remote having lost
+          its way. */}
+      {onClick && !isDpadPrimary() ? (
         <FocusButton
           type="button"
           onClick={onClick}
