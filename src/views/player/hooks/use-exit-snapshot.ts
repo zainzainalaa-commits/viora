@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type RefObject } from "react";
-import { captureFrame, captureMpvFrame, saveSnapshot } from "@/lib/snapshots";
+import { captureMpvFrame, saveSnapshot } from "@/lib/snapshots";
 import { useSettings } from "@/lib/settings";
 import { trickplayGet } from "@/lib/trickplay";
 import { getPlaybackPosition } from "@/lib/player/playback-clock";
@@ -50,11 +50,7 @@ export function useExitSnapshot(params: {
 
   const grabFrame = useCallback(
     async (allowTrick: boolean): Promise<string | null> => {
-      const { engine: eng, seekPreviewEnabled: seek, fullQuality: full } = latest.current;
-      if (eng === "html5") {
-        const v = videoMountRef.current?.querySelector("video") as HTMLVideoElement | null;
-        return v ? captureFrame(v, full) : null;
-      }
+      const { seekPreviewEnabled: seek, fullQuality: full } = latest.current;
       const mpvImg = await captureMpvFrame(full);
       if (mpvImg) return mpvImg;
       if (allowTrick && seek) return trickplayGet(getPlaybackPosition());

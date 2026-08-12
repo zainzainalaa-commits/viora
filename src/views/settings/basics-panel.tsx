@@ -9,7 +9,6 @@ import { Section, useSettingsActiveContext } from "./shared";
 
 const ENGINE_LABEL: Record<string, string> = {
   auto: "Auto",
-  html5: "HTML5",
   mpv: "mpv",
   exo: "Native",
 };

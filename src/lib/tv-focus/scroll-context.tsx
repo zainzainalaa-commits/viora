@@ -102,6 +102,12 @@ export function revealWithin(
     return;
   }
 
+  // Where the item sits in the page, read before anything moves: the
+  // adjustments below change scrollTop, and combining a rect measured now with
+  // a scroll position read afterwards misplaces it by exactly the distance
+  // just scrolled.
+  const pageTop = item.top + container.scrollTop - box.top;
+
   const lead = Math.min(item.height * 0.5, box.height * 0.2);
   if (item.top < box.top + lead) {
     container.scrollTop -= box.top + lead - item.top;
@@ -118,9 +124,13 @@ export function revealWithin(
   // backdrop at y=-432, so two thirds of the poster was gone and the screen read
   // as having lost its picture. Nothing above the fold needs scrolling to reach,
   // so the honest position for it is zero.
-  if (container.scrollTop > 0) {
-    const offsetWithin = item.top + container.scrollTop - box.top;
-    if (offsetWithin < container.clientHeight) container.scrollTop = 0;
+  //
+  // Only if it truly fits there, though. A row that straddles the fold — the
+  // first Continue Watching card sits at 546 and is 211 tall on a 720 screen —
+  // was being pushed back under the edge by the very rule meant to keep the top
+  // of the page honest, leaving the highlight half off the screen.
+  if (container.scrollTop > 0 && pageTop + item.height <= box.height) {
+    container.scrollTop = 0;
   }
 }
 

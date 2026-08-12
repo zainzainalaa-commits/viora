@@ -123,6 +123,9 @@ export function loadStoredSettings(rawKey: string = STORAGE_KEY): Settings {
       parsed._streamSortAddonV1 = true;
     }
     if (parsed.aiSearchModel) parsed.aiSearchModel = migrateModelId(parsed.aiSearchModel);
+    // The web player is gone. A setting still pointing at it would name an
+    // engine that cannot be built, so it falls back to the automatic choice.
+    if ((parsed.playerEngine as string) === "html5") parsed.playerEngine = "auto";
     if (!parsed._mpvEmbedV3) {
       parsed.playerMpvEmbed = true;
       parsed._mpvEmbedV3 = true;

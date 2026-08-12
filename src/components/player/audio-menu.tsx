@@ -104,7 +104,6 @@ function MenuBody(props: Props & { onClose: () => void }) {
         <TrackSection
           tracks={tracks}
           selectedId={selectedId}
-          engine={engine}
           onSelect={(id) => {
             onSelect(id);
             onClose();
@@ -122,23 +121,17 @@ function MenuBody(props: Props & { onClose: () => void }) {
 function TrackSection({
   tracks,
   selectedId,
-  engine,
   onSelect,
 }: {
   tracks: TrackInfo[];
   selectedId: string | null;
-  engine: PlayerEngine;
   onSelect: (id: string) => void;
 }) {
   const tr = useT();
   if (tracks.length === 0) {
     return (
       <div className="px-3 py-4 text-[12.5px] leading-relaxed text-ink-muted">
-        {engine === "html5"
-          ? tr(
-              "Track switching isn't supported on the current engine. The file's default audio is playing.",
-            )
-          : tr("This file has one audio track.")}
+        {tr("This file has one audio track.")}
       </div>
     );
   }

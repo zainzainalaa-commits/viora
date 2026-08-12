@@ -371,7 +371,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "audio-menu": {
-      if (ctx.tight || ctx.engine === "html5") return null;
+      if (ctx.tight) return null;
       return (
         <AudioMenu
           tracks={ctx.snap.audioTracks}
@@ -440,7 +440,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "anime4k-menu": {
-      if (ctx.tight || ctx.engine === "html5" || !ctx.onAnime4kMode || !ctx.anime4kAvailable) return null;
+      if (ctx.tight || !ctx.onAnime4kMode || !ctx.anime4kAvailable) return null;
       return (
         <Anime4kMenu
           mode={(ctx.anime4kMode as Anime4kChoice) ?? "auto"}

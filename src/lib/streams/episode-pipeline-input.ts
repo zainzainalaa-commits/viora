@@ -109,8 +109,9 @@ export function buildEpisodePipelineInput(params: {
       runtimeMinutes: runtimeMinutes(meta.runtime),
       inTheaters: meta.inTheaters === true,
       bandwidthMbps: settings.bandwidthMbps > 0 ? settings.bandwidthMbps : undefined,
-      preferSingleAudioTrack:
-        !("__TAURI_INTERNALS__" in window) || settings.playerEngine === "html5",
+      // Outside the app the browser plays it, and a browser takes the first
+      // audio track it is given.
+      preferSingleAudioTrack: !("__TAURI_INTERNALS__" in window),
       preferAddonId: meta.addonOrigin?.id,
       preferredReleaseGroup: prevGroup,
       respectAddonOrder: settings.streamSort === "addon",

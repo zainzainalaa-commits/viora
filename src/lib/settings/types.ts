@@ -169,7 +169,7 @@ export type Settings = {
   discordShowPoster: boolean;
   discordShowTimestamp: boolean;
   discordShowPartyJoin: boolean;
-  playerEngine: "auto" | "html5" | "mpv" | "exo";
+  playerEngine: "auto" | "mpv" | "exo";
   playerShellId: string;
   playerChromeTheme: "auto" | "default" | "stremio";
   playerMenuBlack: boolean;

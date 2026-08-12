@@ -230,7 +230,8 @@ function ScrollEdge({ side, onClick }: { side: "start" | "end"; onClick: () => v
         side === "start" ? "start-0 bg-gradient-to-r ps-3 pe-10" : "end-0 bg-gradient-to-l pe-3 ps-10"
       }`}
     >
-      <FocusButton
+      {/* Pointer affordance only — the remote moves between the avatars. */}
+      <button
         type="button"
         onClick={onClick}
         aria-label={side === "start" ? t("Scroll left") : t("Scroll right")}
@@ -241,7 +242,7 @@ function ScrollEdge({ side, onClick }: { side: "start" | "end"; onClick: () => v
         ) : (
           <ChevronRight size={15} strokeWidth={2.4} className="dir-icon" />
         )}
-      </FocusButton>
+      </button>
     </div>
   );
 }

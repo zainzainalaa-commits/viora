@@ -169,10 +169,6 @@ export type PlayerOverlayLayersProps = {
   onHostAdvance: Panels["onHostAdvance"];
   watchedFor: Panels["watchedFor"];
   acknowledgeResume: (mode: "resume" | "start-over") => void;
-  showHeaderWarning: boolean;
-  showNoAudioWarning: boolean;
-  onUseMpv: () => void;
-  onDismissNoAudio: () => void;
   // Text-sync feature
   onEnterSync?: () => void;
   syncMode: ReturnType<typeof useTextSync>["syncMode"];
@@ -446,11 +442,6 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         resumeTitle={p.src.meta.name ?? p.src.title}
         onResume={() => p.acknowledgeResume("resume")}
         onStartOver={() => p.acknowledgeResume("start-over")}
-        showHeaderWarning={p.showHeaderWarning}
-        showNoAudioWarning={p.showNoAudioWarning}
-        onUseMpv={p.onUseMpv}
-        onDismissNoAudio={p.onDismissNoAudio}
-        onPickAnother={p.pickAnotherOrGuide}
       />
     </>
   );

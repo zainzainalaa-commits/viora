@@ -244,23 +244,25 @@ function Row({
               />
             ))}
         </div>
+        {/* Chevrons appear on hover and are skipped by the remote, which pages
+            the row by moving between the channels. */}
         {canPrev && (
-          <FocusButton
+          <button
             aria-label={t("Scroll left")}
             onClick={() => scrollPage(-1)}
             className="absolute start-0 top-1/2 z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-edge-soft/55 bg-canvas/90 text-ink opacity-0 backdrop-blur transition-opacity duration-150 hover:bg-canvas group-hover/row:opacity-100 focus-visible:opacity-100 rtl:translate-x-1/2"
           >
             <ChevronLeft size={18} strokeWidth={2.2} className="dir-icon" />
-          </FocusButton>
+          </button>
         )}
         {canNext && (
-          <FocusButton
+          <button
             aria-label={t("Scroll right")}
             onClick={() => scrollPage(1)}
             className="absolute end-0 top-1/2 z-10 flex h-11 w-11 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-edge-soft/55 bg-canvas/90 text-ink opacity-0 backdrop-blur transition-opacity duration-150 hover:bg-canvas group-hover/row:opacity-100 focus-visible:opacity-100 rtl:-translate-x-1/2"
           >
             <ChevronRight size={18} strokeWidth={2.2} className="dir-icon" />
-          </FocusButton>
+          </button>
         )}
       </div>
     </section>

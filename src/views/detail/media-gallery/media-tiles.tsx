@@ -18,7 +18,10 @@ function TileButton({
   className?: string;
 }) {
   return (
-    <FocusButton
+    // Download, pin, set-as-backdrop: they live in a corner overlay that only
+    // appears on hover, so on a remote they would be invisible stops sitting on
+    // top of every tile. Saving a backdrop to disk is a pointer luxury.
+    <button
       type="button"
       title={label}
       aria-label={label}
@@ -29,7 +32,7 @@ function TileButton({
       className={`flex h-8 w-8 items-center justify-center rounded-full bg-canvas/80 text-ink shadow-[0_4px_14px_rgba(0,0,0,0.45)] backdrop-blur-md transition-transform hover:scale-110 active:scale-90 ${className}`}
     >
       {icon}
-    </FocusButton>
+    </button>
   );
 }
 

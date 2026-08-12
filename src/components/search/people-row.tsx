@@ -113,7 +113,10 @@ function ArrowButton({
 }) {
   const t = useT();
   return (
-    <FocusButton
+    // Hover-only affordance: the remote walks the people themselves, which
+    // scrolls the row, and a stop on an invisible chevron looks like a dead
+    // press.
+    <button
       type="button"
       aria-label={t(side === "left" ? "Scroll left" : "Scroll right")}
       onClick={onClick}
@@ -130,7 +133,7 @@ function ArrowButton({
       ) : (
         <ChevronRight size={18} strokeWidth={2.4} className="dir-icon" />
       )}
-    </FocusButton>
+    </button>
   );
 }
 

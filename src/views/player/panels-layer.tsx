@@ -5,7 +5,6 @@ import type { Meta } from "@/lib/cinemeta";
 import type { PanelCorner } from "@/lib/player-chrome";
 import type { PlayEpisode } from "@/lib/view";
 import { useT } from "@/lib/i18n";
-import { HeaderWarning, NoAudioWarning } from "./header-warning";
 
 export function PanelsLayer({
   isSeriesPlayback,
@@ -27,11 +26,6 @@ export function PanelsLayer({
   resumeTitle,
   onResume,
   onStartOver,
-  showHeaderWarning,
-  showNoAudioWarning,
-  onUseMpv,
-  onDismissNoAudio,
-  onPickAnother,
 }: {
   isSeriesPlayback: boolean;
   meta: Meta;
@@ -52,11 +46,6 @@ export function PanelsLayer({
   resumeTitle: string;
   onResume: () => void;
   onStartOver: () => void;
-  showHeaderWarning: boolean;
-  showNoAudioWarning: boolean;
-  onUseMpv: () => void;
-  onDismissNoAudio: () => void;
-  onPickAnother: () => void;
 }) {
   const t = useT();
   return (
@@ -114,10 +103,6 @@ export function PanelsLayer({
         />
       )}
 
-      {showHeaderWarning && <HeaderWarning onPickAnother={onPickAnother} />}
-      {showNoAudioWarning && (
-        <NoAudioWarning onUseMpv={onUseMpv} onDismiss={onDismissNoAudio} />
-      )}
     </>
   );
 }

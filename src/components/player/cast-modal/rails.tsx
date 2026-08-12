@@ -70,14 +70,15 @@ function ScrollRail({ children }: { children: React.ReactNode }) {
 function RailArrow({ dir, onClick }: { dir: "left" | "right"; onClick: () => void }) {
   const Icon = dir === "left" ? ChevronLeft : ChevronRight;
   return (
-    <FocusButton
+    // Visible on hover only, so the remote skips it and walks the cast instead.
+    <button
       type="button"
       onClick={onClick}
       aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
       className={`absolute top-[42%] z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/75 text-white opacity-0 ring-1 ring-white/15 backdrop-blur-sm transition-opacity duration-150 hover:bg-black/95 group-hover/rail:opacity-100 ${dir === "left" ? "left-0" : "right-0"}`}
     >
       <Icon size={20} strokeWidth={2.5} />
-    </FocusButton>
+    </button>
   );
 }
 

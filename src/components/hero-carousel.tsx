@@ -198,6 +198,11 @@ export function HeroCarousel({
         }}
         tabIndex={-1}
         {...heroFocus.focusProps}
+        // It behaves as one control — OK opens the title, left and right change
+        // slides — so it should say so. Without this it is a bare div holding
+        // focus, which reads to anything inspecting the page as focus lost.
+        role="button"
+        aria-label={slides[active]?.meta?.name ?? undefined}
         data-hero-stage=""
         dir="ltr"
         onPointerDown={onPointerDown}

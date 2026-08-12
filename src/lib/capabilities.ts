@@ -8,7 +8,6 @@ export type Capability =
   // playback
   | "mpvEngine"
   | "exoEngine"
-  | "html5Engine"
   | "hdrPassthrough"
   | "shaderUpscale"
   | "motionInterpolation"
@@ -55,7 +54,6 @@ function desktopTable(): Table {
   return {
     mpvEngine: true,
     exoEngine: false,
-    html5Engine: true,
     hdrPassthrough: os === "windows",
     shaderUpscale: true,
     motionInterpolation: os === "windows",
@@ -109,7 +107,6 @@ function mobileTable(): Table {
     // HEVC and 4K that a webview <video> turns down. iOS has no equivalent the
     // app can reach from a WKWebView host.
     exoEngine: !ios,
-    html5Engine: true,
     hdrPassthrough: false,
     shaderUpscale: false,
     motionInterpolation: false,

@@ -46,7 +46,7 @@ export function usePlayerBridge(params: {
 
   const [snap, setSnap] = useState<PlayerSnapshot>(emptySnapshot);
   const prevSnapRef = useRef<PlayerSnapshot>(emptySnapshot);
-  const [engine, setEngine] = useState<PlayerEngine>("html5");
+  const [engine, setEngine] = useState<PlayerEngine>("exo");
   const [autoFallbackTried, setAutoFallbackTried] = useState(false);
   // Chosen from inside the player, for this stream only. The setting in
   // Settings is what the next film starts on; this is the viewer saying "not

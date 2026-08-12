@@ -1,6 +1,5 @@
 import { FocusSection, focusKeys, setFocusSafely } from "@/lib/tv-focus";
 import { isDpadPrimary } from "@/lib/platform";
-import { can } from "@/lib/capabilities";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resolveChromeTheme } from "@/lib/theme";
 import { useActiveKid } from "@/lib/profiles";
@@ -78,7 +77,7 @@ import type { ToastInfo } from "@/views/addons/addons-types";
 
 export function PlayerView({ src }: { src: PlayerSrc }) {
   const { setChromeHidden, topPath, openPicker, exitPlayback, replacePlayerSrc, exitPlayer } = useView();
-  const { settings, update } = useSettings();
+  const { settings } = useSettings();
   const isKid = useActiveKid() != null;
   const t = useT();
   const chromeTheme = resolveChromeTheme(settings.theme, settings.playerChromeTheme);
@@ -466,19 +465,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     isNextUp: true,
   });
   const isSeriesPlayback = !!src.episode && src.meta.type === "series";
-
-  const showHeaderWarning =
-    src.notWebReady === true && engine === "html5" && (snap.status === "error" || snap.status === "loading");
-  const [noAudioDismissed, setNoAudioDismissed] = useState(false);
-  useEffect(() => {
-    setNoAudioDismissed(false);
-  }, [src.url]);
-  const showNoAudioWarning =
-    engine === "html5" &&
-    snap.noAudio === true &&
-    !noAudioDismissed &&
-    !liveOverlay.isLive &&
-    settings.playerEngine !== "auto";
 
   const { inRoomRef, isHostRef, initialSyncDoneRef } = useRoomSync({
     inRoom,
@@ -927,10 +913,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     onHostAdvance: broadcastEpisode,
     watchedFor,
     acknowledgeResume,
-    showHeaderWarning,
-    showNoAudioWarning,
-    onUseMpv: () => update({ playerEngine: can("exoEngine") ? "exo" : "mpv" }),
-    onDismissNoAudio: () => setNoAudioDismissed(true),
     // Text-sync props (preserved from fork)
     onEnterSync: handleEnterSync,
     syncMode: textSync.syncMode,

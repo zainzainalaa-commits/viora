@@ -15,7 +15,7 @@ import { startMaintenance, subscribeMemoryPressure } from "@/lib/maintenance";
 import { MiddleClickScroll } from "@/lib/use-middle-click-scroll";
 import { flushCloudSync } from "@/views/player/hooks/use-stremio-sync";
 import { useOverlayPinned } from "@/lib/overlay-pin";
-import { isMobileDevice, isWeb } from "@/lib/platform";
+import { isDpadPrimary, isMobileDevice, isWeb } from "@/lib/platform";
 import { useIsPhone } from "@/lib/use-form-factor";
 import { MobileTabBar } from "@/chrome/mobile-tabbar";
 import { installLongPressContextMenu } from "@/lib/long-press-context-menu";
@@ -673,6 +673,15 @@ function Shell() {
   const showsTop = topKind === "shows";
   const libraryTop = topKind === "library";
   const liveTop = topKind === "live";
+  // Live TV gives up the sidebar for the width its channel grid wants — a fair
+  // trade with a mouse, which can always reach the corner again. A remote
+  // cannot: with no playlist connected the screen holds one button, and every
+  // direction on the D-pad does nothing at all. The rail stays on television.
+  //
+  // Only the rail: `liveTop` itself also keeps the view from being evicted and
+  // marks which focus layer is on top, and neither of those has anything to do
+  // with how wide the channel grid would like to be.
+  const liveHidesRail = liveTop && !isDpadPrimary();
   const vodTop = topKind === "vod";
   const downloadsTop = topKind === "downloads";
   const matchDetailTop = topKind === "match-detail";
@@ -747,11 +756,11 @@ function Shell() {
   return (
     <div data-kids={kidsTop || kid ? "on" : undefined} className="relative flex h-full">
       {!playerActive && !pickerTop && layout === "mobile" && <MobileTabBar />}
-      {!settingsTop && !playerActive && !liveTop && !pickerTop && layout === "sidebar" && <Sidebar />}
-      {!settingsTop && !playerActive && !liveTop && !pickerTop && layout === "dracula" && <DraculaSidebar />}
-      {!settingsTop && !playerActive && !liveTop && !pickerTop && layout === "nord" && <NordSidebar />}
-      {!settingsTop && !playerActive && !liveTop && !pickerTop && layout === "forest" && <ForestSidebar />}
-      {!settingsTop && !playerActive && !liveTop && !pickerTop && layout === "stremio" && <StremioRail />}
+      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "sidebar" && <Sidebar />}
+      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "dracula" && <DraculaSidebar />}
+      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "nord" && <NordSidebar />}
+      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "forest" && <ForestSidebar />}
+      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "stremio" && <StremioRail />}
       {!settingsTop && !playerActive && !pickerTop && layout === "topdock" && <TopDock />}
       {!settingsTop && !playerActive && !pickerTop && layout === "cinematic" && <CinematicOverlay />}
       {!settingsTop && !playerActive && !pickerTop && layout === "royal" && <RoyalTopbar />}

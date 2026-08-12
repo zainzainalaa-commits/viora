@@ -1,4 +1,3 @@
-import { FocusButton } from "@/lib/tv-focus";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -57,7 +56,11 @@ function RailArrow({ side, visible, onClick }: { side: "start" | "end"; visible:
   const sideClass = side === "start" ? "start-0 justify-start" : "end-0 justify-end";
   return (
     <div className={`pointer-events-none absolute inset-y-0 z-20 flex w-14 items-center ${sideClass}`}>
-      <FocusButton
+      {/* Not a stop for the remote. These sit on top of the strip at opacity
+          zero, so walking the page landed on a chevron nobody can see, twice per
+          rail, with nothing appearing to happen. Moving between the tiles
+          scrolls the strip anyway. */}
+      <button
         type="button"
         onClick={onClick}
         aria-label={side === "start" ? t("Scroll left") : t("Scroll right")}
@@ -73,7 +76,7 @@ function RailArrow({ side, visible, onClick }: { side: "start" | "end"; visible:
         ) : (
           <ChevronRight size={22} strokeWidth={2.2} className="dir-icon" />
         )}
-      </FocusButton>
+      </button>
     </div>
   );
 }

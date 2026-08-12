@@ -1,4 +1,3 @@
-import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { useT } from "@/lib/i18n";
@@ -144,7 +143,10 @@ function Arrow({
 }) {
   const t = useT();
   return (
-    <FocusButton
+    // A scroll chevron is a pointer affordance. The remote scrolls this rail by
+    // moving between its tiles, so a stop here is a press that appears to do
+    // nothing — on a control drawn at opacity zero.
+    <button
       type="button"
       onClick={onClick}
       aria-label={t(side === "left" ? "Scroll left" : "Scroll right")}
@@ -158,6 +160,6 @@ function Arrow({
       ) : (
         <ChevronRight size={20} strokeWidth={2.4} className="dir-icon" />
       )}
-    </FocusButton>
+    </button>
   );
 }

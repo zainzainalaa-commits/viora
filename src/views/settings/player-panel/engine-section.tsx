@@ -10,7 +10,7 @@ import { HdrModePicker } from "./hdr-mode";
 import { DisplayPanelSelector } from "./display-panel-selector";
 
 type Choice = {
-  id: "auto" | "html5" | "mpv" | "exo";
+  id: "auto" | "mpv" | "exo";
   label: string;
   sub: string;
   recommended?: boolean;
@@ -89,20 +89,10 @@ export function PlayerEnginePanel() {
         ),
       },
     ];
-    // The web player is no longer offered, but it is still shown to anyone
-    // whose setting already points at it, so that choice can be walked back
-    // rather than being stuck behind a row that no longer exists.
-    if (settings.playerEngine === "html5") {
-      choices.push({
-        id: "html5",
-        label: t("Built-in web player"),
-        sub: t("The old web-layer playback. Kept only because it is what you have selected."),
-      });
-    }
     // Auto means ExoPlayer here, so a fresh install shows the radio where
     // playback will actually happen rather than on nothing at all.
     const isSelected = (id: Choice["id"]) =>
-      id === "exo" ? settings.playerEngine !== "mpv" && settings.playerEngine !== "html5" : settings.playerEngine === id;
+      id === "exo" ? settings.playerEngine !== "mpv" : settings.playerEngine === id;
     return (
       <div className="flex flex-col gap-4">
         <EngineChoices choices={choices} isSelected={isSelected} />
@@ -114,13 +104,8 @@ export function PlayerEnginePanel() {
     {
       id: "auto",
       label: t("Auto"),
-      sub: t("mpv on the desktop app, HTML5 in the browser. The right engine without thinking about it."),
+      sub: t("The right engine without thinking about it."),
       recommended: true,
-    },
-    {
-      id: "html5",
-      label: "HTML5",
-      sub: t("Native webview playback. Smooth and integrated, but limited codec coverage."),
     },
     {
       id: "mpv",
