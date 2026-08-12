@@ -8,6 +8,7 @@ import { fetchAniSkipSegments, kitsuToMal } from "./aniskip";
 import { chaptersToSegments } from "./chapters";
 import { fetchIntroDbSegments } from "./theintrodb";
 import { fetchCinemanaSceneSegments } from "./cinemana-scenes";
+import { fetchAlboxSceneSegments } from "./albox-scenes";
 import { useSettings } from "../settings";
 import type { SkipSegment } from "./types";
 import { getLocalCache } from "../simkl/activities";
@@ -140,13 +141,34 @@ export function useSkipSegments(
     };
   }, [wantFlagged, cinemanaId, durationSec]);
 
+  // Cinema Box publishes an intro and a credit range per episode. Ordinary
+  // skips, unlike the scene marks above, so they need no opt-in — but only when
+  // the file on screen is the same cut, which the provider checks.
+  const [alboxSegs, setAlboxSegs] = useState<SkipSegment[]>([]);
+  const alboxId = meta.id.startsWith("abx:") ? meta.id : cinemanaId;
+
+  useEffect(() => {
+    setAlboxSegs([]);
+    if (durationSec <= 0) return;
+    if (!alboxId.startsWith("abx:") && !alboxId.startsWith("tt")) return;
+    let cancelled = false;
+    fetchAlboxSceneSegments(alboxId, durationSec, wantFlagged)
+      .then((segs) => {
+        if (!cancelled) setAlboxSegs(segs);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [alboxId, durationSec, wantFlagged]);
+
   const fromChapters = useMemo(
     () => chaptersToSegments(chapters, durationSec),
     [chapters, durationSec],
   );
 
   return useMemo(() => {
-    const base = mergeSegments([adSegments, flagged, aniSkip, introDb, fromChapters]);
+    const base = mergeSegments([adSegments, flagged, aniSkip, introDb, alboxSegs, fromChapters]);
     if (durationSec <= 0) return base;
     const minOutroStart = durationSec * MIN_OUTRO_START_FRACTION;
     return base
@@ -157,7 +179,7 @@ export function useSkipSegments(
         return len >= 2 && len <= MAX_SEGMENT_SEC;
       })
       .filter((s) => s.kind !== "outro" || s.startSec >= minOutroStart);
-  }, [aniSkip, introDb, fromChapters, durationSec, adSegments, flagged]);
+  }, [aniSkip, introDb, fromChapters, durationSec, adSegments, flagged, alboxSegs]);
 }
 
 export function useAdSegments(

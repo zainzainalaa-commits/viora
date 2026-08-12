@@ -16,6 +16,7 @@ const DIRECT_HOSTS = new Set([
 ]);
 
 const PROXY_HOSTS = new Set([
+  "cinema.albox.co",
   "v3-cinemeta.strem.io",
   "opensubtitles-v3.strem.io",
   "opensubtitles.strem.io",

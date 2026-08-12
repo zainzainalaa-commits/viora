@@ -1,3 +1,4 @@
+import { alboxAddon } from "./albox";
 import { cinemanaAddon } from "./cinemana";
 import type { LocalAddon } from "./types";
 
@@ -9,7 +10,7 @@ import type { LocalAddon } from "./types";
 
 export const LOCAL_SCHEME = "local://";
 
-const REGISTRY: LocalAddon[] = [cinemanaAddon];
+const REGISTRY: LocalAddon[] = [cinemanaAddon, alboxAddon];
 
 export function localAddons(): LocalAddon[] {
   return REGISTRY;

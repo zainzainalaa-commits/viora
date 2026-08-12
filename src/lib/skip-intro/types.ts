@@ -4,7 +4,7 @@
  * the film, so it is only ever offered when the viewer has asked for it.
  */
 export type SkipKind = "intro" | "outro" | "recap" | "ad" | "flagged";
-export type SkipSource = "aniskip" | "introdb" | "chapters" | "adcorpus" | "cinemana";
+export type SkipSource = "aniskip" | "introdb" | "chapters" | "adcorpus" | "cinemana" | "albox";
 
 export type SkipSegment = {
   kind: SkipKind;

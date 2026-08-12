@@ -17,6 +17,7 @@ const DISABLED_KEY = "harbor.addons.disabled";
  */
 const BUILT_IN_ADDONS: Array<{ id: string; transportUrl: string }> = [
   { id: "community.cinemana", transportUrl: "local://cinemana/manifest.json" },
+  { id: "community.albox", transportUrl: "local://albox/manifest.json" },
 ];
 
 export function isBuiltInAddon(transportUrl: string | undefined | null): boolean {

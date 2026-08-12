@@ -455,18 +455,34 @@ function Shell() {
       setView("home");
       return true;
     }
-    if (stackKinds.length > 1 || topKind !== "home") {
+    // A pushed screen — a title, a person, a collection — keeps Back as "leave
+    // this page". That is what it has always meant there, and taking it away to
+    // move focus instead makes the commonest press on the commonest screen stop
+    // doing the one thing it is for.
+    if (stackKinds.length > 1) {
       goBack();
       return true;
     }
-    // At the root, Back means one of two things depending on where the user is.
-    // From the content it pulls focus to the navigation, which is the way out of
-    // a grid without hunting for the edge. From the navigation there is nowhere
-    // further to go, so the press is declined and Android closes the app — the
-    // behaviour a TV viewer expects from Back on a home screen.
+
+    // A top-level screen has nothing to pop, so Back's only useful job there is
+    // to hand the remote back to the rail. That matters because left walks a row
+    // one card at a time — measured at fifteen presses after browsing a single
+    // row — so a viewer who has looked along a row has no short way back to the
+    // navigation. Home already did this; the rest of the top-level screens were
+    // simply calling `goBack` on an empty stack and doing nothing at all.
     const inSidebar = !!document.activeElement?.closest("aside");
-    if (inSidebar) return false;
-    return setFocusSafely(focusKeys.sidebar);
+    if (!inSidebar && document.querySelector("aside") && setFocusSafely(focusKeys.sidebar)) {
+      return true;
+    }
+
+    if (topKind !== "home") {
+      goBack();
+      return true;
+    }
+    // At the root with focus already on the rail there is nowhere further to go,
+    // so the press is declined and Android closes the app — the behaviour a TV
+    // viewer expects from Back on a home screen.
+    return false;
   }, !player);
   
   useEffect(() => startMaintenance(), []);

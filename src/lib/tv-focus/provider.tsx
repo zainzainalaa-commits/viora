@@ -511,6 +511,9 @@ function useFocusLifeline(enabled: boolean): void {
     // press of right enters the content deliberately.
     let firstPlacement = true;
     let firstTries = 0;
+    // A fallback that had to settle for the rail, and the element it settled on.
+    let rescueFrom: Element | null = null;
+    let rescueTicks = 0;
     // A press means the viewer has taken over; after that the opening highlight
     // is no longer anyone's business but theirs.
     let acted = false;
@@ -579,6 +582,26 @@ function useFocusLifeline(enabled: boolean): void {
 
       if (!key || !doesFocusableExist(key) || !hasLiveFocus(key)) {
         setFocusSafely(focusKeys.content, focusKeys.sidebar);
+        // Opening a title kills the focus on the card, and the screen it opens
+        // is still fetching, so the content has nothing to offer and the
+        // fallback settles for the rail. Nothing revisits that: focus is alive,
+        // so every later poll is satisfied — measured on a series whose page
+        // rendered its Play button 400ms in and still left the highlight on the
+        // search button six seconds later.
+        //
+        // So a fallback that had to settle for the rail is remembered, and
+        // corrected once the screen is ready. Not at launch, where landing on
+        // the rail is the deliberate choice described above.
+        rescueFrom =
+          !firstPlacement && document.activeElement?.closest("aside")
+            ? document.activeElement
+            : null;
+        rescueTicks = rescueFrom ? 10 : 0;
+      } else if (rescueTicks > 0) {
+        rescueTicks -= 1;
+        // The viewer moving is the end of it — the highlight is theirs now.
+        if (document.activeElement !== rescueFrom) rescueTicks = 0;
+        else if (setFocusSafely(focusKeys.content)) rescueTicks = 0;
       }
       timer = window.setTimeout(check, 400);
     };
