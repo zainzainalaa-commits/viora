@@ -276,11 +276,18 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
                 </p>
               ) : (
                 <div className="flex flex-col gap-0.5 p-2">
-                  {visibleVariants.map((t) => (
+                  {visibleVariants.map((t, i) => (
                     <VariantRow
                       key={t.id}
                       track={t}
                       selected={t.id === selectedId}
+                      // The track you are watching is the one the remote should
+                      // start on; with none picked yet, the top of the list.
+                      primary={
+                        selectedId
+                          ? t.id === selectedId
+                          : i === 0
+                      }
                       onPick={() => {
                         onSelect(t.id);
                       }}

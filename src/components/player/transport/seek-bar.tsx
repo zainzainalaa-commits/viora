@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { setFocusSafely, useFocusableControl } from "@/lib/tv-focus";
 import { useSettings } from "@/lib/settings";
 import {
   usePlaybackPositionGated,
@@ -10,7 +11,7 @@ import { useTrickplayState } from "@/lib/trickplay";
 import { useSkipSegmentsView } from "@/lib/skip-intro/segment-store";
 import { ThumbPreview } from "@/components/player/thumb-preview";
 import { SeekBarVisual } from "./seek-bar-visual";
-import { fmtTime } from "./transport-utils";
+import { PLAY_PAUSE_FOCUS_KEY, fmtTime } from "./transport-utils";
 
 const BUFFER_PAD_SEC = 4;
 const PENDING_MAX_MS = 2500;
@@ -19,10 +20,14 @@ export function SeekBar({
   durationSec,
   onSeek,
   active,
+  backStepSec = 10,
+  forwardStepSec = 10,
 }: {
   durationSec: number;
   onSeek: (s: number) => void;
   active: boolean;
+  backStepSec?: number;
+  forwardStepSec?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<number | null>(null);
@@ -129,8 +134,46 @@ export function SeekBar({
     setScrub(null);
   };
 
+  /**
+   * The bar is a stop of its own, and left and right belong to it while focus
+   * is here — which is the only way to scrub with a remote. Up and down are
+   * handed back so it never becomes a trap.
+   */
+  const seekFocus = useFocusableControl({
+    onArrowPress: (direction) => {
+      // Down goes to the play button by name. Left to the engine, the nearest
+      // thing below a full-width bar is whichever button happens to sit under
+      // the playhead, so where focus landed depended on how far through the
+      // film you were.
+      if (direction === "down") {
+        setFocusSafely(PLAY_PAUSE_FOCUS_KEY);
+        return false;
+      }
+      if (direction !== "left" && direction !== "right") return true;
+      if (dur <= 1) return true;
+      const from = pending ?? positionRef.current;
+      const step = direction === "left" ? -Math.abs(backStepSec) : Math.abs(forwardStepSec);
+      const next = Math.max(0, Math.min(dur - 0.25, from + step));
+      onSeek(next);
+      setPending(next);
+      pendingAtRef.current = Date.now();
+      return false;
+    },
+  });
+
   return (
-    <div dir="ltr" className="pointer-events-auto group/seek relative h-12">
+    <div
+      dir="ltr"
+      ref={seekFocus.ref as React.Ref<HTMLDivElement>}
+      tabIndex={-1}
+      role="slider"
+      aria-label="Seek"
+      aria-valuemin={0}
+      aria-valuemax={Math.round(dur)}
+      aria-valuenow={Math.round(value)}
+      {...seekFocus.focusProps}
+      className="pointer-events-auto group/seek relative h-12 outline-none"
+    >
       <div
         ref={ref}
         onPointerMove={onMove}
@@ -145,7 +188,8 @@ export function SeekBar({
           pct={pct}
           bufferedPct={bufferedPct}
           scrubbing={scrub != null}
-          hovered={hover != null}
+          hovered={hover != null || seekFocus.focused}
+          focused={seekFocus.focused}
           segments={segmentSpans}
         />
         {hover != null &&

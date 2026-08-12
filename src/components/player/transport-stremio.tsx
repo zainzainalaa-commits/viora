@@ -308,7 +308,11 @@ export function TransportStremio(p: TransportStremioProps) {
             </>
           ) : (
             <div className="min-w-0 flex-1">
-              <SeekBar durationSec={snap.durationSec} onSeek={onSeek} active={visible} />
+              <SeekBar
+                  durationSec={snap.durationSec}
+                  onSeek={onSeek}
+                  active={visible}
+                />
             </div>
           )}
         </div>

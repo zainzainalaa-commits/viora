@@ -84,7 +84,7 @@ export function LeaveConfirmModal() {
         <div className="mt-6 flex gap-3">
           {/* The safe way out, and where focus lands. */}
           <FocusButton
-            autoFocus
+            data-focus-primary
             onClick={closeLeaveConfirm}
             className="h-12 flex-1 rounded-xl bg-elevated text-[16px] font-semibold text-ink transition-colors hover:bg-raised"
           >

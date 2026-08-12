@@ -37,6 +37,7 @@ export function SwitcherRow({
   divider,
   isCurrent,
   match,
+  primary,
 }: {
   stream: ScoredStream;
   addonLogo: string | null;
@@ -45,6 +46,8 @@ export function SwitcherRow({
   divider: boolean;
   isCurrent: boolean;
   match?: "same" | "close" | null;
+  /** The list's entry point for the remote. */
+  primary?: boolean;
 }) {
   const t = useT();
   const addonName = stream.addonName ?? t("Source");
@@ -59,6 +62,7 @@ export function SwitcherRow({
     <li className={divider ? "border-t border-edge-soft/60" : ""}>
       <FocusButton
         onClick={onPick}
+        data-focus-primary={primary ? "" : undefined}
         disabled={resolving || isCurrent}
         className={`group flex w-full items-center gap-3.5 px-5 py-3 text-start transition-colors ${
           isCurrent

@@ -1,10 +1,29 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { getSeekHovering, subscribeSeekHovering } from "@/lib/player/playback-clock";
-import { CHROME_HIDE_MS_PAUSED, CHROME_HIDE_MS_PLAYING, CHROME_HIDE_MS_RESUME } from "../player-utils";
+import { isDpadPrimary } from "@/lib/platform";
+import { CHROME_HIDE_MS_PLAYING, CHROME_HIDE_MS_RESUME } from "../player-utils";
 
-const UI_SCALE_ACTIVITY_EVENT = "harbor:ui-scale-activity";
-const UI_SCALE_RESIZE_HOLD_MS = 700;
-
+/**
+ * When the transport is on screen.
+ *
+ * The version this replaces kept seven ways to wake the controls, three guards,
+ * and armed its hide timer from inside the wake itself — and it never hid
+ * anything. Hiding told the rest of the app the chrome was gone; that re-ran
+ * the effect which wakes it; the wake armed a fresh timer. Measured on device:
+ * `armed 1800ms -> HIDE -> wake -> armed 1800ms -> HIDE`, over and over, so the
+ * bar was permanently up and focus permanently sat on a button over the film.
+ *
+ * This is the model TV players actually use, and it holds because the pieces
+ * only point one way:
+ *
+ *   - Waking is local state and nothing else. It never calls outward, so
+ *     nothing can call it back.
+ *   - One effect owns the timer, keyed on what genuinely decides whether the
+ *     controls should go: are they up, is it playing, is a menu open. Re-running
+ *     it re-arms rather than stacking timers.
+ *   - Telling the rest of the app is a separate effect that only writes.
+ *
+ * Paused keeps them up, which is the point of pausing.
+ */
 export function useChromeVisibility(params: {
   playing: boolean;
   drawMode: boolean;
@@ -12,160 +31,81 @@ export function useChromeVisibility(params: {
   setChromeHidden: (hidden: boolean) => void;
   keyboardPauseShowsControls: boolean;
 }) {
-  const { playing, drawMode, pipMode, setChromeHidden, keyboardPauseShowsControls } = params;
-  const [chromeVisible, setChromeVisible] = useState(false);
-  const lastInputKeyboardRef = useRef(false);
-  const prevPlayingRef = useRef(playing);
-  const chromeVisibleRef = useRef(false);
-  useEffect(() => {
-    chromeVisibleRef.current = chromeVisible;
-  }, [chromeVisible]);
+  const { playing, drawMode, pipMode, setChromeHidden } = params;
 
-  const hideTimer = useRef<number | null>(null);
-  const resizeTimer = useRef<number | null>(null);
-  const resizingUiRef = useRef(false);
-  const anyMenuOpenRef = useRef(false);
-  const resumeHideRef = useRef(false);
+  const [chromeVisible, setChromeVisible] = useState(true);
+  const [anyMenuOpen, setAnyMenuOpen] = useState(false);
+  // Bumped on every wake so the timer effect re-runs even when the controls are
+  // already up: a second press has to buy another few seconds.
+  const [wakeTick, setWakeTick] = useState(0);
 
+  const chromeVisibleRef = useRef(chromeVisible);
+  chromeVisibleRef.current = chromeVisible;
+
+  /** Stable by construction, so nothing downstream re-runs because of it. */
   const wakeChrome = useCallback(() => {
     setChromeVisible(true);
-    setChromeHidden(pipMode);
-    if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    if (resizingUiRef.current || anyMenuOpenRef.current || getSeekHovering()) return;
-    let wait = playing && !drawMode ? CHROME_HIDE_MS_PLAYING : CHROME_HIDE_MS_PAUSED;
-    if (resumeHideRef.current) {
-      resumeHideRef.current = false;
-      wait = CHROME_HIDE_MS_RESUME;
-    }
-    hideTimer.current = window.setTimeout(() => {
-      setChromeVisible(false);
-      setChromeHidden(true);
-    }, wait);
-  }, [playing, drawMode, pipMode, setChromeHidden]);
+    setWakeTick((n) => n + 1);
+  }, []);
 
+  const hideChrome = useCallback(() => {
+    setChromeVisible(false);
+  }, []);
+
+  const toggleChrome = useCallback(() => {
+    if (chromeVisibleRef.current) setChromeVisible(false);
+    else wakeChrome();
+  }, [wakeChrome]);
+
+  /** The resume path wants a shorter first hide than a normal press. */
+  const resumeHideRef = useRef(false);
   const hideForResume = useCallback(() => {
     resumeHideRef.current = true;
   }, []);
 
-  /** Hide immediately. Touch needs this: a tap toggles rather than only wakes. */
-  const hideChrome = useCallback(() => {
-    if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    if (anyMenuOpenRef.current) return;
-    setChromeVisible(false);
-    setChromeHidden(true);
-  }, [setChromeHidden]);
-
-  const toggleChrome = useCallback(() => {
-    if (chromeVisibleRef.current) hideChrome();
-    else wakeChrome();
-  }, [hideChrome, wakeChrome]);
-
+  // The only place the controls are ever put away on their own.
   useEffect(() => {
-    const playingChanged = prevPlayingRef.current !== playing;
-    prevPlayingRef.current = playing;
-    if (playingChanged && lastInputKeyboardRef.current && !keyboardPauseShowsControls) {
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-      setChromeVisible(false);
-      setChromeHidden(true);
-    } else {
-      wakeChrome();
-    }
-    const onMove = () => {
-      lastInputKeyboardRef.current = false;
-      wakeChrome();
-    };
-    const onPointerDown = () => {
-      lastInputKeyboardRef.current = false;
-    };
-    const onKeyDown = () => {
-      lastInputKeyboardRef.current = true;
-    };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("touchstart", onMove);
-    window.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("keydown", onKeyDown);
+    if (!chromeVisible) return;
+    if (anyMenuOpen) return;
+    // Paused, drawing, or picture-in-picture: they are being looked at on
+    // purpose.
+    if (!playing || drawMode || pipMode) return;
+    const wait = resumeHideRef.current ? CHROME_HIDE_MS_RESUME : CHROME_HIDE_MS_PLAYING;
+    resumeHideRef.current = false;
+    const t = window.setTimeout(() => setChromeVisible(false), wait);
+    return () => window.clearTimeout(t);
+  }, [chromeVisible, wakeTick, playing, drawMode, pipMode, anyMenuOpen]);
+
+  // Any press brings them back. Registered once, reading nothing that changes.
+  useEffect(() => {
+    const onInput = () => wakeChrome();
+    window.addEventListener("keydown", onInput);
+    window.addEventListener("touchstart", onInput);
+    // No pointer on a television. The emulator parks a cursor over the video,
+    // and every time the bar hid, the layout shifting under that stationary
+    // cursor counted as movement and brought it straight back.
+    if (!isDpadPrimary()) window.addEventListener("mousemove", onInput);
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("touchstart", onMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("keydown", onKeyDown);
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-      if (resizeTimer.current) window.clearTimeout(resizeTimer.current);
-      setChromeHidden(false);
+      window.removeEventListener("keydown", onInput);
+      window.removeEventListener("touchstart", onInput);
+      window.removeEventListener("mousemove", onInput);
     };
-  }, [wakeChrome, setChromeHidden, playing, keyboardPauseShowsControls]);
+  }, [wakeChrome]);
 
+  // A menu opening is a reason to show them, and a reason not to count down.
   useEffect(() => {
-    const onScaleActivity = () => {
-      resizingUiRef.current = true;
-      setChromeVisible(true);
-      setChromeHidden(pipMode);
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-      if (resizeTimer.current) window.clearTimeout(resizeTimer.current);
-      resizeTimer.current = window.setTimeout(() => {
-        resizingUiRef.current = false;
-        wakeChrome();
-      }, UI_SCALE_RESIZE_HOLD_MS);
-    };
-    window.addEventListener(UI_SCALE_ACTIVITY_EVENT, onScaleActivity);
-    return () => {
-      window.removeEventListener(UI_SCALE_ACTIVITY_EVENT, onScaleActivity);
-      if (resizeTimer.current) window.clearTimeout(resizeTimer.current);
-    };
-  }, [pipMode, setChromeHidden, wakeChrome]);
+    if (anyMenuOpen) setChromeVisible(true);
+  }, [anyMenuOpen]);
 
+  // Write-only, and the reason the loop is gone: this tells the rest of the app
+  // what happened, and nothing tells it back.
   useEffect(() => {
-    const onLeave = (e: MouseEvent) => {
-      if (e.relatedTarget) return;
-      if (!playing || drawMode) return;
-      if (anyMenuOpenRef.current || getSeekHovering()) return;
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-      setChromeVisible(false);
-      setChromeHidden(true);
-    };
-    document.addEventListener("mouseout", onLeave);
-    return () => document.removeEventListener("mouseout", onLeave);
-  }, [playing, drawMode, setChromeHidden]);
+    setChromeHidden(!chromeVisible && !pipMode);
+    return () => setChromeHidden(false);
+  }, [chromeVisible, pipMode, setChromeHidden]);
 
-  useEffect(() => {
-    const onBlur = () => {
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-      setChromeVisible(false);
-      setChromeHidden(true);
-    };
-    window.addEventListener("blur", onBlur);
-    return () => window.removeEventListener("blur", onBlur);
-  }, [setChromeHidden]);
-
-  useEffect(
-    () =>
-      subscribeSeekHovering(() => {
-        if (getSeekHovering()) {
-          setChromeVisible(true);
-          if (hideTimer.current) window.clearTimeout(hideTimer.current);
-        } else {
-          wakeChrome();
-        }
-      }),
-    [wakeChrome],
-  );
-
-  const [anyMenuOpen, setAnyMenuOpen] = useState(false);
-  useEffect(() => {
-    anyMenuOpenRef.current = anyMenuOpen;
-    if (anyMenuOpen) {
-      setChromeVisible(true);
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    } else {
-      wakeChrome();
-    }
-  }, [anyMenuOpen, wakeChrome]);
-
-  const cursorStyle: CSSProperties = drawMode
-    ? { cursor: "none" }
-    : !chromeVisible && playing
-      ? { cursor: "none" }
-      : { cursor: "default" };
+  const cursorStyle: CSSProperties =
+    drawMode || (!chromeVisible && playing) ? { cursor: "none" } : { cursor: "default" };
 
   return {
     chromeVisible,

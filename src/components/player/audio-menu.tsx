@@ -1,4 +1,5 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
+import { useExclusiveMenu } from "./transport/menu-exclusive";
 import { Check, Languages, RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Flag } from "@/components/flag";
@@ -29,6 +30,7 @@ export function AudioMenu(props: Props) {
   useEffect(() => {
     onOpenChange?.(open);
   }, [open, onOpenChange]);
+  useExclusiveMenu("audio", open, () => setOpen(false));
 
   useEffect(() => {
     if (!open) return;
@@ -62,9 +64,12 @@ export function AudioMenu(props: Props) {
         </FocusButton>
       </Tooltip>
       {open && (
-        <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex max-h-[400px] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>
+        <FocusModal
+          onClose={() => setOpen(false)}
+          className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex max-h-[400px] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}
+        >
           <AudioMenuBody {...props} onClose={() => setOpen(false)} />
-        </div>
+        </FocusModal>
       )}
     </div>
   );
@@ -139,11 +144,16 @@ function TrackSection({
   }
   return (
     <div className="flex flex-col gap-0.5">
-      {tracks.map((t) => {
+      {tracks.map((t, i) => {
         const isSel = t.id === selectedId;
         return (
           <FocusButton
             key={t.id}
+            // Opening the menu should land on the track that is playing, not on
+            // the close cross that happens to come first in the markup.
+            data-focus-primary={
+              (selectedId ? isSel : i === 0) ? "" : undefined
+            }
             onClick={() => onSelect(t.id)}
             className={`flex items-start gap-2.5 rounded-lg px-2.5 py-2 text-start transition-colors ${
               isSel ? "bg-elevated ring-1 ring-edge" : "hover:bg-canvas/55"

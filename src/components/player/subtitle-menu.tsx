@@ -1,4 +1,5 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
+import { useExclusiveMenu } from "./transport/menu-exclusive";
 import { Subtitles as SubsIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { openStyleBar } from "@/lib/player/sub-presets";
@@ -23,6 +24,7 @@ export function SubtitleMenu(props: Props) {
   useEffect(() => {
     onOpenChange?.(open);
   }, [open, onOpenChange]);
+  useExclusiveMenu("subtitles", open, () => setOpen(false));
 
   useEffect(() => {
     if (!open) return;
@@ -61,9 +63,12 @@ export function SubtitleMenu(props: Props) {
         </FocusButton>
       </Tooltip>
       {open && (
-        <div className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex h-[400px] max-h-[72vh] w-[500px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}>
+        <FocusModal
+          onClose={() => setOpen(false)}
+          className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex h-[400px] max-h-[72vh] w-[500px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}
+        >
           <MenuBody {...props} onClose={() => setOpen(false)} onOpenStyleBar={openStyleBar} />
-        </div>
+        </FocusModal>
       )}
     </div>
   );

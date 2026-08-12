@@ -456,7 +456,13 @@ export function Transport({
                 <Fragment key={c.id}>{renderControl(c.id, ctx)}</Fragment>
               ))}
               <div className="flex-1">
-                <SeekBar durationSec={snap.durationSec} onSeek={onSeek} active={visible} />
+                <SeekBar
+                  durationSec={snap.durationSec}
+                  onSeek={onSeek}
+                  active={visible}
+                  backStepSec={settings.seekBackStepSec}
+                  forwardStepSec={settings.seekForwardStepSec}
+                />
               </div>
               {controlsInSlot(chromeConfig, "seek-trailing").map((c) => (
                 <Fragment key={c.id}>{renderControl(c.id, ctx)}</Fragment>
@@ -464,9 +470,12 @@ export function Transport({
             </>
           )}
         </div>
-        <div className={`pointer-events-auto grid items-center ${
-          compact ? "grid-cols-[auto_1fr_auto] gap-2" : "grid-cols-[1fr_auto_1fr] gap-4"
-        }`}>
+        <div
+          data-player-row
+          className={`pointer-events-auto grid items-center ${
+            compact ? "grid-cols-[auto_1fr_auto] gap-2" : "grid-cols-[1fr_auto_1fr] gap-4"
+          }`}
+        >
           <div className="flex min-w-0 items-center gap-2 justify-self-start">
             {controlsInSlot(chromeConfig, "bottom-left").map((c) => (
               <Fragment key={c.id}>{renderControl(c.id, ctx)}</Fragment>

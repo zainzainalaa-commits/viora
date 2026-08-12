@@ -1,7 +1,7 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { isDpadPrimary } from "@/lib/platform";
 import { t as translate } from "@/lib/i18n";
-import { Camera, ChevronLeft, Cpu, Info, Maximize, Minimize, PauseCircle, PictureInPicture2, PlayCircle, Replace, Tv } from "lucide-react";
+import { Camera, ChevronLeft, Crop, Cpu, Info, Maximize, Minimize, Pause, PauseCircle, PictureInPicture2, Play, PlayCircle, Replace, Tv } from "lucide-react";
 import type { ReactNode } from "react";
 import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
@@ -9,6 +9,8 @@ import { getCustomIcon, type ControlVariant, type CustomIconMap, type PlayerCont
 import type { DownloadStatus } from "@/views/player/hooks/use-video-download";
 import { renderCustomIconControl } from "./custom-icon-renderer";
 import { realQualityLabel } from "@/lib/player/resolution-label";
+import { CROP_PRESETS } from "@/views/player/hooks/use-video-fill";
+import { PLAY_PAUSE_FOCUS_KEY } from "./transport-utils";
 
 function getControlState(id: PlayerControlId, ctx: ControlContext): string | undefined {
   const preview = ctx.previewStates?.[id];
@@ -39,7 +41,6 @@ import { BigButton } from "./big-button";
 import { DvrButton } from "./dvr-button";
 import { VolumeControl } from "./volume-control";
 import { SpeedMenu } from "./speed-menu";
-import { AspectMenu } from "./aspect-menu";
 import { Anime4kMenu } from "./anime4k-menu";
 import { HdrToggleBigBtn } from "./hdr-toggle-btn";
 import type { Anime4kChoice } from "@/views/player/hooks/use-anime4k";
@@ -297,12 +298,22 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
         <Tooltip label={ctx.playing ? t("Pause") : t("Play")}>
           <FocusButton
             onClick={ctx.onPlayPause}
-            className={`flex items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-[background-color,transform] hover:bg-white/22 active:scale-95 ${
-              ctx.tight ? "h-12 w-12" : ctx.compact ? "h-14 w-14" : "h-16 w-16"
-            }`}
+            focusKey={PLAY_PAUSE_FOCUS_KEY}
+            className={`flex items-center justify-center rounded-full text-white transition-[background-color,transform] active:scale-95 ${
+              // No disc behind it on a remote: the glyph alone is the control,
+              // and a filled circle plus a ringed icon was two frames around
+              // one triangle.
+              isDpadPrimary() ? "" : "bg-white/12 backdrop-blur-md hover:bg-white/22"
+            } ${ctx.tight ? "h-12 w-12" : ctx.compact ? "h-14 w-14" : "h-16 w-16"}`}
             aria-label={ctx.playing ? t("Pause") : t("Play")}
           >
-            {ctx.playing ? (
+            {isDpadPrimary() ? (
+              ctx.playing ? (
+                <Pause size={ctx.tight ? 28 : ctx.compact ? 32 : 36} strokeWidth={2} fill="currentColor" />
+              ) : (
+                <Play size={ctx.tight ? 28 : ctx.compact ? 32 : 36} strokeWidth={2} fill="currentColor" />
+              )
+            ) : ctx.playing ? (
               <PauseCircle size={ctx.tight ? 28 : ctx.compact ? 32 : 36} strokeWidth={1.5} />
             ) : (
               <PlayCircle size={ctx.tight ? 28 : ctx.compact ? 32 : 36} strokeWidth={1.5} />
@@ -405,13 +416,27 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "aspect-menu": {
-      if (ctx.tight || ctx.engine === "html5" || !ctx.onCropMode) return null;
+      if (ctx.tight || !ctx.onCropMode) return null;
+      // A press is the whole interaction: it steps to the next shape and the
+      // player flashes its name. A popup for nine options was three presses to
+      // change something a viewer wants to try and see.
+      const modes = CROP_PRESETS;
+      const at = Math.max(0, modes.findIndex((m) => m.id === (ctx.cropMode ?? "fit")));
+      const next = modes[(at + 1) % modes.length];
+      const current = modes[at];
+      const onCrop = ctx.onCropMode;
+      const label = t("Aspect ratio: {mode}", { mode: t(current?.label ?? "Fit") });
       return (
-        <AspectMenu
-          mode={ctx.cropMode ?? "fit"}
-          onMode={ctx.onCropMode}
-          onOpenChange={ctx.setAspectMenuOpen}
-        />
+        <BigButton onClick={() => onCrop(next.id)} ariaLabel={label} tooltip={label}>
+          <span className="flex items-center gap-1">
+            <Crop size={21} strokeWidth={1.9} />
+            {current && current.id !== "fit" && (
+              <span className="text-[11px] font-bold tabular-nums tracking-wider">
+                {current.label}
+              </span>
+            )}
+          </span>
+        </BigButton>
       );
     }
     case "anime4k-menu": {
@@ -467,6 +492,10 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       return <CastButton onClick={ctx.onCast} capabilities={ctx.capabilities} />;
     }
     case "fullscreen": {
+      // Nothing to toggle: the player is the screen. Its place in the row is
+      // taken by the aspect menu, which is the control a viewer actually wants
+      // there — fit, fill, zoom, or a forced ratio for old 4:3 shows.
+      if (isDpadPrimary()) return null;
       return (
         <BigButton
           onClick={ctx.onFullscreen}

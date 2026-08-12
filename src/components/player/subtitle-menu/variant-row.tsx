@@ -20,10 +20,13 @@ function subExt(track: TrackInfo): string {
 export function VariantRow({
   track,
   selected,
+  primary,
   onPick,
 }: {
   track: TrackInfo;
   selected: boolean;
+  /** Where the remote should land when the menu opens. */
+  primary?: boolean;
   onPick: () => void;
 }) {
   const tr = useT();
@@ -45,6 +48,7 @@ export function VariantRow({
   return (
     <FocusButton
       onClick={onPick}
+      data-focus-primary={primary ? "" : undefined}
       onContextMenu={(e) =>
         open(e, {
           kind: "subtitle",

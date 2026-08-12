@@ -61,9 +61,29 @@ export function FocusModal({
     // arrives with the step, the fetch, or the animation.
     let tries = 0;
     const claim = () => {
-      if (focusInsideScope(el)) return;
+      if (focusInsideScope(el)) {
+        timer = window.setTimeout(watchForEntryPoint, 80);
+        return;
+      }
       if (++tries < 12) timer = window.setTimeout(claim, 50);
     };
+
+    // Landing somewhere is not the same as landing on the right thing. A menu
+    // whose list is still being fetched or grouped — sources, subtitle tracks —
+    // has nothing but a header when the claim above runs, so the remote parks on
+    // a close cross. Until the viewer moves focus themselves, the entry point the
+    // menu declares still wins over whatever rendered first.
+    let auto: Element | null = null;
+    let waits = 0;
+    const watchForEntryPoint = () => {
+      if (auto === null) auto = document.activeElement;
+      // Focus moving at all ends this: either the entry point took it, or the
+      // viewer did, and neither wants a second opinion.
+      if (document.activeElement !== auto) return;
+      if (el.querySelector("[data-focus-primary]")) focusInsideScope(el);
+      if (++waits < 40) timer = window.setTimeout(watchForEntryPoint, 60);
+    };
+
     let timer = window.setTimeout(claim, 0);
 
     // The WebView can still hand DOM focus to something behind the dialog before
@@ -104,6 +124,10 @@ export function FocusModal({
       rememberChild={false}
       focusKey={focusKey}
       className={className}
+      // A dialog is a surface of its own, not moving picture, so focus inside it
+      // can afford an outline that the transport bar cannot. Styling keys off
+      // this rather than off each dialog's own markup.
+      data-focus-scope="modal"
     >
       {children}
     </FocusSection>

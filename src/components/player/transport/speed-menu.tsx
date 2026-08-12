@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { useExclusiveMenu } from "./menu-exclusive";
 import { Clock, Gauge, Plus, Settings2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SLEEP_PRESETS, type SleepMode, type SleepTimerState } from "@/views/player/hooks/use-sleep-timer";
@@ -42,6 +43,7 @@ export function SpeedMenu({
   useEffect(() => {
     onOpenChange?.(open);
   }, [open, onOpenChange]);
+  useExclusiveMenu("speed", open, () => setOpen(false));
   useEffect(() => {
     if (!open) setEditing(false);
   }, [open]);

@@ -1,7 +1,6 @@
 import { type ComponentProps, type RefObject } from "react";
 import { DrawCanvas, StrokesLayer, type Stroke } from "@/components/player/draw-canvas";
 import { StreamSwitcher } from "@/components/player/stream-switcher";
-import { StreamCheckPill } from "@/components/player/stream-check-pill";
 import { AdReportButton } from "@/components/player/ad-report-button";
 import { P2pStatusChip } from "@/components/player/p2p-status-chip";
 import type { VolumeHudPosition, VolumeIndicatorState } from "@/components/player/volume-indicator";
@@ -29,7 +28,6 @@ type Tools = ComponentProps<typeof ToolsLayer>;
 type Panels = ComponentProps<typeof PanelsLayer>;
 type Live = ComponentProps<typeof LiveLayer>;
 type Switcher = ComponentProps<typeof StreamSwitcher>;
-type Pill = ComponentProps<typeof StreamCheckPill>;
 type Loader = ComponentProps<typeof LoaderLayer>;
 
 export type PlayerOverlayLayersProps = {
@@ -155,7 +153,6 @@ export type PlayerOverlayLayersProps = {
   switcherOpen: boolean;
   foreignNotice: Room["foreignNotice"];
   onDismissForeign: () => void;
-  streamPillVariant: Pill["variant"] | null;
   mpvEmbedWindowsActive: boolean;
   setStreamCheckOpen: (v: boolean) => void;
   dvrOpen: boolean;
@@ -400,17 +397,6 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         foreignNotice={p.foreignNotice}
         onDismissForeign={p.onDismissForeign}
       />
-
-      {p.streamPillVariant && !p.switcherOpen && (
-        <StreamCheckPill
-          variant={p.streamPillVariant}
-          visible
-          compact={p.mpvEmbedWindowsActive}
-          live={p.liveOverlay.isLive}
-          onLooksGood={p.streamPillVariant === "check" ? () => p.setStreamCheckOpen(false) : undefined}
-          onPickAnother={p.pickAnotherOrGuide}
-        />
-      )}
 
       <P2pStatusChip
         stats={p.engineStats}

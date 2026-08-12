@@ -1,4 +1,4 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
 import { Filter, Languages, MousePointerClick, RefreshCw, X, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { resolveAddonLogo } from "@/components/addon-logo";
@@ -288,12 +288,15 @@ export function StreamSwitcher({
     );
   }
 
+  const firstPickableIndex = list.slice(0, showCount).findIndex((s) => !matchCurrent(s));
+
   return (
-    <div
+    // A modal, so the D-pad stays in the source list instead of wandering into
+    // the transport behind it, Back closes it, and the button that opened it
+    // gets focus back afterwards.
+    <FocusModal
+      onClose={onClose}
       className="pointer-events-auto absolute inset-0 z-[60] flex items-center justify-center bg-black/72 backdrop-blur-md animate-in fade-in duration-200"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
     >
       <div className="flex h-full max-h-[82vh] w-full max-w-[880px] flex-col overflow-hidden rounded-[8px] border border-edge bg-elevated shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)] animate-in fade-in slide-in-from-bottom-2 duration-150 backdrop-blur-xl">
         <header className="flex items-center justify-between gap-4 border-b border-edge-soft px-6 py-4">
@@ -414,6 +417,9 @@ export function StreamSwitcher({
             </p>
             <FocusButton
               onClick={() => refresh()}
+              // With no list to land in, this is the only thing here worth
+              // pressing, so it is where the remote starts.
+              data-focus-primary={refreshing ? undefined : ""}
               disabled={refreshing}
               className="flex h-10 items-center gap-2 rounded-md bg-raised px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-elevated disabled:opacity-70"
             >
@@ -426,6 +432,10 @@ export function StreamSwitcher({
             {list.slice(0, showCount).map((s, i) => (
               <SwitcherRow
                 key={`${s.addonId}-${s.infoHash ?? s.url ?? i}`}
+                // The list opens on the first source that can actually be
+                // chosen. The one already playing is disabled, so landing there
+                // would leave the remote on a dead row.
+                primary={i === firstPickableIndex}
                 stream={s}
                 addonLogo={addonLogos.get(s.addonId) ?? null}
                 onPick={() => onPick(s)}
@@ -464,7 +474,7 @@ export function StreamSwitcher({
           </span>
         </footer>
       </div>
-    </div>
+    </FocusModal>
   );
 }
 

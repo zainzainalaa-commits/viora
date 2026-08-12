@@ -1,3 +1,6 @@
+/** The transport button the seek bar hands focus down to. */
+export const PLAY_PAUSE_FOCUS_KEY = "player:play-pause";
+
 export function fmtTime(sec: number): string {
   if (!Number.isFinite(sec) || sec < 0) return "0:00";
   const total = Math.floor(sec);

@@ -62,7 +62,6 @@ import { usePendingSeekApply } from "./player/hooks/use-pending-seek-apply";
 import { usePlayerHotkeys } from "./player/hooks/use-player-hotkeys";
 import { usePlayerMedia } from "./player/hooks/use-player-media";
 import { useTrickplay } from "./player/hooks/use-trickplay";
-import { useStreamPill } from "./player/hooks/use-stream-pill";
 import { useStubDetection } from "./player/hooks/use-stub-detection";
 import { useBridgeLoad } from "./player/hooks/use-bridge-load";
 import { useVideoFill } from "./player/hooks/use-video-fill";
@@ -178,7 +177,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   const pipMode = false;
   const togglePipMode = () => {};
   const exitPip = async () => {};
-  const { slowLoad, transcodedUrl, failureReason, surrender, retry } = useAutoRetry({
+  const { transcodedUrl, failureReason, surrender, retry } = useAutoRetry({
     bridgeRef,
     src,
     snap,
@@ -358,7 +357,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   );
 
   const {
-    streamCheckOpen,
     setStreamCheckOpen,
     switcherOpen,
     setSwitcherOpen,
@@ -699,17 +697,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   });
 
   const isLocalSrc = isLocalUrl(src.url);
-  const streamPillVariant = useStreamPill({
-    srcUrl: src.url,
-    snap,
-    pipMode,
-    showWaiting,
-    isLocalSrc,
-    slowLoad,
-    inRoom,
-    streamCheckOpen,
-  });
-
   const playStreamRef = liveStreamRef ?? src.streamRef;
   const playUrl = liveUrl ?? src.url;
   useTrickplay({
@@ -923,7 +910,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     switcherOpen,
     foreignNotice,
     onDismissForeign: () => setForeignNotice(null),
-    streamPillVariant,
     mpvEmbedWindowsActive,
     setStreamCheckOpen,
     dvrOpen,
@@ -941,7 +927,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     onHostAdvance: broadcastEpisode,
     watchedFor,
     acknowledgeResume,
-    showHeaderWarning: showHeaderWarning && !streamPillVariant,
+    showHeaderWarning,
     showNoAudioWarning,
     onUseMpv: () => update({ playerEngine: can("exoEngine") ? "exo" : "mpv" }),
     onDismissNoAudio: () => setNoAudioDismissed(true),
@@ -965,8 +951,8 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
       dir="ltr"
       className={`fixed inset-0 z-[100] overflow-hidden ${stageBg}`}
       style={cursorStyle}
-      onMouseMove={wakeChrome}
-      onMouseEnter={wakeChrome}
+      onMouseMove={isDpadPrimary() ? undefined : wakeChrome}
+      onMouseEnter={isDpadPrimary() ? undefined : wakeChrome}
     >
       <div
         ref={videoMountRef}

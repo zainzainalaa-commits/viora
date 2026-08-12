@@ -57,6 +57,28 @@ export function useTvPlayerKeys(params: {
       const isOk = key === "Enter" || key === " ";
       const isDown = key === "ArrowDown";
       const isUp = key === "ArrowUp";
+      const isLateral = key === "ArrowLeft" || key === "ArrowRight";
+
+      // The row of tools ends where it ends. Without this, pressing past the
+      // last one lands on the seek bar — which answers left and right by
+      // scrubbing, so the tools cannot be walked back to and the remote looks
+      // dead. The bar is reached deliberately, with up, or not at all.
+      if (isLateral && s.chromeVisible) {
+        const active = document.activeElement as HTMLElement | null;
+        const row = active?.closest<HTMLElement>("[data-player-row]");
+        if (active && row) {
+          const items = [...row.querySelectorAll<HTMLElement>("button")].filter(
+            (b) => !(b as HTMLButtonElement).disabled && b.offsetParent !== null,
+          );
+          const at = items.indexOf(active);
+          const stop = key === "ArrowLeft" ? at === 0 : at === items.length - 1;
+          if (at !== -1 && stop) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }
+        return;
+      }
       if (!isOk && !isDown && !isUp) return;
 
       if (s.chromeVisible) {

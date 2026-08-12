@@ -1795,16 +1795,33 @@ html[data-input="dpad"] [data-focusable="true"]:focus {
   z-index: 2;
 }
 
-/* Inside the player, focus is a soft tile rather than a ring.
-   The transport sits on top of moving picture, where a hard orange outline
-   fights the image behind it. A filled rounded tile with the icon in the accent
-   colour reads instantly against anything, and the icon carries the colour
-   because every icon here draws with currentColor. */
+/* Inside the player, focus is the colour of the icon and nothing else.
+   The transport sits on top of moving picture, where a box around a control
+   fights the image behind it. Every icon here draws with currentColor, so the
+   accent colour alone is enough to say which one the remote is on. */
+html[data-input="dpad"] [data-harbor-player] button:focus,
+html[data-input="dpad"] [data-harbor-player] a:focus,
+html[data-input="dpad"] [data-harbor-player] [tabindex]:focus,
 html[data-input="dpad"] [data-harbor-player] [data-focusable="true"]:focus {
   outline: none !important;
-  border-radius: 14px;
-  background-color: color-mix(in srgb, var(--color-ink) 16%, transparent);
-  box-shadow: none;
+  box-shadow: none !important;
+  background-color: transparent;
+  color: var(--color-accent);
+}
+
+/* Menus are the exception. A source row is a wide band of coloured text and
+   badges, and turning one more thing orange inside it does not read as "you are
+   here" — the eye needs the edge. A thin accent line and a soft halo, on the
+   surface the dialog already draws, rather than the heavy ring the rest of the
+   app uses over artwork. */
+html[data-input="dpad"] [data-harbor-player] [data-focus-scope="modal"] button:focus,
+html[data-input="dpad"] [data-harbor-player] [data-focus-scope="modal"] a:focus,
+html[data-input="dpad"] [data-harbor-player] [data-focus-scope="modal"] [tabindex]:focus {
+  outline: 1.5px solid color-mix(in srgb, var(--color-accent) 75%, transparent) !important;
+  outline-offset: -1px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
+  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent);
   color: var(--color-accent);
 }
 

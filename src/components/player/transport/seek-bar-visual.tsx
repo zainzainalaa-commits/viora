@@ -1,3 +1,4 @@
+import { isDpadPrimary } from "@/lib/platform";
 import type { Settings } from "@/lib/settings";
 
 export const GLASS_BG =
@@ -22,6 +23,7 @@ export function SeekBarVisual({
   bufferedPct,
   scrubbing = false,
   hovered = false,
+  focused = false,
   segments,
 }: {
   settings: Settings;
@@ -29,6 +31,8 @@ export function SeekBarVisual({
   bufferedPct?: number;
   scrubbing?: boolean;
   hovered?: boolean;
+  /** The remote is on the bar. Only then is the handle the accent colour. */
+  focused?: boolean;
   segments?: SeekSegmentSpan[];
 }) {
   const accent = resolveAccent(settings);
@@ -41,7 +45,11 @@ export function SeekBarVisual({
   const style = settings.seekBarStyle ?? "flat";
   const isRainbow = style === "rainbow";
   const isImage = style === "image" && !!settings.seekBarImage;
-  const dotColor = isRainbow || isImage ? "#ffffff" : accent;
+  // White until the remote is standing on it, so the handle says where focus is
+  // rather than simply being the accent colour all the time. A pointer has a
+  // cursor for that, so the desktop keeps the accent throughout.
+  const dotColor =
+    isRainbow || isImage ? "#ffffff" : !isDpadPrimary() || focused || scrubbing ? accent : "#ffffff";
 
   const fillStyle: React.CSSProperties = {
     width: `${pct}%`,
@@ -137,7 +145,7 @@ function SeekDot({
   const radius = shape === "square" ? "20%" : "50%";
   return (
     <div
-      className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_0_4px_rgba(0,0,0,0.45)] transition-[width,height,border-radius] duration-200"
+      className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius] duration-200"
       style={{
         left: `${leftPct}%`,
         width: size,

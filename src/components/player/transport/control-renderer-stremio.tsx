@@ -4,6 +4,7 @@ import {
   Camera,
   ChevronLeft,
   Cpu,
+  Crop,
   Info,
   Maximize,
   Minimize,
@@ -16,6 +17,7 @@ import {
   Tv,
 } from "lucide-react";
 import { realQualityLabel } from "@/lib/player/resolution-label";
+import { CROP_PRESETS } from "@/views/player/hooks/use-video-fill";
 import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
 import { getCustomIcon, type CustomIconMap, type PlayerControlId, type TimeFormat, type VolumeStyle } from "@/lib/player-chrome";
@@ -27,7 +29,6 @@ import { DownloadButton } from "./download-button";
 import { Tooltip } from "./tooltip";
 import { DvrButton } from "./dvr-button";
 import { SpeedMenu } from "./speed-menu";
-import { AspectMenu } from "./aspect-menu";
 import { Anime4kMenu } from "./anime4k-menu";
 import { HdrToggleStremioBtn } from "./hdr-toggle-btn";
 import type { Anime4kChoice } from "@/views/player/hooks/use-anime4k";
@@ -328,15 +329,23 @@ export function RenderedStremioControl({
           onOpenChange={ctx.setSpeedMenuOpen}
         />
       );
-    case "aspect-menu":
-      if (ctx.engine === "html5" || !ctx.onCropMode) return null;
+    case "aspect-menu": {
+      if (!ctx.onCropMode) return null;
+      // One press, one step through the shapes; see control-renderer.tsx.
+      const modes = CROP_PRESETS;
+      const at = Math.max(0, modes.findIndex((m) => m.id === (ctx.cropMode ?? "fit")));
+      const next = modes[(at + 1) % modes.length];
+      const current = modes[at];
+      const onCrop = ctx.onCropMode;
+      const label = tr("Aspect ratio: {mode}", { mode: tr(current?.label ?? "Fit") });
       return (
-        <AspectMenu
-          mode={ctx.cropMode ?? "fit"}
-          onMode={ctx.onCropMode}
-          onOpenChange={ctx.setAspectMenuOpen}
-        />
+        <Tooltip label={label} side="top">
+          <StremioBtn onClick={() => onCrop(next.id)} ariaLabel={label}>
+            <Crop size={26} strokeWidth={2} />
+          </StremioBtn>
+        </Tooltip>
       );
+    }
     case "anime4k-menu":
       if (ctx.engine === "html5" || !ctx.onAnime4kMode || !ctx.anime4kAvailable) return null;
       return (
@@ -433,6 +442,8 @@ export function RenderedStremioControl({
         </Tooltip>
       );
     case "fullscreen":
+      // Nothing to toggle on a television; the aspect menu takes its place.
+      if (isDpadPrimary()) return null;
       if (!ctx.onFullscreen) return null;
       return (
         <Tooltip label={ctx.fullscreen ? tr("Exit fullscreen") : tr("Fullscreen")} side="bottom">
