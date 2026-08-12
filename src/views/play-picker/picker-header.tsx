@@ -28,7 +28,15 @@ export function PickerHeader({
   // were pushed down from.
   const onDpad = isDpadPrimary();
   return (
-    <header className="flex flex-col gap-3">
+    // Every source screen is the same shape on a television.
+    //
+    // The block above the sources is otherwise as tall as whatever is in it — a
+    // film's title is set larger than an episode's, an episode may carry a
+    // synopsis and a film never does — so the card underneath started 22px lower
+    // on one kind of title than the other, and the screen appeared to shift as
+    // you moved between them. A fixed block, filled from the bottom, means the
+    // sources begin on the same line every time.
+    <header className={onDpad ? "flex h-[168px] flex-col justify-start gap-3" : "flex flex-col gap-3"}>
       {!onDpad && (
         <div className="mb-2 flex items-center justify-between gap-3">
           <FocusButton
@@ -64,7 +72,7 @@ export function PickerHeader({
           <h1 className="font-display text-[64px] font-medium leading-[0.96] tracking-tight text-ink">
             {episode.name || `Episode ${episode.episode}`}
           </h1>
-          {episode.overview && <CollapsibleOverview text={episode.overview} />}
+          {episode.overview && <CollapsibleOverview text={episode.overview} fixed={onDpad} />}
         </>
       ) : (
         <>
@@ -74,7 +82,7 @@ export function PickerHeader({
               {meta.genres?.length ? ` · ${meta.genres.slice(0, 2).join(" · ")}` : ""}
             </p>
           )}
-          <h1 className="font-display text-[68px] font-medium leading-[0.96] tracking-tight text-ink">
+          <h1 className={`font-display font-medium leading-[0.96] tracking-tight text-ink ${onDpad ? "text-[64px]" : "text-[68px]"}`}>
             {meta.name}
           </h1>
         </>
@@ -83,7 +91,7 @@ export function PickerHeader({
   );
 }
 
-function CollapsibleOverview({ text }: { text: string }) {
+function CollapsibleOverview({ text, fixed = false }: { text: string; fixed?: boolean }) {
   const t = useT();
   const [expanded, setExpanded] = useState(false);
   const [truncated, setTruncated] = useState(false);
@@ -104,7 +112,7 @@ function CollapsibleOverview({ text }: { text: string }) {
       >
         {text}
       </p>
-      {(truncated || expanded) && (
+      {!fixed && (truncated || expanded) && (
         <FocusButton
           type="button"
           onClick={() => setExpanded((v) => !v)}

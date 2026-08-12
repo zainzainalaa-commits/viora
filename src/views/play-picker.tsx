@@ -39,6 +39,7 @@ import {
 import { PickerHeader } from "./play-picker/picker-header";
 import { PrimaryCard } from "./play-picker/primary-card";
 import { SourceDiagnostic } from "./play-picker/source-diagnostic";
+import { isDpadPrimary } from "@/lib/platform";
 import { CachedTip } from "./play-picker/cached-tip";
 import { StremioLayout } from "./play-picker/stremio-layout";
 import { SourceDrawer } from "./play-picker/source-drawer";
@@ -637,7 +638,13 @@ const streamIds = useStreamIds(meta, episode, imdbId, intent === "download-seaso
       <BackdropLayer src={backdropSrc} />
 
 
-      <div className="relative mx-auto flex min-h-full w-full max-w-5xl flex-col gap-12 px-12 pb-32 pt-32">
+      <div
+        className={`relative mx-auto flex min-h-full w-full max-w-5xl flex-col gap-12 px-12 pb-32 ${
+          // The 128px band above the title was there to clear a header row that
+          // no longer exists on a television.
+          isDpadPrimary() ? "pt-10" : "pt-32"
+        }`}
+      >
         <PickerHeader meta={meta} episode={episode} onBack={backToDetail} onRefresh={refresh} refreshing={loading} />
 
         {!isDownload && localMatch && (

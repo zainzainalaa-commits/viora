@@ -557,6 +557,7 @@ export function Row({
                 </LazyChild>
               );
             })}
+            {onViewAll && isDpadPrimary() && <ViewAllCard shape={shape} label={t(viewAllLabel)} onClick={onViewAll} />}
           </div>
         </RowTrackContext.Provider>
         <EdgeArrow side="left" visible={canPrev} always={arrowsAlways} onClick={() => scroll(-1)} />
@@ -623,5 +624,51 @@ function EdgeArrow({
         )}
       </button>
     </div>
+  );
+}
+
+/**
+ * The way to the rest of a row, on a television.
+ *
+ * The same destination exists for a mouse as a small link beside the heading,
+ * which a remote has no cheap way to reach — it sits above the row, off the path
+ * the D-pad takes through the cards. As the last card it is exactly where the
+ * viewer already is when they run out of them, and it costs one press.
+ */
+function ViewAllCard({
+  shape,
+  label,
+  onClick,
+}: {
+  shape: RowShape;
+  label: string;
+  onClick: () => void;
+}) {
+  // Matching the row's own cards, so it reads as one more of them rather than as
+  // a panel that wandered in.
+  const aspect =
+    shape === "landscape"
+      ? "aspect-[16/9]"
+      : shape === "tile"
+        ? "aspect-[5/4]"
+        : shape === "rank"
+          ? "aspect-[228/268]"
+          : "aspect-[2/3]";
+  return (
+    <FocusCell>
+      <FocusButton
+        type="button"
+        onClick={onClick}
+        aria-label={label}
+        className="flex w-full flex-col gap-2 text-start"
+      >
+        <span
+          className={`${aspect} flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-edge-soft bg-elevated/40 text-ink-muted transition-colors`}
+        >
+          <ChevronRight size={30} strokeWidth={2} className="dir-icon" />
+          <span className="px-3 text-center text-[13px] font-semibold leading-snug">{label}</span>
+        </span>
+      </FocusButton>
+    </FocusCell>
   );
 }

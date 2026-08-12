@@ -74,6 +74,8 @@ export function CatalogRows({
   injectAfter?: number;
   injectNode?: React.ReactNode;
 }) {
+  const t = useT();
+  const { openGrid } = useView();
   const allKeys = useMemo(() => rows.map((r) => r.key), [rows]);
   const display = useMemo(() => applyPageRows(rows, custom, editMode), [rows, custom, editMode]);
   const orderKeys = useMemo(() => orderedRowKeys(allKeys, custom), [allKeys, custom]);
@@ -93,6 +95,15 @@ export function CatalogRows({
             shape="portrait"
             scrollKey={`${scrollPrefix}:${row.key}`}
             onEndReached={row.hasMore ? () => onLoadMore(row.key) : undefined}
+            // The way to the rest of the catalogue was on the row's heading,
+            // which a remote cannot reach — it is not on the path the D-pad
+            // takes through the cards. Handing it to the row puts it at the end
+            // of the cards instead, where running out of them leads to it.
+            onViewAll={
+              row.fetcher
+                ? () => openGrid({ title: t(row.title), fetcher: row.fetcher!, initial: row.metas })
+                : undefined
+            }
           >
             {row.metas.map((m) => (
               <PickCard key={m.id} meta={m} flagRerun={flagRerunKeys?.includes(row.key)} kids={kids} />
