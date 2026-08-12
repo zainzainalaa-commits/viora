@@ -55,6 +55,8 @@ export type TransportStremioProps = {
   onClearDraw: () => void;
   onScreenshot: () => void;
   onPickAnother: () => void;
+  alternateEngine?: PlayerEngine | null;
+  onSwitchEngine: () => void;
   canPickAnother: boolean;
   title: string;
   subtitle?: string;
@@ -118,6 +120,8 @@ export function TransportStremio(p: TransportStremioProps) {
     onScreenshot,
     onPickAnother,
     canPickAnother,
+    alternateEngine,
+    onSwitchEngine,
     title,
     subtitle,
     resolution,
@@ -187,6 +191,8 @@ export function TransportStremio(p: TransportStremioProps) {
   };
   const ctx: StremioRenderCtx = {
     snap,
+    alternateEngine,
+    onSwitchEngine,
     capabilities,
     drawMode,
     hideOthersDrawings,

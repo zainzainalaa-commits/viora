@@ -62,6 +62,8 @@ export function Transport({
   onClearDraw,
   onScreenshot,
   onPickAnother,
+  alternateEngine,
+  onSwitchEngine,
   canPickAnother,
   title,
   subtitle,
@@ -125,6 +127,8 @@ export function Transport({
   onClearDraw: () => void;
   onScreenshot: () => void;
   onPickAnother: () => void;
+  alternateEngine?: PlayerEngine | null;
+  onSwitchEngine: () => void;
   canPickAnother: boolean;
   title: string;
   subtitle?: string;
@@ -211,6 +215,8 @@ export function Transport({
     return (
       <TransportStremio
         snap={snap}
+        alternateEngine={alternateEngine}
+        onSwitchEngine={onSwitchEngine}
         capabilities={capabilities}
         visible={visible}
         fullscreen={fullscreen}
@@ -385,6 +391,8 @@ export function Transport({
     onClearDraw,
     onScreenshot,
     onPickAnother,
+    alternateEngine,
+    onSwitchEngine,
     onPrevEp,
     onNextEp,
     onDownloadStart,

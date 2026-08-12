@@ -22,7 +22,9 @@ class MainActivity : TauriActivity() {
    * visible, and neither creates a view until something asks it to play.
    */
   private val exoStage by lazy { VideoStage(this, { contentWebView }, sizesSurface = true) }
-  private val mpvStage by lazy { VideoStage(this, { contentWebView }, sizesSurface = false) }
+  private val mpvStage by lazy {
+    VideoStage(this, { contentWebView }, sizesSurface = false) { VioraMpvView(it) }
+  }
   private val nativePlayer by lazy { VioraPlayer(this, exoStage) }
   private val nativeMpv by lazy { VioraMpv(this, mpvStage) }
 

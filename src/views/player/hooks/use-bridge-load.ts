@@ -20,6 +20,12 @@ export function useBridgeLoad(params: {
   season: number | undefined;
   episode: number | undefined;
   authKey: string | null;
+  /**
+   * Set when the player itself reloads the same stream — swapping engines, for
+   * instance — and the viewer's place has to be kept without asking them
+   * anything. Consumed once.
+   */
+  resumeOverrideRef: RefObject<number | null>;
 }): {
   pendingResumeSec: number | null;
   acknowledgeResume: (action: "resume" | "start-over") => void;
@@ -37,6 +43,7 @@ export function useBridgeLoad(params: {
     season,
     episode,
     authKey,
+    resumeOverrideRef,
   } = params;
 
   const { settings } = useSettings();
@@ -71,9 +78,15 @@ export function useBridgeLoad(params: {
         src,
         cloudWriteId(src.meta.id, src.imdbId ?? null, src.imdbIdVerified === true),
       );
+      // Taken before anything else, and taken once: the player asked for this
+      // exact position, so nothing about saved progress or prompts applies.
+      const override = resumeOverrideRef.current;
+      resumeOverrideRef.current = null;
       const resolved = isLive || src.startFromZero
         ? { ms: 0, fromRemote: false, finished: false }
-        : await resolveStartMs(
+        : override != null
+          ? { ms: override * 1000, fromRemote: false, finished: false }
+          : await resolveStartMs(
             src.meta.id,
             season,
             episode,
@@ -87,9 +100,13 @@ export function useBridgeLoad(params: {
       const durationMs = runtimeMin && runtimeMin > 0 ? runtimeMin * 60_000 : 0;
       const finishedNearEnd =
         resolved.finished || (durationMs > 0 && startMs / durationMs >= RESTART_THRESHOLD);
-      const startSec = (!resumePlaybackRef.current || finishedNearEnd ? 0 : startMs) / 1000;
+      const startSec =
+        override != null
+          ? override
+          : (!resumePlaybackRef.current || finishedNearEnd ? 0 : startMs) / 1000;
       const guestInRoom = inRoomRef.current && !isHostRef.current;
       const eligibleForPrompt =
+        override == null &&
         isFirstLoad &&
         !isAutoRetry &&
         !isLive &&

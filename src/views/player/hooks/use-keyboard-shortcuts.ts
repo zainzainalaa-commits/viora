@@ -3,6 +3,7 @@ import type { PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
 import { writePlayerPrefs } from "@/lib/player-prefs";
 import { writePlayerVolume } from "@/lib/player-volume";
 import { effectiveBinding, eventToBinding, isTypingTarget, type HotkeyId } from "@/lib/hotkeys";
+import { isDpadPrimary } from "@/lib/platform";
 import { useSettings } from "@/lib/settings";
 import { getLeaveConfirm, openLeaveConfirm } from "@/lib/player/leave-confirm";
 import { round2 } from "../player-utils";
@@ -182,7 +183,11 @@ export function useKeyboardShortcuts(params: {
         onFrameStep(-1);
         return;
       }
-      if (match("playerVolumeUp")) {
+      // Up and down are how a remote reaches the controls, and the remote has
+      // its own volume keys. Binding volume to them on a television costs the
+      // only route to the subtitle and audio menus.
+      const arrowsAreNavigation = isDpadPrimary();
+      if (match("playerVolumeUp") && !arrowsAreNavigation) {
         e.preventDefault();
         const step = e.shiftKey ? 0.5 : 0.05;
         const max = bridgeRef.current?.capabilities().engine === "mpv" ? 6 : 1;
@@ -193,7 +198,7 @@ export function useKeyboardShortcuts(params: {
         onVolumeFeedback?.(next, false);
         return;
       }
-      if (match("playerVolumeDown")) {
+      if (match("playerVolumeDown") && !arrowsAreNavigation) {
         e.preventDefault();
         const step = e.shiftKey ? 0.5 : 0.05;
         const max = bridgeRef.current?.capabilities().engine === "mpv" ? 6 : 1;

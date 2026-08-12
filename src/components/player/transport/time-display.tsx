@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import type { ReactNode } from "react";
 import { usePlaybackDownloadedGated, usePlaybackPositionGated } from "@/lib/player/playback-clock";
 import { fmtTime } from "./transport-utils";
@@ -58,7 +59,9 @@ export function TimeStart({
           <CachedDot active={active} />
         </>
       );
-    if (onCycle) {
+    // A read-out, not a control. Cycling the format is a mouse convenience,
+    // and on a remote it only put a highlight on the clock.
+    if (onCycle && !isDpadPrimary()) {
       return (
         <FocusButton
           type="button"
@@ -104,7 +107,7 @@ export function TimeEnd({
     fmt === "remaining" ? `-${fmtTime(Math.max(0, duration - positionSec))}` : fmtTime(duration);
   const cls =
     "inline-flex shrink-0 items-center font-mono text-[13px] tabular-nums text-white/65 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]";
-  if (onCycle) {
+  if (onCycle && !isDpadPrimary()) {
     return (
       <FocusButton
         type="button"

@@ -38,6 +38,9 @@ export type PlayerShellProps = {
   onScreenshot: () => void;
   onPickAnother: () => void;
   canPickAnother: boolean;
+  /** The other engine on this device, or null when there is no choice. */
+  alternateEngine: PlayerEngine | null;
+  onSwitchEngine: () => void;
   title: string;
   subtitle?: string;
   resolution?: string | null;

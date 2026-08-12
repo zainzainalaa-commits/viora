@@ -43,6 +43,7 @@ import { useLiveChannelOverlay } from "./player/hooks/use-live-channel-overlay";
 import { useStreamSwitcher } from "./player/hooks/use-stream-switcher";
 import { useMpvEmbed } from "./player/hooks/use-mpv-embed";
 import { usePlayerBridge } from "./player/hooks/use-player-bridge";
+import { useTvPlayerKeys } from "./player/hooks/use-tv-player-keys";
 import { useTextSync } from "./player/hooks/use-text-sync";
 import { useT } from "@/lib/i18n";
 import { useEpisodeNavigation } from "./player/hooks/use-episode-navigation";
@@ -70,6 +71,7 @@ import { useAnime4k } from "./player/hooks/use-anime4k";
 import { useSdrBoostGate } from "./player/hooks/use-sdr-boost-gate";
 import { PlayerOverlayLayers, type PlayerOverlayLayersProps } from "./player/player-overlay-layers";
 import { LeaveConfirmModal } from "@/components/player/leave-confirm-modal";
+import { PlaybackFailedPanel } from "./player/playback-failed-panel";
 import { setSkipSegmentsView } from "@/lib/skip-intro/segment-store";
 import { markStreamDead, STUB_TTL_MS } from "@/lib/dead-streams";
 import type { VolumeIndicatorState } from "@/components/player/volume-indicator";
@@ -131,12 +133,17 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   // Always: there is one window and it is the screen.
   const fullscreen = true;
   const toggleFullscreen = () => {};
-  const { snap, engine, bridgeReady, bridgeKey, embedActive } = usePlayerBridge({
-    bridgeRef,
-    videoMountRef,
-    src,
-    settings,
-  });
+  // Carries a position across a reload the player asked for itself, so swapping
+  // engines resumes where the viewer was instead of starting over.
+  const resumeOverrideRef = useRef<number | null>(null);
+  const { snap, engine, bridgeReady, bridgeKey, embedActive, alternateEngine, switchEngine } =
+    usePlayerBridge({
+      bridgeRef,
+      videoMountRef,
+      src,
+      settings,
+      resumeOverrideRef,
+    });
   const isP2pEngine =
     (isBundledEngineUrl(src.url) || isLocalEngineUrl(src.url)) &&
     !src.url.includes("/hlsv2/") &&
@@ -171,16 +178,14 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   const pipMode = false;
   const togglePipMode = () => {};
   const exitPip = async () => {};
-  const { slowLoad, transcodedUrl } = useAutoRetry({
+  const { slowLoad, transcodedUrl, failureReason, surrender, retry } = useAutoRetry({
     bridgeRef,
     src,
     snap,
     stremioServerTranscode: settings.stremioServerTranscode,
-    instantPlay: settings.instantPlay,
     inRoom: roomSnapshot.state === "joined",
     debrids,
     selfFrameReadyRef,
-    openPicker,
     engineFailure: genuineFailure,
     isP2pEngine,
     engineStats,
@@ -231,7 +236,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     sendDraw,
   });
 
-  const { chromeVisible, wakeChrome, toggleChrome, hideForResume, setAnyMenuOpen, cursorStyle } = useChromeVisibility({
+  const { chromeVisible, wakeChrome, hideChrome, toggleChrome, hideForResume, anyMenuOpen, setAnyMenuOpen, cursorStyle } = useChromeVisibility({
     playing,
     drawMode,
     pipMode,
@@ -249,6 +254,19 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // The remote's own rules inside the player: down brings the controls up
+  // without pausing, OK pauses and brings them up, and nothing holds focus on a
+  // bar nobody can see.
+  useTvPlayerKeys({
+    chromeVisible,
+    playing: snap.status === "playing",
+    anyMenuOpen,
+    hasOverlay: failureReason != null,
+    wakeChrome,
+    hideChrome,
+    pause: () => bridgeRef.current?.pause(),
+  });
 
   const { adjacent, swappingEp, goToEpisode } = useEpisodeNavigation({
     src,
@@ -386,16 +404,14 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     publishState,
   });
 
-  const { closePlayer, onStubEject } = usePlayerExit({
+  const { closePlayer } = usePlayerExit({
     src,
     season,
     episode,
-    bridgeRef,
     liveUrl,
     liveStreamRef,
     inRoom,
     isHost,
-    instantPlay: settings.instantPlay,
     captureExitSnapshot,
     exitPip,
     castActiveRef: cast.castActiveRef,
@@ -404,7 +420,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     notifyHostLeaving,
     clearInvite,
     exitPlayback,
-    openPicker,
   });
   useEffect(() => {
     const onLocalBack = (e: Event) => {
@@ -626,6 +641,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     season,
     episode,
     authKey,
+    resumeOverrideRef,
   });
 
   usePendingSeekApply({
@@ -636,7 +652,14 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     inRoomRef,
   });
 
-  useStubDetection({ src, snap, onStub: onStubEject, instantPlay: settings.instantPlay });
+  // A dead link is a failure like any other now: it says so and waits, rather
+  // than reopening the source list or closing the player from under the viewer.
+  useStubDetection({
+    src,
+    snap,
+    onStub: () => surrender("the source is no longer there"),
+    instantPlay: settings.instantPlay,
+  });
 
   const isLiveLike =
     liveOverlay.isLive ||
@@ -732,13 +755,17 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     snap.videoWidth,
     snap.videoHeight,
   );
-  const { loaderActive } = useEverPlayed({
+  const { loaderActive: everPlayedLoader } = useEverPlayed({
     url: src.url,
     status: snap.status,
     durationSec: snap.durationSec,
     swappingEp,
     swapResolvingKey,
   });
+  // Once the failure panel is up, "connecting" is no longer true and the loader
+  // would sit over it — leaving a spinner and a Cancel button as the only thing
+  // on screen, which is the very symptom the panel exists to replace.
+  const loaderActive = everPlayedLoader && !failureReason;
   const [loaderShowing, setLoaderShowing] = useState(false);
   const showChrome = !loaderActive && !loaderShowing && (chromeVisible || drawMode);
   const liveShellSnap = cast.castDevice
@@ -840,6 +867,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     gif,
     clip,
     loaderActive,
+    playbackFailed: failureReason != null,
     playerShellId: settings.playerShellId,
     shellSnap,
     snapRef,
@@ -854,6 +882,8 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     wakeChrome,
     setHideOthersDrawings,
     canPickAnother: !liveOverlay.isLive || !inRoom || isHost,
+    alternateEngine,
+    onSwitchEngine: switchEngine,
     resolvedImdbId,
     contentAdvisory,
     tmdbKey: settings.tmdbKey ?? null,
@@ -954,6 +984,17 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
         }}
       />
       {!hdrStageActive && <PlayerOverlayLayers {...overlayProps} />}
+      {failureReason && (
+        <PlaybackFailedPanel
+          errorCode={snap.errorCode}
+          reason={snap.errorMessage ?? failureReason}
+          alternateEngine={alternateEngine}
+          onRetry={retry}
+          onSwitchEngine={switchEngine}
+          onPickAnother={pickAnotherOrGuide}
+          onLeave={() => void closePlayer()}
+        />
+      )}
       <LeaveConfirmModal />
     </FocusSection>
   );

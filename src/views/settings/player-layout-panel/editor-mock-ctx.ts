@@ -99,6 +99,8 @@ export function buildDefaultCtx(opts: MockOptions): ControlContext {
     onClearDraw: NOOP,
     onScreenshot: NOOP,
     onPickAnother: NOOP,
+    alternateEngine: "mpv",
+    onSwitchEngine: NOOP,
     onPrevEp: NOOP,
     onNextEp: NOOP,
     onDownloadStart: NOOP,

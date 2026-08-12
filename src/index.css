@@ -1795,6 +1795,19 @@ html[data-input="dpad"] [data-focusable="true"]:focus {
   z-index: 2;
 }
 
+/* Inside the player, focus is a soft tile rather than a ring.
+   The transport sits on top of moving picture, where a hard orange outline
+   fights the image behind it. A filled rounded tile with the icon in the accent
+   colour reads instantly against anything, and the icon carries the colour
+   because every icon here draws with currentColor. */
+html[data-input="dpad"] [data-harbor-player] [data-focusable="true"]:focus {
+  outline: none !important;
+  border-radius: 14px;
+  background-color: color-mix(in srgb, var(--color-ink) 16%, transparent);
+  box-shadow: none;
+  color: var(--color-accent);
+}
+
 /* Controls that show focus in their text instead of around their edge.
    Used by the options inside the Type and Catalog menus on Discover: an option
    is a full-width band in a list that already draws its own boundaries, so a

@@ -1,7 +1,9 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import {
   Camera,
   ChevronLeft,
+  Cpu,
   Info,
   Maximize,
   Minimize,
@@ -115,6 +117,8 @@ export type StremioRenderCtx = {
   onClearDraw: () => void;
   onScreenshot: () => void;
   onPickAnother: () => void;
+  alternateEngine?: PlayerEngine | null;
+  onSwitchEngine: () => void;
   onPrevEp: () => void;
   onNextEp: () => void;
   onDownloadStart?: () => void;
@@ -162,6 +166,8 @@ export function RenderedStremioControl({
   }
   switch (id) {
     case "back":
+      // The remote has a Back key; see the note in control-renderer.tsx.
+      if (isDpadPrimary()) return null;
       if (!ctx.onBack) return null;
       return (
         <Tooltip label={tr("Back")} side="bottom">
@@ -174,7 +180,10 @@ export function RenderedStremioControl({
       if (!ctx.title) return null;
       const showQuality = qualityInfoOn() && !!ctx.quality;
       const res = realQualityLabel(ctx.snap.videoWidth, ctx.snap.videoHeight) ?? ctx.resolution;
-      if (ctx.titleClickable && ctx.onTitleClick) {
+      // Read-only on a remote. It is a caption, not a control, and being
+      // focusable put a highlight on the film title on the way to everything
+      // else.
+      if (ctx.titleClickable && ctx.onTitleClick && !isDpadPrimary()) {
         return (
           <FocusButton
             type="button"
@@ -258,6 +267,7 @@ export function RenderedStremioControl({
     case "seek-forward":
       return null;
     case "volume":
+      if (isDpadPrimary()) return null;
       return (
         <StremioVolume
           snap={ctx.snap}
@@ -342,6 +352,7 @@ export function RenderedStremioControl({
       if (ctx.engine !== "mpv") return null;
       return <HdrToggleStremioBtn />;
     case "cast":
+      if (isDpadPrimary()) return null;
       return <CastButton onClick={ctx.onCast} capabilities={ctx.capabilities} />;
     case "subtitle-menu":
       if (ctx.isLiveChannel && ctx.snap.subtitleTracks.length === 0) return null;
@@ -362,6 +373,22 @@ export function RenderedStremioControl({
           onOpenChange={ctx.setSubtitleMenuOpen}
         />
       );
+    case "engine-switch": {
+      // Only when there is genuinely another engine to move to. The label names
+      // the destination, because that is what the viewer is pressing it for.
+      if (!ctx.alternateEngine) return null;
+      const engineLabel = ctx.alternateEngine === "mpv" ? "mpv" : tr("the native player");
+      return (
+        <Tooltip label={tr("Switch to {engine}", { engine: engineLabel })} side="top">
+          <StremioBtn
+            onClick={ctx.onSwitchEngine}
+            ariaLabel={tr("Switch to {engine}", { engine: engineLabel })}
+          >
+            <Cpu size={26} strokeWidth={2} />
+          </StremioBtn>
+        </Tooltip>
+      );
+    }
     case "audio-menu":
       if (ctx.engine === "html5") return null;
       return (
@@ -415,6 +442,7 @@ export function RenderedStremioControl({
         </Tooltip>
       );
     case "window-controls":
+      if (isDpadPrimary()) return null;
       return <WindowControlButtons t={tr} />;
     default:
       return null;

@@ -94,6 +94,7 @@ export type PlayerOverlayLayersProps = {
   gif: Tools["gif"];
   clip: Tools["clip"];
   loaderActive: boolean;
+  playbackFailed: boolean;
   playerShellId: string;
   shellSnap: PlayerSnapshot;
   snapRef: Shell["snapRef"];
@@ -113,6 +114,8 @@ export type PlayerOverlayLayersProps = {
   wakeChrome: () => void;
   setHideOthersDrawings: (fn: (h: boolean) => boolean) => void;
   canPickAnother: boolean;
+  alternateEngine: Shell["alternateEngine"];
+  onSwitchEngine: Shell["onSwitchEngine"];
   resolvedImdbId: string | null;
   contentAdvisory: { categories: ParentalCategory[]; playKey: string };
   tmdbKey: string | null;
@@ -216,6 +219,9 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         onWheelVolume={p.onVolumeWheel}
       />
 
+      {/* The failure panel replaces the loader rather than sitting under it:
+          "connecting" stops being true the moment the app has given up. */}
+      {!p.playbackFailed && (
       <LoaderLayer
         src={p.src}
         snap={p.snap}
@@ -227,6 +233,7 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         onRetry={p.onLoaderRetry}
         onBrowseChannels={p.liveOverlay.isLive ? () => p.liveOverlay.setOpen(true) : undefined}
       />
+      )}
 
       {!p.pipMode && !p.cast.castDevice && (
         <StrokesLayer strokes={p.strokes} hideOthers={p.hideOthersDrawings} selfId={p.clientId} />
@@ -318,6 +325,8 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
           onScreenshot={p.onScreenshot}
           onPickAnother={p.pickAnotherOrGuide}
           canPickAnother={p.canPickAnother}
+          alternateEngine={p.alternateEngine}
+          onSwitchEngine={p.onSwitchEngine}
           title={p.src.title}
           subtitle={p.src.subtitle}
           resolution={p.src.streamRef?.resolution}

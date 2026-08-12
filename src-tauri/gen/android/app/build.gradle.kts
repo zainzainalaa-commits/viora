@@ -104,10 +104,13 @@ dependencies {
 
     // The second engine: libmpv, with ffmpeg, libass and libplacebo inside it.
     //
-    // This is the same mpv the desktop build used, cross-compiled for Android
-    // and published as an ordinary AAR, so it arrives through Gradle like every
-    // other dependency rather than as a binary someone dropped into the tree.
-    implementation("dev.jdtech.mpv:libmpv:1.0.0")
+    // This particular build (the one NuvioTV ships) carries two things the app
+    // cannot supply for itself: a BaseMPVView that owns the drawing surface's
+    // lifecycle, and a CA bundle in its assets. Without the first, mpv gets
+    // handed a dead surface and fails after decoding the first frame; without
+    // the second, every HTTPS stream fails to open, because Android has no
+    // PEM bundle at any path ffmpeg can read.
+    implementation("io.github.abdallahmehiz:mpv-android-lib:0.1.12")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")

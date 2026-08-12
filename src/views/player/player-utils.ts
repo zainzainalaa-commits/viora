@@ -1,10 +1,7 @@
-import { createHtml5Bridge } from "@/lib/player/html5";
-import { createExoBridge, isExoAvailable } from "@/lib/player/exo";
+import { createExoBridge } from "@/lib/player/exo";
 import { createMpvAndroidBridge, isMpvAndroidAvailable } from "@/lib/player/mpv-android";
-import { createMpvBridge, probeMpv, type MpvRect } from "@/lib/player/mpv";
 import type { PlayerEngine, PlayerBridge } from "@/lib/player/bridge";
 import { isLinuxDesktop, isMacDesktop } from "@/lib/platform";
-import { can } from "@/lib/capabilities";
 
 export const SYNC_DRIFT_TOLERANCE_S = 0.6;
 export const SYNC_SUPPRESS_MS = 1400;
@@ -64,49 +61,15 @@ export function formatNames(names: string[]): string {
 
 export async function pickBridge(
   want: "auto" | PlayerEngine,
-  notWebReady: boolean,
-  mpvOpts: {
-    anime4k: boolean;
-    hdrToSdr: boolean;
-    embed?: boolean;
-    anime4kShaders?: string[];
-    d3d11Flip?: boolean;
-    macEdr?: boolean;
-    extraOptions?: string;
-    getEmbedRect?: () => Promise<MpvRect | null> | MpvRect | null;
-  },
 ): Promise<{ bridge: PlayerBridge; engine: PlayerEngine }> {
-  // Android first, because there the choice is real: both engines are compiled
-  // into the app rather than probed for on the machine.
-  //
-  // `auto` means ExoPlayer here. On a television that is not a preference but
-  // the point — it is the hardware's own decoder, and mpv's advantage only
-  // shows on the files that hardware turns down.
-  if (can("exoEngine") && isExoAvailable()) {
-    if (want === "html5") return { bridge: createHtml5Bridge(), engine: "html5" };
-    if (want === "mpv") {
-      if (isMpvAndroidAvailable()) return { bridge: createMpvAndroidBridge(), engine: "mpv" };
-      console.warn("[viora] mpv requested but libmpv is missing for this ABI; using ExoPlayer");
-    }
-    return { bridge: createExoBridge(), engine: "exo" };
+  // Two engines, both compiled into the app. `auto` means ExoPlayer: on a
+  // television that is not a preference but the point — it is the hardware's
+  // own decoder, and mpv's advantage only shows on what that hardware refuses.
+  if (want === "mpv" && isMpvAndroidAvailable()) {
+    return { bridge: createMpvAndroidBridge(), engine: "mpv" };
   }
-  // Asked for the native engine on a host that has no such thing.
-  if (want === "exo") return { bridge: createHtml5Bridge(), engine: "html5" };
-  // Android/iOS ship no libmpv, and the Tauri bridge is present there too, so
-  // `__TAURI_INTERNALS__` alone cannot stand in for "desktop" any more.
-  if (!can("mpvEngine")) return { bridge: createHtml5Bridge(), engine: "html5" };
-  if (want === "html5") return { bridge: createHtml5Bridge(), engine: "html5" };
   if (want === "mpv") {
-    const probe = await probeMpv();
-    if (probe.available) return { bridge: createMpvBridge(mpvOpts), engine: "mpv" };
-    console.warn("[harbor] mpv requested but libmpv probe failed; falling back to in-webview html5 decode (high memory)");
-    return { bridge: createHtml5Bridge(), engine: "html5" };
+    console.warn("[viora] mpv requested but libmpv is missing for this ABI; using ExoPlayer");
   }
-  const isDesktop = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
-  if (isDesktop || notWebReady) {
-    const probe = await probeMpv();
-    if (probe.available) return { bridge: createMpvBridge(mpvOpts), engine: "mpv" };
-    if (isDesktop) console.warn("[harbor] desktop libmpv probe failed; falling back to in-webview html5 decode (high memory)");
-  }
-  return { bridge: createHtml5Bridge(), engine: "html5" };
+  return { bridge: createExoBridge(), engine: "exo" };
 }

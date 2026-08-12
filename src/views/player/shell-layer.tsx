@@ -40,6 +40,8 @@ export function ShellLayer({
   onScreenshot,
   onPickAnother,
   canPickAnother,
+  alternateEngine,
+  onSwitchEngine,
   title,
   subtitle,
   resolution,
@@ -95,6 +97,8 @@ export function ShellLayer({
   onScreenshot: () => void;
   onPickAnother: () => void;
   canPickAnother: boolean;
+  alternateEngine: PlayerEngine | null;
+  onSwitchEngine: () => void;
   title: string;
   subtitle?: string;
   resolution?: string | null;
@@ -197,6 +201,8 @@ export function ShellLayer({
       onScreenshot={onScreenshot}
       onPickAnother={onPickAnother}
       canPickAnother={canPickAnother}
+      alternateEngine={alternateEngine}
+      onSwitchEngine={onSwitchEngine}
       title={title}
       subtitle={subtitle}
       resolution={resolution}

@@ -3,8 +3,6 @@ package app.viora
 import android.app.Activity
 import android.graphics.Color
 import android.view.Gravity
-import android.view.Surface
-import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +26,12 @@ class VideoStage(
   private val webView: () -> WebView?,
   /** True for ExoPlayer: aspect ratio is expressed by sizing the surface. */
   private val sizesSurface: Boolean,
+  /**
+   * What to draw on. ExoPlayer is happy with a bare SurfaceView; mpv needs the
+   * library's own subclass, which owns the surface's lifecycle and is the whole
+   * reason playback survives being stopped and started again.
+   */
+  private val createView: (Activity) -> SurfaceView = { SurfaceView(it) },
 ) {
   private var container: FrameLayout? = null
   private var surfaceView: SurfaceView? = null
@@ -36,9 +40,6 @@ class VideoStage(
   private var aspectOverride = -1.0
   private var zoomLog2 = 0.0
   private var videoAspect = 0.0
-
-  /** Told when the drawing surface appears, resizes, or goes away. */
-  var onSurface: ((Surface?, Int, Int) -> Unit)? = null
 
   val surface: SurfaceView?
     get() = surfaceView
@@ -55,18 +56,7 @@ class VideoStage(
     val root = activity.findViewById<ViewGroup>(android.R.id.content) ?: return
     val frame = FrameLayout(activity)
     frame.setBackgroundColor(Color.BLACK)
-    val view = SurfaceView(activity)
-    view.holder.addCallback(object : SurfaceHolder.Callback {
-      override fun surfaceCreated(holder: SurfaceHolder) {}
-
-      override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        onSurface?.invoke(holder.surface, width, height)
-      }
-
-      override fun surfaceDestroyed(holder: SurfaceHolder) {
-        onSurface?.invoke(null, 0, 0)
-      }
-    })
+    val view = createView(activity)
     frame.addView(
       view,
       FrameLayout.LayoutParams(

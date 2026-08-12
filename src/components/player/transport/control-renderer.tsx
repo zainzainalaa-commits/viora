@@ -1,6 +1,7 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { t as translate } from "@/lib/i18n";
-import { Camera, ChevronLeft, Info, Maximize, Minimize, PauseCircle, PictureInPicture2, PlayCircle, Replace, Tv } from "lucide-react";
+import { Camera, ChevronLeft, Cpu, Info, Maximize, Minimize, PauseCircle, PictureInPicture2, PlayCircle, Replace, Tv } from "lucide-react";
 import type { ReactNode } from "react";
 import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
@@ -114,6 +115,8 @@ export type ControlContext = {
   onClearDraw: () => void;
   onScreenshot: () => void;
   onPickAnother: () => void;
+  alternateEngine?: PlayerEngine | null;
+  onSwitchEngine: () => void;
   onPrevEp: () => void;
   onNextEp: () => void;
   onDownloadStart?: () => void;
@@ -143,6 +146,10 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
   }
   switch (id) {
     case "back": {
+      // Gone on a remote: the Back key does this, and an on-screen Back is one
+      // more thing for the D-pad to land on — the one it used to land on by
+      // default, so OK meant "leave the film".
+      if (isDpadPrimary()) return null;
       if (!ctx.onBack) return null;
       return (
         <Tooltip label={t("Back")} side="bottom">
@@ -188,7 +195,10 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
           )}
         </>
       );
-      if (ctx.titleClickable && ctx.onTitleClick) {
+      // Read-only on a remote. It is a caption, not a control, and being
+      // focusable put a highlight on the film title on the way to everything
+      // else.
+      if (ctx.titleClickable && ctx.onTitleClick && !isDpadPrimary()) {
         return (
           <FocusButton
             type="button"
@@ -232,6 +242,8 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "volume": {
+      // The remote has its own volume keys.
+      if (isDpadPrimary()) return null;
       if (ctx.tight) return null;
       return (
         <VolumeControl
@@ -330,6 +342,20 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
           ) : (
             <Replace size={22} strokeWidth={1.9} />
           )}
+        </BigButton>
+      );
+    }
+    case "engine-switch": {
+      // Only when there is genuinely another engine to move to. The label names
+      // the destination rather than the current engine, because the viewer is
+      // pressing it to get somewhere.
+      if (ctx.tight || !ctx.alternateEngine) return null;
+      const label = translate("Switch to {engine}", {
+        engine: ctx.alternateEngine === "mpv" ? "mpv" : translate("the native player"),
+      });
+      return (
+        <BigButton onClick={ctx.onSwitchEngine} ariaLabel={label} tooltip={label}>
+          <Cpu size={22} strokeWidth={1.9} />
         </BigButton>
       );
     }
@@ -436,6 +462,7 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "cast": {
+      if (isDpadPrimary()) return null;
       if (ctx.tight) return null;
       return <CastButton onClick={ctx.onCast} capabilities={ctx.capabilities} />;
     }
@@ -455,6 +482,9 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "window-controls":
+      // A television has one window and it is the screen. These are minimise,
+      // maximise and close for a desktop that no longer exists.
+      if (isDpadPrimary()) return null;
       return <WindowControlButtons t={t} />;
   }
 }
