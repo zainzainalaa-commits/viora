@@ -700,7 +700,7 @@ const streamIds = useStreamIds(meta, episode, imdbId, intent === "download-seaso
         ) : (
           <>
             {!loading && result && (
-              <SourceDiagnostic result={result} debrids={debrids} />
+              <SourceDiagnostic result={result} debrids={debrids} onRefresh={refresh} refreshing={loading} />
             )}
 
             {!loading && currentPick && (

@@ -6,7 +6,7 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { isDpadPrimary } from "@/lib/platform";
-import { hasLiveFocus, setFocusSafely } from "./keys";
+import { elementOf, hasLiveFocus, setFocusSafely } from "./keys";
 
 /**
  * One screen in the view stack.
@@ -44,6 +44,17 @@ export function FocusLayer({
 }) {
   const { ref, focusKey, hasFocusedChild } = useFocusable({
     focusable: top,
+    // A screen is where the D-pad lives, and it cannot walk out of one.
+    //
+    // The navigation rail sits outside every layer, so without this the engine
+    // treats it as just another neighbour: up from the top row, left from the
+    // first card, or any edge at all hands the highlight to the menu. That is
+    // the difference between a rail you go to and a rail you fall into. Arrows
+    // now stay inside the screen; Back is what reaches the rail, deliberately.
+    //
+    // It bounds leaving, not entering, so pressing right off the rail still
+    // walks into the screen.
+    isFocusBoundary: true,
     saveLastFocusedChild: true,
     // Off, and the screen still returns you where you left.
     //
@@ -92,6 +103,30 @@ export function FocusLayer({
   // the topbar and stay there.
   const claimed = useRef(false);
   if (!top && claimed.current) claimed.current = false;
+
+  /**
+   * The last place the viewer stood on this screen.
+   *
+   * Kept here rather than read back out of the engine because the question this
+   * answers — "where was I when I left?" — has a different answer from the one
+   * the engine stores for a parent, which is also written by directional entry.
+   * A screen must come back to the card you opened a title from, and only fall
+   * back to its declared entry when it has never been visited.
+   */
+  const lastInside = useRef<string | null>(null);
+  useEffect(() => {
+    if (!top || !isDpadPrimary()) return;
+    const remember = () => {
+      const key = getCurrentFocusKey();
+      if (!key || key === focusKey) return;
+      const el = elementOf(key);
+      if (el && ref.current instanceof HTMLElement && ref.current.contains(el)) {
+        lastInside.current = key;
+      }
+    };
+    const id = window.setInterval(remember, 250);
+    return () => window.clearInterval(id);
+  }, [top, focusKey, ref]);
 
   useEffect(() => {
     if (!top || !isDpadPrimary()) return;
@@ -146,8 +181,41 @@ export function FocusLayer({
       // still opened on the sidebar. Naming the destination removes the
       // inference: the fallback still descends the layer, so a screen with no
       // entry point behaves exactly as before.
-      if (!acted) setFocusSafely(...(preferredChildFocusKey ? [preferredChildFocusKey, focusKey] : [focusKey]));
+      if (acted) return;
+      // Where the viewer was beats where the screen would like them to start.
+      // Coming back from a title's page has to land on the card it was opened
+      // from; the declared entry is for a screen being seen for the first time.
+      const remembered = lastInside.current;
+      const targets: string[] = [];
+      if (remembered && doesFocusableExist(remembered)) targets.push(remembered);
+      if (preferredChildFocusKey) targets.push(preferredChildFocusKey);
+      targets.push(focusKey);
+      setFocusSafely(...targets);
+
+      // A screen that is still fetching has to settle somewhere, and settling is
+      // not the same as deciding. The source screen waits on every addon it has,
+      // which on a slow network runs past the wait above; the highlight then went
+      // to whatever sat highest on the page — the Refresh button — and stayed
+      // there after the Play button it was supposed to open on had appeared.
+      //
+      // So the declaration outlives the placement: while the viewer has not
+      // pressed anything, the entry point is claimed the moment it exists.
+      if (!preferredChildFocusKey || doesFocusableExist(preferredChildFocusKey)) return;
+      let late = 0;
+      const upgrade = window.setInterval(() => {
+        if (acted || ++late > 40) {
+          window.clearInterval(upgrade);
+          return;
+        }
+        if (doesFocusableExist(preferredChildFocusKey)) {
+          window.clearInterval(upgrade);
+          setFocusSafely(preferredChildFocusKey);
+        }
+      }, 250);
+      upgradeTimer = upgrade;
     };
+
+    let upgradeTimer = 0;
 
     if (!pending()) {
       // The user is already inside this screen; they navigated, not switched.
@@ -157,7 +225,10 @@ export function FocusLayer({
         return;
       }
       place();
-      return;
+      return () => {
+        window.clearInterval(upgradeTimer);
+        window.removeEventListener("keydown", onKey, true);
+      };
     }
 
     // Bounded, so a screen whose entry point never arrives still settles rather
@@ -171,13 +242,25 @@ export function FocusLayer({
     }, 250);
     return () => {
       window.clearInterval(timer);
+      window.clearInterval(upgradeTimer);
       window.removeEventListener("keydown", onKey, true);
     };
   }, [top, hasFocusedChild, focusKey, preferredChildFocusKey]);
 
   return (
     <FocusContext.Provider value={focusKey}>
-      <div ref={ref} className={className}>
+      {/* Marks which screen is on top, so a last-resort landing can be confined
+          to it rather than falling out to the navigation rail. */}
+      <div
+        ref={ref}
+        className={className}
+        data-focus-layer={top ? "top" : undefined}
+        // Published so recovery can read it. A screen that keeps re-rendering —
+        // the source list, as its addons answer one by one — loses the focused
+        // node repeatedly, and each recovery landed on whatever was topmost at
+        // that instant, so the highlight crawled down the page on its own.
+        data-focus-entry={preferredChildFocusKey}
+      >
         {children}
       </div>
     </FocusContext.Provider>

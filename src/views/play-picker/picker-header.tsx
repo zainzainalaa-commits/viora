@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { ChevronDown, ChevronLeft, RefreshCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Meta } from "@/lib/cinemeta";
@@ -19,33 +20,42 @@ export function PickerHeader({
   refreshing?: boolean;
 }) {
   const t = useT();
+  // On a television the row above the title is two controls nobody needs: the
+  // remote has its own Back, and a list that just finished loading does not want
+  // refreshing. Both were also the first two stops on the way in, so the
+  // highlight opened on "Back" instead of on the thing the screen exists for.
+  // Dropping them also lifts the title and the sources into the empty space they
+  // were pushed down from.
+  const onDpad = isDpadPrimary();
   return (
     <header className="flex flex-col gap-3">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <FocusButton
-          type="button"
-          onClick={onBack}
-          className="group/back -ms-1 flex w-fit items-center gap-3 rounded-full py-1.5 pe-6 ps-1.5 text-[17px] font-semibold text-ink-muted transition-colors hover:text-ink"
-        >
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-elevated/70 ring-1 ring-edge-soft transition-colors group-hover/back:bg-elevated">
-            <ChevronLeft size={26} strokeWidth={2.4} className="dir-icon" />
-          </span>
-          Back
-        </FocusButton>
-        {onRefresh && (
+      {!onDpad && (
+        <div className="mb-2 flex items-center justify-between gap-3">
           <FocusButton
             type="button"
-            onClick={onRefresh}
-            disabled={refreshing}
-            title={t("Refresh sources")}
-            aria-label={t("Refresh sources")}
-            className="flex h-11 shrink-0 items-center gap-2 rounded-full border border-edge-soft bg-elevated/70 ps-4 pe-5 text-[14px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={onBack}
+            className="group/back -ms-1 flex w-fit items-center gap-3 rounded-full py-1.5 pe-6 ps-1.5 text-[17px] font-semibold text-ink-muted transition-colors hover:text-ink"
           >
-            <RefreshCw size={17} strokeWidth={2.4} className={refreshing ? "animate-spin" : ""} />
-            {t("Refresh")}
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-elevated/70 ring-1 ring-edge-soft transition-colors group-hover/back:bg-elevated">
+              <ChevronLeft size={26} strokeWidth={2.4} className="dir-icon" />
+            </span>
+            Back
           </FocusButton>
-        )}
-      </div>
+          {onRefresh && (
+            <FocusButton
+              type="button"
+              onClick={onRefresh}
+              disabled={refreshing}
+              title={t("Refresh sources")}
+              aria-label={t("Refresh sources")}
+              className="flex h-11 shrink-0 items-center gap-2 rounded-full border border-edge-soft bg-elevated/70 ps-4 pe-5 text-[14px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <RefreshCw size={17} strokeWidth={2.4} className={refreshing ? "animate-spin" : ""} />
+              {t("Refresh")}
+            </FocusButton>
+          )}
+        </div>
+      )}
       {episode ? (
         <>
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-ink-subtle">

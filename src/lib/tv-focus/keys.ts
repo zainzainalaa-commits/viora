@@ -14,6 +14,8 @@ export const focusKeys = {
   sidebar: "SIDEBAR",
   content: "CONTENT",
   player: "PLAYER",
+  /** The source screen's main action — where that screen is entered. */
+  pickerPrimary: "PICKER_PRIMARY_ACTION",
 } as const;
 
 type TreeNode = {
@@ -542,16 +544,37 @@ function resolveUsable(key: string, depth = 0): string | null {
  * pointing at something that does not exist, with no geometry and no way out.
  * Asking the tree what is actually on screen cannot go stale that way.
  */
+/**
+ * The region a last-resort landing is allowed to look in.
+ *
+ * "Anything on screen" used to mean the whole document, and the topmost-leftmost
+ * control in this app is the Search button at the head of the navigation rail.
+ * So every recovery that could not find its named target — a title's page that
+ * has not finished fetching, most often — quietly handed the remote to the menu.
+ * Opening a film and watching the highlight jump to Search was this, from five
+ * different screens.
+ *
+ * Recovery now stays where the viewer is: the dialog if one is open, the player
+ * if it is up, otherwise the screen on top. Finding nothing is an acceptable
+ * answer — the callers poll — and it is a far better one than the rail.
+ */
+function activeScope(): HTMLElement | null {
+  const modal = topModalScope();
+  if (modal) return modal;
+  const player = document.querySelector<HTMLElement>("[data-harbor-player]");
+  if (player) return player;
+  return document.querySelector<HTMLElement>('[data-focus-layer="top"]');
+}
+
 function firstUsableLeaf(): string | null {
   const tree = treeOf();
-  const scope = topModalScope();
+  const scope = activeScope();
   let best: { key: string; top: number; left: number } | null = null;
   for (const key of Object.keys(tree)) {
     if (!isUsableLeaf(key)) continue;
     const el = tree[key].node as HTMLElement;
-    // While a dialog owns the remote, "anything on screen" means anything in the
-    // dialog. Recovery that reaches past it would hand the user controls they
-    // cannot see, underneath the backdrop.
+    // Anything outside the active region is not a legal landing: past a dialog
+    // it is under the backdrop, and past the current screen it is the rail.
     if (scope && !scope.contains(el)) continue;
     const box = el.getBoundingClientRect();
     if (box.bottom < 0 || box.top > window.innerHeight) continue;
@@ -619,6 +642,22 @@ export function setFocusSafely(...keys: string[]): boolean {
     }
     void setFocus(leaf);
     return true;
+  }
+  const region = activeScope();
+  if (!region) return false;
+  // The screen's own entry point comes before "whatever is topmost": it is the
+  // one place on the screen that was chosen rather than measured, and it does
+  // not move when the page grows underneath the highlight.
+  const declared = document
+    .querySelector<HTMLElement>('[data-focus-layer="top"]')
+    ?.getAttribute("data-focus-entry");
+  if (declared && doesFocusableExist(declared)) {
+    const leaf = resolveUsable(declared);
+    const el = leaf ? elementOf(leaf) : null;
+    if (leaf && el && region.contains(el)) {
+      void setFocus(leaf);
+      return true;
+    }
   }
   const anywhere = firstUsableLeaf();
   if (anywhere) {

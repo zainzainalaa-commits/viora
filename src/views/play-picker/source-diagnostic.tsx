@@ -1,6 +1,6 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { isDpadPrimary } from "@/lib/platform";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RefreshCw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useDebridClients } from "@/lib/debrid/registry";
 import type { PipelineResult } from "@/lib/streams/pipeline";
@@ -10,9 +10,14 @@ import { hasCachedMarker } from "@/lib/streams/cached";
 export function SourceDiagnostic({
   result,
   debrids,
+  onRefresh,
+  refreshing = false,
 }: {
   result: PipelineResult;
   debrids: ReturnType<typeof useDebridClients>;
+  /** Refreshing lives on this line on a television — see below. */
+  onRefresh?: () => void;
+  refreshing?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const counts = useMemo(() => {
@@ -41,11 +46,29 @@ export function SourceDiagnostic({
           streams the viewer came for. On a remote it sat directly under the
           heading and caught every trip down the page. */}
       {isDpadPrimary() ? (
-        <span className="flex items-center gap-2 self-start text-[12px] text-ink-subtle/80">
-          <span className="font-semibold text-ink-muted">{cachedTotal} cached</span>
-          <span className="text-ink-subtle/40">·</span>
-          <span>{totalRaw} found across {counts.length} {sourceWord}</span>
-        </span>
+        // The tally is not a control, so the row it sits on is free — and it is
+        // the natural home for Refresh, which used to sit in a header row of its
+        // own above the title, pushing the whole screen down and catching the
+        // highlight on the way in.
+        <div className="flex items-center justify-between gap-3">
+          <span className="flex items-center gap-2 text-[12px] text-ink-subtle/80">
+            <span className="font-semibold text-ink-muted">{cachedTotal} cached</span>
+            <span className="text-ink-subtle/40">·</span>
+            <span>{totalRaw} found across {counts.length} {sourceWord}</span>
+          </span>
+          {onRefresh && (
+            <FocusButton
+              type="button"
+              onClick={onRefresh}
+              disabled={refreshing}
+              aria-label="Refresh sources"
+              className="flex h-11 shrink-0 items-center gap-2 rounded-full border border-edge-soft bg-elevated/70 ps-4 pe-5 text-[14px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <RefreshCw size={17} strokeWidth={2.4} className={refreshing ? "animate-spin" : ""} />
+              Refresh
+            </FocusButton>
+          )}
+        </div>
       ) : (
       <FocusButton
         type="button"

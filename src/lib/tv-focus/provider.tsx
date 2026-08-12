@@ -17,7 +17,6 @@ import {
   elementOf,
   focusKeys,
   hasLiveFocus,
-  preferredChildOf,
   installFocusDiagnostics,
   isElementCovered,
   isElementOffscreen,
@@ -253,7 +252,7 @@ function useFocusRepairOnInput(enabled: boolean): void {
         if (!typing) syncDomFocus(key);
         return;
       }
-      setFocusSafely(focusKeys.content, focusKeys.sidebar);
+      setFocusSafely(focusKeys.content);
     };
     window.addEventListener("keydown", repair, { capture: true });
     return () => window.removeEventListener("keydown", repair, { capture: true });
@@ -504,23 +503,8 @@ function useFocusLifeline(enabled: boolean): void {
   useEffect(() => {
     if (!enabled) return;
     let timer = 0;
-    // The very first placement goes to the sidebar. Handing it to the content
-    // instead means landing on whichever card happened to register first, which
-    // is neither the top of the page nor anywhere the user was looking. The
-    // sidebar is always on screen and always in the same place; from there one
-    // press of right enters the content deliberately.
-    let firstPlacement = true;
-    let firstTries = 0;
-    // A fallback that had to settle for the rail, and the element it settled on.
-    let rescueFrom: Element | null = null;
-    let rescueTicks = 0;
-    // A press means the viewer has taken over; after that the opening highlight
-    // is no longer anyone's business but theirs.
-    let acted = false;
-    const onKey = () => {
-      acted = true;
-    };
-    window.addEventListener("keydown", onKey, true);
+    // Nothing here places focus on the rail any more, at launch or otherwise.
+    // The screen claims its own entry point; see FocusLayer.
     const check = () => {
       // The engine's opinion and the DOM's can differ, and an overlay that opens
       // without any key being pressed produces no event to reconcile them. Until
@@ -570,45 +554,19 @@ function useFocusLifeline(enabled: boolean): void {
       // the declared entry as soon as it exists. A press cancels it for good,
       // and a sidebar that declares nothing falls back to the old rule after a
       // bounded wait.
-      if (firstPlacement && !acted) {
-        const entry = preferredChildOf(focusKeys.sidebar);
-        if (entry) {
-          if (key === entry || setFocusSafely(entry)) firstPlacement = false;
-          timer = window.setTimeout(check, 400);
-          return;
-        }
-        if (++firstTries > 12) firstPlacement = false;
-      }
-
+      // Filling a vacancy, and only inside the screen the viewer is looking at.
+      // The rail is not a destination the app picks any more — it is somewhere
+      // the viewer goes with Back — so a screen whose content is not focusable
+      // yet is simply asked again on the next tick rather than surrendering the
+      // highlight to the menu.
       if (!key || !doesFocusableExist(key) || !hasLiveFocus(key)) {
-        setFocusSafely(focusKeys.content, focusKeys.sidebar);
-        // Opening a title kills the focus on the card, and the screen it opens
-        // is still fetching, so the content has nothing to offer and the
-        // fallback settles for the rail. Nothing revisits that: focus is alive,
-        // so every later poll is satisfied — measured on a series whose page
-        // rendered its Play button 400ms in and still left the highlight on the
-        // search button six seconds later.
-        //
-        // So a fallback that had to settle for the rail is remembered, and
-        // corrected once the screen is ready. Not at launch, where landing on
-        // the rail is the deliberate choice described above.
-        rescueFrom =
-          !firstPlacement && document.activeElement?.closest("aside")
-            ? document.activeElement
-            : null;
-        rescueTicks = rescueFrom ? 10 : 0;
-      } else if (rescueTicks > 0) {
-        rescueTicks -= 1;
-        // The viewer moving is the end of it — the highlight is theirs now.
-        if (document.activeElement !== rescueFrom) rescueTicks = 0;
-        else if (setFocusSafely(focusKeys.content)) rescueTicks = 0;
+        setFocusSafely(focusKeys.content);
       }
       timer = window.setTimeout(check, 400);
     };
     timer = window.setTimeout(check, 400);
     return () => {
       window.clearTimeout(timer);
-      window.removeEventListener("keydown", onKey, true);
     };
   }, [enabled]);
 }

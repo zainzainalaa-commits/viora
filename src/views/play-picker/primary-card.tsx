@@ -1,4 +1,4 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, focusKeys } from "@/lib/tv-focus";
 import { Check, Download, ExternalLink, Loader2, Play, Zap } from "lucide-react";
 import { Flag } from "@/components/flag";
 import { CopyLinkButton, resolveStreamLink } from "@/components/player/copy-link-button";
@@ -204,6 +204,7 @@ export function PrimaryCard({
           <div className="flex flex-wrap items-center gap-5">
             {externalOnly ? (
               <FocusButton
+                focusKey={focusKeys.pickerPrimary}
                 onClick={onPlay}
                 className="group flex h-14 items-center gap-3 rounded-full border border-ink/30 bg-ink/[0.04] px-7 text-[14.5px] font-semibold tracking-[0.04em] text-ink transition-[transform,background-color,opacity] duration-200 hover:scale-[1.02] hover:bg-ink/[0.08] active:scale-[0.98]"
               >
@@ -212,6 +213,7 @@ export function PrimaryCard({
               </FocusButton>
             ) : isCached ? (
               <FocusButton
+                focusKey={focusKeys.pickerPrimary}
                 onClick={onPlay}
                 disabled={resolving}
                 className="group flex h-14 items-center gap-3 rounded-full bg-ink px-9 text-[15px] font-semibold tracking-[0.04em] text-canvas shadow-[0_12px_36px_rgba(0,0,0,0.45)] transition-[transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
@@ -238,6 +240,7 @@ export function PrimaryCard({
               </FocusButton>
             ) : queueTarget ? (
               <FocusButton
+                focusKey={focusKeys.pickerPrimary}
                 onClick={onCache}
                 disabled={resolving}
                 className="group flex h-14 items-center gap-3 rounded-full border border-accent/55 bg-accent/12 px-7 text-[14.5px] font-semibold tracking-[0.04em] text-accent transition-[transform,background-color,opacity] duration-200 hover:scale-[1.02] hover:bg-accent/20 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
@@ -251,6 +254,7 @@ export function PrimaryCard({
               </FocusButton>
             ) : canStream ? (
               <FocusButton
+                focusKey={focusKeys.pickerPrimary}
                 onClick={onPlay}
                 disabled={resolving}
                 className="group flex h-14 items-center gap-3 rounded-full bg-ink px-9 text-[15px] font-semibold tracking-[0.04em] text-canvas shadow-[0_12px_36px_rgba(0,0,0,0.45)] transition-[transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"

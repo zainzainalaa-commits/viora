@@ -456,20 +456,17 @@ function Shell() {
       return true;
     }
     // A pushed screen — a title, a person, a collection — keeps Back as "leave
-    // this page". That is what it has always meant there, and taking it away to
-    // move focus instead makes the commonest press on the commonest screen stop
-    // doing the one thing it is for.
+    // this page", and the screen underneath restores the card it was opened
+    // from. That is the middle of the stack: Details → Screen.
     if (stackKinds.length > 1) {
       goBack();
       return true;
     }
 
-    // A top-level screen has nothing to pop, so Back's only useful job there is
-    // to hand the remote back to the rail. That matters because left walks a row
-    // one card at a time — measured at fifteen presses after browsing a single
-    // row — so a viewer who has looked along a row has no short way back to the
-    // navigation. Home already did this; the rest of the top-level screens were
-    // simply calling `goBack` on an empty stack and doing nothing at all.
+    // The end of the stack: Screen → rail. Arrows cannot reach the rail any
+    // more — every screen is a closed region — so this press is the only way
+    // back to it, and it lands on the entry the viewer left from because the
+    // rail remembers its own last child.
     const inSidebar = !!document.activeElement?.closest("aside");
     if (!inSidebar && document.querySelector("aside") && setFocusSafely(focusKeys.sidebar)) {
       return true;
@@ -981,7 +978,7 @@ function Shell() {
           </FocusLayer>
         )}
         {pickerAlive && picker && (
-          <FocusLayer top={pickerTop} className={layer(pickerTop)}>
+          <FocusLayer top={pickerTop} className={layer(pickerTop)} preferredChildFocusKey={focusKeys.pickerPrimary}>
             <Suspense fallback={null}>
               <PlayPicker
                 key={`picker-${picker.meta.id}-${picker.episode?.season ?? ""}-${picker.episode?.episode ?? ""}-${picker.attempt ?? 0}-${picker.intent ?? "play"}`}
