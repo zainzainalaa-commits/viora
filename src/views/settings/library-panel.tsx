@@ -14,7 +14,6 @@ import previewPoster3 from "@/assets/preview/poster3.webp";
 import previewPoster4 from "@/assets/preview/poster4.webp";
 import { SpoilerPreview } from "./spoiler-preview";
 import { HomeRowPreview } from "./home-layout-previews";
-import { HomeLanguagePicker } from "./home-language-picker";
 import { EpisodeCardPreview } from "./episode-card-previews";
 import { SongCardStylePicker } from "./song-card-style-picker";
 import { HoverStyleGallery } from "./hover-style-preview";
@@ -34,7 +33,6 @@ import { clearAllSnapshots, snapshotCount } from "@/lib/snapshots";
 import { Bookmark, HelpCircle, Popcorn } from "lucide-react";
 import { HoverTooltip } from "@/components/hover-tooltip";
 import { useT } from "@/lib/i18n";
-import { RegionField } from "./region-cascade";
 import { Dropdown, type DropdownOption } from "@/components/dropdown";
 import { ExtLink, KeyField, Section, Segmented, ToggleRow } from "./shared";
 import { TmdbGuideModal } from "./tmdb-tutorial-modal";
@@ -678,12 +676,6 @@ export function LibraryPanel({
         />
       </Section>
 
-      <Section
-        title={t("Home languages")}
-        subtitle={t("Only show titles in these original languages on the Home catalogs. Leave all off to show everything.")}
-      >
-        <HomeLanguagePicker />
-      </Section>
 
       <Section
         title={t("Spoilers")}
@@ -711,12 +703,6 @@ export function LibraryPanel({
               label={t("Blur descriptions")}
               value={settings.spoilerHideDescriptions}
               onChange={(v) => update({ spoilerHideDescriptions: v })}
-            />
-            <ToggleRow
-              label={t("Blur episode images on detail page")}
-              sub={t("Blurs the hero image and stills on the episode detail page until you click reveal.")}
-              value={!!settings.blurEpisodes}
-              onChange={(v) => update({ blurEpisodes: v })}
             />
             <ToggleRow
               label={t("Keep the next episode visible")}
@@ -837,12 +823,6 @@ export function LibraryPanel({
         <ClearSnapshotsButton />
       </Section>
 
-      <Section
-        title={t("Region & language")}
-        subtitle={t("Used for streaming availability and the Now Playing release window. Pick a country and Harbor can match the interface, metadata, and subtitle languages to it.")}
-      >
-        <RegionField />
-      </Section>
 
       <AiSearchSection />
 

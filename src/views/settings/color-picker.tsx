@@ -1,4 +1,4 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -120,12 +120,17 @@ export function ColorPopoverTrigger({
     };
   }, [open, portal, align, direction]);
 
+  // Focus has to go into the swatches, and Back has to bring it out. As a plain
+  // div the panel opened behind the highlight: the remote stayed on the settings
+  // list and nothing inside could be reached.
   const panel = (
-    <div
-      ref={panelRef}
-      className="animate-nudge-in w-[280px] rounded-2xl border border-edge bg-elevated/95 p-3 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.65)] backdrop-blur-md"
-    >
-      <CustomColorPanel value={value} onChange={onChange} />
+    <div ref={panelRef}>
+      <FocusModal
+        onClose={() => setOpen(false)}
+        className="animate-nudge-in w-[280px] rounded-2xl border border-edge bg-elevated/95 p-3 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.65)] backdrop-blur-md"
+      >
+        <CustomColorPanel value={value} onChange={onChange} />
+      </FocusModal>
     </div>
   );
 

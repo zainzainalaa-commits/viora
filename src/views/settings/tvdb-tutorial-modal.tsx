@@ -1,4 +1,4 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal } from "@/lib/tv-focus";
 import { Check, ExternalLink, KeyRound, X } from "lucide-react";
 import { useEffect } from "react";
 import { openUrl } from "@/lib/window";
@@ -46,9 +46,11 @@ export function TvdbGuideModal({ open, onClose }: { open: boolean; onClose: () =
       className="fixed inset-0 z-[200] flex items-center justify-center bg-canvas/70 p-6 backdrop-blur-sm animate-in fade-in duration-150"
       onClick={onClose}
     >
-      <div
+      {/* Same shell as the TMDB one, same problem: nothing to focus and no way
+          back out with a remote. */}
+      <FocusModal
+        onClose={onClose}
         className="flex max-h-[86vh] w-full max-w-[520px] flex-col overflow-hidden rounded-3xl border border-edge bg-elevated shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)] animate-popover-in"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 border-b border-edge-soft px-6 py-5">
           <div className="flex items-center gap-3">
@@ -113,7 +115,7 @@ export function TvdbGuideModal({ open, onClose }: { open: boolean; onClose: () =
             <ExternalLink size={14} strokeWidth={2.2} />
           </FocusButton>
         </div>
-      </div>
+      </FocusModal>
     </div>
   );
 }

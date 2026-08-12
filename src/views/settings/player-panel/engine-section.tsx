@@ -141,20 +141,6 @@ export function PlayerEnginePanel() {
               <DisplayPanelSelector />
             </>
           )}
-          {isWindowsDesktop() && (
-            <ToggleRow
-              label={t("Line-free video mode")}
-              sub={t("Forces a compatibility present mode that removes a thin bright line some monitors show at the screen edge. Side effects: 4K playback can drop to a slideshow and HDR content looks dimmer (this mode bypasses the HDR display path). Leave OFF unless you see that line. Restart playback to apply.")}
-              value={settings.playerD3d11Flip}
-              onChange={(v) => update({ playerD3d11Flip: v })}
-            />
-          )}
-          <ToggleRow
-            label={t("Always re-encode when casting (recommended)")}
-            sub={t("On by default. Pipes every cast through ffmpeg as H.264 + AAC + MPEG-TS so Samsung, LG, Sony, and other DLNA TVs accept the stream regardless of source codec. Turn off only if you have a beefy receiver that handles raw HEVC/DTS and want max quality. Requires ffmpeg in PATH.")}
-            value={settings.castAlwaysTranscode}
-            onChange={(v) => update({ castAlwaysTranscode: v })}
-          />
         </div>
       </DesktopOnlyBlock>
 

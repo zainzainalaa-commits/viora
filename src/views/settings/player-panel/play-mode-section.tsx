@@ -151,44 +151,6 @@ export function PlayModePanel() {
       </FocusButton>
       <FocusButton
         type="button"
-        onClick={() => update({ keepFullscreenOnExit: !settings.keepFullscreenOnExit })}
-        className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
-      >
-        <span
-          className={`mt-0.5 flex h-6 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors ${
-            settings.keepFullscreenOnExit ? "justify-end bg-accent" : "justify-start bg-edge"
-          }`}
-        >
-          <span className="h-5 w-5 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
-        </span>
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="text-[15px] font-semibold text-ink">{t("Stay in fullscreen after closing the player")}</span>
-          <span className="text-[12.5px] leading-snug text-ink-muted">
-            {t("When you exit playback, keep the window fullscreen instead of dropping back to a window. Turn off to leave fullscreen automatically whenever the player closes.")}
-          </span>
-        </div>
-      </FocusButton>
-      <FocusButton
-        type="button"
-        onClick={() => update({ fullscreenRestorePosition: !settings.fullscreenRestorePosition })}
-        className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
-      >
-        <span
-          className={`mt-0.5 flex h-6 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors ${
-            settings.fullscreenRestorePosition ? "justify-end bg-accent" : "justify-start bg-edge"
-          }`}
-        >
-          <span className="h-5 w-5 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
-        </span>
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="text-[15px] font-semibold text-ink">{t("Restore window position after fullscreen")}</span>
-          <span className="text-[12.5px] leading-snug text-ink-muted">
-            {t("When you exit fullscreen, return the window to exactly where it was. Turn off to center it on screen instead.")}
-          </span>
-        </div>
-      </FocusButton>
-      <FocusButton
-        type="button"
         onClick={() => update({ playerVolumeHud: !settings.playerVolumeHud })}
         className="mt-1 flex items-start gap-3.5 rounded-2xl border border-edge-soft bg-canvas/40 px-5 py-4 text-start transition-colors hover:border-edge hover:bg-canvas/60"
       >

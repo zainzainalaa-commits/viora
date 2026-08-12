@@ -1790,9 +1790,43 @@ html[data-input="dpad"] [data-focusable="true"]:focus {
      a soft halo for depth. */
   outline: 3px solid var(--color-accent) !important;
   outline-offset: 0;
-  border-radius: 6px;
+  /* The ring takes the shape of what it is around.
+     It used to force six pixels on everything, which is not a rounding — it is a
+     different shape laid over the control. On a settings field, a 16px box wore
+     a 6px frame and the corners cut across it; on a pill, the ring squared it
+     off. The browser already draws an outline along the element's own radius, so
+     the honest instruction is none at all. */
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 18%, transparent);
   z-index: 2;
+}
+
+/* A field is highlighted as a field.
+   The control that takes focus inside one of these is the text, which sits
+   between the service logo and the reveal button — so ringing it left both of
+   those outside the highlight and a gap at each end. The ring moves out to the
+   field itself, and the text gives up its own. */
+html[data-input="dpad"] [data-key-field]:has([data-field-input]:focus) {
+  outline: 3px solid var(--color-accent) !important;
+  outline-offset: 0;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  z-index: 2;
+}
+html[data-input="dpad"] [data-key-field] [data-field-input]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Except where there is no shape to follow.
+   A control with square corners would take a square ring, which is the sharp
+   frame this replaced. A small radius on those, and only those, keeps every
+   highlight soft without overriding the ones that have their own. */
+html[data-input="dpad"] button:not([class*="rounded"]):focus,
+html[data-input="dpad"] a:not([class*="rounded"]):focus,
+html[data-input="dpad"] select:not([class*="rounded"]):focus,
+html[data-input="dpad"] summary:not([class*="rounded"]):focus,
+html[data-input="dpad"] [tabindex]:not([class*="rounded"]):focus,
+html[data-input="dpad"] [data-focusable="true"]:not([class*="rounded"]):focus {
+  border-radius: 8px;
 }
 
 /* Inside the player, focus is the colour of the icon and nothing else.

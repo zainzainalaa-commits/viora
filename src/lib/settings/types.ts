@@ -58,7 +58,6 @@ export interface SimklGranularFilters {
 
 export type Settings = {
   blurComments: boolean;
-  blurEpisodes: boolean;
   tmdbKey: string;
   omdbKey: string;
   rpdbKey: string;
@@ -117,8 +116,6 @@ export type Settings = {
   heroFullQuality: boolean;
   resumePrompt: boolean;
   resumePlayback: boolean;
-  keepFullscreenOnExit: boolean;
-  fullscreenRestorePosition: boolean;
   contentAdvisoryToast: boolean;
   playerVolumeHud: boolean;
   playerVolumeHudPosition: "center" | "top" | "top-left" | "top-right";
@@ -137,7 +134,6 @@ export type Settings = {
   episodeOrderProvider: "default" | "tmdb" | "tvdb";
   tvdbSeasonType: "aired" | "official" | "dvd" | "absolute" | "alternate" | "regional";
   tvdbOrderPanel: boolean;
-  tvdbPin: string;
   harborAvatar: string | null;
   harborColor: string;
   anilistAutoSync: boolean;
@@ -162,13 +158,6 @@ export type Settings = {
   togetherCfDeployed: boolean;
   togetherShareCursors: boolean;
   togetherGuestsPick: boolean;
-  discordRichPresence: boolean;
-  discordHideTitle: boolean;
-  discordShowWhenPaused: boolean;
-  discordShowWhenBrowsing: boolean;
-  discordShowPoster: boolean;
-  discordShowTimestamp: boolean;
-  discordShowPartyJoin: boolean;
   playerEngine: "auto" | "mpv" | "exo";
   playerShellId: string;
   playerChromeTheme: "auto" | "default" | "stremio";
@@ -180,7 +169,6 @@ export type Settings = {
   keepSourceNextEpisode: boolean;
   playerHdrToSdr: boolean;
   playerRtxHdr: boolean;
-  playerMacEdr: boolean;
   playerDisplayPanel: "auto" | "oled" | "lcd";
   playerMotionInterp: boolean;
   playerAnime4k: boolean;
@@ -199,7 +187,6 @@ export type Settings = {
   streamCacheDir: string;
   remoteStreamServerUrl: string;
   remoteStreamServerStrict: boolean;
-  castAlwaysTranscode: boolean;
   playerAnime4kShaders: string[];
   playerAnime4kMode: string;
   playerAnime4kTier: string;
@@ -229,7 +216,6 @@ export type Settings = {
   preferEmbeddedSubs: boolean;
   subtitleAutoUpgrade: boolean;
   subtitlePreselect: boolean;
-  betaUpdates: boolean;
   autoSkipIntro: boolean;
   autoSkipRecap: boolean;
   autoSkipOutro: boolean;
@@ -246,8 +232,6 @@ export type Settings = {
   showLocalLibraryBadge: boolean;
   localPlaybackMode: "ask" | "local" | "stream";
   localMinFileSizeMb: number;
-  catalogsPinned: string[];
-  catalogsHidden: string[];
   posterBaseUrl: string;
   hidePosterTitles: boolean;
   hoverPreviewEnabled: boolean;
@@ -261,7 +245,6 @@ export type Settings = {
   aiGroqKey: string;
   jinaKey: string;
   aiWebSearch: boolean;
-  playerD3d11Flip: boolean;
   mpvExtraOptions: string;
   mpvQuality: "balanced" | "performance" | "quality";
   mpvHwdec: "auto" | "on" | "off";
@@ -277,8 +260,6 @@ export type Settings = {
   playerEscExitsFullscreen: boolean;
   playerConfirmLeave: boolean;
   playerHdrStage: "auto" | "off" | "always";
-  opensubtitlesApiKey: string;
-  jimakuToken: string;
   audioNormalize: boolean;
   audioProfile: "off" | "bass" | "voice" | "bass-reduce" | "night";
   audioDevice: string;
@@ -383,7 +364,6 @@ export type Settings = {
   simklHomeRailsEnabled: boolean;
   simklUpNextRailEnabled: boolean;
   simklTrendingRailEnabled: boolean;
-  simklScrobbleEnabled: boolean;
   simklAnimeTitleLanguage: "english" | "romaji" | "native";
   weekStartsMonday: boolean;
   customCalendar: {
@@ -423,7 +403,6 @@ export type Settings = {
     };
   }>;
   iptvLiveContainer: "ts" | "m3u8";
-  iptvForceProxy: boolean;
   iptvEpgOffsetHours: number;
   sidebarCollapsed: boolean;
   feedLocaleBias: boolean;

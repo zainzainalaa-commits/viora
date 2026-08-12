@@ -158,12 +158,6 @@ export function SimklPanel() {
               onChange={(val) => update({ simklTrendingRailEnabled: val })}
             />
             <ToggleRow
-              label={t("Scrobble to SIMKL")}
-              sub={t("Automatically track what you are playing and save watch progress in real-time.")}
-              value={settings.simklScrobbleEnabled}
-              onChange={(val) => update({ simklScrobbleEnabled: val })}
-            />
-            <ToggleRow
               label={t("Display SIMKL Community Ratings")}
               sub={t("Display SIMKL community score badge on details pages.")}
               value={settings.simklShowCommunityRatings}
@@ -229,7 +223,6 @@ export function SimklPanel() {
                       }
                       update({
                         useSimklAvatar: false,
-                        simklScrobbleEnabled: true,
                         simklShowCommunityRatings: true,
                         simklEnableUserRatings: true,
                         simklHomeRailsEnabled: false,

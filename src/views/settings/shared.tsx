@@ -167,6 +167,13 @@ export function KeyField({
         </div>
       </div>
       <div
+        // The field is one thing to look at, so it is one thing to highlight.
+        // The control that actually takes focus is the text inside it, which
+        // sits between the service's logo and the reveal button — ringing that
+        // left the logo and the right-hand padding outside the highlight, with
+        // a gap at each end. The ring is drawn on the field instead; see
+        // `[data-key-field]` in index.css.
+        data-key-field
         className={`flex h-14 items-center gap-3 rounded-2xl border bg-elevated px-4 transition-all ${
           focused
             ? "border-ink shadow-[0_0_0_3px_rgba(255,255,255,0.04)]"
@@ -207,8 +214,13 @@ export function KeyField({
           */
           <FocusButton
             type="button"
+            data-field-input
             onClick={() => setTvEntry(true)}
-            className="h-full flex-1 truncate bg-transparent text-start text-[15px] tracking-wide text-ink"
+            // The ring takes the shape of what it is drawn around, and this
+            // button is a bare rectangle inside a field with 28px corners — so
+            // the highlight cut straight across them. Matching the field's own
+            // rounding is what makes it read as the field being selected.
+            className="h-full flex-1 truncate rounded-2xl bg-transparent text-start text-[15px] tracking-wide text-ink"
           >
             {value ? (reveal ? value : "•".repeat(Math.min(value.length, 28))) : (
               <span className="text-ink-subtle/55">{placeholder}</span>
@@ -216,6 +228,7 @@ export function KeyField({
           </FocusButton>
         ) : (
           <input
+            data-field-input
             type={reveal ? "text" : "password"}
             value={value}
             onChange={(e) => onChange(e.target.value)}

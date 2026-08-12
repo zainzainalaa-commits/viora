@@ -8,6 +8,8 @@ import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 import { openUrl } from "@/lib/window";
 import { Section, ToggleRow } from "./shared";
+import { HomeLanguagePicker } from "./home-language-picker";
+import { RegionField } from "./region-cascade";
 import { SubtitleStylePanel } from "./player-panel";
 import { LanguagesPicker } from "./streaming-panel";
 import { DisplayLanguageSection } from "./language-panel/display-language-section";
@@ -41,6 +43,16 @@ export function LanguagePanel() {
   const [blockDraft, setBlockDraft] = useState(settings.trackBlockWords.join(", "));
   return (
     <>
+    {/* Everything about language lives here now. The country and the Home
+        filter were in Library & metadata, which is where you look for keys and
+        catalogues, not for what language the app speaks. */}
+    <Section
+      title={t("Region & language")}
+      subtitle={t("Used for streaming availability and the Now Playing release window. Pick a country and Harbor can match the interface, metadata, and subtitle languages to it.")}
+    >
+      <RegionField />
+    </Section>
+
     <DisplayLanguageSection />
     <Section
       title={t("Subtitle languages")}
@@ -197,6 +209,13 @@ export function LanguagePanel() {
           {t("Contribute on GitHub")}
         </FocusButton>
       </div>
+    </Section>
+
+    <Section
+      title={t("Home languages")}
+      subtitle={t("Only show titles in these original languages on the Home catalogs. Leave all off to show everything.")}
+    >
+      <HomeLanguagePicker />
     </Section>
     </>
   );

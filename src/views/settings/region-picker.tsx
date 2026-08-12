@@ -1,6 +1,8 @@
-import { FocusButton } from "@/lib/tv-focus";
+import { FocusButton, FocusModal, FocusSection } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { SpatialNavigation } from "@noriginmedia/norigin-spatial-navigation";
 import { useT } from "@/lib/i18n";
 import flagAe from "@/assets/regions/ae.svg";
 import flagAr from "@/assets/regions/ar.svg";
@@ -162,6 +164,19 @@ export function RegionPicker({
   const inputRef = useRef<HTMLInputElement>(null);
   const current = REGIONS.find((r) => r.code === value) ?? { code: value, label: value };
 
+  // The list registers while the sheet is still arriving — it fades and slides
+  // into place — so the coordinates the engine stored for the rows are the ones
+  // they had on the way in. Navigating by those skipped every second country:
+  // from Canada, down landed on Ireland and stepped over the United Kingdom.
+  // Measuring again once it has settled is what makes one press mean one row.
+  useEffect(() => {
+    if (!open) return;
+    const timers = [80, 220, 400].map((ms) =>
+      window.setTimeout(() => SpatialNavigation.updateAllLayouts(), ms),
+    );
+    return () => timers.forEach((id) => window.clearTimeout(id));
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
@@ -222,15 +237,32 @@ export function RegionPicker({
       {open && (
         <>
           <div
-            className="fixed inset-0 z-20"
+            className={
+              isDpadPrimary()
+                ? "fixed inset-0 z-[220] bg-black/72 backdrop-blur-md"
+                : "fixed inset-0 z-20"
+            }
             onMouseDown={(e) => {
               e.stopPropagation();
               setOpen(false);
             }}
           />
-        <div
-          className="absolute left-0 right-0 z-30 mt-2 flex max-h-[420px] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
-          style={{ animation: "harbor-fade-in 140ms ease-out both" }}
+        {/* Anchored under the field for a pointer; a sheet of its own on a
+            television.
+            
+            Hanging it inside the page meant the page was what scrolled, not the
+            list — so walking down moved the highlight until the popover's own
+            clipped edge, and stopped there. Measured: it would not go past
+            France. A dialog in the middle of the screen has the whole height to
+            work with and scrolls itself, which is also how every other list on
+            this device is presented. */}
+        <FocusModal
+          onClose={() => setOpen(false)}
+          className={
+            isDpadPrimary()
+              ? "fixed left-1/2 top-1/2 z-[230] flex max-h-[86vh] w-[min(92vw,620px)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)]"
+              : "absolute left-0 right-0 z-30 mt-2 flex max-h-[420px] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
+          }
         >
           <div className="flex items-center gap-2 border-b border-edge-soft px-4 py-3">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -245,7 +277,13 @@ export function RegionPicker({
               className="h-7 flex-1 bg-transparent text-[14px] text-ink placeholder:text-ink-subtle/60 outline-none"
             />
           </div>
-          <div className="flex-1 overflow-y-auto py-1.5">
+          {/* A hair of space between rows.
+              Touching rows share an edge exactly — the bottom of one is the top
+              of the next — and navigating that ambiguity skipped every second
+              country: from Canada, down landed on Ireland and stepped over the
+              United Kingdom. Measured with and without; the gap is what makes
+              one press mean one row. */}
+          <FocusSection className="flex flex-1 flex-col gap-1 overflow-y-auto py-1.5">
             {filtered.length === 0 ? (
               <div className="px-4 py-6 text-center text-[13px] text-ink-subtle">{t("No matches")}</div>
             ) : (
@@ -254,11 +292,12 @@ export function RegionPicker({
                 return (
                   <FocusButton
                     key={r.code}
+                    data-focus-primary={selected ? "" : undefined}
                     onClick={() => {
                       onChange(r.code);
                       setOpen(false);
                     }}
-                    className={`flex h-12 w-full items-center gap-3 px-3 text-start transition-colors ${
+                    className={`flex h-12 w-full shrink-0 items-center gap-3 px-3 text-start transition-colors ${
                       selected ? "bg-raised text-ink" : "text-ink-muted hover:bg-canvas/50 hover:text-ink"
                     }`}
                   >
@@ -272,8 +311,8 @@ export function RegionPicker({
                 );
               })
             )}
-          </div>
-        </div>
+          </FocusSection>
+        </FocusModal>
         </>
       )}
     </div>

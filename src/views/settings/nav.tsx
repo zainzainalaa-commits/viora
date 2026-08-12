@@ -453,7 +453,7 @@ const SETTINGS_OPTIONS: SettingsOption[] = [
   { label: "Home layout", section: "library", anchorTitle: "Home layout", keywords: ["home layout", "rails", "rows", "addon rows", "duplicate rails", "watchlist saved only", "playlists tab", "m3u", "xtream", "keep anime in anime room", "continue watching advance", "advance next episode"] },
   { label: "Spoilers (blur)", section: "library", anchorTitle: "Spoilers", keywords: ["spoiler", "spoilers", "blur", "blur thumbnails", "blur titles", "blur descriptions", "hide spoilers", "next episode visible"] },
   { label: "Continue Watching screenshots", section: "library", anchorTitle: "Continue Watching screenshots", keywords: ["continue watching", "screenshots", "snapshots", "frames", "retention", "clear frames", "storage"] },
-  { label: "Region & language", section: "library", anchorTitle: "Region & language", keywords: ["region", "country", "availability", "location", "iso"] },
+  { label: "Region & language", section: "language", anchorTitle: "Region & language", keywords: ["region", "country", "availability", "location", "iso"] },
   { label: "Metadata providers (TMDB, OMDb, RPDB, MDBList, Fanart, TVDB)", section: "library", anchorTitle: "Metadata providers", keywords: ["metadata", "tmdb", "omdb", "rpdb", "mdblist", "letterboxd", "fanart", "tvdb", "api key", "ratings", "scores", "custom poster service", "btttr", "posters", "hide titles under posters", "imdb score", "rotten tomatoes", "mal score", "hover preview", "peek", "badge position"] },
   { label: "Content filters (hide anime / live tv / sports / adult)", section: "library", anchorTitle: "Content filters", keywords: ["content filters", "hide anime", "hide live tv", "hide sports", "hide adult", "age", "filter"] },
 
@@ -528,7 +528,7 @@ const SETTINGS_OPTIONS: SettingsOption[] = [
   { label: "Advance Continue Watching to the next episode", section: "library", anchorTitle: "Home layout", keywords: ["continue watching", "next episode", "advance", "auto next", "cw card", "zero minutes"] },
   { label: "Hide watched titles in catalogs", section: "library", anchorTitle: "Home layout", keywords: ["hide watched", "already seen", "watched filter", "history", "trakt", "catalogs"] },
   { label: "Hide unreleased titles", section: "library", anchorTitle: "Home layout", keywords: ["unreleased", "upcoming", "future release", "coming soon", "hide", "release date"] },
-  { label: "Home languages", section: "library", anchorTitle: "Home languages", keywords: ["language filter", "original language", "home catalogs", "foreign titles", "english only", "clear", "japanese", "spanish"] },
+  { label: "Home languages", section: "language", anchorTitle: "Home languages", keywords: ["language filter", "original language", "home catalogs", "foreign titles", "english only", "clear", "japanese", "spanish"] },
   { label: "Blur spoilers", section: "library", anchorTitle: "Spoilers", keywords: ["spoilers", "blur", "episodes", "hide spoilers", "peek", "artwork"] },
   { label: "Blur thumbnails", section: "library", anchorTitle: "Spoilers", keywords: ["thumbnails", "episode stills", "blur images", "spoiler pictures"] },
   { label: "Blur titles", section: "library", anchorTitle: "Spoilers", keywords: ["episode titles", "blur names", "spoiler titles", "hide titles"] },
