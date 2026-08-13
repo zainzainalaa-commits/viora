@@ -38,6 +38,7 @@ export function SwitcherRow({
   isCurrent,
   match,
   primary,
+  card,
 }: {
   stream: ScoredStream;
   addonLogo: string | null;
@@ -48,6 +49,8 @@ export function SwitcherRow({
   match?: "same" | "close" | null;
   /** The list's entry point for the remote. */
   primary?: boolean;
+  /** Drawn as a separate card rather than a row in a ruled list. */
+  card?: boolean;
 }) {
   const t = useT();
   const addonName = stream.addonName ?? t("Source");
@@ -64,10 +67,12 @@ export function SwitcherRow({
         onClick={onPick}
         data-focus-primary={primary ? "" : undefined}
         disabled={resolving || isCurrent}
-        className={`group flex w-full items-center gap-3.5 px-5 py-3 text-start transition-colors ${
+        className={`group flex w-full items-center gap-3.5 text-start transition-colors ${
+          card ? "rounded-lg px-3 py-2.5 ring-1 ring-edge-soft" : "px-5 py-3"
+        } ${
           isCurrent
-            ? "cursor-default bg-canvas/40"
-            : "hover:bg-canvas/55 disabled:cursor-wait disabled:opacity-60"
+            ? `cursor-default bg-canvas/40 ${card ? "ring-accent/40" : ""}`
+            : `hover:bg-canvas/55 disabled:cursor-wait disabled:opacity-60 ${card ? "bg-elevated/60" : ""}`
         }`}
       >
         <AddonLogo

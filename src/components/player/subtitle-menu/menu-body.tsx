@@ -1,10 +1,11 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { Check, FolderOpen, Languages, Loader2, Search as SearchIcon, SlidersHorizontal, Sparkles, Timer, X } from "lucide-react";
+import { Check, FolderOpen, Languages, Loader2, Search as SearchIcon, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Flag } from "@/components/flag";
 import { markImportedSub } from "@/lib/player/imported-subs";
 import { useT } from "@/lib/i18n";
-import { openSyncBar } from "@/lib/player/sub-sync";
+import { AutoSyncStatus } from "./auto-sync-status";
+import { SyncNowButton } from "./sync-now-button";
 import { Tooltip } from "../transport/tooltip";
 import { SearchSection } from "./search-section";
 import { VariantRow } from "./variant-row";
@@ -16,13 +17,11 @@ const ALL_LANGS = "__all__";
 
 export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
   const tr = useT();
-  const { tracks, selectedId, onSelect, onClose, delaySec, metaReleaseDate, onOpenStyleBar } = props;
+  const { tracks, selectedId, onSelect, onClose, metaReleaseDate, onOpenStyleBar } = props;
   const groups = useMemo(() => groupByLang(tracks), [tracks]);
   const [searchSettled, setSearchSettled] = useState(false);
   const [activeLang, setActiveLang] = useState<string | null>(null);
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
-  const [hideHI, setHideHI] = useState(false);
-  const [forcedOnly, setForcedOnly] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [justImported, setJustImported] = useState<string | null>(null);
 
@@ -56,18 +55,15 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
     return list.filter((t) => {
       if (sourceFilter === "embedded" && t.external) return false;
       if (sourceFilter === "external" && !t.external) return false;
-      if (hideHI && t.hearingImpaired) return false;
-      if (forcedOnly && !t.forced) return false;
       return true;
     });
-  }, [allLangs, tracks, activeGroup, sourceFilter, hideHI, forcedOnly]);
+  }, [allLangs, tracks, activeGroup, sourceFilter]);
 
   const totalEmbedded = tracks.filter((t) => !t.external).length;
   const totalExternal = tracks.filter((t) => t.external).length;
   const offSelected = selectedId == null;
   const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
   const [localError, setLocalError] = useState<string | null>(null);
-  const delayNonZero = delaySec !== 0;
 
   const loadLocal = async () => {
     setLocalError(null);
@@ -108,24 +104,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
         </div>
 
         <div className="flex items-center gap-1">
-          {/* ── Sync button → opens the floating player-level bar ── */}
-          <Tooltip label={tr("Subtitle sync")} side="bottom" align="end">
-            <FocusButton
-              type="button"
-              onClick={() => {
-                openSyncBar();
-                onClose();
-              }}
-              aria-label={tr("Subtitle sync")}
-              className="relative flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-raised hover:text-ink"
-            >
-              <Timer size={16} strokeWidth={2} />
-              {/* badge when delay is active */}
-              {delayNonZero && (
-                <span className="absolute end-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent" />
-              )}
-            </FocusButton>
-          </Tooltip>
+          <SyncNowButton />
 
           {/* ── Style bar button ── */}
           {onOpenStyleBar && (
@@ -152,10 +131,18 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
         </div>
       </header>
 
+      <AutoSyncStatus />
+
       {/* ── Body ── */}
       <div className="flex min-h-0 flex-1">
         {/* Language sidebar */}
-        <aside className="flex w-[128px] shrink-0 flex-col gap-0.5 overflow-y-auto border-e border-edge-soft bg-canvas/30 p-2">
+        <aside
+          // Every entry keeps its height. In a scrolling column, flex children
+          // are allowed to squeeze, and a squeezed row is one the spatial
+          // navigator cannot aim at — the same fault the country list had, where
+          // every second country was unreachable.
+          className="flex w-[136px] shrink-0 flex-col gap-1 overflow-y-auto border-e border-edge-soft bg-canvas/30 p-2 [&>button]:shrink-0"
+        >
           <FocusButton
             onClick={() => {
               if (offSelected) return;
@@ -205,6 +192,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               <FocusButton
                 key={g.langKey}
                 onClick={() => setActiveLang(g.langKey)}
+                onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest" })}
                 className={`group flex items-center gap-2 rounded-md px-2.5 py-2 text-start text-[12.5px] transition-colors ${
                   isActive
                     ? "bg-elevated text-ink ring-1 ring-edge"
@@ -227,7 +215,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
         {/* Track list section */}
         <section className="flex min-h-0 min-w-0 flex-1 flex-col">
           {!searchOpen && tracks.length > 0 && (activeGroup || allLangs) && (
-            <div className="flex flex-wrap items-center gap-1.5 border-b border-edge-soft bg-canvas/15 px-3 py-2">
+            <div className="flex flex-wrap items-center gap-2 border-b border-edge-soft bg-canvas/15 px-3 py-2">
               <Tab active={sourceFilter === "all"} onClick={() => setSourceFilter("all")}>
                 {tr("All")} <Count value={tracks.length} />
               </Tab>
@@ -245,19 +233,6 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               >
                 {tr("External")} <Count value={totalExternal} />
               </Tab>
-              <span className="ms-auto flex items-center gap-1">
-                <ToggleChip
-                  active={!hideHI}
-                  onClick={() => setHideHI((v) => !v)}
-                  label={tr("HI")}
-                  hint={hideHI ? tr("Hidden") : tr("Shown")}
-                />
-                <ToggleChip
-                  active={forcedOnly}
-                  onClick={() => setForcedOnly((v) => !v)}
-                  label={tr("Forced")}
-                />
-              </span>
             </div>
           )}
 
@@ -266,20 +241,37 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               <SearchSection {...props} />
             </div>
           ) : (
-            <div className="flex-1 overflow-y-auto">
+            // `min-h-0`, or this refuses to shrink below its content: the list
+            // grows past the panel and the footer is painted over the last row.
+            // Measured, the search field started 17px above the bottom of row
+            // five — and an overlapping candidate is not "below", so pressing
+            // down on the last subtitle went nowhere.
+            <div className="min-h-0 flex-1 overflow-y-auto">
               {justImported && <ImportBanner name={justImported} />}
               {tracks.length === 0 ? (
                 <EmptyState searchSettled={searchSettled} veryNewMovie={veryNewMovie} />
               ) : visibleVariants.length === 0 ? (
                 <p className="px-5 py-6 text-[13.5px] text-ink-muted">
-                  {tr("No tracks match these filters. Try toggling HI/SDH or Forced.")}
+                  {tr("No tracks match this filter.")}
                 </p>
               ) : (
-                <div className="flex flex-col gap-0.5 p-2">
+                <div className="flex flex-col gap-1 p-2">
+                  <div className="flex items-center gap-3 px-3 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-ink-subtle">
+                    <span className="w-[18px] shrink-0" />
+                    <span className="w-4 shrink-0" />
+                    <span className="min-w-0 flex-1 truncate">
+                      {allLangs
+                        ? tr("Subtitles")
+                        : tr("Subtitles ({lang})", { lang: activeGroup?.langDisplay ?? "" })}
+                    </span>
+                    <span className="w-[86px] shrink-0 text-center">{tr("Type")}</span>
+                    <span className="w-[74px] shrink-0 text-end">{tr("Timing")}</span>
+                  </div>
                   {visibleVariants.map((t, i) => (
                     <VariantRow
                       key={t.id}
                       track={t}
+                      index={i + 1}
                       selected={t.id === selectedId}
                       // The track you are watching is the one the remote should
                       // start on; with none picked yet, the top of the list.
@@ -307,18 +299,18 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
           <div className="flex shrink-0 items-stretch border-t border-edge-soft">
             <FocusButton
               onClick={() => setSearchOpen((v) => !v)}
-              className="flex flex-1 items-center gap-2 px-3 py-2 text-start text-[12px] font-semibold text-ink-muted transition-colors hover:bg-canvas/40 hover:text-ink"
+              className="m-2 flex flex-1 items-center gap-2.5 rounded-lg bg-canvas/50 px-3.5 py-2.5 text-start text-[12.5px] text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-canvas/70 hover:text-ink"
             >
-              <SearchIcon size={12} strokeWidth={2.2} />
-              {searchOpen ? tr("Hide search") : tr("Find more subtitles")}
+              <SearchIcon size={14} strokeWidth={2.2} className="shrink-0" />
+              {searchOpen ? tr("Hide search") : tr("Find more subtitles online…")}
             </FocusButton>
             {isTauri && (
               <Tooltip label={tr("Load a .srt or .ass from your computer")} align="end">
                 <FocusButton
                   onClick={() => void loadLocal()}
-                  className="flex h-full shrink-0 items-center gap-2 border-s border-edge-soft px-3 py-2 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-canvas/40 hover:text-ink"
+                  className="my-2 me-2 flex shrink-0 items-center gap-2.5 rounded-lg bg-canvas/50 px-3.5 text-[12.5px] font-semibold text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-canvas/70 hover:text-ink"
                 >
-                  <FolderOpen size={12} strokeWidth={2.2} />
+                  <FolderOpen size={14} strokeWidth={2.2} />
                   {tr("Load file")}
                 </FocusButton>
               </Tooltip>
@@ -347,10 +339,11 @@ function Tab({
     <FocusButton
       onClick={onClick}
       disabled={disabled}
-      className={`flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] font-semibold transition-colors disabled:opacity-40 ${
-        active
-          ? "bg-elevated text-ink ring-1 ring-edge"
-          : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
+      // No pill around it. These read as a line of headings, and a filled
+      // capsule on the active one is a second shape competing with the ring
+      // that focus already draws.
+      className={`flex h-7 items-center gap-1.5 rounded-md px-2 text-[11.5px] transition-colors disabled:opacity-40 ${
+        active ? "font-bold text-ink" : "font-semibold text-ink-muted hover:text-ink"
       }`}
     >
       {children}
@@ -360,30 +353,6 @@ function Tab({
 
 function Count({ value }: { value: number }) {
   return <span className="text-[11.5px] tabular-nums text-ink-subtle">{value}</span>;
-}
-
-function ToggleChip({
-  active,
-  onClick,
-  label,
-  hint,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  hint?: string;
-}) {
-  return (
-    <FocusButton
-      onClick={onClick}
-      title={hint}
-      className={`flex h-6 items-center rounded-full px-2 text-[11px] font-semibold transition-colors ${
-        active ? "bg-accent text-canvas" : "bg-raised text-ink-muted hover:bg-elevated"
-      }`}
-    >
-      {label}
-    </FocusButton>
-  );
 }
 
 function ImportBanner({ name }: { name: string }) {

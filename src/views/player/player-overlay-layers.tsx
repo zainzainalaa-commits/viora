@@ -193,8 +193,6 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         videoFillPill={p.videoFillPill}
         subDropToast={p.subDropToast}
         contentAdvisory={p.contentAdvisory}
-        onSubDelay={(s) => { p.bridgeRef.current?.setSubDelay(s); }}
-        onEnterSync={p.onEnterSync}
         chromeVisible={p.showChrome}
       />
       <CastLayer

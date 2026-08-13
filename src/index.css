@@ -1853,7 +1853,9 @@ html[data-input="dpad"] [data-harbor-player] [data-focus-scope="modal"] a:focus,
 html[data-input="dpad"] [data-harbor-player] [data-focus-scope="modal"] [tabindex]:focus {
   outline: 1.5px solid color-mix(in srgb, var(--color-accent) 75%, transparent) !important;
   outline-offset: -1px;
-  border-radius: 8px;
+  /* No radius of its own — the same lesson as the ring above. Eight pixels laid
+     over a pill squares its ends off, which is what the filter chips in the
+     subtitle menu were showing. */
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
   background-color: color-mix(in srgb, var(--color-accent) 8%, transparent);
   color: var(--color-accent);
@@ -2009,8 +2011,13 @@ html[data-input="touch"] [data-harbor-row] > * {
 
 /* The player chrome is sized for a mouse. Fingers and remotes need bigger
    targets, and the scrubber in particular is unusable at desktop height. */
-html[data-input="touch"] [data-harbor-player] button,
-html[data-input="dpad"] [data-harbor-player] button {
+/* The transport's own controls, not everything that happens to be inside a
+   panel over the player. A chip in the subtitle menu is 28px tall and about as
+   wide as its label; forcing it to 44 square turned "All 2" into a circle with
+   the count pushed out of it. Menus draw their own targets, and they are read
+   from a list, not aimed at. */
+html[data-input="touch"] [data-harbor-player] button:not([data-focus-scope="modal"] button),
+html[data-input="dpad"] [data-harbor-player] button:not([data-focus-scope="modal"] button) {
   min-height: 44px;
   min-width: 44px;
 }

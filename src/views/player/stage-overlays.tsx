@@ -2,7 +2,6 @@ import { Anime4kIndicator } from "@/components/player/anime4k-indicator";
 import { SvpIndicator } from "@/components/player/svp-indicator";
 import { StatsOverlay } from "@/components/player/stats-overlay";
 import { SubStyleBar } from "@/components/player/sub-style-bar";
-import { SubSyncBar } from "@/components/player/sub-sync-bar";
 import { SubtitleOverlay } from "@/components/player/subtitle-overlay";
 import {
   VolumeIndicator,
@@ -27,8 +26,6 @@ export function StageOverlays({
   videoFillPill,
   subDropToast,
   contentAdvisory,
-  onSubDelay,
-  onEnterSync,
   chromeVisible,
 }: {
   snap: PlayerSnapshot;
@@ -43,8 +40,6 @@ export function StageOverlays({
   videoFillPill: string | null;
   subDropToast: string | null;
   contentAdvisory: { categories: ParentalCategory[]; playKey: string };
-  onSubDelay: (sec: number) => void;
-  onEnterSync?: () => void;
   chromeVisible: boolean;
 }) {
   const t = useT();
@@ -88,14 +83,6 @@ export function StageOverlays({
         />
       )}
       {!pipMode && <SubStyleBar />}
-      {!pipMode && (
-        <SubSyncBar
-          delaySec={snap.subDelaySec}
-          onDelay={onSubDelay}
-          onEnterSync={onEnterSync}
-          syncAvailable={snap.subtitleTracks.some((t) => t.selected)}
-        />
-      )}
     </>
   );
 }

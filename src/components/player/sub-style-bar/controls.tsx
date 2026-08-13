@@ -67,7 +67,8 @@ export function FontMenu({
       <FocusButton
         ref={btnRef}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 min-w-[120px] shrink-0 items-center justify-between gap-2 px-3 text-[14px] font-semibold text-ink transition-colors hover:bg-elevated"
+        data-focus-primary=""
+        className="flex h-9 min-w-[104px] shrink-0 items-center justify-between gap-2 px-2.5 text-[13px] font-semibold text-ink transition-colors hover:bg-elevated"
         style={{ fontFamily: previewFamily(value) }}
       >
         <span className="truncate">
@@ -136,7 +137,7 @@ export function SizeStepper({ value, onChange }: { value: number; onChange: (n: 
     drag.current.active = false;
   };
   return (
-    <div className="flex h-11 shrink-0 items-stretch">
+    <div className="flex h-9 shrink-0 items-stretch">
       <FocusButton aria-label={t("Smaller")} onClick={() => onChange(value - 1)} className="flex w-9 items-center justify-center text-ink-muted transition-colors hover:bg-elevated hover:text-ink">
         <span className="text-[13px] font-bold">A</span>
       </FocusButton>
@@ -177,7 +178,7 @@ export function BoldToggle({ on, onToggle }: { on: boolean; onToggle: () => void
 export function ColorRow({ value, onChange }: { value: string; onChange: (c: string) => void }) {
   const t = useT();
   return (
-    <div className="flex h-11 shrink-0 items-center gap-1 px-2">
+    <div className="flex h-9 shrink-0 items-center gap-1 px-1.5">
       {SWATCHES.map((c) => (
         <FocusButton
           key={c}

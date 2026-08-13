@@ -60,7 +60,7 @@ export function AdvancedMenu() {
         aria-label={t("More subtitle options")}
         aria-pressed={open}
         title={t("More subtitle options")}
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] transition-colors ${
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] transition-colors ${
           open ? "bg-raised text-ink" : "text-ink-subtle hover:bg-raised hover:text-ink"
         }`}
       >

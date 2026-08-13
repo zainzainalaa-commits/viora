@@ -402,6 +402,23 @@ const player: Record<string, string> = {
   "{word} {n} seconds": "{word} {n} ثانية",
   "{word} {n} seconds. Hold for options": "{word} {n} ثانية. اضغط مطولاً للخيارات",
   "{word} {n}s · hold for options": "{word} {n}ث · اضغط مطولاً للخيارات",
+  "Checking subtitle timing…": "جارٍ فحص توقيت الترجمة…",
+  "Timing could not be checked confidently — adjust it by hand from the sync bar.": "تعذّر ضبط التوقيت بثقة كافية — عدّله يدويًّا من شريط المزامنة.",
+  "Timing corrected": "تم ضبط التوقيت",
+  "matched to {ref}": "بمطابقة {ref}",
+  "drift corrected": "مع تصحيح الانحراف",
+  "{pct}% confident": "ثقة {pct}٪",
+  "Timing already matches": "التوقيت مطابق أصلًا",
+  "Check subtitle timing": "افحص توقيت الترجمة",
+  "Subtitles ({lang})": "الترجمات ({lang})",
+  "Type": "النوع",
+  "Timing": "التوقيت",
+  "Find more subtitles online…": "ابحث عن ترجمات أخرى…",
+  "No tracks match this filter.": "لا توجد مسارات تطابق هذا التصفية.",
+  "sources available": "مصدر متاح",
+  "Refresh": "تحديث",
+  "Press": "اضغط",
+  "to go back": "للرجوع",
 };
 
 export default player;

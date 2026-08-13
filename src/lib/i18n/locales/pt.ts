@@ -173,6 +173,23 @@ const pt: Record<string, string> = {
   "Please add your TMDB API key in the Library & Metadata settings to view this folder.": "Por favor, adicione sua chave de API do TMDB nas configurações de Biblioteca e Metadados para visualizar esta pasta.",
   "OK": "OK",
   "Loading...": "Carregando...",
+  "Checking subtitle timing…": "A verificar o tempo das legendas…",
+  "Timing could not be checked confidently — adjust it by hand from the sync bar.": "Não foi possível verificar o tempo com confiança — ajuste-o manualmente na barra de sincronização.",
+  "Timing corrected": "Tempo corrigido",
+  "matched to {ref}": "correspondência com {ref}",
+  "drift corrected": "deriva corrigida",
+  "{pct}% confident": "{pct}% de confiança",
+  "Timing already matches": "O tempo já corresponde",
+  "Check subtitle timing": "Verificar o tempo das legendas",
+  "Subtitles ({lang})": "Legendas ({lang})",
+  "Type": "Tipo",
+  "Timing": "Tempo",
+  "Find more subtitles online…": "Procurar mais legendas online…",
+  "No tracks match this filter.": "Nenhuma faixa corresponde a este filtro.",
+  "sources available": "fontes disponíveis",
+  "Refresh": "Atualizar",
+  "Press": "Prima",
+  "to go back": "para voltar",
 };
 
 export default pt;

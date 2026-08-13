@@ -52,8 +52,10 @@ export function SubtitleMenu(props: Props) {
           type="button"
           onClick={handleClick}
           aria-label={t("Subtitles")}
+          // The panel standing open above it already says the menu is open; the
+          // grey disc behind the icon only added a second circle to look at.
           className={`relative flex h-12 w-12 items-center justify-center rounded-full transition-colors ${
-            open ? "bg-white/22 text-white" : "text-white/85 hover:bg-white/10 hover:text-white"
+            open ? "text-white" : "text-white/85 hover:bg-white/10 hover:text-white"
           }`}
         >
           <SubsIcon size={19} strokeWidth={2} />
@@ -65,7 +67,7 @@ export function SubtitleMenu(props: Props) {
       {open && (
         <FocusModal
           onClose={() => setOpen(false)}
-          className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex h-[400px] max-h-[72vh] w-[500px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}
+          className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex h-[380px] max-h-[70vh] w-[560px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}
         >
           <MenuBody {...props} onClose={() => setOpen(false)} onOpenStyleBar={openStyleBar} />
         </FocusModal>

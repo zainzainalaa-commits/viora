@@ -1,5 +1,5 @@
 import { FocusButton, FocusModal } from "@/lib/tv-focus";
-import { Filter, Languages, MousePointerClick, RefreshCw, X, Zap } from "lucide-react";
+import { Boxes, Filter, Languages, MousePointerClick, RefreshCw, X, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { resolveAddonLogo } from "@/components/addon-logo";
 import { HostSourceBanner } from "@/components/host-source-banner";
@@ -18,7 +18,8 @@ import type { Meta } from "@/lib/cinemeta";
 import type { PlayEpisode, PlayerStreamRef } from "@/lib/view";
 import { useT } from "@/lib/i18n";
 import { useActiveKid } from "@/lib/profiles";
-import { AddonFilterMenu, QualityFilterMenu, SourceFilterMenu } from "./stream-switcher/filter-dropdowns";
+import { isDpadPrimary } from "@/lib/platform";
+import { AddonFilterMenu, QualityFilterMenu, SourceFilterMenu, triggerClass } from "./stream-switcher/filter-dropdowns";
 import { sourceGroup } from "@/views/play-picker/quality-filter";
 import { KidsStreamSwitcher } from "./stream-switcher/kids-switcher";
 import { abbreviateLanguages, normalizeLangCode, streamMatchesLangs } from "./stream-switcher/lang-utils";
@@ -290,6 +291,242 @@ export function StreamSwitcher({
 
   const firstPickableIndex = list.slice(0, showCount).findIndex((s) => !matchCurrent(s));
 
+  const roomy = isDpadPrimary();
+  const countLabel = refreshing
+    ? t("Refreshing…")
+    : cache
+      ? t("{n} sources", { n: list.length })
+      : t("No sources");
+
+  const filtersActive =
+    cachedOnly || addonFilter !== "all" || qualityFilter !== "all" || sourceFilter !== "all" || filterToPreferred;
+
+  /**
+   * Every filter this screen has, built once.
+   *
+   * They hang across the header on a desktop and stack down the side on a
+   * television, which is the whole of the difference — the same buttons, the
+   * same state, so nothing can drift between the two.
+   */
+  const filterNodes = (pill: boolean) => (
+    <>
+      {pill && (
+        <FocusButton
+          onClick={() => {
+            setCachedOnly(false);
+            setAddonFilter("all");
+            setQualityFilter("all");
+            setSourceFilter("all");
+            setFilterToPreferred(false);
+            setShowFiltered(false);
+          }}
+          className={triggerClass(!filtersActive, true)}
+        >
+          <Boxes size={14} strokeWidth={2.2} />
+          <span className="flex-1 truncate text-start">{t("All")}</span>
+        </FocusButton>
+      )}
+      {debridSlugs.length > 0 && uncachedHidden > 0 && (
+        <FocusButton
+          onClick={() => setCachedOnly((v) => !v)}
+          className={triggerClass(cachedOnly, pill)}
+          aria-pressed={cachedOnly}
+        >
+          <Zap size={pill ? 14 : 11} fill={cachedOnly ? "currentColor" : "none"} strokeWidth={2.2} />
+          <span className={pill ? "flex-1 truncate text-start" : ""}>
+            {cachedOnly ? t("Cached only ({n})", { n: uncachedHidden }) : t("Cached only")}
+          </span>
+        </FocusButton>
+      )}
+      {qualityOptions.length > 1 && (
+        <QualityFilterMenu
+          qualityFilter={qualityFilter}
+          setQualityFilter={setQualityFilter}
+          open={qualityMenuOpen}
+          setOpen={setQualityMenuOpen}
+          qualityOptions={qualityOptions}
+          totalCount={allStreams.length}
+          pill={pill}
+        />
+      )}
+      {sourceOptions.length > 1 && (
+        <SourceFilterMenu
+          sourceFilter={sourceFilter}
+          setSourceFilter={setSourceFilter}
+          open={sourceMenuOpen}
+          setOpen={setSourceMenuOpen}
+          sourceOptions={sourceOptions}
+          totalCount={allStreams.length}
+          pill={pill}
+        />
+      )}
+      {addonOptions.length > 1 && (
+        <AddonFilterMenu
+          addonFilter={addonFilter}
+          setAddonFilter={setAddonFilter}
+          open={addonMenuOpen}
+          setOpen={setAddonMenuOpen}
+          addonOptions={addonOptions}
+          addonLogos={addonLogos}
+          totalCount={allStreams.length}
+          activeAddonName={activeAddonName}
+          pill={pill}
+        />
+      )}
+      {preferredLangs.length > 0 && hiddenCount > 0 && (
+        <FocusButton
+          onClick={() => setFilterToPreferred((v) => !v)}
+          className={triggerClass(filterToPreferred, pill)}
+          aria-pressed={filterToPreferred}
+        >
+          <Languages size={pill ? 14 : 13} strokeWidth={2.2} />
+          <span className={pill ? "flex-1 truncate text-start" : ""}>
+            {filterToPreferred
+              ? t("{langs} only · {n} hidden", { langs: abbreviateLanguages(preferredLangs), n: hiddenCount })
+              : t("{langs} only", { langs: abbreviateLanguages(preferredLangs) })}
+          </span>
+        </FocusButton>
+      )}
+      {rejectedStreams.length > 0 && (
+        <FocusButton
+          onClick={() => setShowFiltered((v) => !v)}
+          className={triggerClass(showFiltered, pill)}
+          aria-pressed={showFiltered}
+        >
+          <Filter size={pill ? 14 : 11} strokeWidth={2.2} />
+          <span className={pill ? "flex-1 truncate text-start" : ""}>
+            {showFiltered ? t("Flagged shown") : t("Flagged ({n})", { n: rejectedStreams.length })}
+          </span>
+        </FocusButton>
+      )}
+    </>
+  );
+
+  const refreshButton = (pill: boolean) => (
+    <Tooltip label={t("Refresh sources")} side={pill ? "top" : "bottom"}>
+      <FocusButton
+        onClick={() => refresh()}
+        disabled={refreshing}
+        className={
+          pill
+            ? "flex h-9 w-full items-center gap-2 rounded-lg bg-raised px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-default disabled:opacity-70"
+            : "flex h-9 w-9 items-center justify-center rounded-md bg-raised text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-default disabled:opacity-70"
+        }
+        aria-label={t("Refresh sources")}
+      >
+        <RefreshCw size={pill ? 14 : 15} strokeWidth={2.2} className={refreshing ? "animate-spin" : ""} />
+        {pill && <span className="flex-1 truncate text-start">{t("Refresh")}</span>}
+      </FocusButton>
+    </Tooltip>
+  );
+
+  const listNode =
+    !cache || list.length === 0 ? (
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 py-12 text-center">
+        <p className="text-[13.5px] text-ink-muted">
+          {refreshing ? t("Looking for sources…") : t("No sources loaded for this title yet.")}
+        </p>
+        <FocusButton
+          onClick={() => refresh()}
+          // With no list to land in, this is the only thing here worth
+          // pressing, so it is where the remote starts.
+          data-focus-primary={refreshing ? undefined : ""}
+          disabled={refreshing}
+          className="flex h-10 items-center gap-2 rounded-md bg-raised px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-elevated disabled:opacity-70"
+        >
+          <RefreshCw size={14} strokeWidth={2.2} className={refreshing ? "animate-spin" : ""} />
+          {t("Refresh sources")}
+        </FocusButton>
+      </div>
+    ) : (
+      <ul
+        className={`flex-1 overflow-y-auto ${
+          roomy ? "flex flex-col gap-1.5 p-2" : ""
+        } [&::-webkit-scrollbar]:w-5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-ink/25 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-thumb:hover]:bg-ink/40`}
+      >
+        {list.slice(0, showCount).map((s, i) => (
+          <SwitcherRow
+            key={`${s.addonId}-${s.infoHash ?? s.url ?? i}`}
+            // The list opens on the first source that can actually be chosen.
+            // The one already playing is disabled, so landing there would leave
+            // the remote on a dead row.
+            primary={i === firstPickableIndex}
+            stream={s}
+            addonLogo={addonLogos.get(s.addonId) ?? null}
+            onPick={() => onPick(s)}
+            resolving={resolvingKey === streamKey(s)}
+            divider={!roomy && i > 0}
+            card={roomy}
+            isCurrent={matchCurrent(s)}
+            match={matchBadge(matchScores?.get(s))}
+          />
+        ))}
+        {list.length > showCount && (
+          <li className={roomy ? "px-1 py-2" : "border-t border-edge-soft/60 px-4 py-3"}>
+            <FocusButton
+              onClick={() => setShowCount((n) => n + 80)}
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-raised px-4 py-2.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
+            >
+              {t("Load more")}
+              <span className="text-[11px] tabular-nums text-ink-subtle">
+                {t("{n} hidden", { n: list.length - showCount })}
+              </span>
+            </FocusButton>
+          </li>
+        )}
+      </ul>
+    );
+
+  // ── Television: filters down the side, the list takes everything else ──
+  //
+  // The same modal and the same rows as the desktop layout below; what changes
+  // is that a row of chips a metre away is unreadable and awkward to reach with
+  // a remote, while a column is one press of left from the list.
+  if (roomy) {
+    return (
+      <FocusModal
+        onClose={onClose}
+        className="pointer-events-auto absolute inset-0 z-[60] flex items-center justify-center bg-black/72 backdrop-blur-md animate-in fade-in duration-200"
+      >
+        <div className="flex h-[380px] max-h-[70vh] w-[560px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-2 duration-150">
+        <aside className="flex w-[152px] shrink-0 flex-col gap-1 overflow-y-auto border-e border-edge-soft px-2.5 py-3">
+          <div className="mb-1.5 px-1">
+            <p className="text-[9.5px] font-bold uppercase tracking-[0.16em] text-ink-subtle">
+              {t("Switch stream")}
+            </p>
+            <p className="mt-1 text-[22px] font-bold leading-[1.05] tabular-nums text-ink">
+              {cache ? list.length : 0}
+            </p>
+            <p className="text-[11.5px] font-semibold leading-tight text-ink-muted">
+              {refreshing ? t("Refreshing…") : t("sources available")}
+            </p>
+          </div>
+          {filterNodes(true)}
+          <div className="mt-auto pt-2">{refreshButton(true)}</div>
+        </aside>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          {hostSource && <HostSourceBanner source={hostSource} compact />}
+          {listNode}
+          <footer className="flex items-center justify-between gap-3 border-t border-edge-soft px-3.5 py-2">
+            <span className="flex min-w-0 items-center gap-1.5 truncate text-[11px] text-ink-subtle">
+              <MousePointerClick size={12} strokeWidth={2.2} className="shrink-0" />
+              {t("Click any source to swap in place")}
+            </span>
+            <span className="flex shrink-0 items-center gap-1.5 text-[11px] text-ink-subtle">
+              {t("Press")}
+              <kbd className="inline-flex h-[20px] items-center justify-center rounded-[6px] border border-edge bg-raised px-2 font-sans text-[11px] font-semibold text-ink-muted">
+                ←
+              </kbd>
+              {t("to go back")}
+            </span>
+          </footer>
+        </div>
+        </div>
+      </FocusModal>
+    );
+  }
+
   return (
     // A modal, so the D-pad stays in the source list instead of wandering into
     // the transport behind it, Back closes it, and the button that opened it
@@ -301,103 +538,13 @@ export function StreamSwitcher({
       <div className="flex h-full max-h-[82vh] w-full max-w-[880px] flex-col overflow-hidden rounded-[8px] border border-edge bg-elevated shadow-[0_28px_72px_-20px_rgba(0,0,0,0.85)] animate-in fade-in slide-in-from-bottom-2 duration-150 backdrop-blur-xl">
         <header className="flex items-center justify-between gap-4 border-b border-edge-soft px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <Tooltip label={t("Refresh sources")} side="bottom">
-              <FocusButton
-                onClick={() => refresh()}
-                disabled={refreshing}
-                className="flex h-9 w-9 items-center justify-center rounded-md bg-raised text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:cursor-default disabled:opacity-70"
-                aria-label={t("Refresh sources")}
-              >
-                <RefreshCw size={15} strokeWidth={2.2} className={refreshing ? "animate-spin" : ""} />
-              </FocusButton>
-            </Tooltip>
+            {refreshButton(false)}
             <span className="text-[13px] font-semibold tracking-[0.01em] text-ink-muted whitespace-nowrap">
-              {refreshing
-                ? t("Refreshing…")
-                : cache
-                  ? t("{n} sources", { n: list.length })
-                  : t("No sources")}
+              {countLabel}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {rejectedStreams.length > 0 && (
-              <Tooltip label={t("Show sources hidden by the trust filter")} side="bottom">
-                <FocusButton
-                  onClick={() => setShowFiltered((v) => !v)}
-                  className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
-                    showFiltered
-                      ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
-                      : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink"
-                  }`}
-                  aria-pressed={showFiltered}
-                >
-                  <Filter size={11} strokeWidth={2.2} />
-                  {showFiltered ? t("Flagged shown") : t("Flagged ({n})", { n: rejectedStreams.length })}
-                </FocusButton>
-              </Tooltip>
-            )}
-            {debridSlugs.length > 0 && uncachedHidden > 0 && (
-              <FocusButton
-                onClick={() => setCachedOnly((v) => !v)}
-                className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
-                  cachedOnly
-                    ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
-                    : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink"
-                }`}
-                aria-pressed={cachedOnly}
-              >
-                <Zap size={11} fill={cachedOnly ? "currentColor" : "none"} strokeWidth={2.2} />
-                {cachedOnly ? t("Cached only ({n})", { n: uncachedHidden }) : t("Cached only")}
-              </FocusButton>
-            )}
-            {addonOptions.length > 1 && (
-              <AddonFilterMenu
-                addonFilter={addonFilter}
-                setAddonFilter={setAddonFilter}
-                open={addonMenuOpen}
-                setOpen={setAddonMenuOpen}
-                addonOptions={addonOptions}
-                addonLogos={addonLogos}
-                totalCount={allStreams.length}
-                activeAddonName={activeAddonName}
-              />
-            )}
-            {qualityOptions.length > 1 && (
-              <QualityFilterMenu
-                qualityFilter={qualityFilter}
-                setQualityFilter={setQualityFilter}
-                open={qualityMenuOpen}
-                setOpen={setQualityMenuOpen}
-                qualityOptions={qualityOptions}
-                totalCount={allStreams.length}
-              />
-            )}
-            {sourceOptions.length > 1 && (
-              <SourceFilterMenu
-                sourceFilter={sourceFilter}
-                setSourceFilter={setSourceFilter}
-                open={sourceMenuOpen}
-                setOpen={setSourceMenuOpen}
-                sourceOptions={sourceOptions}
-                totalCount={allStreams.length}
-              />
-            )}
-            {preferredLangs.length > 0 && hiddenCount > 0 && (
-              <FocusButton
-                onClick={() => setFilterToPreferred((v) => !v)}
-                className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
-                  filterToPreferred
-                    ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
-                    : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink"
-                }`}
-                aria-pressed={filterToPreferred}
-              >
-                <Languages size={13} strokeWidth={2.2} />
-                {filterToPreferred
-                  ? t("{langs} only · {n} hidden", { langs: abbreviateLanguages(preferredLangs), n: hiddenCount })
-                  : t("{langs} only", { langs: abbreviateLanguages(preferredLangs) })}
-              </FocusButton>
-            )}
+            {filterNodes(false)}
             <FocusButton
               onClick={onClose}
               className="flex h-9 w-9 items-center justify-center rounded-md bg-raised text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
@@ -409,57 +556,7 @@ export function StreamSwitcher({
         </header>
 
         {hostSource && <HostSourceBanner source={hostSource} compact />}
-
-        {!cache || list.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 py-12 text-center">
-            <p className="text-[13.5px] text-ink-muted">
-              {refreshing ? t("Looking for sources…") : t("No sources loaded for this title yet.")}
-            </p>
-            <FocusButton
-              onClick={() => refresh()}
-              // With no list to land in, this is the only thing here worth
-              // pressing, so it is where the remote starts.
-              data-focus-primary={refreshing ? undefined : ""}
-              disabled={refreshing}
-              className="flex h-10 items-center gap-2 rounded-md bg-raised px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-elevated disabled:opacity-70"
-            >
-              <RefreshCw size={14} strokeWidth={2.2} className={refreshing ? "animate-spin" : ""} />
-              {t("Refresh sources")}
-            </FocusButton>
-          </div>
-        ) : (
-          <ul className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-ink/25 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-thumb:hover]:bg-ink/40">
-            {list.slice(0, showCount).map((s, i) => (
-              <SwitcherRow
-                key={`${s.addonId}-${s.infoHash ?? s.url ?? i}`}
-                // The list opens on the first source that can actually be
-                // chosen. The one already playing is disabled, so landing there
-                // would leave the remote on a dead row.
-                primary={i === firstPickableIndex}
-                stream={s}
-                addonLogo={addonLogos.get(s.addonId) ?? null}
-                onPick={() => onPick(s)}
-                resolving={resolvingKey === streamKey(s)}
-                divider={i > 0}
-                isCurrent={matchCurrent(s)}
-                match={matchBadge(matchScores?.get(s))}
-              />
-            ))}
-            {list.length > showCount && (
-              <li className="border-t border-edge-soft/60 px-4 py-3">
-                <FocusButton
-                  onClick={() => setShowCount((n) => n + 80)}
-                  className="flex w-full items-center justify-center gap-2 rounded-md bg-raised px-4 py-2.5 text-[12.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
-                >
-                  {t("Load more")}
-                  <span className="text-[11px] tabular-nums text-ink-subtle">
-                    {t("{n} hidden", { n: list.length - showCount })}
-                  </span>
-                </FocusButton>
-              </li>
-            )}
-          </ul>
-        )}
+        {listNode}
 
         <footer className="flex items-center justify-between gap-4 border-t border-edge-soft px-6 py-2.5">
           <span className="flex items-center gap-2 text-[12px] text-ink-subtle">

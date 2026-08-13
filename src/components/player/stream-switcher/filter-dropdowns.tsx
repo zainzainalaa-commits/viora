@@ -5,6 +5,24 @@ import { FormatBadge, type BadgeKind } from "@/components/format-badge";
 import { useT } from "@/lib/i18n";
 import { QUALITY_BADGE, QUALITY_LABEL, type QualityKey } from "./quality";
 
+/**
+ * The trigger, in either of the two places these menus live: a chip in the old
+ * header row, or a full-width pill down the side of the television layout.
+ */
+export function triggerClass(active: boolean, pill?: boolean): string {
+  const base = active
+    ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
+    : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink";
+  return pill
+    ? `flex h-9 w-full items-center gap-2 rounded-lg px-3 text-[12px] font-semibold transition-colors ${base}`
+    : `flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${base}`;
+}
+
+const popupClass = (pill?: boolean) =>
+  pill
+    ? "absolute start-0 top-full z-20 mt-1.5 max-h-72 w-64 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]"
+    : "absolute end-0 top-full z-20 mt-1.5 max-h-72 w-64 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]";
+
 export function AddonFilterMenu({
   addonFilter,
   setAddonFilter,
@@ -14,6 +32,7 @@ export function AddonFilterMenu({
   addonLogos,
   totalCount,
   activeAddonName,
+  pill,
 }: {
   addonFilter: string;
   setAddonFilter: (id: string) => void;
@@ -23,22 +42,19 @@ export function AddonFilterMenu({
   addonLogos: Map<string, string | null>;
   totalCount: number;
   activeAddonName: string;
+  pill?: boolean;
 }) {
   const t = useT();
   return (
     <div className="relative">
       <FocusButton
         onClick={() => setOpen((v) => !v)}
-        className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
-          addonFilter !== "all"
-            ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
-            : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink"
-        }`}
+        className={triggerClass(addonFilter !== "all", pill)}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
         <Boxes size={13} strokeWidth={2.2} />
-        <span className="max-w-[140px] truncate">{activeAddonName}</span>
+        <span className={pill ? "flex-1 truncate text-start" : "max-w-[140px] truncate"}>{activeAddonName}</span>
         <ChevronDown
           size={12}
           strokeWidth={2.4}
@@ -46,7 +62,7 @@ export function AddonFilterMenu({
         />
       </FocusButton>
       {open && (
-        <div className="absolute end-0 top-full z-20 mt-1.5 max-h-72 w-64 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
+        <div className={popupClass(pill)}>
           <FocusButton
             onClick={() => {
               setAddonFilter("all");
@@ -107,6 +123,7 @@ export function SourceFilterMenu({
   setOpen,
   sourceOptions,
   totalCount,
+  pill,
 }: {
   sourceFilter: string;
   setSourceFilter: (s: string) => void;
@@ -114,6 +131,7 @@ export function SourceFilterMenu({
   setOpen: (fn: (v: boolean) => boolean) => void;
   sourceOptions: Array<{ id: string; name: string; count: number }>;
   totalCount: number;
+  pill?: boolean;
 }) {
   const t = useT();
   const activeName = sourceFilter === "all" ? t("Any source") : sourceFilter;
@@ -121,11 +139,7 @@ export function SourceFilterMenu({
     <div className="relative">
       <FocusButton
         onClick={() => setOpen((v) => !v)}
-        className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
-          sourceFilter !== "all"
-            ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
-            : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink"
-        }`}
+        className={triggerClass(sourceFilter !== "all", pill)}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -134,7 +148,7 @@ export function SourceFilterMenu({
         ) : (
           <Disc3 size={13} strokeWidth={2.2} />
         )}
-        <span className="max-w-[120px] truncate">{activeName}</span>
+        <span className={pill ? "flex-1 truncate text-start" : "max-w-[120px] truncate"}>{activeName}</span>
         <ChevronDown
           size={12}
           strokeWidth={2.4}
@@ -142,7 +156,7 @@ export function SourceFilterMenu({
         />
       </FocusButton>
       {open && (
-        <div className="absolute end-0 top-full z-20 mt-1.5 w-52 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
+        <div className={popupClass(pill)}>
           <FocusButton
             onClick={() => {
               setSourceFilter("all");
@@ -195,6 +209,7 @@ export function QualityFilterMenu({
   setOpen,
   qualityOptions,
   totalCount,
+  pill,
 }: {
   qualityFilter: QualityKey;
   setQualityFilter: (q: QualityKey) => void;
@@ -202,17 +217,14 @@ export function QualityFilterMenu({
   setOpen: (fn: (v: boolean) => boolean) => void;
   qualityOptions: Array<{ id: Exclude<QualityKey, "all">; name: string; count: number; badge: BadgeKind }>;
   totalCount: number;
+  pill?: boolean;
 }) {
   const t = useT();
   return (
     <div className="relative">
       <FocusButton
         onClick={() => setOpen((v) => !v)}
-        className={`flex h-9 items-center gap-2 rounded-md px-3.5 text-[11.5px] font-semibold tracking-[0.04em] transition-colors ${
-          qualityFilter !== "all"
-            ? "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
-            : "bg-raised text-ink-muted hover:bg-elevated hover:text-ink"
-        }`}
+        className={triggerClass(qualityFilter !== "all", pill)}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -233,7 +245,7 @@ export function QualityFilterMenu({
         />
       </FocusButton>
       {open && (
-        <div className="absolute end-0 top-full z-20 mt-1.5 w-56 overflow-y-auto rounded-md border border-edge bg-elevated p-1.5 shadow-[0_18px_44px_-14px_rgba(0,0,0,0.7)]">
+        <div className={popupClass(pill)}>
           <FocusButton
             onClick={() => {
               setQualityFilter("all");
