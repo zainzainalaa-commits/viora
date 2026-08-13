@@ -11,6 +11,7 @@ import { peekPickerCache, subscribePickerCache } from "@/lib/picker-cache";
 import { useSettings } from "@/lib/settings";
 import type { ScoredStream } from "@/lib/streams/types";
 import { hasCachedMarker } from "@/lib/streams/cached";
+import { everyAddonRepresented } from "@/lib/streams/scoring";
 import type { SourceDescriptor } from "@/lib/together/protocol";
 import { buildMatchScores, matchBadge } from "@/lib/together/source-match";
 import { addonInstanceKey, buildAddonOptions } from "@/views/play-picker/picker-utils";
@@ -258,9 +259,12 @@ export function StreamSwitcher({
     [allStreams, matchCurrent],
   );
   const list = useMemo(() => {
-    if (!currentStream) return filteredList;
+    // One from every addon at the head, for the same reason the picker does it:
+    // an account with a dozen addons buries the two that came with the app.
+    const spread = everyAddonRepresented(filteredList);
+    if (!currentStream) return spread;
     const curKey = streamKey(currentStream);
-    return [currentStream, ...filteredList.filter((s) => streamKey(s) !== curKey)];
+    return [currentStream, ...spread.filter((s) => streamKey(s) !== curKey)];
   }, [filteredList, currentStream]);
   const [showCount, setShowCount] = useState(80);
   useEffect(() => {

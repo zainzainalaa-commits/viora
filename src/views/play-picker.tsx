@@ -17,6 +17,7 @@ import { readSeasonLock } from "@/lib/season-lock";
 import { useSettings } from "@/lib/settings";
 import type { ScoredStream, Tier } from "@/lib/streams/types";
 import { isAddonRanked } from "@/lib/streams/addon-detect";
+import { everyAddonRepresented } from "@/lib/streams/scoring";
 import { useView, type PlayEpisode, type PlayerSrc } from "@/lib/view";
 import { prefetchSegments } from "@/lib/skip-intro";
 import { AutoExhaustedModal } from "./play-picker/auto-exhausted-modal";
@@ -254,8 +255,13 @@ const streamIds = useStreamIds(meta, episode, imdbId, intent === "download-seaso
   const displayStreams = useMemo(() => {
     const all = filteredPicker?.all ?? [];
     const base = addonOrderMode && result ? orderByAddonNative(all, result.raw.addon, addons) : all;
-    if (!hostMatch) return base;
-    return base.slice().sort((a, b) => (hostMatch.get(b) ?? 0) - (hostMatch.get(a) ?? 0));
+    const ordered = hostMatch
+      ? base.slice().sort((a, b) => (hostMatch.get(b) ?? 0) - (hostMatch.get(a) ?? 0))
+      : base;
+    // Applied last, so it holds whichever ordering the viewer has chosen.
+    // In addon order the addons queue up behind one another, and the ones that
+    // came with the app sit at the end of that queue — a hundred torrents deep.
+    return everyAddonRepresented(ordered);
   }, [filteredPicker, addonOrderMode, result, addons, hostMatch]);
 
   const langHiddenCount = useMemo(() => {
