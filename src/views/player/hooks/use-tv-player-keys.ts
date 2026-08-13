@@ -50,7 +50,12 @@ export function useTvPlayerKeys(params: {
       // A menu or a dialog owns the remote while it is open; so does a text
       // field, which on this device means the on-screen keyboard is up.
       if (s.anyMenuOpen || s.hasOverlay) return;
-      const target = e.target as HTMLElement | null;
+      // A key pressed with nothing focused arrives with `document` as its
+      // target, and `document` has no `closest` — the same case `isTypingTarget`
+      // guards against in hotkeys.ts. Calling it here threw, and a throw inside
+      // a keydown listener takes the whole player to the error screen.
+      const node = e.target;
+      const target = node instanceof Element ? (node as HTMLElement) : null;
       if (target?.closest("input, textarea, [contenteditable='true']")) return;
 
       const key = e.key;
