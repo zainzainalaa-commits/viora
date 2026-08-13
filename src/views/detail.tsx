@@ -92,6 +92,7 @@ function animeAwardLookupName(
 }
 import { Pill } from "./detail/pill";
 import { Credit } from "./detail/credit";
+import { pageScrollKeyNav } from "./detail/page-scroll";
 import { TitlePlate } from "./detail/title-plate";
 import { PlayModeHint } from "./detail/play-mode-hint";
 import { UpcomingCta } from "./detail/upcoming-cta";
@@ -1015,6 +1016,7 @@ export function DetailView({
       as="main"
       scrolls
       ref={scrollRef}
+      onKeyDown={pageScrollKeyNav}
       className="absolute inset-0 z-30 overflow-y-auto bg-canvas"
     >
       <section className="relative">

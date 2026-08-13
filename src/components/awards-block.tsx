@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { Fragment, useState } from "react";
 import { tmdbPersonIdByName, tmdbPersonIdCached } from "@/lib/providers/tmdb";
 import { useSettings } from "@/lib/settings";
@@ -91,7 +92,8 @@ function AwardGroup({ type, entries }: { type: AwardType; entries: AwardEntry[] 
         </span>
         <div className="flex flex-col gap-1.5">
           <h4 className="text-[18px] font-medium tracking-tight text-ink">
-            {type === "other" ? (
+            {type === "other" || isDpadPrimary() ? (
+              // A heading, not a control. See the note in credit.tsx.
               TYPE_TITLE[type]
             ) : (
               <FocusButton
@@ -232,7 +234,7 @@ function PersonLink({ name }: { name: string }) {
     if (id) openPerson(id);
   };
 
-  if (cached === null) {
+  if (cached === null || isDpadPrimary()) {
     return <span>{name}</span>;
   }
 
