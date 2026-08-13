@@ -23,12 +23,15 @@ export function EpisodeGridCard({
   g,
   progress,
   spoiler,
+  first,
   onContextMenu,
 }: {
   meta: Meta;
   g: GridEpisode;
   progress: Progress;
   spoiler?: SpoilerMask;
+  /** Named so the toolbar above can hand focus straight to it. */
+  first?: boolean;
   onContextMenu?: (
     e: React.MouseEvent,
     season: number,
@@ -74,6 +77,7 @@ export function EpisodeGridCard({
   return (
     <div onMouseEnter={enter} onMouseLeave={leave} className={`group relative ${preview ? "z-30" : ""}`}>
       <FocusButton
+        focusKey={first ? "DETAIL_EPISODE_FIRST" : undefined}
         data-ep={g.number}
         data-no-card-ring
         onClick={g.play}
