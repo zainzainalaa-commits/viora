@@ -189,7 +189,6 @@ export function AnimeEpisodes({
       (e) => String(e.number).includes(q) || (e.title ?? "").toLowerCase().includes(q),
     );
   }, [query, displayEpisodes, aiMode, ai.matched]);
-  const gridEpisodes = filteredEpisodes ?? displayEpisodes;
   const windowEpisodes = filteredEpisodes
     ? settings.episodeSort === "newest"
       ? filteredEpisodes.slice().reverse()
@@ -335,13 +334,13 @@ export function AnimeEpisodes({
             </div>
           ) : (
             <AnimeEpisodeStrip
-              layout={settings.episodeLayout === "grid" ? "grid" : "strip"}
+              layout="strip"
               meta={meta}
-              episodes={settings.episodeLayout === "grid" ? gridEpisodes : windowEpisodes}
+              episodes={windowEpisodes}
               progressFor={progressFor}
               spoilerFor={spoilerFor}
               onContextMenu={openWatchedMenu}
-              onReachEnd={settings.episodeLayout === "grid" ? undefined : grow}
+              onReachEnd={grow}
               metaForEp={routing.metaForEp}
             />
           )}

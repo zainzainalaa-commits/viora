@@ -72,7 +72,7 @@ export function OrderedEpisodes({
       <EpisodeStrip
         meta={meta}
         episodes={episodes}
-        layout={settings.episodeLayout === "grid" ? "grid" : "strip"}
+        layout="strip"
         progressFor={(ep) => progressByKey.get(`${ep.seasonNumber}:${ep.episodeNumber}`)!}
         thumbnailFor={(ep) =>
           cinemetaVideos?.find(

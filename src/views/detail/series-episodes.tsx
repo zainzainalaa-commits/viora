@@ -349,7 +349,7 @@ export function SeriesEpisodes({
         <div key={settings.episodeLayout} className="animate-fade-in">
           {settings.episodeLayout !== "list" ? (
             <EpisodeStrip
-              layout={settings.episodeLayout === "grid" ? "grid" : "strip"}
+              layout="strip"
               meta={meta}
               seriesImdbId={imdbId}
               cinemetaVideos={cinemetaVideos}
