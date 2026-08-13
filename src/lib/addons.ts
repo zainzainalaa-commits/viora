@@ -265,7 +265,16 @@ export async function gatherCatalogAddons(authKey: string | null): Promise<Addon
   return [...stremio, ...localFull.filter((a): a is Addon => a != null)];
 }
 
-const NON_CONTENT_TYPES = new Set(["addon_catalog"]);
+/**
+ * Catalogue types that are not something to browse.
+ *
+ * `addon_catalog` lists other addons. `other` is what a debrid addon publishes
+ * its account with: Torrentio's "RealDebrid" catalogue is the raw contents of a
+ * cloud drive — a Downloads folder and a list of release filenames, with no
+ * posters, no titles and nothing to open. It has no business being a row on the
+ * home screen beside Trending and Collections.
+ */
+const NON_CONTENT_TYPES = new Set(["addon_catalog", "other"]);
 
 function requiredCatalogExtras(cat: CatalogDef): Array<{ name: string; value: string }> | null {
   const required = (cat.extra ?? []).filter((e) => e.isRequired);
