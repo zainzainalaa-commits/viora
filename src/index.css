@@ -1800,6 +1800,23 @@ html[data-input="dpad"] [data-focusable="true"]:focus {
   z-index: 2;
 }
 
+/* An episode card is highlighted as a card.
+   The control that takes focus is the thumbnail, which is the top two thirds of
+   it — so the ring cut the card in half, with the title and the runtime outside
+   the highlight. It moves out to the card, and the thumbnail gives up its own,
+   the same arrangement the key fields below use. */
+html[data-input="dpad"] [data-ep]:has(button:focus) {
+  outline: 3px solid var(--color-accent) !important;
+  outline-offset: 3px;
+  border-radius: 14px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  z-index: 2;
+}
+html[data-input="dpad"] [data-ep] button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* A field is highlighted as a field.
    The control that takes focus inside one of these is the text, which sits
    between the service logo and the reveal button — so ringing it left both of

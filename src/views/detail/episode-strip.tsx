@@ -1,4 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
+import { isDpadPrimary } from "@/lib/platform";
 import { Check, Eye } from "lucide-react";
 import { EpisodeRatingBadge } from "./episode-rating-badge";
 import { useEffect, useMemo, useState } from "react";
@@ -17,6 +18,17 @@ import { EpisodeDownloadButton } from "./episode-download-button";
 import { isUpcomingDate } from "./helpers";
 
 type Progress = { ratio: number; watched: boolean; startedAt: number };
+
+/**
+ * One card, one stop.
+ *
+ * A card carried three: the thumbnail, the caption under it — which plays the
+ * same episode — and the eye that opens the episode's own page. With a mouse
+ * that is three affordances; with a remote it is three presses to cross one
+ * card, and the highlight lands around a line of text rather than the card.
+ */
+const CaptionTag = isDpadPrimary() ? "div" : FocusButton;
+const EyeTag = isDpadPrimary() ? "div" : FocusButton;
 
 export function EpisodeStrip({
   meta,
@@ -224,9 +236,8 @@ function EpisodeStripCard({
         )}
       </FocusButton>
       <div className="flex items-start justify-between gap-2 px-0.5">
-        <FocusButton
-          type="button"
-          onClick={handlePlayClick}
+        <CaptionTag
+          {...(isDpadPrimary() ? {} : { type: "button" as const, onClick: handlePlayClick })}
           className="flex min-w-0 flex-1 flex-col gap-0.5 text-start focus-visible:outline-none"
         >
           <span className={`truncate text-[13.5px] font-semibold text-ink ${spoiler?.title ? SPOILER_TEXT_CLASS : ""}`}>
@@ -236,7 +247,7 @@ function EpisodeStripCard({
             S{ep.seasonNumber} E{ep.episodeNumber}
             {ep.runtime ? ` · ${t("{n} min", { n: ep.runtime })}` : ""}
           </span>
-        </FocusButton>
+        </CaptionTag>
         <div className="flex shrink-0 items-center gap-0.5">
           <EpisodeDownloadButton
             meta={meta}
@@ -250,15 +261,19 @@ function EpisodeStripCard({
             }}
             size={30}
           />
-          <FocusButton
-            type="button"
-            onClick={() => openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta)}
+          <EyeTag
+            {...(isDpadPrimary()
+              ? {}
+              : {
+                  type: "button" as const,
+                  onClick: () => openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta),
+                })}
             aria-label={t("Episode details")}
             title={t("Episode details")}
             className="flex items-center justify-center rounded-full p-1.5 text-ink-subtle transition-colors hover:bg-elevated hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
           >
             <Eye size={16} strokeWidth={2} />
-          </FocusButton>
+          </EyeTag>
         </div>
       </div>
     </div>

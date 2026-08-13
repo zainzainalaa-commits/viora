@@ -1,3 +1,4 @@
+import { FocusSection } from "@/lib/tv-focus";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { EpisodeJumper } from "@/components/episode-jumper";
 import { providerForModel } from "@/lib/ai-models";
@@ -255,7 +256,17 @@ export function SeriesEpisodes({
     <div data-episodes className="flex scroll-mt-24 flex-col gap-6">
       <div className="flex items-end justify-between gap-6">
         <h3 className="text-[22px] font-medium tracking-tight text-ink">{t("Episodes")}</h3>
-        <div className="flex items-center gap-2.5">
+        {/*
+          A row, so a vertical press has something to aim between.
+
+          The page registers one container and every control on it as flat
+          siblings — hero buttons, this toolbar, the episodes, the cast — and the
+          helper that carries a press from one row to the next needs rows to
+          choose from. With none, the press fell back to raw geometry across
+          eighty-one mixed items, failed, and the screen put the highlight back
+          where it remembered it: at the top of the page.
+        */}
+        <FocusSection className="flex items-center gap-2.5">
           <RandomEpisodeButton meta={meta} seasons={seasons} />
           <EpisodeLayoutToggle
             value={settings.episodeLayout}
@@ -303,7 +314,7 @@ export function SeriesEpisodes({
               />
             )
             )}
-        </div>
+        </FocusSection>
       </div>
 
       {!aiMode && searchOpen && <EpisodeSearchBar value={epSearch} onChange={setEpSearch} />}
@@ -346,7 +357,7 @@ export function SeriesEpisodes({
       )}
 
       {!altActive && !loading && enrichedEpisodes.length > 0 && (
-        <div key={settings.episodeLayout} className="animate-fade-in">
+        <FocusSection key={settings.episodeLayout} className="animate-fade-in">
           {settings.episodeLayout !== "list" ? (
             <EpisodeStrip
               layout="strip"
@@ -396,7 +407,7 @@ export function SeriesEpisodes({
               ))}
             </div>
           )}
-        </div>
+        </FocusSection>
       )}
       {!altActive && settings.episodeLayout === "list" && (
         <EpisodeJumper scrollRef={scrollRef} totalEpisodes={enrichedEpisodes.length} />
