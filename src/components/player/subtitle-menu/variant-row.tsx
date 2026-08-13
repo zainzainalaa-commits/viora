@@ -26,6 +26,7 @@ export function VariantRow({
   index,
   selected,
   primary,
+  rowKey,
   onPick,
 }: {
   track: TrackInfo;
@@ -34,6 +35,8 @@ export function VariantRow({
   selected: boolean;
   /** Where the remote should land when the menu opens. */
   primary?: boolean;
+  /** The navigator's name for this row, so the list can step to it by order. */
+  rowKey: string;
   onPick: () => void;
 }) {
   const tr = useT();
@@ -54,6 +57,9 @@ export function VariantRow({
     <FocusButton
       onClick={onPick}
       data-focus-primary={primary ? "" : undefined}
+      data-list-row=""
+      data-list-key={rowKey}
+      focusKey={rowKey}
       // Keep the row the remote is on fully inside the list.
       //
       // The focus system reveals a control that has left the *window*; a row

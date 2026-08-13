@@ -11,6 +11,7 @@ import { SearchSection } from "./search-section";
 import { VariantRow } from "./variant-row";
 import type { SubtitleMenuProps } from "./types";
 import { groupByLang, isVeryNewRelease } from "./utils";
+import { listKeyNav } from "./list-nav";
 
 type SourceFilter = "all" | "embedded" | "external";
 const ALL_LANGS = "__all__";
@@ -133,87 +134,78 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
 
       <AutoSyncStatus />
 
-      {/* ── Body ── */}
-      <div className="flex min-h-0 flex-1">
-        {/* Language sidebar */}
-        <aside
-          // Every entry keeps its height. In a scrolling column, flex children
-          // are allowed to squeeze, and a squeezed row is one the spatial
-          // navigator cannot aim at — the same fault the country list had, where
-          // every second country was unreachable.
-          className="flex w-[136px] shrink-0 flex-col gap-1 overflow-y-auto border-e border-edge-soft bg-canvas/30 p-2 [&>button]:shrink-0"
+      {/* ── Band one: subtitles on or off, and which language ──
+           A row, not a column down the side. The panel is 560 wide and the
+           table wants all of it, and a sidebar is one more thing for the remote
+           to walk sideways into on its way anywhere. */}
+      <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto border-b border-edge-soft bg-canvas/20 px-3 py-2 [&>button]:shrink-0">
+        <FocusButton
+          onClick={() => {
+            if (offSelected) return;
+            onSelect(null);
+            onClose();
+          }}
+          disabled={offSelected}
+          onFocus={(e) => e.currentTarget.scrollIntoView({ inline: "nearest", block: "nearest" })}
+          className={`flex h-8 items-center gap-2 rounded-full px-3 text-[12px] font-semibold transition-colors ${
+            offSelected ? "text-ink-subtle" : "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
+          }`}
         >
-          <FocusButton
-            onClick={() => {
-              if (offSelected) return;
-              onSelect(null);
-              onClose();
-            }}
-            disabled={offSelected}
-            className={`flex items-center gap-2 rounded-md px-2.5 py-2 text-start text-[12.5px] font-semibold transition-colors ${
-              offSelected
-                ? "text-ink-subtle"
-                : "bg-elevated text-ink ring-1 ring-edge hover:bg-raised"
+          <span
+            className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${
+              offSelected ? "bg-raised text-ink-subtle" : "bg-accent text-canvas"
             }`}
           >
-            <span
-              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${
-                offSelected ? "bg-raised text-ink-subtle" : "bg-accent text-canvas"
-              }`}
-            >
-              {offSelected ? null : <Check size={9} strokeWidth={3} />}
-            </span>
-            {offSelected ? tr("Off") : tr("On")}
-          </FocusButton>
+            {offSelected ? null : <Check size={9} strokeWidth={3} />}
+          </span>
+          {offSelected ? tr("Off") : tr("On")}
+        </FocusButton>
 
-          {groups.length > 0 && (
-            <div className="mt-1.5 mb-0.5 px-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-ink-subtle">
-              {tr("Languages")}
-            </div>
-          )}
-          {groups.length > 1 && (
+        {groups.length > 0 && <span aria-hidden className="h-5 w-px shrink-0 bg-edge-soft" />}
+
+        {groups.length > 1 && (
+          <FocusButton
+            onClick={() => setActiveLang(ALL_LANGS)}
+            onFocus={(e) => e.currentTarget.scrollIntoView({ inline: "nearest", block: "nearest" })}
+            className={`flex h-8 items-center gap-1.5 rounded-full px-3 text-[12px] font-medium transition-colors ${
+              allLangs
+                ? "bg-elevated text-ink ring-1 ring-edge"
+                : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
+            }`}
+          >
+            <Languages size={13} strokeWidth={2} className="shrink-0" />
+            {tr("All")}
+            <span className="text-[10.5px] tabular-nums text-ink-subtle">{tracks.length}</span>
+          </FocusButton>
+        )}
+
+        {groups.map((g) => {
+          const isActive = activeLang === g.langKey;
+          const hasSelected = g.variants.some((v) => v.id === selectedId);
+          return (
             <FocusButton
-              onClick={() => setActiveLang(ALL_LANGS)}
-              className={`flex items-center gap-2 rounded-md px-2.5 py-2 text-start text-[12.5px] font-medium transition-colors ${
-                allLangs
+              key={g.langKey}
+              onClick={() => setActiveLang(g.langKey)}
+              onFocus={(e) => e.currentTarget.scrollIntoView({ inline: "nearest", block: "nearest" })}
+              className={`flex h-8 items-center gap-1.5 rounded-full px-3 text-[12px] transition-colors ${
+                isActive
                   ? "bg-elevated text-ink ring-1 ring-edge"
                   : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
               }`}
             >
-              <Languages size={14} strokeWidth={2} className="shrink-0" />
-              <span className="flex-1 truncate">{tr("All languages")}</span>
-              <span className="text-[10.5px] tabular-nums text-ink-subtle">{tracks.length}</span>
+              <Flag language={g.langDisplay} size="sm" showLabel={false} />
+              <span className="truncate font-medium">{g.langDisplay}</span>
+              {hasSelected && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" />}
+              <span className="text-[10.5px] tabular-nums text-ink-subtle">{g.variants.length}</span>
             </FocusButton>
-          )}
-          {groups.map((g) => {
-            const isActive = activeLang === g.langKey;
-            const hasSelected = g.variants.some((v) => v.id === selectedId);
-            return (
-              <FocusButton
-                key={g.langKey}
-                onClick={() => setActiveLang(g.langKey)}
-                onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest" })}
-                className={`group flex items-center gap-2 rounded-md px-2.5 py-2 text-start text-[12.5px] transition-colors ${
-                  isActive
-                    ? "bg-elevated text-ink ring-1 ring-edge"
-                    : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
-                }`}
-              >
-                <Flag language={g.langDisplay} size="sm" showLabel={false} />
-                <span className="flex-1 truncate font-medium">{g.langDisplay}</span>
-                {hasSelected && (
-                  <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" />
-                )}
-                <span className="text-[10.5px] tabular-nums text-ink-subtle">
-                  {g.variants.length}
-                </span>
-              </FocusButton>
-            );
-          })}
-        </aside>
+          );
+        })}
+      </div>
 
+      {/* ── Band two: everything about the tracks themselves ── */}
+      <div className="flex min-h-0 flex-1">
         {/* Track list section */}
-        <section className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <section className="flex min-h-0 min-w-0 flex-1 flex-col" onKeyDown={listKeyNav}>
           {!searchOpen && tracks.length > 0 && (activeGroup || allLangs) && (
             <div className="flex flex-wrap items-center gap-2 border-b border-edge-soft bg-canvas/15 px-3 py-2">
               <Tab active={sourceFilter === "all"} onClick={() => setSourceFilter("all")}>
@@ -272,6 +264,7 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
                       key={t.id}
                       track={t}
                       index={i + 1}
+                      rowKey={`SUB_TRACK_${t.id}`}
                       selected={t.id === selectedId}
                       // The track you are watching is the one the remote should
                       // start on; with none picked yet, the top of the list.
@@ -299,6 +292,9 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
           <div className="flex shrink-0 items-stretch border-t border-edge-soft">
             <FocusButton
               onClick={() => setSearchOpen((v) => !v)}
+              data-list-row=""
+              data-list-key="SUB_FIND_MORE"
+              focusKey="SUB_FIND_MORE"
               className="m-2 flex flex-1 items-center gap-2.5 rounded-lg bg-canvas/50 px-3.5 py-2.5 text-start text-[12.5px] text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-canvas/70 hover:text-ink"
             >
               <SearchIcon size={14} strokeWidth={2.2} className="shrink-0" />
@@ -308,6 +304,9 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               <Tooltip label={tr("Load a .srt or .ass from your computer")} align="end">
                 <FocusButton
                   onClick={() => void loadLocal()}
+                  data-list-row=""
+                  data-list-key="SUB_LOAD_FILE"
+                  focusKey="SUB_LOAD_FILE"
                   className="my-2 me-2 flex shrink-0 items-center gap-2.5 rounded-lg bg-canvas/50 px-3.5 text-[12.5px] font-semibold text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-canvas/70 hover:text-ink"
                 >
                   <FolderOpen size={14} strokeWidth={2.2} />

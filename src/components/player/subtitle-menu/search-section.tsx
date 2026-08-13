@@ -14,6 +14,7 @@ import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 import type { SubtitleMenuProps } from "./types";
 import { isVeryNewRelease } from "./utils";
+import { listKeyNav } from "./list-nav";
 
 export function SearchSection(props: SubtitleMenuProps) {
   const t = useT();
@@ -129,7 +130,7 @@ export function SearchSection(props: SubtitleMenuProps) {
   }, [filtered]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col" onKeyDown={listKeyNav}>
       <div className="flex shrink-0 items-center gap-2 px-4 py-3">
         <div className="relative flex-1">
           <SearchIcon
@@ -219,6 +220,9 @@ function LangGroup({
         type="button"
         onClick={() => setOpen((v) => !v)}
         onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest" })}
+        data-list-row=""
+        data-list-key={`SUB_GROUP_${lang}`}
+        focusKey={`SUB_GROUP_${lang}`}
         className="flex w-full items-center gap-2 bg-canvas/40 px-4 py-2 text-start transition-colors hover:bg-canvas/60"
       >
         <Flag language={lang} size="sm" showLabel={false} />
@@ -326,6 +330,9 @@ function ResultRow({
         // that box is still on screen — so the focus system never reveals it
         // and the list dead-ends. Same fix as the track list.
         onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest" })}
+        data-list-row=""
+        data-list-key={`SUB_RESULT_${result.id}`}
+        focusKey={`SUB_RESULT_${result.id}`}
         className="flex min-w-0 flex-1 items-start gap-3 text-start"
       >
         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
