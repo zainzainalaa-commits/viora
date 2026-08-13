@@ -303,9 +303,19 @@ export async function tmdbDetails(key: string, meta: Meta): Promise<TmdbDetail |
 
   let overview = raw.overview ?? "";
   let tagline = raw.tagline ?? "";
-  if (!settings.translateDescriptions) {
-    const enTrans = raw.translations?.translations?.find((t: any) => t.iso_639_1 === "en")?.data;
+  // English when the chosen language has nothing to say.
+  //
+  // TMDB answers in the language asked for and returns an empty overview when
+  // no one has written one — which is most of them, in most languages. Setting
+  // the metadata language to Arabic therefore emptied the description on the
+  // home hero and on every detail page that had no Arabic translation, and the
+  // page simply showed nothing. Asked-for language first, English second,
+  // nothing only when there is genuinely nothing.
+  const enTrans = raw.translations?.translations?.find((t: any) => t.iso_639_1 === "en")?.data;
+  if (!settings.translateDescriptions || !overview.trim()) {
     if (enTrans?.overview) overview = enTrans.overview;
+  }
+  if (!settings.translateDescriptions || !tagline.trim()) {
     if (enTrans?.tagline) tagline = enTrans.tagline;
   }
 
