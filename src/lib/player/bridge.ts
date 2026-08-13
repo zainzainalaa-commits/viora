@@ -84,6 +84,23 @@ export type PlayerBridge = {
   addSubtitle: (url: string, lang?: string, title?: string, select?: boolean) => Promise<boolean>;
   getSelectedTrackCues: () => SubCue[] | null;
   getSelectedTrackUrl: () => string | null;
+  /**
+   * Re-times a subtitle without rewriting it.
+   *
+   * The engine keeps the cues it parsed and displays them through `shift`, so
+   * turning the correction off is forgetting a function rather than reloading a
+   * file. Answers false where the engine owns the subtitle itself and the app
+   * has nothing to re-time.
+   */
+  applySubtitleSync?: (trackId: string, shift: (t: number) => number) => boolean;
+  clearSubtitleSync?: (trackId: string) => void;
+  /** Cues for any track the app parsed itself, for use as a sync reference. */
+  getTrackCues?: (trackId: string) => SubCue[] | null;
+  /**
+   * Fetches and parses a track the viewer has not selected, so it can be read
+   * as a sync reference. Does not change what is on screen.
+   */
+  loadTrackCues?: (trackId: string) => Promise<SubCue[] | null>;
   setAudioNormalize: (on: boolean) => void;
   setAudioProfile?: (profile: string) => void;
   setAudioDevice?: (name: string) => void;

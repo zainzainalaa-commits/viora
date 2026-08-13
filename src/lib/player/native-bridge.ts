@@ -104,6 +104,12 @@ type ExternalTrack = {
   title?: string;
   cues: SubCue[] | null;
   loading: boolean;
+  /**
+   * The same cues, re-timed by auto-sync. The parsed originals are kept beside
+   * them so the correction can be dropped, or recomputed, without fetching the
+   * file again.
+   */
+  syncedCues?: SubCue[] | null;
 };
 
 const POLL_MS = 180;
@@ -178,7 +184,18 @@ export function createNativeBridge(config: NativeEngineConfig): PlayerBridge {
     listeners.forEach((l) => l(next));
   };
 
-  const isExternal = (id: string | null): boolean => !!id && id.startsWith(EXTERNAL_PREFIX);
+  /**
+   * Whether this app owns the timing of a track, rather than the decoder.
+   *
+   * Asked of the list, not of the name. Tracks added from the subtitle menu are
+   * named `ext-…` here, but the ones that arrive with the stream keep the id the
+   * addon gave them — `cnm-ara`, for instance. Testing the prefix filed those
+   * under embedded, so selecting one asked the engine for a track it had never
+   * heard of while the cue loop skipped the file the app had just parsed:
+   * measured on Silo S1E3, both Cinemana subtitles downloaded and parsed, and
+   * neither ever reached the screen.
+   */
+  const isExternal = (id: string | null): boolean => !!id && externals.some((t) => t.id === id);
 
   const mapTracks = (list: NativeTrack[], kind: "audio" | "subtitle"): TrackInfo[] =>
     list.map((t, i) => ({
@@ -241,7 +258,8 @@ export function createNativeBridge(config: NativeEngineConfig): PlayerBridge {
     if (!isExternal(activeSubId)) return;
     const track = externals.find((t) => t.id === activeSubId);
     const at = estimatedPosition() - subDelaySec;
-    const cue = track?.cues ? findActiveCue(track.cues, at) : null;
+    const timed = track?.syncedCues ?? track?.cues;
+    const cue = timed ? findActiveCue(timed, at) : null;
     const text = cue?.text ?? "";
     const cueId = `${cue?.start ?? 0}|${text}`;
     if (cueId === lastCueId) return;
@@ -529,6 +547,37 @@ export function createNativeBridge(config: NativeEngineConfig): PlayerBridge {
     },
     getSelectedTrackCues() {
       return externals.find((t) => t.id === activeSubId)?.cues ?? null;
+    },
+    getTrackCues(trackId) {
+      return externals.find((t) => t.id === trackId)?.cues ?? null;
+    },
+    async loadTrackCues(trackId) {
+      const track = externals.find((t) => t.id === trackId);
+      if (!track) return null;
+      // The same fetch the viewer's own choice goes through, so a reference
+      // costs one small download and nothing on screen moves.
+      await ensureLoaded(track);
+      return track.cues;
+    },
+    applySubtitleSync(trackId, shift) {
+      const track = externals.find((t) => t.id === trackId);
+      if (!track?.cues) return false;
+      // A derived list, not an edit: `cues` still holds what the file said.
+      track.syncedCues = track.cues.map((c) => ({
+        start: Math.max(0, c.start + shift(c.start)),
+        end: Math.max(0, c.end + shift(c.end)),
+        text: c.text,
+      }));
+      lastCueId = "";
+      tickExternalCue();
+      return true;
+    },
+    clearSubtitleSync(trackId) {
+      const track = externals.find((t) => t.id === trackId);
+      if (!track) return;
+      track.syncedCues = null;
+      lastCueId = "";
+      tickExternalCue();
     },
     getSelectedTrackUrl() {
       return externals.find((t) => t.id === activeSubId)?.url ?? null;

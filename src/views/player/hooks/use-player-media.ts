@@ -23,6 +23,7 @@ import { useSubDrop } from "./use-sub-drop";
 import { useSubStyleApply } from "./use-sub-style-apply";
 import { useTrackAutoload } from "./use-track-autoload";
 import { useAutoSync } from "./use-auto-sync";
+import { useReferenceSync } from "./use-reference-sync";
 import { useVideoDownload } from "./use-video-download";
 import { useWebviewMemory } from "./use-webview-memory";
 
@@ -109,6 +110,10 @@ export function usePlayerMedia(params: {
   });
 
   useAutoSync({ bridgeRef, src, snap, engine, settings });
+  // Sync against another subtitle rather than the audio. The two are
+  // complementary: the audio path needs an ffmpeg binary and so never runs on
+  // Android, and this one needs a second subtitle to compare against.
+  useReferenceSync({ bridgeRef, src, snap });
 
   const subEmbed = engine === "mpv" && settings.playerMpvEmbed;
   const hdrNativeSurface =
