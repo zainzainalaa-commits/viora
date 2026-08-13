@@ -36,6 +36,30 @@ function extraSegment(q: SubSearchQuery): string {
   return parts.length > 0 ? `/${parts.join("&")}` : "";
 }
 
+
+/** How long any one addon may take before its answer stops being waited for. */
+const ADDON_MS = 8000;
+
+/**
+ * Stop waiting on a request that is not coming back.
+ *
+ * On Android every request leaves through the native client, which holds a
+ * thirty-second timeout of its own, so a single unresponsive addon decided how
+ * long the whole subtitle search took. The request cannot be cancelled from
+ * here, but waiting on it can be given up.
+ */
+async function withDeadline<T>(work: Promise<T>, ms: number, fallback: T): Promise<T> {
+  let timer = 0;
+  const expiry = new Promise<T>((resolve) => {
+    timer = window.setTimeout(() => resolve(fallback), ms);
+  });
+  try {
+    return await Promise.race([work, expiry]);
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 async function callOne(addon: Addon, type: string, id: string, extra: string): Promise<RawAddonSub[]> {
   const base = transportBase(addon.transportUrl);
   const url = `${base}/subtitles/${type}/${id}${extra}.json`;
@@ -90,8 +114,12 @@ export async function searchAddons(
   const extra = extraSegment(q);
   const settled = await Promise.all(
     subAddons.map(async (addon) => {
-      const result = await callOne(addon, type, id, extra);
-      dlog(`[addons] ${addon.manifest.name}: ${result.length} subtitles`);
+      const started = Date.now();
+      // One addon that never answers should not decide how long the search
+      // takes; the native client would otherwise hold the call for thirty
+      // seconds. See the note on withDeadline.
+      const result = await withDeadline(callOne(addon, type, id, extra), ADDON_MS, [] as RawAddonSub[]);
+      dlog(`[addons] ${addon.manifest.name}: ${result.length} subtitles in ${Date.now() - started}ms`);
       return result;
     }),
   );

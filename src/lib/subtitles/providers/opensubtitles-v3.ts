@@ -28,6 +28,30 @@ function buildId(q: SubSearchQuery): string | null {
   return id;
 }
 
+/** How long any one mirror may take before its answer stops being waited for. */
+const ENDPOINT_MS = 7000;
+
+/**
+ * Stop waiting on a request that is not coming back.
+ *
+ * On Android every request leaves through the native client, which holds a
+ * thirty-second timeout of its own — so one mirror that accepts the connection
+ * and then says nothing kept the whole subtitle search spinning for half a
+ * minute. The request cannot be cancelled from here, but waiting on it can be
+ * given up, and whatever the other hosts returned is worth showing now.
+ */
+async function withDeadline<T>(work: Promise<T>, ms: number, fallback: T): Promise<T> {
+  let timer = 0;
+  const expiry = new Promise<T>((resolve) => {
+    timer = window.setTimeout(() => resolve(fallback), ms);
+  });
+  try {
+    return await Promise.race([work, expiry]);
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 async function callEndpoint(base: string, type: string, id: string): Promise<RawSub[]> {
   const url = `${base}/subtitles/${type}/${id}.json`;
   try {
@@ -55,7 +79,9 @@ export async function searchOpenSubtitlesV3(q: SubSearchQuery): Promise<SubResul
   const isEpisode = q.season != null && q.episode != null;
   const type = isEpisode || id.includes(":") ? "series" : "movie";
 
-  const results = await Promise.all(ENDPOINTS.map((base) => callEndpoint(base, type, id)));
+  const results = await Promise.all(
+    ENDPOINTS.map((base) => withDeadline(callEndpoint(base, type, id), ENDPOINT_MS, [] as RawSub[])),
+  );
   const seen = new Set<string>();
   const merged: RawSub[] = [];
   for (const list of results) {

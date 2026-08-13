@@ -61,7 +61,10 @@ export function SearchSection(props: SubtitleMenuProps) {
     void run();
   }, [metaImdbId, addons, addonsLoading]);
 
+  const runId = useRef(0);
+
   const run = async () => {
+    const mine = ++runId.current;
     setLoading(true);
     setResults(null);
     try {
@@ -81,33 +84,26 @@ export function SearchSection(props: SubtitleMenuProps) {
         },
         addons: addons ?? [],
         preferredLangs: settings.preferredSubLangs ?? [],
+        // Show each provider's results the moment they land rather than
+        // holding everything back for the slowest one. A search asks two or
+        // three services at once and they can be seconds apart.
+        onPartial: (partial: SubResult[], done: boolean) => {
+          if (runId.current !== mine) return;
+          setResults(partial);
+          if (!done) setLoading(true);
+        },
       };
 
-      // Log search attempt for debugging (will appear in terminal)
-      console.log('[SUBTITLES SEARCH] Starting with:', {
-        hasImdbId: !!metaImdbId,
-        addonsCount: addons?.length ?? 0,
-        providers: searchOpts.providers,
-        query: searchQuery,
-      });
-
       const r = await searchSubtitles(searchQuery, searchOpts);
-
-      // Log results by source (will appear in terminal)
-      const bySource = r.reduce((acc, sub) => {
-        acc[sub.source] = (acc[sub.source] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-      console.log('[SUBTITLES SEARCH] Complete:', {
-        total: r.length,
-        bySource,
-        addonResults: bySource.addon || 0,
-        opensubtitlesResults: bySource.opensubtitles || 0,
-      });
-
-      setResults(r);
+      if (runId.current === mine) setResults(r);
+    } catch (e) {
+      // A provider that throws used to leave the panel showing nothing at all:
+      // results stayed null and loading went false, which renders neither the
+      // list, nor "searching", nor "none found".
+      console.warn("[subs] search failed", e);
+      if (runId.current === mine) setResults([]);
     } finally {
-      setLoading(false);
+      if (runId.current === mine) setLoading(false);
     }
   };
 
@@ -168,13 +164,14 @@ export function SearchSection(props: SubtitleMenuProps) {
           <FilterChip active={forcedOnly} onClick={() => setForcedOnly((v) => !v)}>
             {t("Forced only")}
           </FilterChip>
-          <span className="ms-auto text-[11.5px] tabular-nums text-ink-subtle">
+          <span className="ms-auto flex items-center gap-1.5 text-[11.5px] tabular-nums text-ink-subtle">
+            {loading && <Loader2 size={11} className="animate-spin" />}
             {t("{shown} of {total}", { shown: filtered?.length ?? 0, total: results.length })}
           </span>
         </div>
       )}
 
-      {loading && results == null && (
+      {loading && (results === null || results.length === 0) && (
         <p className="flex items-center gap-2 px-4 py-3 text-[13px] text-ink-muted">
           <Loader2 size={14} className="animate-spin" />
           {addonsLoading
@@ -182,7 +179,7 @@ export function SearchSection(props: SubtitleMenuProps) {
             : t("Searching {count} sources…", { count: 1 + (addons?.length ?? 0) })}
         </p>
       )}
-      {results !== null && results.length === 0 && (
+      {!loading && results !== null && results.length === 0 && (
         <p className="px-4 py-3 text-[13px] text-ink-muted">
           {isVeryNewRelease(props.metaReleaseDate)
             ? t("Movie's too new. Subtitles haven't been published yet.")
@@ -221,6 +218,7 @@ function LangGroup({
       <FocusButton
         type="button"
         onClick={() => setOpen((v) => !v)}
+        onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest" })}
         className="flex w-full items-center gap-2 bg-canvas/40 px-4 py-2 text-start transition-colors hover:bg-canvas/60"
       >
         <Flag language={lang} size="sm" showLabel={false} />
@@ -322,7 +320,14 @@ function ResultRow({
         added ? "bg-emerald-400/12" : "hover:bg-canvas/60"
       }`}
     >
-      <FocusButton onClick={handleAdd} className="flex min-w-0 flex-1 items-start gap-3 text-start">
+      <FocusButton
+        onClick={handleAdd}
+        // Results scroll inside their own box, and a row that has only left
+        // that box is still on screen — so the focus system never reveals it
+        // and the list dead-ends. Same fix as the track list.
+        onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest" })}
+        className="flex min-w-0 flex-1 items-start gap-3 text-start"
+      >
         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
           {adding ? (
             <Loader2 size={14} className="animate-spin text-ink-subtle" />
@@ -378,19 +383,16 @@ function ResultRow({
       </FocusButton>
       <span
         role="button"
-        tabIndex={0}
+        // Not a focus stop. Every result had two, so walking down the list
+        // stepped sideways into a save button between each pair of subtitles —
+        // and saving a file to disk is not something a remote asks for. The
+        // mouse still clicks it, and the long-press menu still offers it.
+        tabIndex={-1}
         title={saved ? t("Saved to disk") : t("Download to disk")}
         aria-label={t("Download subtitle to disk")}
         onClick={(e) => {
           e.stopPropagation();
           void download();
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            e.stopPropagation();
-            void download();
-          }
         }}
         className={`mt-0.5 inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md transition-colors ${saved ? "text-accent" : "text-ink-subtle hover:bg-elevated hover:text-ink"
           }`}

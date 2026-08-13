@@ -11,6 +11,14 @@ export type SearchOptions = {
   addons?: Addon[];
   preferredLangs: string[];
   streamHints?: StreamHints;
+  /**
+   * Called each time a provider answers, with everything ranked so far.
+   *
+   * Providers are asked at once but come back minutes apart on a slow line, and
+   * waiting for the last one means a viewer stares at a spinner while the first
+   * one's results are already in hand.
+   */
+  onPartial?: (results: SubResult[], done: boolean) => void;
 };
 
 export type StreamHints = {
@@ -34,16 +42,25 @@ export async function searchSubtitles(
   if (wyzieOn) tasks.push({ name: "wyzie", p: searchWyzie(q) });
   if (addonsOn && opts.addons && opts.addons.length > 0)
     tasks.push({ name: "addons", p: searchAddons(opts.addons, q) });
-  const settled = await Promise.allSettled(tasks.map((t) => t.p));
   const all: SubResult[] = [];
-  settled.forEach((r, i) => {
-    if (r.status === "fulfilled") {
-      dinfo(`[subs] ${tasks[i].name}: ${r.value.length} results`);
-      all.push(...r.value);
-    } else {
-      dwarn(`[subs] ${tasks[i].name} failed`, r.reason);
-    }
-  });
+  let answered = 0;
+  await Promise.all(
+    tasks.map(async (task) => {
+      const started = Date.now();
+      try {
+        const value = await task.p;
+        dinfo(`[subs] ${task.name}: ${value.length} results in ${Date.now() - started}ms`);
+        all.push(...value);
+      } catch (e) {
+        dwarn(`[subs] ${task.name} failed`, e);
+      }
+      answered += 1;
+      opts.onPartial?.(
+        dedupAndRank(all, opts.preferredLangs, opts.streamHints),
+        answered === tasks.length,
+      );
+    }),
+  );
   const ranked = dedupAndRank(all, opts.preferredLangs, opts.streamHints);
   dinfo(`[subs] total ${ranked.length} after dedup/rank`);
   return ranked;
