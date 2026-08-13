@@ -27,7 +27,18 @@ export async function tmdbMetadataOverview(key: string, metaId: string): Promise
   if (hit !== undefined) return hit || undefined;
   try {
     const raw = await get<{ overview?: string }>(key, `${m[1]}/${m[2]}`, { language: metaLang });
-    const ov = raw?.overview?.trim() || "";
+    let ov = raw?.overview?.trim() || "";
+    // English behind the chosen language.
+    //
+    // TMDB answers only in the language asked for, and returns an empty
+    // overview when no one has written one — most titles, in most languages. In
+    // Arabic that left the banner at the top of the home screen with a title, a
+    // year, a rating and nothing else. One more request, only when the first
+    // came back empty, and only for the title actually on screen.
+    if (!ov && metaLang.toLowerCase() !== "en" && !metaLang.toLowerCase().startsWith("en-")) {
+      const fallback = await get<{ overview?: string }>(key, `${m[1]}/${m[2]}`, { language: "en" });
+      ov = fallback?.overview?.trim() || "";
+    }
     overviewCache.set(cacheKey, ov);
     return ov || undefined;
   } catch {
