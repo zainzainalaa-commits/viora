@@ -1,12 +1,10 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { Check, FolderOpen, Languages, Loader2, Search as SearchIcon, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { Check, Languages, Loader2, Search as SearchIcon, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Flag } from "@/components/flag";
-import { markImportedSub } from "@/lib/player/imported-subs";
 import { useT } from "@/lib/i18n";
 import { AutoSyncStatus } from "./auto-sync-status";
 import { SyncNowButton } from "./sync-now-button";
-import { Tooltip } from "../transport/tooltip";
 import { SearchSection } from "./search-section";
 import { VariantRow } from "./variant-row";
 import type { SubtitleMenuProps } from "./types";
@@ -16,15 +14,26 @@ import { listKeyNav } from "./list-nav";
 type SourceFilter = "all" | "embedded" | "external";
 const ALL_LANGS = "__all__";
 
-export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
+export function MenuBody(
+  props: SubtitleMenuProps & {
+    onClose: () => void;
+    /**
+     * Owned above, because Back has to be able to undo it.
+     *
+     * Opening the search replaces the track list with a second screen inside
+     * the same panel, and the remote's back button belongs to whoever owns the
+     * panel — so the flag lives there and comes down as a prop.
+     */
+    searchOpen: boolean;
+    setSearchOpen: (open: boolean) => void;
+  },
+) {
   const tr = useT();
-  const { tracks, selectedId, onSelect, onClose, metaReleaseDate, onOpenStyleBar } = props;
+  const { tracks, selectedId, onSelect, onClose, metaReleaseDate, onOpenStyleBar, searchOpen, setSearchOpen } = props;
   const groups = useMemo(() => groupByLang(tracks), [tracks]);
   const [searchSettled, setSearchSettled] = useState(false);
   const [activeLang, setActiveLang] = useState<string | null>(null);
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [justImported, setJustImported] = useState<string | null>(null);
 
   useEffect(() => {
     if (tracks.length > 0) return;
@@ -63,33 +72,6 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
   const totalEmbedded = tracks.filter((t) => !t.external).length;
   const totalExternal = tracks.filter((t) => t.external).length;
   const offSelected = selectedId == null;
-  const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
-  const [localError, setLocalError] = useState<string | null>(null);
-
-  const loadLocal = async () => {
-    setLocalError(null);
-    try {
-      const { open } = await import("@tauri-apps/plugin-dialog");
-      const path = await open({
-        multiple: false,
-        filters: [{ name: "Subtitles", extensions: ["srt", "ass", "ssa", "vtt", "sub"] }],
-      });
-      if (typeof path !== "string") return;
-      const name = path.split(/[\\\/]/).pop() || tr("Local subtitle");
-      const ok = await props.onAddSubtitle(path, undefined, name);
-      if (ok === false) {
-        setLocalError(tr("Couldn't load that subtitle file. Try another."));
-        return;
-      }
-      markImportedSub(name);
-      setActiveLang(ALL_LANGS);
-      setJustImported(name);
-      window.setTimeout(() => onClose(), 1700);
-    } catch (e) {
-      console.warn("[subtitles] local load failed", e);
-      setLocalError(tr("Couldn't load that subtitle file. Try another."));
-    }
-  };
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -239,7 +221,6 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
             // five — and an overlapping candidate is not "below", so pressing
             // down on the last subtitle went nowhere.
             <div className="min-h-0 flex-1 overflow-y-auto">
-              {justImported && <ImportBanner name={justImported} />}
               {tracks.length === 0 ? (
                 <EmptyState searchSettled={searchSettled} veryNewMovie={veryNewMovie} />
               ) : visibleVariants.length === 0 ? (
@@ -283,15 +264,9 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
             </div>
           )}
 
-          {localError && (
-            <div className="shrink-0 border-t border-edge-soft bg-danger/10 px-3 py-1.5 text-[11.5px] text-danger">
-              {localError}
-            </div>
-          )}
-
           <div className="flex shrink-0 items-stretch border-t border-edge-soft">
             <FocusButton
-              onClick={() => setSearchOpen((v) => !v)}
+              onClick={() => setSearchOpen(!searchOpen)}
               data-list-row=""
               data-list-key="SUB_FIND_MORE"
               focusKey="SUB_FIND_MORE"
@@ -300,20 +275,6 @@ export function MenuBody(props: SubtitleMenuProps & { onClose: () => void }) {
               <SearchIcon size={14} strokeWidth={2.2} className="shrink-0" />
               {searchOpen ? tr("Hide search") : tr("Find more subtitles online…")}
             </FocusButton>
-            {isTauri && (
-              <Tooltip label={tr("Load a .srt or .ass from your computer")} align="end">
-                <FocusButton
-                  onClick={() => void loadLocal()}
-                  data-list-row=""
-                  data-list-key="SUB_LOAD_FILE"
-                  focusKey="SUB_LOAD_FILE"
-                  className="my-2 me-2 flex shrink-0 items-center gap-2.5 rounded-lg bg-canvas/50 px-3.5 text-[12.5px] font-semibold text-ink-muted ring-1 ring-edge-soft transition-colors hover:bg-canvas/70 hover:text-ink"
-                >
-                  <FolderOpen size={14} strokeWidth={2.2} />
-                  {tr("Load file")}
-                </FocusButton>
-              </Tooltip>
-            )}
           </div>
         </section>
       </div>
@@ -352,31 +313,6 @@ function Tab({
 
 function Count({ value }: { value: number }) {
   return <span className="text-[11.5px] tabular-nums text-ink-subtle">{value}</span>;
-}
-
-function ImportBanner({ name }: { name: string }) {
-  const tr = useT();
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setShown(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
-  return (
-    <div
-      className={`mx-2 mt-2 flex items-center gap-3 overflow-hidden rounded-xl border border-accent/35 bg-accent/10 px-3.5 py-2.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        shown ? "translate-y-0 scale-100 opacity-100" : "-translate-y-1 scale-[0.97] opacity-0"
-      }`}
-    >
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-canvas shadow-[0_0_18px_-2px_var(--color-accent)]">
-        <Check size={16} strokeWidth={3} />
-      </span>
-      <div className="flex min-w-0 flex-col">
-        <span className="truncate text-[13px] font-semibold text-ink">{name}</span>
-        <span className="text-[11px] font-medium text-accent">{tr("Imported and now playing")}</span>
-      </div>
-      <Sparkles size={15} className="ms-auto shrink-0 text-accent" />
-    </div>
-  );
 }
 
 function EmptyState({ searchSettled, veryNewMovie }: { searchSettled: boolean; veryNewMovie: boolean }) {

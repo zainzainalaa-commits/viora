@@ -1,4 +1,4 @@
-import { FocusButton, FocusModal } from "@/lib/tv-focus";
+import { FocusButton, FocusModal, setFocusSafely } from "@/lib/tv-focus";
 import { useExclusiveMenu } from "./transport/menu-exclusive";
 import { Subtitles as SubsIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ type Props = SubtitleMenuProps;
 export function SubtitleMenu(props: Props) {
   const t = useT();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const { side, measure } = useMenuSide(wrap, 500);
   const propsRef = useRef(props);
@@ -40,7 +41,41 @@ export function SubtitleMenu(props: Props) {
 
   const handleClick = () => {
     if (!open) measure();
+    setSearchOpen(false);
     setOpen((v) => !v);
+  };
+
+  /**
+   * One step back, not out.
+   *
+   * The search is a second screen inside this panel, so Back from it belongs to
+   * the panel: it puts the track list back and returns the highlight to the
+   * subtitle that is playing. Only from the list itself does Back close the
+   * menu and hand the remote to the film again.
+   */
+  const stepBack = () => {
+    if (searchOpen) {
+      setSearchOpen(false);
+      // Once the list is back on screen — it takes a render or two, and the
+      // panel's own entry point claims the highlight in the meantime.
+      const id = propsRef.current.selectedId;
+      const target = id ? `SUB_TRACK_${id}` : "SUB_FIND_MORE";
+      // Asked more than once, on purpose.
+      //
+      // The list needs a render before the row exists, and the Back handler
+      // places focus itself after this returns — so a single well-timed call is
+      // either too early or gets overruled. It stops as soon as the highlight is
+      // actually on the row.
+      for (const delay of [0, 60, 150, 300, 500]) {
+        window.setTimeout(() => {
+          const el = document.querySelector<HTMLElement>(`[data-list-key="${target}"]`);
+          if (el && document.activeElement === el) return;
+          setFocusSafely(target);
+        }, delay);
+      }
+      return;
+    }
+    setOpen(false);
   };
 
   const subSelected = props.selectedId != null;
@@ -66,10 +101,16 @@ export function SubtitleMenu(props: Props) {
       </Tooltip>
       {open && (
         <FocusModal
-          onClose={() => setOpen(false)}
+          onClose={stepBack}
           className={`absolute bottom-[calc(100%+10px)] ${side === "start" ? "start-0" : "end-0"} flex h-[380px] max-h-[70vh] w-[560px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-2xl border border-edge bg-elevated shadow-[0_24px_60px_-18px_rgba(0,0,0,0.8)] backdrop-blur-xl`}
         >
-          <MenuBody {...props} onClose={() => setOpen(false)} onOpenStyleBar={openStyleBar} />
+          <MenuBody
+            {...props}
+            searchOpen={searchOpen}
+            setSearchOpen={setSearchOpen}
+            onClose={() => setOpen(false)}
+            onOpenStyleBar={openStyleBar}
+          />
         </FocusModal>
       )}
     </div>
@@ -77,5 +118,6 @@ export function SubtitleMenu(props: Props) {
 }
 
 export function SubtitleMenuBody(props: Props & { onClose: () => void }) {
-  return <MenuBody {...props} />;
+  const [searchOpen, setSearchOpen] = useState(false);
+  return <MenuBody {...props} searchOpen={searchOpen} setSearchOpen={setSearchOpen} />;
 }
