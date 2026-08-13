@@ -1,4 +1,5 @@
 import { FocusSection } from "@/lib/tv-focus";
+import { rowEdgeKeyNav } from "../row-edges";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -51,8 +52,7 @@ export function MediaRail({ children }: { children: React.ReactNode }) {
       */}
       <FocusSection
         scrolls
-        isFocusBoundary
-        focusBoundaryDirections={["left", "right"]}
+        onKeyDown={rowEdgeKeyNav}
         ref={trackRef}
         className="flex gap-4 overflow-x-auto p-5 -m-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >

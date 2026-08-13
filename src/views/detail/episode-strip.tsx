@@ -26,9 +26,19 @@ type Progress = { ratio: number; watched: boolean; startedAt: number };
  * same episode — and the eye that opens the episode's own page. With a mouse
  * that is three affordances; with a remote it is three presses to cross one
  * card, and the highlight lands around a line of text rather than the card.
+ *
+ * Read per render, not once when the module loads. The television flag is
+ * stamped on the document at boot, and this file is imported before that
+ * happens — so asking at module scope answered "not a television" on a
+ * television, both controls stayed focusable, and ten of them sat ten pixels
+ * below every card. That is enough for the helper that carries a press out of a
+ * row to conclude the row is not finished, stand down, and leave the press to
+ * be restored to the toolbar above.
  */
-const CaptionTag = isDpadPrimary() ? "div" : FocusButton;
-const EyeTag = isDpadPrimary() ? "div" : FocusButton;
+function cardTags() {
+  const dpad = isDpadPrimary();
+  return { CaptionTag: dpad ? "div" : FocusButton, EyeTag: dpad ? "div" : FocusButton } as const;
+}
 
 export function EpisodeStrip({
   meta,
@@ -161,6 +171,7 @@ function EpisodeStripCard({
     setImgIdx(0);
   }, [ep.id]);
 
+  const { CaptionTag, EyeTag } = cardTags();
   const still = useMemo(() => {
     const tmdbSize = settings.hdEpisodeImages ? "original" : "w300";
     if (imgIdx === 0 && ep.stillPath) return `https://image.tmdb.org/t/p/${tmdbSize}${ep.stillPath}`;
@@ -249,7 +260,14 @@ function EpisodeStripCard({
           </span>
         </CaptionTag>
         <div className="flex shrink-0 items-center gap-0.5">
-          <EpisodeDownloadButton
+          {/*
+            The download sits ten pixels under the thumbnail, inside the same
+            card, and on a remote it was a second stop there — enough for the
+            helper that carries a press out of a row to conclude the row was not
+            finished, stand down, and let the press be restored to the toolbar
+            above. Downloading an episode is on the episode's own page.
+          */}
+          {!isDpadPrimary() && <EpisodeDownloadButton
             meta={meta}
             episode={{
               season: ep.seasonNumber,
@@ -260,7 +278,7 @@ function EpisodeStripCard({
               overview: ep.overview || undefined,
             }}
             size={30}
-          />
+          />}
           <EyeTag
             {...(isDpadPrimary()
               ? {}

@@ -1,3 +1,4 @@
+import { FocusSection } from "@/lib/tv-focus";
 import { FocusButton } from "@/lib/tv-focus";
 import { ChevronDown, ChevronUp, Eye, EyeOff } from "lucide-react";
 import type { ReactNode } from "react";
@@ -36,7 +37,14 @@ export function ContentRails({
         const hidden = custom.hidden.includes(key);
         if (hidden && !editMode) return null;
         return (
-          <div key={key} className="flex flex-col gap-3">
+          // Each section is a row of its own.
+          //
+          // They were flat siblings of every other control on the page, and the
+          // helper that carries a vertical press from one row to the next needs
+          // rows to choose between. Without them, down out of the episodes found
+          // nothing, the press failed, and the screen put the highlight back on
+          // the toolbar above — the two traded focus forever.
+          <FocusSection key={key} className="flex flex-col gap-3">
             {editMode && (
               <RailControls
                 label={s.label}
@@ -49,7 +57,7 @@ export function ContentRails({
               />
             )}
             {!hidden && <LazyMount minHeight={s.minHeight ?? 280}>{s.node}</LazyMount>}
-          </div>
+          </FocusSection>
         );
       })}
     </div>

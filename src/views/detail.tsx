@@ -91,7 +91,6 @@ function animeAwardLookupName(
   return null;
 }
 import { Pill } from "./detail/pill";
-import { Credit } from "./detail/credit";
 import { pageScrollKeyNav } from "./detail/page-scroll";
 import { TitlePlate } from "./detail/title-plate";
 import { PlayModeHint } from "./detail/play-mode-hint";
@@ -1430,38 +1429,6 @@ export function DetailView({
 
         {(() => {
           const railSections: DetailSection[] = [];
-          if (detail && (detail.directors.length > 0 || detail.creators.length > 0 || detail.writers.length > 0)) {
-            railSections.push({
-              key: "crew",
-              label: t("Crew"),
-              minHeight: 160,
-              node: (
-                <div className="grid grid-cols-1 gap-x-12 gap-y-6 border-b border-edge-soft pb-12 sm:grid-cols-2 lg:grid-cols-3">
-                  {detail.directors.length > 0 && (
-                    <Credit label={detail.directors.length === 1 ? t("Director") : t("Directors")} people={detail.directors} />
-                  )}
-                  {detail.creators.length > 0 && (
-                    <Credit label={detail.creators.length === 1 ? t("Creator") : t("Creators")} people={detail.creators} />
-                  )}
-                  {detail.writers.length > 0 && (
-                    <Credit label={detail.writers.length === 1 ? t("Writer") : t("Writers")} people={detail.writers.slice(0, 6)} />
-                  )}
-                  {detail.producers.length > 0 && (
-                    <Credit label={t("Producers")} people={detail.producers.slice(0, 6)} />
-                  )}
-                  {detail.cinematography.length > 0 && (
-                    <Credit label={t("Cinematography")} people={detail.cinematography} />
-                  )}
-                  {detail.composer.length > 0 && (
-                    <Credit label={t("Music")} people={detail.composer} />
-                  )}
-                  {detail.editor.length > 0 && (
-                    <Credit label={detail.editor.length === 1 ? t("Editor") : t("Editors")} people={detail.editor} />
-                  )}
-                </div>
-              ),
-            });
-          }
           if (detail && detail.cast.length > 0) {
             railSections.push({
               key: "cast",
