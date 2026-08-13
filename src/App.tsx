@@ -70,6 +70,7 @@ import { FavoritesProvider } from "@/lib/iptv/favorites";
 import { MediaFavoritesProvider } from "@/lib/media-favorites";
 import { LocalWatchlistProvider } from "@/lib/local-watchlist";
 import { useSettings } from "@/lib/settings";
+import { readActiveStremioAuthKey } from "@/lib/auth";
 import { effectiveBinding, eventToBinding } from "@/lib/hotkeys";
 import { ViewProvider, useView, type Frame, type MetaFilter, type View } from "@/lib/view";
 import type { MetaType } from "@/lib/cinemeta";
@@ -607,6 +608,17 @@ function Shell() {
   useEffect(() => {
     void import("@/lib/addon-store").then(({ ensureBuiltInAddons }) => ensureBuiltInAddons());
   }, []);
+
+  // A TMDB key already given to the addon does not need giving again here.
+  useEffect(() => {
+    void import("@/lib/providers/tmdb/adopt-addon-key").then(({ adoptTmdbFromAddon }) =>
+      adoptTmdbFromAddon(
+        readActiveStremioAuthKey(),
+        { tmdbKey: settings.tmdbKey, tmdbLanguage: settings.tmdbLanguage },
+        update,
+      ),
+    );
+  }, [settings.tmdbKey, settings.tmdbLanguage, update]);
 
   useEffect(() => {
     let dispose: (() => void) | null = null;

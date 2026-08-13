@@ -83,7 +83,17 @@ export function ProfileChip({ collapsed = false }: { collapsed?: boolean } = {})
           collapsed ? "" : "lg:justify-start lg:px-3"
         }`}
       >
-        <ProfileAvatar profile={activeProfile} user={user} fallbackAvatar={harborAvatar} preferUser={tv && !!user} />
+        {/*
+          No portrait on a television.
+
+          The circle carried a Stremio avatar or a generated one, neither of
+          which says anything the name underneath does not — and on a screen
+          read from three metres it is a coloured dot beside the only line that
+          matters. The name and what it is signed into stay.
+        */}
+        {!tv && (
+          <ProfileAvatar profile={activeProfile} user={user} fallbackAvatar={harborAvatar} preferUser={tv && !!user} />
+        )}
         <div className={`hidden min-w-0 flex-1 ${collapsed ? "" : "lg:block"}`}>
           <div className="truncate text-[14.5px] font-medium tracking-tight text-ink">
             {/*
