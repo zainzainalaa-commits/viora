@@ -104,7 +104,11 @@ export function KeyField({
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
-  onSave: () => void;
+  /**
+   * Saves. Takes the value when the caller has one in hand, because the panel's
+   * draft state is a render behind at that moment — see `onCommit` below.
+   */
+  onSave: (value?: string) => void;
   saved: boolean;
   help: React.ReactNode;
   iconSrc?: string;
@@ -255,8 +259,21 @@ export function KeyField({
             initial={value}
             placeholder={placeholder}
             onCommit={(v) => {
+              // The value goes with the call.
+              //
+              // `onSave` closes over the panel's draft, and `onChange(v)` has
+              // only *scheduled* that state — so saving without the argument
+              // wrote whatever the draft held on the previous render. Measured
+              // on the device: typing a key and pressing Done stored nothing at
+              // all, and the next key entered stored the one before it. Every
+              // key on this screen went through here, so none of them could be
+              // set from a remote on the first go.
+              //
+              // Nor did the seven-hundred-millisecond autosave below rescue it:
+              // saving marks the field clean, so the corrected value was never
+              // dirty again.
               onChange(v);
-              onSave();
+              onSave(v);
             }}
             onClose={() => setTvEntry(false)}
           />
@@ -301,7 +318,8 @@ export function KeyField({
         >
           <FocusButton
             type="button"
-            onClick={onSave}
+            // Not `onClick={onSave}`: that hands the click event in as the value.
+            onClick={() => onSave()}
             disabled={!showSave && !saved}
             className={`relative flex h-10 items-center justify-center overflow-hidden rounded-xl px-4 text-[13.5px] font-semibold transition-all ${
               saved

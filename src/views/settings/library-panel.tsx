@@ -142,7 +142,7 @@ export function LibraryPanel({
           placeholder={t("v3 API key")}
           value={tmdbDraft}
           onChange={setTmdbDraft}
-          onSave={() => saveKey("tmdb", tmdbDraft)}
+          onSave={(v) => saveKey("tmdb", v ?? tmdbDraft)}
           saved={savedKey === "tmdb"}
           iconSrc={tmdbLogo}
           headerExtra={
@@ -183,7 +183,7 @@ export function LibraryPanel({
           placeholder={t("8-character key")}
           value={omdbDraft}
           onChange={setOmdbDraft}
-          onSave={() => saveKey("omdb", omdbDraft)}
+          onSave={(v) => saveKey("omdb", v ?? omdbDraft)}
           saved={savedKey === "omdb"}
           iconSrc={omdbLogo}
           help={
@@ -201,7 +201,7 @@ export function LibraryPanel({
           placeholder={t("rpdb key")}
           value={rpdbDraft}
           onChange={setRpdbDraft}
-          onSave={() => saveKey("rpdb", rpdbDraft)}
+          onSave={(v) => saveKey("rpdb", v ?? rpdbDraft)}
           saved={savedKey === "rpdb"}
           iconSrc={rpdbLogo}
           help={
@@ -290,7 +290,7 @@ export function LibraryPanel({
           placeholder={t("personal key")}
           value={fanartDraft}
           onChange={setFanartDraft}
-          onSave={() => saveKey("fanart", fanartDraft)}
+          onSave={(v) => saveKey("fanart", v ?? fanartDraft)}
           saved={savedKey === "fanart"}
           iconSrc={fanartLogo}
           help={
@@ -308,7 +308,7 @@ export function LibraryPanel({
           placeholder={t("subscriber API key")}
           value={tvdbDraft}
           onChange={setTvdbDraft}
-          onSave={() => saveKey("tvdb", tvdbDraft)}
+          onSave={(v) => saveKey("tvdb", v ?? tvdbDraft)}
           saved={savedKey === "tvdb"}
           iconSrc={tvdbLogo}
           headerExtra={

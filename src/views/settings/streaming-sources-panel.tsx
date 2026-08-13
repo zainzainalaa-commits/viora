@@ -157,7 +157,7 @@ export function StreamingSourcesPanel({
           placeholder={t("API token")}
           value={rdDraft}
           onChange={setRdDraft}
-          onSave={() => saveKey("rd", rdDraft)}
+          onSave={(v) => saveKey("rd", v ?? rdDraft)}
           saved={savedKey === "rd"}
           iconSrc={realDebridLogo}
           help={
@@ -179,7 +179,7 @@ export function StreamingSourcesPanel({
           placeholder={t("API key")}
           value={tbDraft}
           onChange={setTbDraft}
-          onSave={() => saveKey("tb", tbDraft)}
+          onSave={(v) => saveKey("tb", v ?? tbDraft)}
           saved={savedKey === "tb"}
           iconSrc={torboxLogo}
           help={
@@ -201,7 +201,7 @@ export function StreamingSourcesPanel({
           placeholder={t("API key")}
           value={adDraft}
           onChange={setAdDraft}
-          onSave={() => saveKey("ad", adDraft)}
+          onSave={(v) => saveKey("ad", v ?? adDraft)}
           saved={savedKey === "ad"}
           iconSrc={allDebridLogo}
           help={
@@ -223,7 +223,7 @@ export function StreamingSourcesPanel({
           placeholder={t("API key")}
           value={pmDraft}
           onChange={setPmDraft}
-          onSave={() => saveKey("pm", pmDraft)}
+          onSave={(v) => saveKey("pm", v ?? pmDraft)}
           saved={savedKey === "pm"}
           iconSrc={premiumizeLogo}
           help={
@@ -244,7 +244,7 @@ export function StreamingSourcesPanel({
           placeholder={t("API key")}
           value={dlDraft}
           onChange={setDlDraft}
-          onSave={() => saveKey("dl", dlDraft)}
+          onSave={(v) => saveKey("dl", v ?? dlDraft)}
           saved={savedKey === "dl"}
           iconSrc={debridLinkLogo}
           help={
