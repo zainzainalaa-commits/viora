@@ -7,6 +7,7 @@ import { animeKitsuMeta, type AnimeKitsuVideo } from "@/lib/providers/anime-kits
 import { tmdbLiteMeta } from "@/lib/providers/tmdb/tmdb-lite";
 import { useContextMenu } from "@/lib/context-menu";
 import { useT } from "@/lib/i18n";
+import { isDpadPrimary } from "@/lib/platform";
 import { readSnapshot, useSnapshotVersion } from "@/lib/snapshots";
 import { episodeFromVideoId, isAnimeCwItem, libraryMetaType, type LibraryItem } from "@/lib/stremio";
 import { useHasNewEpisode } from "@/lib/new-episodes";
@@ -267,7 +268,34 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
       <FocusButton
         ref={cardRef}
         onClick={onClick}
-        onContextMenu={(e) => openContextMenu(e, { kind: "meta", meta })}
+        // Hold OK to take it out of the row.
+        //
+        // `onContextMenu` is a right-click or a finger held on glass; a remote
+        // has neither, and the ✕ in the corner only exists under a pointer — so
+        // there was no way at all to remove something from Continue Watching
+        // from the sofa. The menu is opened over the card itself.
+        onLongPress={
+          onDismiss
+            ? () => {
+                const box = cardRef.current?.getBoundingClientRect();
+                openContextMenu(
+                  new MouseEvent("contextmenu", {
+                    clientX: box ? box.left + box.width / 2 : 0,
+                    clientY: box ? box.top + box.height / 2 : 0,
+                  }),
+                  { kind: "continue", label: meta.name, remove: () => onDismiss(item) },
+                );
+              }
+            : undefined
+        }
+        onContextMenu={(e) =>
+          openContextMenu(
+            e,
+            onDismiss
+              ? { kind: "continue", label: meta.name, remove: () => onDismiss(item) }
+              : { kind: "meta", meta },
+          )
+        }
         className="flex w-full min-w-0 flex-col gap-2.5 text-start"
       >
       <div className="harbor-poster relative aspect-[16/9] overflow-hidden rounded-xl bg-elevated shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] will-change-transform [transform:translate3d(0,0,0)] transition-transform duration-[220ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.02]">
@@ -383,7 +411,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
           <Play size={22} fill="currentColor" className="ml-0.5 text-ink" />
         </FocusButton>
       </div>
-      {onDismiss && (
+      {onDismiss && !isDpadPrimary() && (
         <FocusButton
           type="button"
           onClick={(e) => {

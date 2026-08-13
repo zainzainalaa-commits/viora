@@ -1,5 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { Bookmark, BookmarkCheck, CheckCheck, ClipboardPaste, Copy, Download, EyeOff, Info, ListChecks, ListPlus, Maximize, Navigation, RotateCcw, Star, UserPlus, Wallpaper } from "lucide-react";
+import { Bookmark, BookmarkCheck, CheckCheck, ClipboardPaste, Copy, Download, EyeOff, Info, ListChecks, ListPlus, Maximize, Navigation, RotateCcw, Star, UserPlus, Wallpaper, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useActiveAddon } from "@/lib/active-addon";
 import { useContextMenu, type ViewSummonable } from "@/lib/context-menu";
@@ -359,6 +359,22 @@ export function ContextMenu() {
         />,
       );
     }
+  } else if (state.target.kind === "continue") {
+    // One entry, and it is the one the row is for. The ✕ in the corner of the
+    // card only appears under a mouse pointer, so a remote had no way to take
+    // anything out of Continue Watching at all.
+    const { remove } = state.target;
+    items.push(
+      <Item
+        key="remove-from-continue"
+        icon={<X size={14} strokeWidth={2} />}
+        label={t("Remove from Continue Watching")}
+        onClick={() => {
+          remove();
+          close();
+        }}
+      />,
+    );
   } else if (state.target.kind === "subtitle") {
     const { download } = state.target;
     items.push(
