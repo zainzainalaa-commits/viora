@@ -266,7 +266,11 @@ export function SeriesEpisodes({
           eighty-one mixed items, failed, and the screen put the highlight back
           where it remembered it: at the top of the page.
         */}
-        <FocusSection className="flex items-center gap-2.5">
+        <FocusSection
+          isFocusBoundary
+          focusBoundaryDirections={["left", "right"]}
+          className="flex items-center gap-2.5"
+        >
           <RandomEpisodeButton meta={meta} seasons={seasons} />
           <EpisodeLayoutToggle
             value={settings.episodeLayout}
@@ -357,7 +361,14 @@ export function SeriesEpisodes({
       )}
 
       {!altActive && !loading && enrichedEpisodes.length > 0 && (
-        <FocusSection key={settings.episodeLayout} className="animate-fade-in">
+        <FocusSection
+          key={settings.episodeLayout}
+          // Right at the last episode stops there. Falling out of the end of a
+          // row into whatever sits beneath it is not what the press meant.
+          isFocusBoundary
+          focusBoundaryDirections={["left", "right"]}
+          className="animate-fade-in"
+        >
           {settings.episodeLayout !== "list" ? (
             <EpisodeStrip
               layout="strip"

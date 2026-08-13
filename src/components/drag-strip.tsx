@@ -2,6 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDragScroll } from "@/lib/use-drag-scroll";
+import { isDpadPrimary } from "@/lib/platform";
 
 export function DragStrip({
   children,
@@ -88,13 +89,19 @@ export function DragStrip({
         ref={ref}
         onScroll={sync}
         {...handlers}
-        className="flex cursor-grab gap-4 overflow-x-auto [scroll-snap-type:x_proximity] [&>*]:[scroll-snap-align:start] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] active:cursor-grabbing [&_img]:select-none [&_img]:[-webkit-user-drag:none]"
+        className="flex cursor-grab gap-4 overflow-x-auto py-2 -my-2 [scroll-snap-type:x_proximity] [&>*]:[scroll-snap-align:start] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] active:cursor-grabbing [&_img]:select-none [&_img]:[-webkit-user-drag:none]"
       >
         {children}
       </div>
-      {bar.left && <StripArrow dir={-1} offset={arrowOffset} onClick={() => page(-1)} />}
-      {bar.right && <StripArrow dir={1} offset={arrowOffset} onClick={() => page(1)} />}
-      {bar.show && (
+      {/*
+        The drag bar and the arrows are for a hand on a mouse: something to grab
+        and pull. A remote scrolls the row by moving along it, so on a television
+        they are a grey bar under every strip and two chevrons over the artwork,
+        neither of which anyone can use.
+      */}
+      {bar.left && !isDpadPrimary() && <StripArrow dir={-1} offset={arrowOffset} onClick={() => page(-1)} />}
+      {bar.right && !isDpadPrimary() && <StripArrow dir={1} offset={arrowOffset} onClick={() => page(1)} />}
+      {bar.show && !isDpadPrimary() && (
         <div ref={barTrackRef} className="relative mt-3.5 h-3 w-full rounded-full bg-edge-soft/25">
           <div
             onPointerDown={onBarDown}

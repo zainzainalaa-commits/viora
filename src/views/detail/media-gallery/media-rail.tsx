@@ -1,3 +1,4 @@
+import { FocusSection } from "@/lib/tv-focus";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -39,12 +40,24 @@ export function MediaRail({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="group/rail relative min-w-0">
-      <div
+      {/*
+        A row the engine knows about, and one that scrolls itself.
+
+        Without this the images were flat siblings of everything else on the
+        page, and the ones past the right edge are off screen — which the focus
+        resolver refuses — so right stopped dead on the first image with the rest
+        of the gallery beyond it. `scrolls` is what brings the next one into view
+        as focus arrives.
+      */}
+      <FocusSection
+        scrolls
+        isFocusBoundary
+        focusBoundaryDirections={["left", "right"]}
         ref={trackRef}
         className="flex gap-4 overflow-x-auto p-5 -m-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {children}
-      </div>
+      </FocusSection>
       <RailArrow side="start" visible={canPrev} onClick={() => scroll(-1)} />
       <RailArrow side="end" visible={canNext} onClick={() => scroll(1)} />
     </div>

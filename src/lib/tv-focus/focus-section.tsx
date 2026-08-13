@@ -18,6 +18,7 @@ export function FocusSection({
   rememberChild = true,
   autoRestoreFocus = false,
   isFocusBoundary = false,
+  focusBoundaryDirections,
   inert = false,
   scrolls = false,
   preferredChildFocusKey,
@@ -54,6 +55,13 @@ export function FocusSection({
   /** True for modals: the D-pad must not walk out into the page underneath. */
   isFocusBoundary?: boolean;
   /**
+   * Which way the boundary holds. A row of cards wants it left and right —
+   * running off the end of the row should stop, not drop into whatever happens
+   * to sit below the last card — while up and down stay open, because leaving a
+   * row vertically is how a page is read.
+   */
+  focusBoundaryDirections?: Array<"up" | "down" | "left" | "right">;
+  /**
    * Takes the whole region out of the search — used when something covers it,
    * such as the player over the browsing UI. Hiding a region visually is not
    * enough: its controls stay registered, and the remote will happily walk onto
@@ -89,6 +97,7 @@ export function FocusSection({
     focusKey,
     focusable: !inert,
     isFocusBoundary,
+    focusBoundaryDirections,
     saveLastFocusedChild: rememberChild,
     preferredChildFocusKey,
     autoRestoreFocus,
