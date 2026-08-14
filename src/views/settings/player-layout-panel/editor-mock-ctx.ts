@@ -107,7 +107,6 @@ export function buildDefaultCtx(opts: MockOptions): ControlContext {
     onDownloadCancel: NOOP,
     onDownloadReveal: NOOP,
     onDownloadReset: NOOP,
-    onOpenDvr: NOOP,
     setAudioMenuOpen: NOOP_BOOL,
     setSubtitleMenuOpen: NOOP_BOOL,
     setSpeedMenuOpen: NOOP_BOOL,

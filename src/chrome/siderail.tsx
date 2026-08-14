@@ -5,7 +5,6 @@ import { Search } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
 import { ProfileBlock } from "@/chrome/siderail/profile-block";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
-import { RecordingPill } from "@/chrome/recording-pill";
 import { TogetherButton } from "@/chrome/topbar";
 import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-items";
 import { useSearch } from "@/lib/search-context";
@@ -127,7 +126,6 @@ export function SideRail() {
             >
               <Search size={15} strokeWidth={1.8} />
             </FocusButton>
-            {!collapsed && <RecordingPill />}
             {!collapsed && view !== "live" && <TogetherButton variant="ghost" popoverPlacement="above-left" />}
           </div>
           <div className={`flex ${collapsed ? "justify-center" : ""}`}>

@@ -29,7 +29,6 @@ export function usePlayerHotkeys(params: {
   toggleSwitcher: () => void;
   toggleEpisodePanel: () => void;
   liveOverlay: ReturnType<typeof useLiveChannelOverlay>;
-  toggleDvr: () => void;
   sleep: ReturnType<typeof useSleepTimer>;
   quickToolsEnabled: boolean;
   frameGrab: ReturnType<typeof useFrameGrab>;
@@ -61,7 +60,6 @@ export function usePlayerHotkeys(params: {
     toggleSwitcher,
     toggleEpisodePanel,
     liveOverlay,
-    toggleDvr,
     sleep,
     quickToolsEnabled,
     frameGrab,
@@ -98,9 +96,6 @@ export function usePlayerHotkeys(params: {
     toggleEpisodePanel,
     toggleGuide: () => {
       if (liveOverlay.isLive) liveOverlay.setOpen((o) => !o);
-    },
-    toggleDvr: () => {
-      if (liveOverlay.isLive) toggleDvr();
     },
     toggleSleep: () =>
       sleep.mode.kind === "off" ? sleep.set({ kind: "end_episode" }) : sleep.cancel(),

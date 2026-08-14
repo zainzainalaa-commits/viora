@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
 import { MetaAwardsCorner } from "@/components/meta-awards-corner";
@@ -7,17 +7,14 @@ import { meta as fetchMeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
 import { omdbPrefetch, useOmdbScores } from "@/lib/providers/omdb";
 import { useImdbRating } from "@/lib/imdb-rating";
-import { tmdbImdbId, tmdbLogo, tmdbMovieImages, tmdbTrailerList, useTmdbImdbId } from "@/lib/providers/tmdb";
+import { tmdbImdbId, tmdbLogo, tmdbMovieImages, useTmdbImdbId } from "@/lib/providers/tmdb";
 import { useSettings } from "@/lib/settings";
 import { useLocalizedOverview } from "@/lib/use-localized-overview";
-import { fetchTrailer, prefetchTrailer, trailerSrc, type TrailerInfo } from "@/lib/trailer";
 import { useView } from "@/lib/view";
-import { usePageVisible } from "@/lib/visibility";
 
 export const Hero = memo(function Hero({
   meta,
   rank,
-  playTrailer = false,
   active = true,
   loadBackdrop = true,
   full = false,
@@ -25,7 +22,6 @@ export const Hero = memo(function Hero({
 }: {
   meta: Meta;
   rank?: { label: string; position: number };
-  playTrailer?: boolean;
   active?: boolean;
   loadBackdrop?: boolean;
   full?: boolean;
@@ -39,46 +35,12 @@ export const Hero = memo(function Hero({
   const [bgUrl, setBgUrl] = useState<string | undefined>(meta.background);
   const [bgResolved, setBgResolved] = useState<boolean>(!!meta.background);
   const bg = bgUrl ? upsizeTmdb(bgUrl, fullQuality) : bgResolved ? meta.poster : undefined;
-  const [trailerCandidates, setTrailerCandidates] = useState<string[]>([]);
-  const [trailerInfo, setTrailerInfo] = useState<TrailerInfo | null>(null);
-  const [videoReady, setVideoReady] = useState(false);
   const [logo, setLogo] = useState<string | undefined>(meta.logo);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const [logoResolved, setLogoResolved] = useState<boolean>(!!meta.logo);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const omdb = useOmdbScores(resolvedImdb ?? undefined);
   const imdbRating = useImdbRating(meta, resolvedImdb);
-  const pageVisible = usePageVisible();
-  const wantsPlayback = !!playTrailer && !!trailerInfo && pageVisible;
 
-  useEffect(() => {
-    setTrailerCandidates([]);
-    setTrailerInfo(null);
-    setVideoReady(false);
-    if (!playTrailer) return;
-    let cancelled = false;
-    const isTmdb = meta.id.startsWith("tmdb:");
-    const lookup: Promise<string[]> = isTmdb
-      ? tmdbTrailerList(settings.tmdbKey, meta.id)
-      : fetchMeta(narrowMediaType(meta.type), meta.id).then((full) => {
-          const ids = [
-            full?.trailers?.[0]?.source,
-            full?.trailerStreams?.[0]?.ytId,
-            ...(full?.trailerStreams?.slice(1).map((s) => s.ytId) ?? []),
-          ].filter((s): s is string => !!s);
-          return Array.from(new Set(ids));
-        });
-    lookup
-      .then((ids) => {
-        if (cancelled) return;
-        setTrailerCandidates(ids);
-        if (ids[0]) prefetchTrailer(ids[0], "360p");
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, [meta.id, meta.type, settings.tmdbKey, playTrailer]);
 
   useEffect(() => {
     setLogo(meta.logo);
@@ -135,41 +97,8 @@ export const Hero = memo(function Hero({
     };
   }, [active, meta.id, settings.tmdbKey, settings.omdbKey]);
 
-  useEffect(() => {
-    if (!playTrailer || trailerCandidates.length === 0 || trailerInfo) return;
-    let cancelled = false;
-    fetchTrailer(trailerCandidates[0], "360p").then((info) => {
-      if (!cancelled && info) setTrailerInfo(info);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [playTrailer, trailerCandidates, trailerInfo]);
 
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (wantsPlayback) {
-      v.play().catch(() => {});
-    } else {
-      v.pause();
-    }
-  }, [wantsPlayback]);
 
-  useEffect(() => {
-    if (!trailerInfo) return;
-    const v = videoRef.current;
-    return () => {
-      if (!v) return;
-      try {
-        v.pause();
-        v.removeAttribute("src");
-        v.load();
-      } catch {
-        void 0;
-      }
-    };
-  }, [trailerInfo]);
 
   return (
     <section
@@ -184,25 +113,8 @@ export const Hero = memo(function Hero({
           decoding="async"
           fetchPriority={active ? "high" : "low"}
           className={`absolute object-cover transition-opacity duration-500 ${full ? "inset-0 h-full w-full rounded-none" : "inset-[2px] h-[calc(100%-4px)] w-[calc(100%-4px)] rounded-[26px]"}`}
-          style={{ opacity: wantsPlayback && videoReady ? 0 : 0.9 }}
+          style={{ opacity: 0.9 }}
         />
-      )}
-      {trailerInfo && (
-        <div
-          className={`pointer-events-none absolute overflow-hidden transition-opacity duration-500 ${full ? "inset-0 rounded-none" : "inset-[2px] rounded-[26px]"}`}
-          style={{ opacity: wantsPlayback && videoReady ? 1 : 0 }}
-        >
-          <video
-            ref={videoRef}
-            src={trailerSrc(trailerInfo)}
-            muted
-            loop
-            playsInline
-            preload="none"
-            onCanPlay={() => setVideoReady(true)}
-            className="absolute left-1/2 top-1/2 h-[135%] w-[135%] -translate-x-1/2 -translate-y-1/2 object-cover"
-          />
-        </div>
       )}
       <div
         className="absolute inset-0 bg-gradient-to-r from-canvas via-canvas/85 via-50% to-transparent rtl:bg-gradient-to-l"

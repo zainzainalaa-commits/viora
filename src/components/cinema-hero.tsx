@@ -14,11 +14,10 @@ import { useEffect, useRef, useState } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
 import { MetaAwardsCorner } from "@/components/meta-awards-corner";
 import { meta as fetchMeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
-import { tmdbLogo, tmdbTrailerList, useTmdbImdbId } from "@/lib/providers/tmdb";
+import { tmdbLogo, useTmdbImdbId } from "@/lib/providers/tmdb";
 import { useImdbRating } from "@/lib/imdb-rating";
 import { useSettings } from "@/lib/settings";
 import { useLocalizedOverview } from "@/lib/use-localized-overview";
-import { fetchTrailer, prefetchTrailer, trailerSrc, type TrailerInfo } from "@/lib/trailer";
 import { useT } from "@/lib/i18n";
 import { useView } from "@/lib/view";
 import { observe, usePageVisible } from "@/lib/visibility";
@@ -47,7 +46,6 @@ export function CinemaHero({
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState(0);
   const [inViewport, setInViewport] = useState(true);
-  const pageVisible = usePageVisible();
   const ref = useRef<HTMLElement>(null);
 
   // One stop for the whole hero, and the same contract the home screen's uses:
@@ -81,6 +79,7 @@ export function CinemaHero({
   const velocity = useRef(0);
   const moved = useRef(false);
   const widthRef = useRef(0);
+  const pageVisible = usePageVisible();
 
   useEffect(() => {
     const el = ref.current;
@@ -268,12 +267,6 @@ function CinemaSlide({
   const [logo, setLogo] = useState<string | undefined>(meta.logo);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const [logoResolved, setLogoResolved] = useState<boolean>(!!meta.logo);
-  const [trailerCandidates, setTrailerCandidates] = useState<string[]>([]);
-  const [trailerInfo, setTrailerInfo] = useState<TrailerInfo | null>(null);
-  const [videoReady, setVideoReady] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const pageVisible = usePageVisible();
-  const wantsPlayback = active && !!trailerInfo && pageVisible;
   const bg = upsizeTmdb(meta.background || meta.poster);
 
   useEffect(() => {
@@ -300,70 +293,9 @@ function CinemaSlide({
     };
   }, [active, logoResolved, meta.id, meta.type, settings.tmdbKey]);
 
-  useEffect(() => {
-    if (!active) return;
-    setTrailerCandidates([]);
-    setTrailerInfo(null);
-    setVideoReady(false);
-    let cancelled = false;
-    const isTmdb = meta.id.startsWith("tmdb:");
-    const lookup: Promise<string[]> = isTmdb
-      ? tmdbTrailerList(settings.tmdbKey, meta.id)
-      : fetchMeta(narrowMediaType(meta.type), meta.id).then((full) => {
-          const ids = [
-            full?.trailers?.[0]?.source,
-            full?.trailerStreams?.[0]?.ytId,
-            ...(full?.trailerStreams?.slice(1).map((s) => s.ytId) ?? []),
-          ].filter((s): s is string => !!s);
-          return Array.from(new Set(ids));
-        });
-    lookup
-      .then((ids) => {
-        if (cancelled) return;
-        setTrailerCandidates(ids);
-        if (ids[0]) prefetchTrailer(ids[0], "360p");
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, [active, meta.id, meta.type, settings.tmdbKey]);
 
-  useEffect(() => {
-    if (!active || trailerCandidates.length === 0 || trailerInfo) return;
-    let cancelled = false;
-    fetchTrailer(trailerCandidates[0], "360p").then((info) => {
-      if (!cancelled && info) setTrailerInfo(info);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [active, trailerCandidates, trailerInfo]);
 
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (wantsPlayback) {
-      v.play().catch(() => {});
-    } else {
-      v.pause();
-    }
-  }, [wantsPlayback]);
 
-  useEffect(() => {
-    if (!trailerInfo) return;
-    const v = videoRef.current;
-    return () => {
-      if (!v) return;
-      try {
-        v.pause();
-        v.removeAttribute("src");
-        v.load();
-      } catch {
-        void 0;
-      }
-    };
-  }, [trailerInfo]);
 
   return (
     <div
@@ -377,25 +309,8 @@ function CinemaSlide({
           decoding="async"
           fetchPriority={active ? "high" : "low"}
           className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-          style={{ opacity: wantsPlayback && videoReady ? 0 : 1 }}
+          
         />
-      )}
-      {trailerInfo && (
-        <div
-          className="pointer-events-none absolute inset-0 overflow-hidden transition-opacity duration-700"
-          style={{ opacity: wantsPlayback && videoReady ? 1 : 0 }}
-        >
-          <video
-            ref={videoRef}
-            src={trailerSrc(trailerInfo)}
-            muted
-            loop
-            playsInline
-            preload="none"
-            onCanPlay={() => setVideoReady(true)}
-            className="absolute left-1/2 top-1/2 h-[135%] w-[135%] -translate-x-1/2 -translate-y-1/2 object-cover"
-          />
-        </div>
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/70 via-30% to-transparent" />
       <MetaAwardsCorner meta={meta} imdbId={resolvedImdb} />

@@ -58,7 +58,6 @@ import { usePlayerExit } from "./player/hooks/use-player-exit";
 import { usePendingSeekApply } from "./player/hooks/use-pending-seek-apply";
 import { usePlayerHotkeys } from "./player/hooks/use-player-hotkeys";
 import { usePlayerMedia } from "./player/hooks/use-player-media";
-import { useTrickplay } from "./player/hooks/use-trickplay";
 import { useStubDetection } from "./player/hooks/use-stub-detection";
 import { useBridgeLoad } from "./player/hooks/use-bridge-load";
 import { useVideoFill } from "./player/hooks/use-video-fill";
@@ -442,7 +441,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     });
   }, [snap.status, src, hasStarted, inRoom, exitPlayback, openPicker]);
 
-  const [dvrOpen, setDvrOpen] = useState(false);
   const pickAnotherOrGuide = useCallback(() => {
     if (liveOverlay.isLive) {
       liveOverlay.setOpen(true);
@@ -523,7 +521,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     syncToastTimerRef.current = window.setTimeout(() => setSyncToast(null), kind === "error" ? 5000 : 3000);
   }, []);
   const handleEnterSync = useCallback(() => {
-    void textSync.enter(src.url, src.headers);
+    void textSync.enter();
   }, [textSync.enter, src.url, src.headers]);
 
   const volumeIndicatorTimerRef = useRef<number | null>(null);
@@ -578,7 +576,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     toggleSwitcher: () => setSwitcherOpen((v) => !v),
     toggleEpisodePanel: () => setEpisodePanelOpen((v) => !v),
     liveOverlay,
-    toggleDvr: () => setDvrOpen((v) => !v),
     sleep,
     quickToolsEnabled,
     frameGrab,
@@ -676,11 +673,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   const isLocalSrc = isLocalUrl(src.url);
   const playStreamRef = liveStreamRef ?? src.streamRef;
   const playUrl = liveUrl ?? src.url;
-  useTrickplay({
-    url: playUrl,
-    enabled: settings.seekPreviewEnabled,
-    isLive: src.meta.id?.startsWith("iptv:") ?? false,
-  });
   const adSegments = useAdSegments(
     src.meta.id,
     src.imdbId ?? null,
@@ -846,8 +838,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     tmdbKey: settings.tmdbKey ?? null,
     download: isLocalSrc ? undefined : download,
     liveOverlay,
-    setDvrOpen,
-    openDvr: liveOverlay.isLive ? () => setDvrOpen(true) : undefined,
     sleep,
     adjacentPrev: adjacent.prev,
     adjacentNext: adjacent.next,
@@ -881,7 +871,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     foreignNotice,
     onDismissForeign: () => setForeignNotice(null),
     setStreamCheckOpen,
-    dvrOpen,
     setSwitcherOpen,
     onSwitchStream,
     debridSlugs: debrids.map((d) => d.slug),

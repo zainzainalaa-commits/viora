@@ -15,7 +15,6 @@ export type PlayerControlId =
   | "time-start"
   | "time-end"
   | "volume"
-  | "dvr"
   | "download"
   | "prev-episode"
   | "seek-back"
@@ -95,7 +94,6 @@ export const CONTROL_STATES: Partial<Record<PlayerControlId, readonly string[]>>
   "fullscreen": ["fullscreen", "windowed"],
   "draw-toggle": ["active", "inactive"],
   cast: ["connected", "idle"],
-  dvr: ["recording", "idle"],
   pip: ["active", "inactive"],
   download: ["idle", "downloading", "complete", "error"],
 };
@@ -144,7 +142,6 @@ export const ICON_REPLACEABLE_CONTROLS: readonly PlayerControlId[] = [
   "prev-episode",
   "next-episode",
   "pick-another",
-  "dvr",
   "download",
   "draw-toggle",
   "pip",
@@ -174,7 +171,6 @@ export const DEFAULT_DEFAULT_CONFIG: PlayerChromeConfig = {
     { id: "time-start", slot: "seek-leading", order: 0 },
     { id: "time-end", slot: "seek-trailing", order: 0 },
     { id: "volume", slot: "bottom-left", order: 0 },
-    { id: "dvr", slot: "bottom-left", order: 10 },
     { id: "download", slot: "bottom-left", order: 20 },
     { id: "prev-episode", slot: "bottom-center", order: 0 },
     { id: "seek-back", slot: "bottom-center", order: 10 },
@@ -212,7 +208,6 @@ export const DEFAULT_STREMIO_CONFIG: PlayerChromeConfig = {
     { id: "volume", slot: "bottom-left", order: 10 },
     { id: "time-start", slot: "bottom-left", order: 20 },
     { id: "time-end", slot: "bottom-left", order: 30 },
-    { id: "dvr", slot: "bottom-left", order: 40 },
     { id: "prev-episode", slot: "bottom-center", order: 0 },
     { id: "seek-back", slot: "bottom-center", order: 10 },
     { id: "seek-forward", slot: "bottom-center", order: 20 },
@@ -246,7 +241,6 @@ export const CONTROL_META: Record<
   "time-start": { label: "Time elapsed", group: "info", defaultSlot: "seek-leading" },
   "time-end": { label: "Time remaining or duration", group: "info", defaultSlot: "seek-trailing" },
   volume: { label: "Volume", group: "transport", defaultSlot: "bottom-left" },
-  dvr: { label: "DVR record (Live TV)", group: "actions", defaultSlot: "bottom-left" },
   download: { label: "Download", group: "actions", defaultSlot: "bottom-left" },
   "prev-episode": { label: "Previous episode", group: "transport", defaultSlot: "bottom-center" },
   "seek-back": { label: "Seek back", group: "transport", defaultSlot: "bottom-center" },

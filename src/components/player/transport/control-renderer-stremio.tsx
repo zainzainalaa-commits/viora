@@ -27,7 +27,6 @@ import { SubtitleMenu } from "../subtitle-menu";
 import { AudioMenu } from "../audio-menu";
 import { DownloadButton } from "./download-button";
 import { Tooltip } from "./tooltip";
-import { DvrButton } from "./dvr-button";
 import { SpeedMenu } from "./speed-menu";
 import { Anime4kMenu } from "./anime4k-menu";
 import { HdrToggleStremioBtn } from "./hdr-toggle-btn";
@@ -125,7 +124,6 @@ export type StremioRenderCtx = {
   onDownloadCancel?: () => void;
   onDownloadReveal?: () => void;
   onDownloadReset?: () => void;
-  onOpenDvr?: () => void;
 };
 
 function getStremioState(id: PlayerControlId, ctx: StremioRenderCtx): string | undefined {
@@ -138,8 +136,6 @@ function getStremioState(id: PlayerControlId, ctx: StremioRenderCtx): string | u
       return ctx.fullscreen ? "fullscreen" : "windowed";
     case "draw-toggle":
       return ctx.drawMode ? "active" : "inactive";
-    case "dvr":
-      return ctx.isLiveChannel ? "recording" : "idle";
     case "cast":
       return ctx.capabilities.chromecast ? "connected" : "idle";
     case "pip":
@@ -303,9 +299,6 @@ export function RenderedStremioControl({
           </StremioBtn>
         </Tooltip>
       );
-    case "dvr":
-      if (!ctx.isLiveChannel || !ctx.onOpenDvr) return null;
-      return <DvrButton channelName={ctx.meta?.name ?? tr("Live")} onClick={ctx.onOpenDvr} />;
     case "download":
       if (ctx.isLiveChannel) return null;
       if (!ctx.download || !ctx.onDownloadStart || !ctx.onDownloadCancel || !ctx.onDownloadReveal || !ctx.onDownloadReset) return null;

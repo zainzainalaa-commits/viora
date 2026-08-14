@@ -81,7 +81,6 @@ export type TransportStremioProps = {
   onDownloadCancel?: () => void;
   onDownloadReveal?: () => void;
   onDownloadReset?: () => void;
-  onOpenDvr?: () => void;
   sleep?: import("@/views/player/hooks/use-sleep-timer").SleepTimerState;
 };
 
@@ -145,7 +144,6 @@ export function TransportStremio(p: TransportStremioProps) {
     onDownloadCancel,
     onDownloadReveal,
     onDownloadReset,
-    onOpenDvr,
     sleep,
   } = p;
 
@@ -263,7 +261,6 @@ export function TransportStremio(p: TransportStremioProps) {
     onDownloadCancel,
     onDownloadReveal,
     onDownloadReset,
-    onOpenDvr,
   };
 
   const renderSlot = (slot: PlayerSlot) =>

@@ -38,7 +38,6 @@ export type HotkeyId =
   | "playerStreamSwitcher"
   | "playerEpisodePanel"
   | "playerTvGuide"
-  | "playerDvr"
   | "playerSleep"
   | "globalUiScaleUp"
   | "globalUiScaleDown"
@@ -103,7 +102,6 @@ export const HOTKEYS: HotkeyDef[] = [
   { id: "playerStreamSwitcher", scope: "Player", group: "Panels", label: "Stream switcher", description: "Open or close the in-player stream switcher.", defaultBinding: "w" },
   { id: "playerEpisodePanel", scope: "Player", group: "Panels", label: "Up next / episodes", description: "Open or close the episode panel.", defaultBinding: "e" },
   { id: "playerTvGuide", scope: "Player", group: "Panels", label: "TV guide", description: "Open or close the live TV guide (live channels only).", defaultBinding: "g" },
-  { id: "playerDvr", scope: "Player", group: "Panels", label: "DVR / record", description: "Open or close the live TV recorder (live channels only).", defaultBinding: "r" },
   { id: "playerSleep", scope: "Player", group: "Panels", label: "Sleep at end of episode", description: "Toggle a sleep timer that pauses when this episode ends.", defaultBinding: "l" },
 ];
 

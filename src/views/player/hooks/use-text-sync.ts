@@ -80,7 +80,7 @@ export function useTextSync(bridge: PlayerBridge | null, metaId: string) {
     };
   }, [state.syncMode, state.points, state.nudge, state.segments, state.cues, constant]);
 
-  const enter = useCallback(async (sourceUrl: string | null, headers?: Record<string, string>) => {
+  const enter = useCallback(async () => {
     const b = bridgeRef.current;
     if (!b) return;
     setState({ ...INITIAL, syncMode: "loading" });
@@ -89,7 +89,7 @@ export function useTextSync(bridge: PlayerBridge | null, metaId: string) {
       baseOffset = s.subDelaySec;
     });
     unsub();
-    const res = await getCuesAnySource(b, sourceUrl, headers);
+    const res = await getCuesAnySource(b);
     if (!res.ok) {
       setState({ ...INITIAL, error: res.reason });
       return;

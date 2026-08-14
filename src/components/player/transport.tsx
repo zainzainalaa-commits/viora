@@ -90,7 +90,6 @@ export function Transport({
   onDownloadCancel,
   onDownloadReveal,
   onDownloadReset,
-  onOpenDvr,
   sleep,
 }: {
   snap: PlayerSnapshot;
@@ -155,7 +154,6 @@ export function Transport({
   onDownloadCancel?: () => void;
   onDownloadReveal?: () => void;
   onDownloadReset?: () => void;
-  onOpenDvr?: () => void;
   sleep?: import("@/views/player/hooks/use-sleep-timer").SleepTimerState;
 }) {
   const t = useT();
@@ -272,7 +270,6 @@ export function Transport({
         onDownloadCancel={onDownloadCancel}
         onDownloadReveal={onDownloadReveal}
         onDownloadReset={onDownloadReset}
-        onOpenDvr={onOpenDvr}
         sleep={sleep}
       />
     );
@@ -399,7 +396,6 @@ export function Transport({
     onDownloadCancel,
     onDownloadReveal,
     onDownloadReset,
-    onOpenDvr,
     setAudioMenuOpen,
     setSubtitleMenuOpen,
     setSpeedMenuOpen,

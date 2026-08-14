@@ -61,7 +61,6 @@ import { SearchProvider, useSearch } from "@/lib/search-context";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import { SearchHotkey } from "@/components/search/search-hotkey";
 import { TogetherProvider, useTogether } from "@/lib/together/provider";
-import { DvrProvider } from "@/lib/dvr/provider";
 import { FavoritesProvider } from "@/lib/iptv/favorites";
 import { MediaFavoritesProvider } from "@/lib/media-favorites";
 import { LocalWatchlistProvider } from "@/lib/local-watchlist";
@@ -242,7 +241,6 @@ export function App() {
             <TogetherProvider>
               <ViewProvider>
                 <SearchProvider>
-                <DvrProvider>
                 <FavoritesProvider>
                 <MediaFavoritesProvider>
                 <LocalWatchlistProvider>
@@ -291,7 +289,6 @@ export function App() {
                 </LocalWatchlistProvider>
                 </MediaFavoritesProvider>
                 </FavoritesProvider>
-                </DvrProvider>
                 </SearchProvider>
               </ViewProvider>
             </TogetherProvider>

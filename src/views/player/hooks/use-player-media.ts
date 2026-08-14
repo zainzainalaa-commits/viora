@@ -21,7 +21,6 @@ import { useStremioSync } from "./use-stremio-sync";
 import { useSubDrop } from "./use-sub-drop";
 import { useSubStyleApply } from "./use-sub-style-apply";
 import { useTrackAutoload } from "./use-track-autoload";
-import { useAutoSync } from "./use-auto-sync";
 import { useReferenceSync } from "./use-reference-sync";
 import { useVideoDownload } from "./use-video-download";
 import { useWebviewMemory } from "./use-webview-memory";
@@ -106,7 +105,6 @@ export function usePlayerMedia(params: {
     authKey,
   });
 
-  useAutoSync({ bridgeRef, src, snap, engine, settings });
   // Sync against another subtitle rather than the audio. The two are
   // complementary: the audio path needs an ffmpeg binary and so never runs on
   // Android, and this one needs a second subtitle to compare against.
@@ -175,7 +173,7 @@ export function usePlayerMedia(params: {
       ? `${src.meta.name ?? "Subtitle"} S${src.episode.season}E${src.episode.episode}`
       : src.meta.name ?? "Subtitle";
     const fileName = `${base.replace(/[\\/:*?"<>|]+/g, " ").trim() || "Subtitle"}.srt`;
-    const res = await getCuesAnySource(b, src.url, src.headers);
+    const res = await getCuesAnySource(b);
     if (res.ok && res.source.cues.length > 0) {
       await downloadText(fileName, toSrt(res.source.cues), ["srt"], "Subtitle");
     }

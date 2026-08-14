@@ -3,7 +3,6 @@ import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
-import { RecordingPill } from "@/chrome/recording-pill";
 import { TogetherButton } from "@/chrome/topbar";
 import { useT } from "@/lib/i18n";
 import { useSearch } from "@/lib/search-context";
@@ -125,7 +124,6 @@ export function CinematicOverlay() {
           />
 
           <div className="ms-2 flex shrink-0 items-center gap-1">
-            <RecordingPill />
             {view !== "live" && (
               <TogetherButton variant="ghost" connectStyle="tab" />
             )}

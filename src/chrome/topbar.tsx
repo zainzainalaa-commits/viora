@@ -7,7 +7,6 @@ import { isDpadPrimary } from "@/lib/platform";
 import { HarborMark } from "@/components/icons/harbor-mark";
 import { TogetherPopover } from "@/components/together-modal";
 import { DownloadsButton } from "@/components/downloads-popover";
-import { RecordingPill } from "@/chrome/recording-pill";
 import {
   effectiveBinding,
   eventToBinding,
@@ -85,7 +84,6 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
         <div
           className="flex h-full min-w-0 items-center justify-end gap-2"
         >
-          <RecordingPill />
           <DownloadsButton />
           {!onLiveRoot && !kid && <TogetherButton />}
         </div>

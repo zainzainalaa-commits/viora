@@ -3,7 +3,6 @@ import { ArrowLeft, LogOut, Pencil, Search, Settings as SettingsIcon, Users } fr
 import { useEffect, useRef, useState } from "react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
 import { HarborMark } from "@/components/icons/harbor-mark";
-import { RecordingPill } from "@/chrome/recording-pill";
 import { TogetherButton } from "@/chrome/topbar";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
@@ -58,7 +57,6 @@ export function FloatingTop() {
       )}
       <div className="flex flex-1" data-tauri-drag-region />
       <div className="pointer-events-auto flex shrink-0 items-center gap-1.5">
-        <RecordingPill />
         {!liveActive && <TogetherButton variant="ghost" popoverPlacement="below-right" />}
         <PillBtn label={t("common.search")} onClick={() => setSearchOpen(true)}>
           <Search size={16} strokeWidth={2.2} />

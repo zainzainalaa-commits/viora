@@ -101,7 +101,6 @@ import { PreviewIcon } from "./detail/preview-icon";
 import { HeroActionOverflow, useHeroActionOverflow } from "./detail/hero-action-overflow";
 import { HeroRatings } from "./detail/hero-ratings";
 import { TrailerOverlay } from "./detail/trailer-overlay";
-import { DetailHeroTrailer } from "./detail/detail-hero-trailer";
 import { SeriesEpisodes } from "./detail/series-episodes";
 import { CinemetaEpisodes } from "./detail/cinemeta-episodes";
 import { AnimeEpisodes } from "./detail/anime-episodes";
@@ -1040,9 +1039,8 @@ export function DetailView({
           ) : (
             <div className="absolute inset-0 animate-pulse bg-white/[0.02]" />
           )}
-          {settings.detailTrailerAutoplay && trailerCandidate && (
-            <DetailHeroTrailer candidateId={trailerCandidate} paused={trailerOpen} />
-          )}
+          {/* The hero used to autoplay the trailer here, over the backdrop. The
+              file came from yt-dlp, which Android cannot spawn. */}
           <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/55 via-45% to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-canvas/85 via-canvas/35 to-transparent" />
 
@@ -1480,7 +1478,7 @@ export function DetailView({
             railSections.push({
               key: "mediaGallery",
               label: t("Media"),
-              node: <MediaGallery detail={detail} title={title} logo={logo} />,
+              node: <MediaGallery detail={detail} title={title} />,
             });
           }
           if (isAnime) {
@@ -1588,7 +1586,6 @@ export function DetailView({
         <TrailerOverlay
           id={trailerCandidate}
           title={title}
-          logo={logo}
           onClose={() => setTrailerOpen(false)}
         />
       )}

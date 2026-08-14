@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { LogOut, Pencil, Search, Settings as SettingsIcon, Users } from "lucide-react";
 import { HarborMark } from "@/components/icons/harbor-mark";
 import { CatAvatar } from "@/components/icons/cat-avatar";
-import { RecordingPill } from "@/chrome/recording-pill";
 import { TogetherButton } from "@/chrome/topbar";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
@@ -116,7 +115,6 @@ export function TopDock() {
           />
 
           <div className="ms-2 flex shrink-0 items-center gap-1">
-            <RecordingPill />
             {view !== "live" && <TogetherButton variant="ghost" connectStyle="tab" />}
             <IconBtn
               onClick={() => setSearchOpen(true)}

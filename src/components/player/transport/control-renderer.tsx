@@ -22,8 +22,6 @@ function getControlState(id: PlayerControlId, ctx: ControlContext): string | und
       return ctx.fullscreen ? "fullscreen" : "windowed";
     case "draw-toggle":
       return ctx.drawMode ? "active" : "inactive";
-    case "dvr":
-      return ctx.isLiveChannel ? "recording" : "idle";
     case "cast":
       return ctx.capabilities.chromecast ? "connected" : "idle";
     case "pip":
@@ -38,7 +36,6 @@ import { AudioMenu } from "../audio-menu";
 import { DownloadButton } from "./download-button";
 import { Tooltip } from "./tooltip";
 import { BigButton } from "./big-button";
-import { DvrButton } from "./dvr-button";
 import { VolumeControl } from "./volume-control";
 import { SpeedMenu } from "./speed-menu";
 import { Anime4kMenu } from "./anime4k-menu";
@@ -123,7 +120,6 @@ export type ControlContext = {
   onDownloadCancel?: () => void;
   onDownloadReveal?: () => void;
   onDownloadReset?: () => void;
-  onOpenDvr?: () => void;
   setAudioMenuOpen: (v: boolean) => void;
   setSubtitleMenuOpen: (v: boolean) => void;
   setSpeedMenuOpen: (v: boolean) => void;
@@ -254,10 +250,6 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
           style={ctx.volumeStyle ?? "slider"}
         />
       );
-    }
-    case "dvr": {
-      if (ctx.tight || !ctx.isLiveChannel || !ctx.onOpenDvr) return null;
-      return <DvrButton channelName={ctx.meta?.name ?? t("Live")} onClick={ctx.onOpenDvr} />;
     }
     case "download": {
       if (ctx.mid || ctx.isLiveChannel) return null;

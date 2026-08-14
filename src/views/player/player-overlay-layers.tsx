@@ -119,8 +119,6 @@ export type PlayerOverlayLayersProps = {
   tmdbKey: string | null;
   download: Shell["download"];
   liveOverlay: Live["liveOverlay"];
-  setDvrOpen: (fn: (v: boolean) => boolean) => void;
-  openDvr: (() => void) | undefined;
   sleep: Shell["sleep"];
   adjacentPrev: PlayEpisode | null;
   adjacentNext: PlayEpisode | null;
@@ -154,7 +152,6 @@ export type PlayerOverlayLayersProps = {
   foreignNotice: Room["foreignNotice"];
   onDismissForeign: () => void;
   setStreamCheckOpen: (v: boolean) => void;
-  dvrOpen: boolean;
   setSwitcherOpen: (fn: (v: boolean) => boolean) => void;
   onSwitchStream: Switcher["onPick"];
   debridSlugs: string[];
@@ -339,7 +336,6 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
           season={p.src.episode?.season ?? null}
           episode={p.src.episode?.episode ?? null}
           download={p.download}
-          onOpenDvr={p.openDvr}
           sleep={p.sleep}
           onVolumeFeedback={p.onVolumeFeedback}
         />
@@ -396,13 +392,7 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         visible={p.isP2pEngine && p.showChrome && !p.pipMode && !p.drawMode}
       />
 
-      <LiveLayer
-        liveOverlay={p.liveOverlay}
-        dvrOpen={p.dvrOpen}
-        onCloseDvr={() => p.setDvrOpen(() => false)}
-        srcUrl={p.src.url}
-        channelName={p.src.meta.name ?? p.src.title}
-      />
+      <LiveLayer liveOverlay={p.liveOverlay} />
       <StreamSwitcher
         open={p.switcherOpen}
         onClose={() => p.setSwitcherOpen(() => false)}
