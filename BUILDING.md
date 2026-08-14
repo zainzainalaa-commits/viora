@@ -73,8 +73,18 @@ Set in three places that have to agree:
 - `src-tauri/Cargo.toml` → `[package] version`
 - `src-tauri/tauri.conf.json` → `version`
 
-Android's `versionCode` and `versionName` are generated from the Tauri config;
-do not edit `gen/android/app/tauri.properties` by hand.
+`build-apk.mjs` writes `gen/android/app/tauri.properties` from `package.json`
+on every build, and `app/build.gradle.kts` reads the APK's `versionName` and
+`versionCode` from there. Do not edit that file by hand — it is overwritten.
+
+`versionCode` is derived as `major*1000000 + minor*1000 + patch`, so 1.0.2
+becomes 1000002. It has to increase between releases: Android refuses an update
+whose code is not greater than the installed one, and the viewer would have to
+uninstall — losing their library — before they could move forward.
+
+This used to be a trap. `tauri android build` regenerates that file, but this
+script deliberately does not call it (see above), so nothing kept it in step and
+every APK shipped 1.0.0 / 1000000 no matter what the three files above said.
 
 ## After moving the project directory
 
