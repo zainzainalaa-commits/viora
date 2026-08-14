@@ -68,11 +68,6 @@ body,
   overflow: hidden;
 }
 
-html[data-os="linux"]:not([data-mpv-embed="1"]),
-html[data-os="linux"]:not([data-mpv-embed="1"]) body,
-html[data-os="linux"]:not([data-mpv-embed="1"]) #root {
-  background: var(--color-canvas);
-}
 
 body {
   user-select: none;
@@ -1953,32 +1948,14 @@ html[data-input="dpad"] .harbor-row-track {
    app rather than the same app. Modern TVs do not overscan, and the layout was
    already designed for a 16:9 screen. */
 
-/* Hover affordances never fire from a D-pad or a finger; make them permanent
-   rather than unreachable. */
-html[data-input="dpad"] .harbor-hover-only,
-html[data-input="touch"] .harbor-hover-only {
+/* Hover affordances never fire from a D-pad; make them permanent rather than
+   unreachable. */
+html[data-input="dpad"] .harbor-hover-only {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Touch targets below ~44px are hard to hit reliably. */
-html[data-input="touch"] button,
-html[data-input="touch"] a[role="button"],
-html[data-input="touch"] [data-focusable="true"] {
-  min-height: 44px;
-}
-
-html[data-input="touch"] {
-  /* Kill the 300ms tap delay and iOS double-tap zoom. */
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html[data-form-factor="phone"] {
-  font-size: 15px;
-}
-
-/* Respect the notch / gesture bar on phones and the rounded corners on TV. */
+/* Respect the rounded corners and any inset the TV reports. */
 html[data-os="android"] body {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
@@ -1986,42 +1963,17 @@ html[data-os="android"] body {
   padding-right: env(safe-area-inset-right);
 }
 
-/* Phone: the bottom tab bar occupies the foot of the screen, so scroll
-   containers need to clear it or their last row sits under the tabs. */
-html[data-form-factor="phone"] body {
-  padding-bottom: calc(56px + env(safe-area-inset-bottom));
-}
-
-/* The desktop chrome assumes a 960px-wide window. At phone width the fixed
-   side rails and their content offsets have nothing to align to. */
-html[data-form-factor="phone"] [data-harbor-rail],
-html[data-form-factor="phone"] [data-harbor-siderail] {
-  display: none;
-}
-
-/* Rows scroll horizontally on desktop with hover arrows that touch cannot
-   reach; let the finger scroll them directly with snapping instead. */
-html[data-input="touch"] [data-harbor-row] {
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-}
-html[data-input="touch"] [data-harbor-row] > * {
-  scroll-snap-align: start;
-}
-
-/* The player chrome is sized for a mouse. Fingers and remotes need bigger
-   targets, and the scrubber in particular is unusable at desktop height. */
+/* The player chrome was sized for a mouse. A remote needs bigger targets, and
+   the scrubber in particular is unusable at desktop height. */
 /* The transport's own controls, not everything that happens to be inside a
    panel over the player. A chip in the subtitle menu is 28px tall and about as
    wide as its label; forcing it to 44 square turned "All 2" into a circle with
    the count pushed out of it. Menus draw their own targets, and they are read
    from a list, not aimed at. */
-html[data-input="touch"] [data-harbor-player] button:not([data-focus-scope="modal"] button),
 html[data-input="dpad"] [data-harbor-player] button:not([data-focus-scope="modal"] button) {
   min-height: 44px;
   min-width: 44px;
 }
-html[data-input="touch"] [data-harbor-player] [role="slider"],
 html[data-input="dpad"] [data-harbor-player] [role="slider"] {
   padding-block: 12px;
 }
@@ -2030,9 +1982,8 @@ html[data-input="dpad"] [data-harbor-player] [role="slider"] {
    purpose — the TV should be the same app at the same scale, not a magnified
    one. Only the focus ring above is added, because a D-pad has no cursor. */
 
-/* Scrollbars are pointer furniture; a remote or a finger never uses them. */
-html[data-form-factor="tv"] ::-webkit-scrollbar,
-html[data-input="touch"] ::-webkit-scrollbar {
+/* Scrollbars are pointer furniture; a remote never uses them. */
+html[data-form-factor="tv"] ::-webkit-scrollbar {
   display: none;
 }
 
