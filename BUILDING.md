@@ -55,16 +55,15 @@ Keep the keystore safe and backed up. Android identifies an app by its
 signature, so losing it means you can never ship an update to anyone who
 installed the old build — they would have to uninstall first.
 
-## Desktop
+## There is no desktop build
 
-```bash
-pnpm run setup:libmpv     # Windows only: fetches libmpv-2.dll
-node scripts/fetch-binaries.mjs
-pnpm exec tauri build
-```
+Android is the only target. `cargo check` against the host will fail on the
+desktop bundle metadata — that is expected, not a broken tree. Build the APK to
+check the Rust side.
 
-Desktop needs libmpv and the ffmpeg/yt-dlp sidecars. Neither ships in the
-Android build — see `src/lib/capabilities.ts` for what each platform supports.
+To work on the frontend without a device, `pnpm dev` serves it in a browser and
+the arrow keys stand in for the D-pad. The Tauri bridge is absent there, so
+anything native is off; `src/lib/capabilities.ts` is the table that decides.
 
 ## Version
 
