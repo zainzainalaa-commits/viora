@@ -43,6 +43,20 @@ export function useFormFactor(): FormFactor {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
+/**
+ * The store must agree with the native side, but modules are evaluated before
+ * the platform_info round-trip answers. After the native answer lands in
+ * platform.ts, re-run the computation with the now-current knowledge and push
+ * the result everywhere the store's snapshot is read.
+ */
+export function syncFormFactor(): void {
+  const next = refreshFormFactor();
+  if (next === snapshot) return;
+  snapshot = next;
+  document.documentElement.dataset.formFactor = next;
+  for (const listener of listeners) listener();
+}
+
 export function useIsPhone(): boolean {
   return useFormFactor() === "phone";
 }

@@ -23,6 +23,7 @@ mod http_fetch;
 mod local_lib;
 mod roku;
 mod power;
+mod platform_info;
 mod airplay;
 mod settings_store;
 mod song_id;
@@ -195,6 +196,7 @@ pub fn run() {
 fn invoke_handler() -> impl Fn(tauri::ipc::Invoke) -> bool + Send + Sync + 'static {
     tauri::generate_handler![
         harbor_flush_done,
+        platform_info::platform_info,
         power::power_inhibit,
         harbor_set_webview_memory_low,
         harbor_set_webview_visible,
