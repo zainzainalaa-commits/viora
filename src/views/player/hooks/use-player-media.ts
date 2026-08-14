@@ -3,7 +3,6 @@ import { useAuth } from "@/lib/auth";
 import { downloadText } from "@/lib/download-text";
 import { getCuesAnySource } from "@/lib/subtitles/extract";
 import { toSrt } from "@/lib/subtitles/serialize";
-import { isWindowsDesktop } from "@/lib/platform";
 import { isAssTrack, isImageSubTrack } from "@/lib/player/sub-format";
 import { clearImportedSubs } from "@/lib/player/imported-subs";
 import { readPlayerVolume } from "@/lib/player-volume";
@@ -26,8 +25,6 @@ import { useAutoSync } from "./use-auto-sync";
 import { useReferenceSync } from "./use-reference-sync";
 import { useVideoDownload } from "./use-video-download";
 import { useWebviewMemory } from "./use-webview-memory";
-
-const HDR_NATIVE_GAMMAS = new Set(["pq", "hlg"]);
 
 export function usePlayerMedia(params: {
   src: PlayerSrc;
@@ -116,12 +113,10 @@ export function usePlayerMedia(params: {
   useReferenceSync({ bridgeRef, src, snap });
 
   const subEmbed = engine === "mpv" && settings.playerMpvEmbed;
-  const hdrNativeSurface =
-    engine === "mpv" &&
-    isWindowsDesktop() &&
-    !settings.playerHdrToSdr &&
-    HDR_NATIVE_GAMMAS.has(snap.hdrGamma) &&
-    (settings.playerHdrOpaqueWindow || (settings.playerMpvEmbed && settings.playerHdrStage !== "off"));
+  // HDR passthrough was a Windows-only path: mpv handed the frames to a native
+  // surface so the WebView compositor never touched the colours. Nothing on
+  // this platform can do that, so the surface is never native here.
+  const hdrNativeSurface = false;
   const selectedSubTrack = snap.subtitleTracks.find((t) => t.selected) ?? null;
   const subAssOverridden = settings.subAssOverride !== "no" && settings.subAssOverride !== "scale";
   const selectedAssSub = isAssTrack(selectedSubTrack);

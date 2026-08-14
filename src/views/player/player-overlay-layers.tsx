@@ -153,7 +153,6 @@ export type PlayerOverlayLayersProps = {
   switcherOpen: boolean;
   foreignNotice: Room["foreignNotice"];
   onDismissForeign: () => void;
-  mpvEmbedWindowsActive: boolean;
   setStreamCheckOpen: (v: boolean) => void;
   dvrOpen: boolean;
   setSwitcherOpen: (fn: (v: boolean) => boolean) => void;

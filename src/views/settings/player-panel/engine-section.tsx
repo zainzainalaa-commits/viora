@@ -1,12 +1,10 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { isWindowsDesktop } from "@/lib/platform";
 import { can } from "@/lib/capabilities";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 import { ToggleRow } from "../shared";
 import { BandwidthInput } from "./bandwidth-section";
 import { DesktopOnlyBlock } from "./internals";
-import { HdrModePicker } from "./hdr-mode";
 import { DisplayPanelSelector } from "./display-panel-selector";
 
 type Choice = {
@@ -128,19 +126,13 @@ export function PlayerEnginePanel() {
             value={settings.playerMpvEmbed}
             onChange={(v) => update({ playerMpvEmbed: v })}
           />
-          {isWindowsDesktop() ? (
-            <HdrModePicker />
-          ) : (
-            <>
-              <ToggleRow
-                label={t("HDR-to-SDR tonemapping")}
-                sub={t("Maps HDR sources to SDR using bt.2446a. Recommended on SDR displays.")}
-                value={settings.playerHdrToSdr}
-                onChange={(v) => update({ playerHdrToSdr: v })}
-              />
-              <DisplayPanelSelector />
-            </>
-          )}
+          <ToggleRow
+            label={t("HDR-to-SDR tonemapping")}
+            sub={t("Maps HDR sources to SDR using bt.2446a. Recommended on SDR displays.")}
+            value={settings.playerHdrToSdr}
+            onChange={(v) => update({ playerHdrToSdr: v })}
+          />
+          <DisplayPanelSelector />
         </div>
       </DesktopOnlyBlock>
 

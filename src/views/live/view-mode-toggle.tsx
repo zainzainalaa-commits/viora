@@ -1,9 +1,10 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { Grid2x2, Home, LayoutGrid, ListTree } from "lucide-react";
+import { Home, LayoutGrid, ListTree } from "lucide-react";
 import { useT } from "@/lib/i18n";
-import { isWindowsDesktop } from "@/lib/platform";
 
-export type ViewMode = "home" | "grid" | "guide" | "multiview";
+// Multiview was a fourth mode here, tiling several channels in one window. It
+// needed the desktop's multi-window support and went with it.
+export type ViewMode = "home" | "grid" | "guide";
 
 export function ViewModeToggle({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewMode) => void }) {
   const t = useT();
@@ -27,14 +28,6 @@ export function ViewModeToggle({ mode, onChange }: { mode: ViewMode; onChange: (
         icon={<ListTree size={14} strokeWidth={2} />}
         label={t("Guide")}
       />
-      {isWindowsDesktop() && (
-        <ToggleButton
-          active={mode === "multiview"}
-          onClick={() => onChange("multiview")}
-          icon={<Grid2x2 size={14} strokeWidth={2} />}
-          label={t("Multiview")}
-        />
-      )}
     </div>
   );
 }

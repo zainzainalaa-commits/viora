@@ -49,7 +49,6 @@ import { CastButton } from "./cast-button";
 import { SeekStepBtn } from "./seek-step-btn";
 import { EpisodeNavBtn } from "./episode-nav-btn";
 import { TimeStart, TimeEnd } from "./time-display";
-import { WindowControlButtons } from "./window-control-buttons";
 import { IdentifySongButton } from "@/components/identify-song-button";
 
 export type ControlContext = {
@@ -511,9 +510,9 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "window-controls":
-      // A television has one window and it is the screen. These are minimise,
-      // maximise and close for a desktop that no longer exists.
-      if (isDpadPrimary()) return null;
-      return <WindowControlButtons t={t} />;
+      // A television has one window and it is the screen. These were minimise,
+      // maximise and close for a desktop that no longer exists. The case stays
+      // so a saved player layout naming this control still loads.
+      return null;
   }
 }

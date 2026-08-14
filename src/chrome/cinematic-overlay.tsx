@@ -12,13 +12,10 @@ import { getThemeById } from "@/lib/theme";
 import { useParental } from "@/lib/parental";
 import { useView, type View } from "@/lib/view";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
-import { close, minimize, toggleMaximize, useMaximized } from "@/lib/window";
 import { OverflowNav, type NavEntry } from "@/chrome/nav-overflow";
 import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-items";
 import { ProfileChipCompact } from "@/chrome/cinematic-overlay/profile-chip-compact";
-import { can } from "@/lib/capabilities";
 
-const HAS_WINDOW_CHROME = can("customTitlebar");
 
 export function CinematicOverlay() {
   const { view, setView, chromeHidden } = useView();
@@ -27,7 +24,6 @@ export function CinematicOverlay() {
   const { setOpen: setSearchOpen } = useSearch();
   const t = useT();
   const [pinFor, setPinFor] = useState<View | null>(null);
-  const maxed = useMaximized();
 
   const themePreset =
     settings.theme.preset !== "custom"
@@ -144,60 +140,6 @@ export function CinematicOverlay() {
               onOpenSettings={() => setView("settings")}
               settingsActive={view === "settings"}
             />
-            {HAS_WINDOW_CHROME && !settings.useNativeTitleBar && (
-              <div className="ms-1 flex items-center gap-0.5">
-                <WinBtn onClick={minimize} label={t("chrome.minimize")}>
-                  <path
-                    d="M3 6.5h7"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </WinBtn>
-                <WinBtn
-                  onClick={toggleMaximize}
-                  label={maxed ? t("chrome.restore") : t("chrome.maximize")}
-                >
-                  {maxed ? (
-                    <>
-                      <rect
-                        x="2.5"
-                        y="4.5"
-                        width="6"
-                        height="6"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        rx="1"
-                      />
-                      <path
-                        d="M5 4.5V3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5H9"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        fill="none"
-                      />
-                    </>
-                  ) : (
-                    <rect
-                      x="3"
-                      y="3"
-                      width="7"
-                      height="7"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      rx="1.2"
-                    />
-                  )}
-                </WinBtn>
-                <WinBtn onClick={close} label={t("common.close")}>
-                  <path
-                    d="M3.5 3.5l6 6M9.5 3.5l-6 6"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </WinBtn>
-              </div>
-            )}
           </div>
         </div>
       </header>
@@ -247,26 +189,3 @@ function IconBtn({
   );
 }
 
-function WinBtn({
-  onClick,
-  label,
-  children,
-}: {
-  onClick: () => void;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <FocusButton
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      title={label}
-      className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-white/15 hover:text-ink"
-    >
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-        {children}
-      </svg>
-    </FocusButton>
-  );
-}

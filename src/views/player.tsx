@@ -24,7 +24,6 @@ import { useChromeConfig } from "./player/hooks/use-chrome-config";
 import { useEverPlayed } from "./player/hooks/use-ever-played";
 import { useDrawMode } from "./player/hooks/use-draw-mode";
 import { useChromeVisibility } from "./player/hooks/use-chrome-visibility";
-import { useTouchGestures } from "./player/hooks/use-touch-gestures";
 import { useAutoRetry } from "./player/hooks/use-auto-retry";
 import { useWakeReconnect } from "./player/hooks/use-wake-reconnect";
 import { useEngineStats } from "./player/hooks/use-engine-stats";
@@ -40,7 +39,6 @@ import { useLobbyGate } from "./player/hooks/use-lobby-gate";
 import { hostSourceMatchesMedia } from "@/lib/together/room-derive";
 import { useLiveChannelOverlay } from "./player/hooks/use-live-channel-overlay";
 import { useStreamSwitcher } from "./player/hooks/use-stream-switcher";
-import { useMpvEmbed } from "./player/hooks/use-mpv-embed";
 import { usePlayerBridge } from "./player/hooks/use-player-bridge";
 import { useTvPlayerKeys } from "./player/hooks/use-tv-player-keys";
 import { useTextSync } from "./player/hooks/use-text-sync";
@@ -134,7 +132,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   // Carries a position across a reload the player asked for itself, so swapping
   // engines resumes where the viewer was instead of starting over.
   const resumeOverrideRef = useRef<number | null>(null);
-  const { snap, engine, bridgeReady, bridgeKey, embedActive, alternateEngine, switchEngine } =
+  const { snap, engine, bridgeReady, bridgeKey, alternateEngine, switchEngine } =
     usePlayerBridge({
       bridgeRef,
       videoMountRef,
@@ -234,7 +232,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     sendDraw,
   });
 
-  const { chromeVisible, wakeChrome, hideChrome, toggleChrome, hideForResume, anyMenuOpen, setAnyMenuOpen, cursorStyle } = useChromeVisibility({
+  const { chromeVisible, wakeChrome, hideChrome, hideForResume, anyMenuOpen, setAnyMenuOpen, cursorStyle } = useChromeVisibility({
     playing,
     drawMode,
     pipMode,
@@ -516,13 +514,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     sendCommand,
   });
 
-  const touchGestures = useTouchGestures({
-    onToggleChrome: toggleChrome,
-    onPlayPause: playPauseToggle,
-    onSeekBy: seekStep,
-    enabled: !drawMode && !pipMode,
-  });
-
   const textSync = useTextSync(bridgeRef.current, src.meta.id);
   const [syncToast, setSyncToast] = useState<ToastInfo | null>(null);
   const syncToastTimerRef = useRef<number | null>(null);
@@ -710,8 +701,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   }, [skipSegments]);
   const hasNextEpisodeNow = canChangeEpisode && !!adjacent.next;
 
-  useMpvEmbed({ engine, settings });
-
   useSdrBoostGate({
     engine,
     hdrGamma: snap.hdrGamma,
@@ -722,12 +711,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   // while the page kept only the controls. There is no second window here.
   const hdrStageActive = false;
 
-  const { mpvEmbedWindowsActive, stageBg } = embedFlags(
-    engine,
-    embedActive,
-    snap.videoWidth,
-    snap.videoHeight,
-  );
+  const { stageBg } = embedFlags(engine);
   const { loaderActive: everPlayedLoader } = useEverPlayed({
     url: src.url,
     status: snap.status,
@@ -896,7 +880,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     switcherOpen,
     foreignNotice,
     onDismissForeign: () => setForeignNotice(null),
-    mpvEmbedWindowsActive,
     setStreamCheckOpen,
     dvrOpen,
     setSwitcherOpen,
@@ -939,13 +922,9 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
       <div
         ref={videoMountRef}
         className="absolute inset-0"
-        {...touchGestures}
         onClick={(e) => {
           if (e.target !== e.currentTarget) return;
           if (drawMode || pipMode) return;
-          // Touch routes through the gesture handler instead: a bare tap there
-          // reveals the controls rather than pausing.
-          if (touchGestures.onPointerUp) return;
           const resuming = snap.status !== "playing";
           playPauseToggle();
           if (resuming) hideForResume();

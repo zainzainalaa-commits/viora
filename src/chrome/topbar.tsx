@@ -23,10 +23,7 @@ import { useSelfIdentity } from "@/lib/together/use-self-identity";
 import { activeLayout } from "@/lib/theme";
 import { useThemePreview } from "@/lib/theme-preview";
 import { useView } from "@/lib/view";
-import { close } from "@/lib/window";
-import { can } from "@/lib/capabilities";
 
-const HAS_WINDOW_CHROME = can("customTitlebar");
 
 export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
   const { chromeHidden, canGoBack, view, setView, topKind } = useView();
@@ -48,16 +45,11 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
         : "ps-[84px] lg:ps-[260px]";
   const searchWidth = canGoBack
     ? "w-[14rem] sm:w-[18rem] lg:w-[22rem] xl:w-[24rem]"
-    : "w-[14rem] sm:w-[20rem] lg:w-[24rem] xl:w-[28rem] hover:w-[18rem] sm:hover:w-[24rem] lg:hover:w-[28rem] xl:hover:w-[34rem] focus-within:w-[18rem] sm:focus-within:w-[24rem] lg:focus-within:w-[28rem] xl:focus-within:w-[34rem]";
-  const dragProps = HAS_WINDOW_CHROME ? { "data-tauri-drag-region": true } : {};
-  return (
+    : "w-[14rem] sm:w-[20rem] lg:w-[24rem] xl:w-[28rem] hover:w-[18rem] sm:hover:w-[24rem] lg:hover:w-[28rem] xl:hover:w-[34rem] focus-within:w-[18rem] sm:focus-within:w-[24rem] lg:focus-within:w-[28rem] xl:focus-within:w-[34rem]";  return (
     <header className={`fixed inset-x-0 top-0 ${topKind === "picker" || connecting ? "z-[130]" : "z-[55]"} h-20`}>
-      <div
-        {...dragProps}
-        className="relative z-10 grid h-full grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-8"
+      <div        className="relative z-10 grid h-full grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-8"
       >
         <div
-          {...dragProps}
           className={
             sidebarHidden
               ? "flex h-full min-w-0 items-center justify-start gap-3"
@@ -85,14 +77,12 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
           {!onLiveRoot && !connecting && <BackChrome />}
         </div>
         <div
-          {...dragProps}
           className={`min-w-0 max-w-full transition-[width] duration-200 ease-out ${searchWidth}`}
         >
           {/* On a remote the search entry lives in the sidebar. */}
           {!hideSearch && !kid && !isDpadPrimary() && <SearchPill />}
         </div>
         <div
-          {...dragProps}
           className="flex h-full min-w-0 items-center justify-end gap-2"
         >
           <RecordingPill />

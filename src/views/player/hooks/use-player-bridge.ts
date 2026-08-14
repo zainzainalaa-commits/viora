@@ -3,11 +3,9 @@ import { type PlayerEngine, emptySnapshot, type PlayerBridge, type PlayerSnapsho
 import { probeMpv } from "@/lib/player/mpv";
 import { isMpvAndroidAvailable } from "@/lib/player/mpv-android";
 import { isExoAvailable } from "@/lib/player/exo";
-import { can } from "@/lib/capabilities";
 import type { PlayerSrc } from "@/lib/view";
 import type { Settings } from "@/lib/settings";
 import { getPlaybackPosition, setPlaybackClock } from "@/lib/player/playback-clock";
-import { isWindowsDesktop } from "@/lib/platform";
 import { svpEnsureRunning } from "@/lib/svp";
 import { pickBridge } from "../player-utils";
 
@@ -56,8 +54,10 @@ export function usePlayerBridge(params: {
     setEngineOverride(null);
   }, [src.url]);
 
-  const hdrOpaqueWindow = isWindowsDesktop() && settings.playerHdrOpaqueWindow;
-  const embedActive = settings.playerMpvEmbed && !hdrOpaqueWindow;
+  // The opaque HDR window was a Windows arrangement: a second, always-on-top
+  // window carrying the video so the compositor left the colours alone. There
+  // is one WebView here and no window to open.
+  const embedActive = settings.playerMpvEmbed;
   const isAnimeSrc =
     !!src.meta.id?.startsWith("kitsu:") ||
     !!src.meta.id?.startsWith("mal:") ||
@@ -76,11 +76,9 @@ export function usePlayerBridge(params: {
     if (svpOn) void svpEnsureRunning().catch(() => {});
   }, [svpOn]);
   // Where to escalate when the chosen engine cannot decode what it was handed:
-  // whichever engine on this device plays the most, which is mpv wherever mpv
-  // exists — compiled into the app on Android, installed alongside it on the
-  // desktop. ExoPlayer is the answer only where there is no mpv at all.
-  const fallbackEngine: PlayerEngine =
-    can("mpvEngine") || isMpvAndroidAvailable() ? "mpv" : "exo";
+  // whichever engine on this device plays the most, which is mpv where mpv is
+  // compiled into the app. ExoPlayer is the answer only where there is no mpv.
+  const fallbackEngine: PlayerEngine = isMpvAndroidAvailable() ? "mpv" : "exo";
   // Live channels used to be forced onto the web layer, decoding HLS in
   // JavaScript. Both native engines demux HLS and MPEG-TS themselves, with the
   // television's own decoders, so a channel is now just another stream.

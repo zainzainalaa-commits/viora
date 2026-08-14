@@ -3,7 +3,6 @@ import { Cast, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fetchTrailer, resolveTrailerQuality, trailerSrc } from "@/lib/trailer";
-import { isMacDesktop } from "@/lib/platform";
 import { openUrl } from "@/lib/window";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
@@ -80,7 +79,7 @@ export function TrailerOverlay({
       onClick={dismiss}
       className="fixed inset-0 z-[120] flex cursor-zoom-out items-center justify-center"
       style={{
-        backgroundColor: open ? (isMacDesktop() ? "rgba(0,0,0,1)" : "rgba(0,0,0,0.82)") : "rgba(0,0,0,0)",
+        backgroundColor: open ? "rgba(0,0,0,0.82)" : "rgba(0,0,0,0)",
         backdropFilter: open ? "blur(32px) saturate(1.2)" : "blur(0px)",
         WebkitBackdropFilter: open ? "blur(32px) saturate(1.2)" : "blur(0px)",
         transition:
@@ -124,11 +123,7 @@ export function TrailerOverlay({
         {streamUrl ? (
           <NativeTrailerPlayer src={streamUrl} videoRef={videoRef} />
         ) : extractFailed ? (
-          isMacDesktop() ? (
-            <ExternalTrailerFallback id={id} title={title} logo={logo} />
-          ) : (
             <YouTubeEmbed id={id} title={title} />
-          )
         ) : (
           <TrailerLoader title={title} logo={logo} />
         )}
@@ -185,37 +180,6 @@ function YouTubeEmbed({ id, title }: { id: string; title: string }) {
   );
 }
 
-function ExternalTrailerFallback({ id, title, logo }: { id: string; title: string; logo?: string }) {
-  const t = useT();
-  return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-8 text-center">
-      {logo ? (
-        <img
-          src={logo}
-          alt={title}
-          className="max-h-24 w-auto max-w-[55%] object-contain opacity-90 drop-shadow-[0_18px_45px_rgba(0,0,0,0.55)]"
-        />
-      ) : (
-        <p className="font-display text-[40px] font-medium leading-[0.98] tracking-tight text-white drop-shadow-[0_18px_45px_rgba(0,0,0,0.55)]">
-          {title}
-        </p>
-      )}
-      <p className="max-w-sm text-[14px] leading-relaxed text-white/55">
-        {t("This trailer plays on YouTube.")}
-      </p>
-      <FocusButton
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          openUrl(`https://www.youtube.com/watch?v=${id}`);
-        }}
-        className="flex h-11 items-center rounded-full bg-white px-6 text-[14px] font-semibold text-black shadow-[0_8px_22px_rgba(0,0,0,0.4)] transition-transform active:scale-[0.97]"
-      >
-        {t("Watch on YouTube")}
-      </FocusButton>
-    </div>
-  );
-}
 
 function TrailerLoader({ title, logo }: { title: string; logo?: string }) {
   const t = useT();

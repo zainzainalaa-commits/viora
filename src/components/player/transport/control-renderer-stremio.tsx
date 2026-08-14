@@ -38,7 +38,6 @@ import { TimeStart } from "./time-display";
 import { StremioBtn } from "./stremio-btn";
 import { StremioVolume } from "./stremio-volume";
 import { renderCustomIconControlStremio } from "./custom-icon-renderer";
-import { WindowControlButtons } from "./window-control-buttons";
 import { IdentifySongButton } from "@/components/identify-song-button";
 
 function qualityInfoOn(): boolean {
@@ -452,8 +451,8 @@ export function RenderedStremioControl({
         </Tooltip>
       );
     case "window-controls":
-      if (isDpadPrimary()) return null;
-      return <WindowControlButtons t={tr} />;
+      // See control-renderer.tsx: no window to control on a television.
+      return null;
     default:
       return null;
   }

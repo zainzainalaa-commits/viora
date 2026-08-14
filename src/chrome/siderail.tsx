@@ -14,10 +14,7 @@ import { useT } from "@/lib/i18n";
 import { useParental } from "@/lib/parental";
 import { useView, type View } from "@/lib/view";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
-import { close, minimize, toggleMaximize } from "@/lib/window";
-import { can } from "@/lib/capabilities";
 
-const HAS_WINDOW_CHROME = can("customTitlebar");
 
 const PRIMARY_IDS = new Set(["home", "discover", "movies", "shows", "kids", "anime", "live", "vod"]);
 
@@ -137,19 +134,6 @@ export function SideRail() {
             <CollapseToggle collapsed={collapsed} />
           </div>
           {!collapsed && <ProfileBlock onOpenSettings={() => setView("settings")} />}
-          {HAS_WINDOW_CHROME && !settings.useNativeTitleBar && (
-            <div className="flex items-center justify-end gap-0.5 pt-1">
-              <WinBtn onClick={minimize} label={t("chrome.minimize")}>
-                <path d="M3 6.5h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-              </WinBtn>
-              <WinBtn onClick={toggleMaximize} label={t("chrome.maximize")}>
-                <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="1.4" rx="1.2" />
-              </WinBtn>
-              <WinBtn onClick={close} label={t("common.close")}>
-                <path d="M3.5 3.5l6 6M9.5 3.5l-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-              </WinBtn>
-            </div>
-          )}
         </div>
       </aside>
       {pinFor !== null && (
@@ -223,26 +207,3 @@ function GoldRule({ collapsed }: { collapsed: boolean }) {
   );
 }
 
-function WinBtn({
-  onClick,
-  label,
-  children,
-}: {
-  onClick: () => void;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <FocusButton
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      title={label}
-      className="flex h-7 w-7 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-elevated/60 hover:text-ink"
-    >
-      <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
-        {children}
-      </svg>
-    </FocusButton>
-  );
-}

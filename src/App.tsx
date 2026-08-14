@@ -15,10 +15,7 @@ import { startMaintenance, subscribeMemoryPressure } from "@/lib/maintenance";
 import { MiddleClickScroll } from "@/lib/use-middle-click-scroll";
 import { flushCloudSync } from "@/views/player/hooks/use-stremio-sync";
 import { useOverlayPinned } from "@/lib/overlay-pin";
-import { isDpadPrimary, isMobileDevice, isWeb } from "@/lib/platform";
-import { useIsPhone } from "@/lib/use-form-factor";
-import { MobileTabBar } from "@/chrome/mobile-tabbar";
-import { installLongPressContextMenu } from "@/lib/long-press-context-menu";
+import { isDpadPrimary } from "@/lib/platform";
 import { activeLayout } from "@/lib/theme";
 import { useThemePreview } from "@/lib/theme-preview";
 import { DevErrorTrigger } from "@/components/dev-error-trigger";
@@ -33,7 +30,6 @@ import { CustomHoverCssMount } from "@/components/custom-hover-css-mount";
 import { EmbedViewportRoot } from "@/components/embed-viewport";
 import { CustomCodeMount } from "@/components/custom-code-mount";
 import { OfflineBanner } from "@/chrome/offline-banner";
-import { MobileNotice } from "@/components/mobile-notice";
 import { WebhookLoopMount } from "@/components/webhook-loop-mount";
 import { ListToastHost } from "@/components/lists/list-toast";
 import { TogetherChatToast } from "@/components/together-chat-toast";
@@ -231,7 +227,6 @@ function useIdleEvict(active: boolean, pin = false): boolean {
 }
 
 export function App() {
-  if (isWeb() && isMobileDevice()) return <MobileNotice />;
   return (
     <SettingsProvider>
       <ProfilesProvider>
@@ -429,11 +424,10 @@ function Shell() {
     () => (preview ? preview.layout : activeLayout(settings.theme)),
     [preview, settings.theme],
   );
-  // Every desktop layout puts navigation at the top or in a side rail, both out
-  // of thumb reach at phone width. Phones get a bottom tab bar instead, which
-  // means none of the ten themed chromes render there.
-  const phoneLayout = useIsPhone();
-  const layout = phoneLayout ? "mobile" : kid ? "sidebar" : baseLayout;
+  // The phone build had an eleventh layout here — a bottom tab bar, because a
+  // top bar and a side rail are both out of thumb reach at phone width. A
+  // television is all rail, so the themed chromes are the whole set again.
+  const layout = kid ? "sidebar" : baseLayout;
   const themeHasTopbar =
     layout === "sidebar" ||
     layout === "dracula" ||
@@ -441,8 +435,6 @@ function Shell() {
     layout === "forest" ||
     layout === "stremio";
   useViewPreloader();
-
-  useEffect(() => installLongPressContextMenu(), []);
 
   // Outermost Back handler: pop the view stack while there is one, otherwise
   // fall back to the sidebar so Back never leaves the user with nowhere to go.
@@ -780,7 +772,6 @@ function Shell() {
 
   return (
     <div data-kids={kidsTop || kid ? "on" : undefined} className="relative flex h-full">
-      {!playerActive && !pickerTop && layout === "mobile" && <MobileTabBar />}
       {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "sidebar" && <Sidebar />}
       {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "dracula" && <DraculaSidebar />}
       {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "nord" && <NordSidebar />}

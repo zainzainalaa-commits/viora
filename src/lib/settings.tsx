@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { applyTheme, isKnownPreset, nextColorTheme } from "@/lib/theme";
-import { getCustomThemes, subscribeCustomThemes } from "@/lib/custom-themes";
 import { loadBgImage, saveBgImage } from "@/lib/theme-storage";
 import { effectiveTmdbLanguage, setTmdbLanguage } from "@/lib/providers/tmdb/tmdb-client";
 import { setPosterBaseUrl } from "@/lib/providers/rpdb";
@@ -16,7 +15,6 @@ import {
   sourceKeyFor,
 } from "./settings/profile-store";
 import type { Settings, StreamingService } from "./settings/types";
-import { can } from "@/lib/capabilities";
 
 export type {
   ContentCategory,
@@ -233,37 +231,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, [settings.cwSnapshotRetentionDays]);
 
   useEffect(() => {
+    // Schemes are declared in AndroidManifest.xml at build time; there is no
+    // runtime register call the way there was on the desktop.
     window.__harborStremioDeeplink = settings.stremioDeeplinkInstall;
-    if (!can("deepLinkRegistration")) return;
-    void import("@tauri-apps/api/core").then(({ invoke }) => {
-      void invoke("deeplink_set_stremio", { enabled: settings.stremioDeeplinkInstall }).catch(
-        (e) => console.warn("[harbor] deeplink_set_stremio failed", e),
-      );
-    });
   }, [settings.stremioDeeplinkInstall]);
 
-  useEffect(() => {
-    if (!can("customTitlebar")) return;
-    void import("@tauri-apps/api/window").then(({ getCurrentWindow }) => {
-      getCurrentWindow()
-        .setDecorations(settings.useNativeTitleBar)
-        .catch((e) => console.warn("[harbor] setDecorations failed", e));
-    });
-  }, [settings.useNativeTitleBar]);
 
-  useEffect(() => {
-    if (!can("systemTray")) return;
-    void import("@tauri-apps/api/core").then(({ invoke }) => {
-      void invoke("tray_set_prefs", {
-        prefs: {
-          closeToTray: settings.closeToTray,
-          alwaysOnTop: settings.trayAlwaysOnTop,
-          pauseMinimized: settings.pauseMinimized,
-          pauseUnfocused: settings.pauseUnfocused,
-        },
-      }).catch((e) => console.warn("[harbor] tray_set_prefs failed", e));
-    });
-  }, [settings.closeToTray, settings.trayAlwaysOnTop, settings.pauseMinimized, settings.pauseUnfocused]);
 
   useEffect(() => {
     if (!("__TAURI_INTERNALS__" in window)) return;
@@ -302,23 +275,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  useEffect(() => {
-    let unsub: (() => void) | undefined;
-    let cancelled = false;
-    void import("@tauri-apps/api/core").then(({ invoke }) => {
-      if (cancelled) return;
-      const push = () => {
-        const themes = getCustomThemes().map((t) => ({ id: t.id, name: t.name }));
-        if (can("systemTray")) void invoke("tray_set_custom_themes", { themes }).catch(() => {});
-      };
-      push();
-      unsub = subscribeCustomThemes(push);
-    });
-    return () => {
-      cancelled = true;
-      unsub?.();
-    };
-  }, []);
+  // The custom themes used to be mirrored into the desktop tray menu, so a
+  // theme could be switched without opening the app. There is no tray here.
 
   const update = useCallback((patch: Partial<Settings>) => {
     setSettings((s) => ({ ...s, ...patch }));
