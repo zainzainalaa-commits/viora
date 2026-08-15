@@ -78,6 +78,37 @@ function sh(cmd, args, opts = {}) {
   return execFileSync(cmd, args, { cwd: ROOT, encoding: "utf8", stdio: "pipe", ...opts });
 }
 
+/**
+ * Runs a Windows batch wrapper.
+ *
+ * `apksigner` ships as apksigner.bat, and since the fix for CVE-2024-27980
+ * Node refuses to hand a .bat or .cmd to execFile at all — it throws EINVAL
+ * before the process ever starts, because the shell would reparse the
+ * arguments. cmd.exe has to be the thing being executed, with the batch file
+ * as its argument.
+ *
+ * The arguments are quoted individually rather than joined into one string:
+ * the SDK lives under a user profile, and any account whose name has a space
+ * in it would otherwise split the path in half.
+ */
+function runBat(bat, args) {
+  if (process.platform !== "win32") return sh(bat, args);
+  // Backslashes, not the forward slashes Node is happy with: cmd.exe reads a
+  // leading forward slash as the start of a switch and answers "The filename,
+  // directory name, or volume label syntax is incorrect."
+  const win = (p) => p.replace(/\//g, "\\");
+  const inner = [win(bat), ...args.map(win)].map((a) => `"${a}"`).join(" ");
+  // The outer pair is required, not belt-and-braces. When the string after /c
+  // begins with a quote, cmd strips the first and last quote of the whole line
+  // and runs what is left — so `"tool" "a" "b"` becomes `tool" "a" "b`, which
+  // is why this first failed with "The filename, directory name, or volume
+  // label syntax is incorrect". With /s and an outer pair, cmd removes exactly
+  // that pair and takes the rest verbatim. See `cmd /?`.
+  return sh(process.env.COMSPEC || "cmd.exe", ["/d", "/s", "/c", `"${inner}"`], {
+    windowsVerbatimArguments: true,
+  });
+}
+
 // ── أدوات الإصدار ────────────────────────────────────────────────────────────
 
 const VERSION_RE = /^\d+\.\d+\.\d+$/;
@@ -145,7 +176,7 @@ function findApksigner() {
 function assertReleaseSigned(apk, apksigner) {
   let out;
   try {
-    out = sh(apksigner, ["verify", "--print-certs", apk], { stdio: ["ignore", "pipe", "pipe"] });
+    out = runBat(apksigner, ["verify", "--print-certs", apk]);
   } catch (e) {
     die(`apksigner could not verify ${apk}\n     ${(e.stderr || e.message || "").toString().slice(0, 400)}`);
   }

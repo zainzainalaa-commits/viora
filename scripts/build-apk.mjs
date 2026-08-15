@@ -257,8 +257,19 @@ console.log(`\n✔ ${apk}  (${(statSync(apkPath).size / 1024 / 1024).toFixed(1)}
 console.log(`  ${apkPath}\n`);
 
 if (release) {
-  console.log("  Release APKs are unsigned. Sign before distributing:");
-  console.log("  apksigner sign --ks my-release.jks --out viora.apk " + apk + "\n");
+  // Gradle signs with the release key when keystore.properties is present and
+  // silently falls back to the debug key when it is not, so which one came out
+  // is worth saying rather than assuming. This used to claim every release APK
+  // was unsigned, which stopped being true once the keystore was set up — and
+  // sent at least one person hunting for a signing step that had already run.
+  const signed = existsSync(join(ANDROID, "keystore.properties"));
+  if (signed) {
+    console.log("  Signed with the release key from keystore.properties.\n");
+  } else {
+    console.log("  No keystore.properties — this APK carries the DEBUG key.");
+    console.log("  Anyone who installs it can never update to a properly signed");
+    console.log("  build; Android will not replace one certificate with another.\n");
+  }
 }
 
 void execFileSync;
