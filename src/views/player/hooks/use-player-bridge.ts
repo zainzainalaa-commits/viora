@@ -128,9 +128,21 @@ export function usePlayerBridge(params: {
     // Already on the most capable engine this device has: there is nowhere
     // left to escalate to, and retrying would only loop.
     if (engine === fallbackEngine) return;
-    // The viewer picked this engine by hand from inside the player. Swapping it
-    // out from under them is precisely what they were overriding.
-    if (engineOverride) return;
+    // A hand-picked engine used to be exempt from this, on the reasoning that
+    // swapping it out is what the viewer was overriding. That holds while the
+    // engine plays. It stops holding the moment it reports that it cannot decode
+    // the file: honouring the choice then means honouring a black screen, and
+    // "try the other engine" is what pressing that button meant in the first
+    // place. Escalating once is the answer to the request, not a betrayal of it.
+    //
+    // Reproduced on the emulator, switching to ExoPlayer mid-film:
+    //   Decoder init failed: [-49999], Format(2, null, video/x-matroska, audio/ac3)
+    // Plain AC-3 — no decoder on that device, nothing for MediaCodec's own
+    // fallback to reach, and mpv playing the same file a second earlier.
+    //
+    // Only one escalation happens: autoFallbackTried above closes the door, and
+    // being already on the fallback engine returns before this.
+    //
     // The Settings choice used to gate this too — only "auto" was rescued. That
     // was right on the desktop, where "auto" was an option you could pick. The
     // Android panel offers exactly two engines, ExoPlayer and mpv, so the moment
@@ -142,16 +154,29 @@ export function usePlayerBridge(params: {
     // The setting says what the next film starts on. It does not say to sit on a
     // dead picture when the other engine would play it.
     if (snap.errorCode !== "decode" && snap.errorCode !== "codec" && !snap.noAudio) return;
+    // Both flags, and the order matters. `chosenEngine` reads `engineOverride`
+    // first, so raising `autoFallbackTried` on its own left the hand-picked
+    // engine still selected and the escalation changed nothing — measured on
+    // the emulator, where ExoPlayer reported the decode failure and then sat on
+    // it. Clearing the override is what lets `fallbackEngine` through.
+    const escalate = () => {
+      // Logged because this is invisible from the outside: the picture simply
+      // reappears, and when it does not, the only way to tell a rescue that
+      // never fired from one that fired and failed is a line in logcat.
+      console.warn(`[viora] engine "${engine}" reported ${snap.errorCode ?? "no audio"} — escalating to ${fallbackEngine}`);
+      setEngineOverride(null);
+      setAutoFallbackTried(true);
+    };
     if (isMpvAndroidAvailable()) {
       // Nothing to probe: the engine is compiled into the app.
-      setAutoFallbackTried(true);
+      escalate();
       return;
     }
     (async () => {
       const probe = await probeMpv();
-      if (probe.available) setAutoFallbackTried(true);
+      if (probe.available) escalate();
     })();
-  }, [engine, fallbackEngine, engineOverride, autoFallbackTried, snap.errorCode, snap.noAudio]);
+  }, [engine, fallbackEngine, autoFallbackTried, snap.errorCode, snap.noAudio]);
 
   /**
    * The other engine this device has, or null when there is no choice to offer.
