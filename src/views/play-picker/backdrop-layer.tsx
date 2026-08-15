@@ -4,7 +4,9 @@ import { useSettings } from "@/lib/settings";
 function BlurUpBackdrop({ src, forceBlur }: { src: string; forceBlur: boolean }) {
   const [loaded, setLoaded] = useState(false);
   const lowSrc = src.replace(/\/t\/p\/(w\d+|h\d+)\//, "/t/p/w300/");
-  const hiSrc = src.replace(/\/t\/p\/(w\d+|h\d+)\//, "/t/p/original/");
+  // w1280, not original. This sits behind a blur and a list of sources, and
+  // original is up to 3840px for a panel that can show 2560 at most.
+  const hiSrc = src.replace(/\/t\/p\/(w\d+|h\d+)\//, "/t/p/w1280/");
   return (
     <>
       <img

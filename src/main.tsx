@@ -78,14 +78,49 @@ function revealWhenReady() {
   const reveal = () => {
     if (done) return;
     done = true;
-    window.removeEventListener(FIRST_CONTENT_EVENT, reveal);
+    window.removeEventListener(FIRST_CONTENT_EVENT, onContent);
     window.clearTimeout(cap);
+    window.clearInterval(poll);
     bootEl.classList.add("gone");
     setTimeout(() => bootEl.remove(), 260);
   };
 
+  /**
+   * Whether every card the viewer will actually see has its art.
+   *
+   * Rows arriving is not the same as rows being ready to look at: the first
+   * version of this lifted on the first row and the owner still watched the
+   * cards fill in behind it. What matters is the images inside the opening
+   * screenful — anything below the fold can load while the app is being read.
+   *
+   * `complete` covers decoded and failed alike, which is deliberate. A poster
+   * whose request has failed is never going to arrive, and waiting on it would
+   * hold the screen for the full timeout every launch.
+   */
+  const visibleArtSettled = () => {
+    const fold = window.innerHeight;
+    let seen = 0;
+    for (const img of document.images) {
+      const box = img.getBoundingClientRect();
+      if (box.bottom <= 0 || box.top >= fold || box.width === 0) continue;
+      seen++;
+      if (!img.complete) return false;
+    }
+    // No images in view yet means the rows have not rendered their cards, not
+    // that there is nothing to wait for.
+    return seen > 0;
+  };
+
+  let poll = 0;
+  const onContent = () => {
+    if (visibleArtSettled()) return reveal();
+    poll = window.setInterval(() => {
+      if (visibleArtSettled()) reveal();
+    }, 120);
+  };
+
   const cap = window.setTimeout(reveal, FIRST_CONTENT_TIMEOUT_MS);
-  window.addEventListener(FIRST_CONTENT_EVENT, reveal, { once: true });
+  window.addEventListener(FIRST_CONTENT_EVENT, onContent, { once: true });
 }
 
 void boot();

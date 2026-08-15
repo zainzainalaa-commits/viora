@@ -117,7 +117,9 @@ export async function tmdbAnimeLogo(
   const backdropPath = (imgs?.backdrops ?? [])[0]?.file_path;
   return {
     logo,
-    backdrop: backdropPath ? `https://image.tmdb.org/t/p/original${backdropPath}` : undefined,
+    // w1280, not original: original runs to 3840px and every backdrop is
+    // decoded whole even when it ends up behind a scrim at a fraction of that.
+    backdrop: backdropPath ? `https://image.tmdb.org/t/p/w1280${backdropPath}` : undefined,
     tmdbId: id,
   };
 }
