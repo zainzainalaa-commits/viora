@@ -131,7 +131,16 @@ export function usePlayerBridge(params: {
     // The viewer picked this engine by hand from inside the player. Swapping it
     // out from under them is precisely what they were overriding.
     if (engineOverride) return;
-    if (settings.playerEngine !== "auto") return;
+    // The Settings choice used to gate this too — only "auto" was rescued. That
+    // was right on the desktop, where "auto" was an option you could pick. The
+    // Android panel offers exactly two engines, ExoPlayer and mpv, so the moment
+    // anyone touched the recommended one the setting became "exo" and the rescue
+    // below was switched off for good. What that looks like on a television is a
+    // black screen on any file the hardware cannot decode — a TrueHD track is
+    // enough — with a working engine sitting unused behind a menu.
+    //
+    // The setting says what the next film starts on. It does not say to sit on a
+    // dead picture when the other engine would play it.
     if (snap.errorCode !== "decode" && snap.errorCode !== "codec" && !snap.noAudio) return;
     if (isMpvAndroidAvailable()) {
       // Nothing to probe: the engine is compiled into the app.
@@ -142,7 +151,7 @@ export function usePlayerBridge(params: {
       const probe = await probeMpv();
       if (probe.available) setAutoFallbackTried(true);
     })();
-  }, [engine, fallbackEngine, engineOverride, autoFallbackTried, snap.errorCode, snap.noAudio, settings.playerEngine]);
+  }, [engine, fallbackEngine, engineOverride, autoFallbackTried, snap.errorCode, snap.noAudio]);
 
   /**
    * The other engine this device has, or null when there is no choice to offer.
