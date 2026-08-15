@@ -107,28 +107,42 @@
         // satisfies both minimums at this panel's real aspect ratio, and is
         // never smaller than what the device already reports — a 4K set is left
         // untouched rather than being scaled to someone's idea of a TV.
+        // This used to run only behind `(pointer: none)`, and on a real
+        // Changhong set it never ran at all — that panel claims a pointer, which
+        // is the same lie platform.ts documents. The consequence was measurable
+        // in a screenshot: the side rail drew 144 device pixels wide, which is
+        // its 72px collapsed width at this panel's 2x density, when an applied
+        // 1280px viewport would have made it 312. Every `lg:` class in the app
+        // — 154 of them across 41 files — sat dead behind a 1024px breakpoint
+        // that a 960px viewport can never cross, so the rail had no labels, no
+        // expanded width, and a toggle that changed its own icon and nothing
+        // else.
+        //
+        // The gate is gone rather than made cleverer. It existed to keep this
+        // away from desktop and phone, and neither is built any more. The
+        // `target > w` test below already leaves alone anything wide enough —
+        // a 4K set, or `pnpm dev` in a 1920px browser window — so applying it
+        // everywhere costs nothing and stops depending on a signal that lies.
         try {
           var DESIGN_W = 1280;
           var DESIGN_H = 720;
-          if (window.matchMedia && window.matchMedia('(pointer: none)').matches) {
-            var w = document.documentElement.clientWidth || window.innerWidth || 0;
-            var h = document.documentElement.clientHeight || window.innerHeight || 0;
-            if (w > 0 && h > 0) {
-              // Width needed for the height minimum, at this aspect ratio.
-              var forHeight = Math.round(DESIGN_H * (w / h));
-              var target = Math.max(w, DESIGN_W, forHeight);
-              if (target > w) {
-                var vp = document.querySelector('meta[name="viewport"]');
-                // The scale is not optional. A width on its own tells the engine
-                // how wide to lay the page out but nothing about how big to draw
-                // it, and Android WebView's answer is 1:1 — so a 1280px layout in
-                // a 960px window simply had its right and bottom quarter hanging
-                // outside the screen. Stating the ratio makes the whole layout
-                // land exactly on the panel, which is the entire point of
-                // choosing a width in the first place.
-                var scale = w / target;
-                if (vp) vp.setAttribute('content', 'width=' + target + ', initial-scale=' + scale);
-              }
+          var w = document.documentElement.clientWidth || window.innerWidth || 0;
+          var h = document.documentElement.clientHeight || window.innerHeight || 0;
+          if (w > 0 && h > 0) {
+            // Width needed for the height minimum, at this aspect ratio.
+            var forHeight = Math.round(DESIGN_H * (w / h));
+            var target = Math.max(w, DESIGN_W, forHeight);
+            if (target > w) {
+              var vp = document.querySelector('meta[name="viewport"]');
+              // The scale is not optional. A width on its own tells the engine
+              // how wide to lay the page out but nothing about how big to draw
+              // it, and Android WebView's answer is 1:1 — so a 1280px layout in
+              // a 960px window simply had its right and bottom quarter hanging
+              // outside the screen. Stating the ratio makes the whole layout
+              // land exactly on the panel, which is the entire point of
+              // choosing a width in the first place.
+              var scale = w / target;
+              if (vp) vp.setAttribute('content', 'width=' + target + ', initial-scale=' + scale);
             }
           }
         } catch (e) {}
