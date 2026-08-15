@@ -30,6 +30,19 @@ class MainActivity : TauriActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     enableEdgeToEdge()
+    // TEMPORARY — remove before shipping.
+    //
+    // Opens the WebView's DevTools socket so the main thread can be profiled on
+    // the television itself. wry enables this only for debug builds, and a debug
+    // build carries the debug signing key, which Android will not accept over a
+    // release install: measuring would mean uninstalling first and taking the
+    // viewer's add-ons and library with it. This is a static method, so calling
+    // it here turns the socket on for a release-signed build and the install
+    // stays in place.
+    //
+    // It must not ship. With this on, anything on the same network can attach to
+    // the page and read whatever the app can.
+    WebView.setWebContentsDebuggingEnabled(true)
     super.onCreate(savedInstanceState)
   }
 
