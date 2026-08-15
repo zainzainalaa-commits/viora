@@ -1,4 +1,4 @@
-import { loadStoredSettings } from "./load";
+import { invalidateStoredSettings, loadStoredSettings } from "./load";
 import type { Settings } from "./types";
 
 export const MIRROR_KEY = "harbor.settings";
@@ -23,6 +23,7 @@ export function seedSharedFromLegacy(): void {
     if (localStorage.getItem(SHARED_KEY) != null) return;
     const legacy = localStorage.getItem(MIRROR_KEY);
     if (legacy != null) localStorage.setItem(SHARED_KEY, legacy);
+    invalidateStoredSettings();
   } catch {
     return;
   }
@@ -63,6 +64,7 @@ export function applyLegacyToActive(): boolean {
   try {
     localStorage.setItem(sourceKeyFor(profileId, linked), blob);
     localStorage.setItem(MIRROR_KEY, blob);
+    invalidateStoredSettings();
     return true;
   } catch {
     return false;
@@ -73,6 +75,11 @@ export function persistEffective(settings: Settings, profileId: string, linked: 
   const json = serializeSettings(settings);
   localStorage.setItem(MIRROR_KEY, json);
   localStorage.setItem(sourceKeyFor(profileId, linked), json);
+  // loadStoredSettings holds its answer for a moment rather than reading the
+  // stored blob back on every call. Every write goes through here, so saying so
+  // explicitly means a saved change is visible to the next reader immediately
+  // instead of after that interval.
+  invalidateStoredSettings();
   return json;
 }
 
@@ -80,6 +87,7 @@ export function forkToProfile(profileId: string): void {
   try {
     const shared = localStorage.getItem(SHARED_KEY) ?? localStorage.getItem(MIRROR_KEY);
     if (shared != null) localStorage.setItem(profileKey(profileId), shared);
+    invalidateStoredSettings();
   } catch {
     return;
   }
@@ -88,6 +96,7 @@ export function forkToProfile(profileId: string): void {
 export function dropProfileBlob(profileId: string): void {
   try {
     localStorage.removeItem(profileKey(profileId));
+    invalidateStoredSettings();
   } catch {
     return;
   }

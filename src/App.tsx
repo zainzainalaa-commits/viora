@@ -453,24 +453,117 @@ function Shell() {
       return true;
     }
 
-    // The end of the stack: Screen → rail. Arrows cannot reach the rail any
-    // more — every screen is a closed region — so this press is the only way
-    // back to it, and it lands on the entry the viewer left from because the
-    // rail remembers its own last child.
-    const inSidebar = !!document.activeElement?.closest("aside");
-    if (!inSidebar && document.querySelector("aside") && setFocusSafely(focusKeys.sidebar)) {
-      return true;
-    }
-
+    // Back no longer detours through the rail.
+    //
+    // It used to be the only way there, because arrows cannot leave a screen.
+    // The owner asked for the rail to be reached the way a television viewer
+    // expects — by pressing towards it — and once that exists, sending Back
+    // there as well makes Back mean two different things depending on where the
+    // highlight happens to be. So Back is now only ever "leave where I am":
+    // out of a pushed page, out of a screen, and out of the app from the root.
     if (topKind !== "home") {
       goBack();
       return true;
     }
-    // At the root with focus already on the rail there is nowhere further to go,
-    // so the press is declined and Android closes the app — the behaviour a TV
-    // viewer expects from Back on a home screen.
+    // At the root there is nowhere further to go, so the press is declined and
+    // Android closes the app — the behaviour a TV viewer expects from Back on a
+    // home screen.
     return false;
   }, !player);
+
+  // Pressing towards the rail reaches it.
+  //
+  // A screen is still a closed region: the boundary is untouched, and no arrow
+  // walks out of one. What happens instead is that the engine is allowed to
+  // answer first, and only if it found nothing at all in that direction — the
+  // highlight did not move — is the press understood as "I am at the edge and I
+  // want the menu". That is why this cannot leak: anywhere with somewhere to go,
+  // it goes there, and this never runs.
+  //
+  // The direction follows the interface, not the keycap. The rail sits on the
+  // left in English and on the right in Arabic, so the key that opens it is
+  // whichever one points at it — as the owner pointed out when he asked for
+  // this.
+  useEffect(() => {
+    if (!isDpadPrimary()) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const towardsRail =
+        document.documentElement.dir === "rtl" ? "ArrowRight" : "ArrowLeft";
+      if (e.key !== towardsRail) return;
+      // Not from inside the rail, and not while anything is over the screen: a
+      // dialog or the player owns its own edges.
+      if (document.activeElement?.closest("aside")) return;
+      if (document.querySelector("[role=dialog]")) return;
+      const rail = document.querySelector("aside");
+      if (!rail) return;
+      // Decided before the press is allowed to mean anything, by looking at
+      // what is actually there.
+      //
+      // Two attempts to decide this *afterwards* both failed the same way, and
+      // the failure is worth recording. Comparing the focused element a frame
+      // later called an ordinary step between cards "nothing happened", because
+      // a press in a row scrolls it first and the highlight settles after that.
+      // Waiting for a focusin instead, with a timer behind it, failed for the
+      // same reason at a different length — the move simply takes longer than
+      // any number worth hard-coding. Measured on the emulator both times, two
+      // cards into a row: "one step back: RAIL". A rail you fall into.
+      //
+      // There is nothing to time. Whether a press has anywhere to go is a fact
+      // about the screen at the moment it is pressed: is there a focusable
+      // thing beside this one, on the side the rail is on. If there is, this is
+      // ordinary navigation and the engine handles it. If there is not, the
+      // viewer is at the edge and asking for the menu.
+      const active = document.activeElement as HTMLElement | null;
+      if (!active) return;
+      // Something on the screen that handles this key itself gets it first. The
+      // hero says so while it still has an earlier slide to show; once it is on
+      // the first one it stops saying it, and the press arrives here.
+      if (active.closest("[data-hero-can-step-back]")) return;
+      const box = active.getBoundingClientRect();
+      if (box.width === 0 && box.height === 0) return;
+      const rtl = towardsRail === "ArrowRight";
+      const candidates = document.querySelectorAll<HTMLElement>(
+        "[role=gridcell], button, a[href], [tabindex]",
+      );
+      for (const el of candidates) {
+        if (el === active || rail.contains(el)) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) continue;
+        // Only things on the same line: a card above or below is reached with
+        // Up and Down, and says nothing about whether this row has run out.
+        if (r.bottom <= box.top + 4 || r.top >= box.bottom - 4) continue;
+        const beside = rtl ? r.left >= box.right - 4 : r.right <= box.left + 4;
+        if (beside) return;
+      }
+      // The rail's own entry for this screen, not whatever sits closest.
+      //
+      // Handing the highlight to the rail as a whole lets it choose, and from
+      // the hero — which is at the top of the page — the closest thing is
+      // Search at the head of the rail. The viewer leaving the home screen
+      // should arrive on Home. The marked entry says which that is; the rail as
+      // a whole remains the fallback for a screen that has no entry of its own.
+      const entry = rail.querySelector<HTMLElement>("[data-rail-active]");
+      if (entry) {
+        entry.focus();
+        return;
+      }
+      setFocusSafely(focusKeys.sidebar);
+    };
+    // Capture, and this is the whole of it working.
+    //
+    // On the bubble phase the focus engine has already answered the press by
+    // the time this runs, so `document.activeElement` is where the highlight
+    // has *arrived*, not where it was. Pressing left from the second card of a
+    // row therefore asked "is there anything to the left of the first card" —
+    // there is not — and opened the rail on top of a move that had just
+    // succeeded. Reproduced on the emulator: card #1, press left, "RAIL".
+    //
+    // Capturing reads the screen as the viewer left it, which is the only state
+    // the question makes sense against.
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, []);
   
   useEffect(() => startMaintenance(), []);
 

@@ -10,11 +10,15 @@ import { useEffect, useRef, useState } from "react";
  * is one behind everything, and the profile during navigation put 41.7% of the
  * main thread in raster.
  *
- * w1280 is a shade under native and nine times cheaper to decode. It sits
- * behind a gradient scrim and a logo, which is exactly where that trade is
- * invisible.
+ * w1280 was the first step down from that, and it is still nearly the panel's
+ * own width — sharper than anything behind a scrim needs to be. w780 is another
+ * two and a half times cheaper again, and this layer is never looked at
+ * directly: a gradient covers most of it, the logo and the buttons sit on top,
+ * and the set renders at 1080p whatever the panel is. Detail spent here is
+ * detail nobody sees, paid for in download time on the viewer's connection and
+ * decode time on a four-core box.
  */
-const BACKDROP_SIZE = "w1280";
+const BACKDROP_SIZE = "w780";
 
 function Layer({ url, first, onReady }: { url: string; first: boolean; onReady: () => void }) {
   const lowUrl = url.replace(/\/t\/p\/(w\d+|original)\//, "/t/p/w300/");
@@ -55,9 +59,26 @@ export function HeroBackdrop({ url }: { url: string }) {
   const [layers, setLayers] = useState<{ id: number; url: string }[]>([{ id: 0, url }]);
   const nextId = useRef(1);
   useEffect(() => {
-    setLayers((prev) =>
-      prev[prev.length - 1]?.url === url ? prev : [...prev, { id: nextId.current++, url }],
-    );
+    setLayers((prev) => {
+      if (prev[prev.length - 1]?.url === url) return prev;
+      // A backdrop that has been shown before keeps its layer.
+      //
+      // Every change used to append a layer under a fresh id, and a fresh id is
+      // a fresh element: it starts transparent and fades in over seven hundred
+      // milliseconds. So moving to another title and coming back replayed the
+      // whole arrival for a picture the engine already had in hand — the owner
+      // reported it as the image loading again, and he was watching an
+      // animation, not a download.
+      //
+      // Reusing the id keeps the same element. React moves it rather than
+      // rebuilding it, the picture is simply already there, and nothing fades.
+      const seen = prev.findIndex((l) => l.url === url);
+      if (seen !== -1) {
+        const kept = prev[seen];
+        return [...prev.slice(0, seen), ...prev.slice(seen + 1), kept];
+      }
+      return [...prev, { id: nextId.current++, url }];
+    });
   }, [url]);
   const settle = (id: number) =>
     setLayers((prev) => {

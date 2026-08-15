@@ -13,6 +13,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://image.tmdb.org" crossorigin />
+    <!--
+      The two hosts the artwork actually waits on.
+
+      Measured on the television: a poster from cdn.myanimelist.net takes about
+      600 ms the first time and up to a second, against 150 ms from TMDB, and
+      there are more of them on the home screen than from anywhere else. TMDB was
+      already named here; these two were not, so every screen paid for a fresh
+      name lookup, connection and handshake at the moment the artwork was wanted
+      rather than before it.
+
+      Only the first view pays it. Once an image has been seen the engine keeps
+      it — measured at 1 ms to show again, against 982 ms for the same picture
+      with a fresh address — so this is entirely about the first time.
+    -->
+    <link rel="preconnect" href="https://cdn.myanimelist.net" crossorigin />
+    <link rel="preconnect" href="https://images.metahub.space" crossorigin />
     <link rel="preconnect" href="https://api.themoviedb.org" crossorigin />
     <link rel="preconnect" href="https://v3-cinemeta.strem.io" crossorigin />
     <link rel="preconnect" href="https://api.strem.io" crossorigin />

@@ -171,6 +171,14 @@ function RailItem({
       onClick={onClick}
       aria-label={translated}
       title={collapsed ? translated : undefined}
+      // Which entry this screen belongs to, said plainly.
+      //
+      // Until now the only thing distinguishing it was a colour, which is fine
+      // for the eye and useless to anything that has to find it. Pressing
+      // towards the rail has to land on the entry for the screen the viewer is
+      // leaving — not on whichever item happens to be nearest, which from the
+      // hero at the top of the page is Search.
+      data-rail-active={active ? "" : undefined}
       className={`group relative flex h-10 items-center text-[16px] tracking-tight transition-colors ${
         collapsed ? "justify-center px-2" : "ps-7 pe-3 text-start"
       } ${active ? "text-accent" : "text-ink-muted hover:text-ink"}`}

@@ -184,6 +184,12 @@ export function CinemaHero({
       }}
       tabIndex={-1}
       data-hero-stage=""
+      // A press back through the slides belongs to this hero, not to the rail.
+      // See the same attribute on the home carousel: the arrow handler above
+      // already decides it correctly, but the rail listens in the capture phase
+      // and would otherwise take the key first. Absent on the first slide, so
+      // that one still opens the rail.
+      data-hero-can-step-back={active > 0 ? "" : undefined}
       {...heroFocus.focusProps}
       className="harbor-bleed-stremio relative h-[420px] overflow-hidden bg-canvas"
       onMouseEnter={() => setPaused(true)}
@@ -407,5 +413,7 @@ function Dot() {
 
 function upsizeTmdb(url?: string): string | undefined {
   if (!url) return url;
-  return url.replace("/t/p/w780/", "/t/p/w1280/");
+  // Was an upgrade to w1280. It sits behind a scrim on a set that renders at
+  // 1080p, so the extra pixels were downloaded and decoded to be covered up.
+  return url;
 }

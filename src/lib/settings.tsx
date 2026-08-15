@@ -6,6 +6,7 @@ import { setPosterBaseUrl } from "@/lib/providers/rpdb";
 import { setMdblistBatchKey } from "@/lib/providers/mdblist-batch";
 import { setUiLanguage } from "@/lib/i18n";
 import { STORAGE_KEY } from "./settings/defaults";
+import { invalidateStoredSettings } from "./settings/load";
 import { readSettingsFile, writeSettingsFile } from "./settings/file-store";
 import {
   forkToProfile,
@@ -87,6 +88,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       if (cancelled || !raw || localStorage.getItem(STORAGE_KEY)) return;
       try {
         localStorage.setItem(STORAGE_KEY, raw);
+        // loadEffective holds its answer briefly rather than re-reading the
+        // stored blob on every call, and it has already been called once by the
+        // initialiser above. Without saying so, the settings just restored from
+        // file would be read back as whatever was there before them.
+        invalidateStoredSettings();
         seedSharedFromLegacy();
         setSettings(loadEffective(sourceRef.current.profileId, sourceRef.current.linked));
       } catch {}

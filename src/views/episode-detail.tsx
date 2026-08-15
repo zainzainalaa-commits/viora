@@ -119,13 +119,15 @@ export function EpisodeDetailView({
     return () => { cancelled = true; };
   }, [episodeKey, initialSeriesMeta, tmdbKey]);
 
-  const getImageUrl = (path: string | null | undefined, size = "original"): string | undefined => {
+  const getImageUrl = (path: string | null | undefined, size = "w1280"): string | undefined => {
     if (!path) return undefined;
     if (path.startsWith("http://") || path.startsWith("https://")) return path;
     return `https://image.tmdb.org/t/p/${size}${path}`;
   };
 
-  const background = getImageUrl(episodeData?.stillPath, "original") ?? seriesMeta?.background ?? undefined;
+  // A still behind the page, on a 1920 wide panel. The full size asset is
+  // decoded whole before any of it is drawn.
+  const background = getImageUrl(episodeData?.stillPath, "w1280") ?? seriesMeta?.background ?? undefined;
 
   // Episode rating: hosted IMDb → OMDB (via episode IMDb ID) → TMDB vote_average → none
   const episodeRating = harborEpisodeRating ??

@@ -73,8 +73,42 @@ export function sanitizeTheme(t: Partial<ThemeSettings> | undefined): ThemeSetti
   };
 }
 
+// Rebuilding the settings object on every call is what made this the second
+// hottest function on the television. The parse is only the beginning of it:
+// what follows is thirty-odd object spreads and two array maps through
+// languageName. It is called from the metadata mappers, once per title, so a
+// screen of a hundred cards rebuilt the whole thing a hundred times over to
+// read one boolean.
+//
+// The stored string is the cache key, which is what makes the memo safe: every
+// write to settings produces a different string, so a hit can only mean nothing
+// has changed. Reading that string back is itself a copy of a blob that runs to
+// tens of kilobytes, so within a burst the store is not consulted again either;
+// a quarter of a second of staleness is invisible here, because the interface
+// renders from the provider's own state and these callers are data mappers.
+const RECHECK_MS = 250;
+type Cached = { raw: string | null; value: Settings; checkedAt: number };
+const cache = new Map<string, Cached>();
+
+export function invalidateStoredSettings(): void {
+  cache.clear();
+}
+
 export function loadStoredSettings(rawKey: string = STORAGE_KEY): Settings {
+  const now = Date.now();
+  const hit = cache.get(rawKey);
+  if (hit && now - hit.checkedAt < RECHECK_MS) return hit.value;
   const raw = localStorage.getItem(rawKey);
+  if (hit && hit.raw === raw) {
+    hit.checkedAt = now;
+    return hit.value;
+  }
+  const value = buildStoredSettings(raw);
+  cache.set(rawKey, { raw, value, checkedAt: now });
+  return value;
+}
+
+function buildStoredSettings(raw: string | null): Settings {
   if (!raw) {
     return {
       ...DEFAULT,

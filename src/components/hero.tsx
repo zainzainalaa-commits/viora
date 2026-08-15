@@ -214,6 +214,10 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function upsizeTmdb(url?: string, full = false): string | undefined {
   if (!url) return url;
-  const size = full ? "original" : "w1280";
+  // Never `original`: that is up to 3840px, and four of them were measured on
+  // one screen at 2880 wide to be drawn at 320. A hero that fills the screen
+  // gets w1280, which is already close to the 1920 the set actually renders;
+  // anything smaller than full bleed gets w780.
+  const size = full ? "w1280" : "w780";
   return url.replace("/t/p/w780/", `/t/p/${size}/`);
 }

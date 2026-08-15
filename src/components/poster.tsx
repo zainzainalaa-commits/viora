@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { CellIsUpFrontContext } from "@/components/row";
 import { needsImdbForPoster, needsTmdbForPoster, rpdbPoster } from "@/lib/providers/rpdb";
 import {
   tmdbIdFromImdb,
@@ -149,6 +150,34 @@ export function usePosterChain(
 // grid items, collapsing every poster card to 0px height so artwork never shows.
 // The padding-top hack works identically on every engine.
 // Upstream issue 403: poster aspect-ratio fallback.
+// Ask each service for a picture the size of a card, not the size it happens to
+// offer.
+//
+// Measured on the television, on one details screen: 94 images arriving 780
+// pixels wide to be drawn at 110, and four arriving at 2880 to be drawn at 320.
+// Nothing is gained by any of it — the panel renders at 1080p and a card is a
+// couple of hundred device pixels across — but every one of those pixels is
+// downloaded over the viewer's connection and decoded on a four-core box before
+// the card can appear.
+//
+// This is safe to do here because nothing large is built from this component:
+// the heroes, the backdrop and the gallery all render their own images and pick
+// their own sizes, and each of them upgrades deliberately. A card asking for a
+// card-sized picture cannot make any of those softer.
+//
+// The numbers: a portrait card is drawn about 132 CSS pixels wide, so 264 real
+// ones, and w342 covers that with room to spare. A landscape card is drawn
+// about 110, so 220, and w300 covers it. Both are a step or two below what was
+// being asked for and still above what is actually painted.
+function cardSized(url: string, ratio: Ratio): string {
+  const wanted = ratio === "portrait" ? "w342" : "w300";
+  let out = url.replace(/\/t\/p\/(original|w1280|w780|w500)\//, `/t/p/${wanted}/`);
+  // Metahub publishes the same artwork at two sizes and the smaller one is
+  // already the right size for a card.
+  out = out.replace("/poster/medium/", "/poster/small/");
+  return out;
+}
+
 const ASPECT_PAD: Record<Ratio, string> = {
   portrait: "150%", // 3 / 2
   landscape: "56.25%", // 9 / 16
@@ -162,6 +191,21 @@ export function Poster({
   className = "",
   children,
   onError,
+  // Left off, and it has to stay off until someone works out why.
+  //
+  // Turning it on looked like the obvious win — fifty-five places build a
+  // Poster and none of them asked for it, so every poster in the application is
+  // fetched the moment it enters the page. But the engine's own lazy loading
+  // does not fire for images inside the row track. Measured in the preview at
+  // 1280x720: seven posters sitting plainly on screen, `loading="lazy"`,
+  // `complete` still false sixteen seconds later. The same element with the
+  // same URL switched to `eager` decoded at once, so it is neither the network
+  // nor the host. Something about the track — a nested scroller carrying
+  // `contain: layout style` — keeps those images out of whatever the engine
+  // uses to decide.
+  //
+  // What works in this layout is the observer the rows already run themselves,
+  // which is where the gating belongs.
   lazy = false,
   fallbacks,
 }: {
@@ -176,8 +220,11 @@ export function Poster({
   fallbacks?: Array<string | null | undefined>;
 }) {
   const { settings } = useSettings();
+  const upFront = useContext(CellIsUpFrontContext);
   const effect = settings.posterEffect;
-  const candidates = [src, ...(fallbacks ?? [])].filter((u): u is string => !!u);
+  const candidates = [src, ...(fallbacks ?? [])]
+    .filter((u): u is string => !!u)
+    .map((u) => cardSized(u, ratio));
   const sig = candidates.join("|");
   const [idx, setIdx] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -284,6 +331,19 @@ export function Poster({
           src={current}
           alt=""
           decoding="async"
+          // Raise what the viewer is looking at; never lower anything else.
+          //
+          // "low" was a mistake and the owner caught it: the engine does not
+          // treat it as a mild preference but holds those requests back hard
+          // while the connection is busy, so cards past the first few in a row
+          // sat empty until the highlight reached them — at which point the row
+          // became the front one, the hint flipped, and the artwork appeared at
+          // once. That is a card with no picture until you look at it, which is
+          // worse than no hint at all.
+          //
+          // "auto" leaves the engine's own judgement in place, and it already
+          // knows what is off screen. Only the row being looked at overrides it.
+          fetchPriority={upFront ? "high" : "auto"}
           loading={lazy ? "lazy" : undefined}
           onLoad={() => {
             setLoaded(true);
