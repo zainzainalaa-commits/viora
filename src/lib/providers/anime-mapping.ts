@@ -29,19 +29,69 @@ type AnidbMapCache = {
   t: number;
 };
 
+/**
+ * The mapping caches, held in memory and written back lazily.
+ *
+ * These two used to touch localStorage on every call, and every caller below
+ * reads a whole cache to look up one id: `readJson(...)` then `cache[kitsuId]`.
+ * A screen of forty anime therefore parsed the entire file forty times and
+ * re-serialised it on every miss, against storage that is synchronous and runs
+ * on the thread drawing the screen.
+ *
+ * Measured on the television before this: the Anime screen sat at 98.3% main
+ * thread with 88.4% of it in script, against under 15% everywhere else in the
+ * app, with getItem and setItem alone accounting for 706ms of a 12 second
+ * sample. It is the one screen where the work was the app's own rather than
+ * raster.
+ *
+ * The shape callers rely on is unchanged: `readJson` hands back the same
+ * mutable object each time, so the existing `cache[id] = entry; writeJson(...)`
+ * still records the entry. What changed is that the parse happens once and the
+ * serialise is coalesced to one write per turn of the event loop.
+ */
+const memo = new Map<string, unknown>();
+const dirty = new Set<string>();
+let flushHandle: number | null = null;
+
+function flush() {
+  flushHandle = null;
+  for (const key of dirty) {
+    try {
+      localStorage.setItem(key, JSON.stringify(memo.get(key)));
+    } catch {
+      // Quota, most likely. Dropping the write loses a cache entry that will be
+      // fetched again; throwing here would lose the lookup that asked for it.
+    }
+  }
+  dirty.clear();
+}
+
+// Written before the page goes away, because a debounce that never fires is a
+// cache that never persists — every launch would start cold and re-fetch.
+if (typeof window !== "undefined") {
+  window.addEventListener("pagehide", flush);
+}
+
 function readJson<T>(key: string, fallback: T): T {
+  if (memo.has(key)) return memo.get(key) as T;
+  let value = fallback;
   try {
     const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
+    if (raw) value = JSON.parse(raw) as T;
   } catch {
-    return fallback;
+    value = fallback;
   }
+  memo.set(key, value);
+  return value;
 }
 
 function writeJson(key: string, value: unknown) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
+  memo.set(key, value);
+  dirty.add(key);
+  if (flushHandle != null) return;
+  // A microtask would still land inside the render that triggered it. This is
+  // the first moment the screen is not waiting on us.
+  flushHandle = window.setTimeout(flush, 0);
 }
 
 const inflightArm = new Map<number, Promise<ArmKitsuEntry | null>>();
