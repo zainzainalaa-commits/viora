@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { announceFirstContent } from "@/lib/first-content";
 import { BackToTop } from "@/components/back-to-top";
 import { HeroCarousel, type Slide } from "@/components/hero-carousel";
 import { publishHomeRowCatalog } from "@/lib/home-row-catalog";
@@ -93,6 +94,19 @@ export function Home({ active = true }: { active?: boolean }) {
   const [anilistWatchedMap, setAnilistWatchedMap] = useState<Map<string, Set<string>>>(() => new Map());
   const [localWatched, setLocalWatched] = useState<WatchedSet>(() => recentlyPlayed());
   useEffect(() => subscribePlayback(() => setLocalWatched(recentlyPlayed())), []);
+
+  // The boot screen is held until this fires, so the viewer is not shown an
+  // empty library filling itself in. Any one of these carrying a row means
+  // there is something on the screen; which of them it is does not matter.
+  const hasContent =
+    rows.length > 0 ||
+    traktRows.length > 0 ||
+    simklRows.length > 0 ||
+    animeRows.length > 0 ||
+    arabicRows.length > 0;
+  useEffect(() => {
+    if (hasContent) announceFirstContent();
+  }, [hasContent]);
   const [heroPool, setHeroPool] = useState<Meta[]>([]);
   const [items, setItems] = useState<LibraryItem[]>([]);
   const cwVersion = useCwDismissVersion();

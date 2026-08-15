@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "@/App";
 import { TVFocusProvider } from "@/lib/tv-focus";
 import { formFactor, platformOS, setNativePlatform, type PlatformOS } from "@/lib/platform";
+import { FIRST_CONTENT_EVENT, FIRST_CONTENT_TIMEOUT_MS } from "@/lib/first-content";
 import "@/index.css";
 
 // One entry, one window.
@@ -50,12 +51,41 @@ async function boot() {
     </StrictMode>,
   );
 
-  requestAnimationFrame(() => {
-    const bootEl = document.getElementById("harbor-boot");
-    if (!bootEl) return;
+  revealWhenReady();
+}
+
+/**
+ * Holds the boot screen until the first screen has something to show.
+ *
+ * It used to lift on the first animation frame after `render`, which is the
+ * moment React has produced a tree — not the moment that tree has any content
+ * in it. What the viewer saw was the mark, then an empty library, then rows
+ * arriving one by one over several seconds.
+ *
+ * The wait is capped, and the cap is the important half. The home rows come
+ * from whatever catalogues are installed, and one of those can be slow, rate
+ * limited, or simply unreachable on a television that woke up before its
+ * network did. A gate with no ceiling turns any of those into an app that never
+ * opens, which is worse than the flicker it was meant to fix. So the signal
+ * wins if it arrives, the clock wins if it does not, and the screen is never
+ * held longer than it takes to decide the content is not coming.
+ */
+function revealWhenReady() {
+  const bootEl = document.getElementById("harbor-boot");
+  if (!bootEl) return;
+
+  let done = false;
+  const reveal = () => {
+    if (done) return;
+    done = true;
+    window.removeEventListener(FIRST_CONTENT_EVENT, reveal);
+    window.clearTimeout(cap);
     bootEl.classList.add("gone");
     setTimeout(() => bootEl.remove(), 260);
-  });
+  };
+
+  const cap = window.setTimeout(reveal, FIRST_CONTENT_TIMEOUT_MS);
+  window.addEventListener(FIRST_CONTENT_EVENT, reveal, { once: true });
 }
 
 void boot();

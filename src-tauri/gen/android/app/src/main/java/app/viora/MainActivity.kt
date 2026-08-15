@@ -30,6 +30,17 @@ class MainActivity : TauriActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     enableEdgeToEdge()
+    // The white frame before the mark appears.
+    //
+    // A WebView paints its own background before the page has produced
+    // anything, and that background is white. On a television, in a dark room,
+    // that is a full-screen flash between the launcher and the boot screen —
+    // the app's first impression, and the thing the owner reported first.
+    //
+    // The window is painted the same colour the boot screen uses, so the first
+    // frame the panel shows is already the right one and there is nothing to
+    // flash from.
+    window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(0xFF0A0A0A.toInt()))
     // TEMPORARY — remove before shipping.
     //
     // Opens the WebView's DevTools socket so the main thread can be profiled on
@@ -155,6 +166,13 @@ class MainActivity : TauriActivity() {
 
   override fun onWebViewCreate(webView: WebView) {
     contentWebView = webView
+    // The white flash, second attempt.
+    //
+    // Painting the activity window was not enough, and the owner saw the flash
+    // again: a WebView draws its own background over the window, and that
+    // background is white until the page's own paints cover it. Both surfaces
+    // have to start at the boot screen's colour, not just the one behind.
+    webView.setBackgroundColor(0xFF0A0A0A.toInt())
     takeKeyboardFocus(webView)
     webView.addJavascriptInterface(ClipboardBridge(), "VioraClipboard")
     webView.addJavascriptInterface(nativePlayer, "VioraPlayer")
