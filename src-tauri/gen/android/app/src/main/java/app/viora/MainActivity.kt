@@ -173,6 +173,24 @@ class MainActivity : TauriActivity() {
     // background is white until the page's own paints cover it. Both surfaces
     // have to start at the boot screen's colour, not just the one behind.
     webView.setBackgroundColor(0xFF0A0A0A.toInt())
+    // The page is allowed to choose its own width.
+    //
+    // `index.html` picks a layout width for the panel it finds itself on — 1280
+    // on a 16:9 set — and states it in the viewport meta. Android only reads
+    // that tag when `useWideViewPort` is on, and nothing here was turning it on:
+    // the app was living off whatever the WebView happened to default to, which
+    // is not the same in every build. Measured on the emulator with it off:
+    // `clientWidth` stayed at 960 while the tag said 1280, so every `lg:` class
+    // in the app — 154 of them across 41 files — sat dead behind a 1024px
+    // breakpoint the layout could never reach. The side rail could not expand
+    // and every card drew a third too large. Rewriting the tag at runtime
+    // changed nothing, which is what proved it was the setting and not the tag.
+    //
+    // `loadWithOverviewMode` is its other half: it makes the initial scale fit
+    // that chosen width to the screen, so a 1280px layout lands on a 960px panel
+    // instead of hanging off the right edge.
+    webView.settings.useWideViewPort = true
+    webView.settings.loadWithOverviewMode = true
     takeKeyboardFocus(webView)
     webView.addJavascriptInterface(ClipboardBridge(), "VioraClipboard")
     webView.addJavascriptInterface(nativePlayer, "VioraPlayer")
