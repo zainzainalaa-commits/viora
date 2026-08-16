@@ -5,14 +5,6 @@ import type { PlayEpisode } from "./view";
 import { tmdbDetails, tmdbSeasonEpisodes } from "./providers/tmdb";
 import { resolveMeta } from "./meta-resource";
 
-export function isAnimeId(id: string): boolean {
-  return (
-    id.startsWith("kitsu:") ||
-    id.startsWith("mal:") ||
-    id.startsWith("anilist:") ||
-    id.startsWith("anidb:")
-  );
-}
 
 
 
@@ -67,7 +59,7 @@ export async function fetchAdjacentEpisodes(
   current: { season: number; episode: number },
   opts: { tmdbKey: string; kitsuStreamId?: string },
 ): Promise<Adjacent> {
-  if (meta.type !== "series" && !isAnimeId(meta.id)) return { prev: null, next: null };
+  if (meta.type !== "series") return { prev: null, next: null };
 
   if (meta.id.startsWith("tt")) {
     const key = `${meta.id}:${current.season}:${current.episode}`;
@@ -96,7 +88,7 @@ export async function fetchUpcomingEpisodes(
   count: number,
   opts: { tmdbKey: string },
 ): Promise<PlayEpisode[]> {
-  if ((meta.type !== "series" && !isAnimeId(meta.id)) || count <= 0) return [];
+  if ((meta.type !== "series") || count <= 0) return [];
   if (meta.id.startsWith("tt")) {
     const eps = await loadCinemetaEpisodes(meta.id);
     if (!eps) return [];
@@ -193,7 +185,7 @@ function uniqueAnimeSeasons(eps: PlayEpisode[] | null): number[] {
 }
 
 export async function fetchSeasonList(meta: Meta, opts: { tmdbKey: string }): Promise<number[]> {
-  if (meta.type !== "series" && !isAnimeId(meta.id)) return [];
+  if (meta.type !== "series") return [];
   if (meta.id.startsWith("tt")) {
     return uniqueSeasons(await loadCinemetaEpisodes(meta.id));
   }
@@ -210,7 +202,7 @@ export async function fetchSeasonEpisodes(
   season: number,
   opts: { tmdbKey: string },
 ): Promise<PlayEpisode[]> {
-  if ((meta.type !== "series" && !isAnimeId(meta.id)) || season < 1) return [];
+  if ((meta.type !== "series") || season < 1) return [];
   if (meta.id.startsWith("tt")) {
     const eps = await loadCinemetaEpisodes(meta.id);
     return (eps ?? []).filter((e) => e.season === season);
@@ -225,7 +217,7 @@ export async function fetchSeasonEpisodes(
 }
 
 export async function fetchEpisodeList(meta: Meta, opts: { tmdbKey: string }): Promise<PlayEpisode[]> {
-  if (meta.type !== "series" && !isAnimeId(meta.id)) return [];
+  if (meta.type !== "series") return [];
   if (meta.id.startsWith("tt")) return (await loadCinemetaEpisodes(meta.id)) ?? [];
   if (meta.id.startsWith("tmdb:tv:") && opts.tmdbKey) {
     const seasons = await fetchSeasonList(meta, opts);

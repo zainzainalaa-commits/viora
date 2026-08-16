@@ -8,7 +8,6 @@ import {
 } from "@/lib/stremio";
 import { isCwDismissed } from "@/lib/cw-dismiss";
 
-const ANIME_ID = /^(kitsu|mal|anilist|anidb):/;
 
 
 export function isNextAired(isAnime: boolean, airDate: string | undefined): boolean {
@@ -27,7 +26,6 @@ function currentEpisode(i: LibraryItem): { season: number; episode: number } | n
   const episode = i.state?.episode;
   if (season && episode) return { season, episode };
   const vid = i.state?.video_id ?? "";
-  if (ANIME_ID.test(i._id) && vid.split(":").length === 3) return null;
   return episodeFromVideoId(vid);
 }
 
@@ -49,7 +47,7 @@ export async function resurfaceCandidates(
   const now = Date.now();
   const out = new Map<string, { season: number; episode: number }>();
   const candidates = library.filter((i) => {
-    if (i.type !== "series" && !ANIME_ID.test(i._id)) return false;
+    if (i.type !== "series") return false;
     if (!i.state || (i.removed && !i.temp)) return false;
     if (inCw.has(i._id) || isCwMember(i) || isCwDismissed(i)) return false;
     if ((i.state.flaggedWatched ?? 0) <= 0) return false;

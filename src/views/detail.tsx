@@ -878,7 +878,7 @@ export function DetailView({
                     onClick={() => {
                       if (isSeries) {
                         document
-                          .querySelector("[data-episodes], [data-anime-episodes]")
+                          .querySelector("[data-episodes]")
                           ?.scrollIntoView({ behavior: "smooth", block: "start" });
                         return;
                       }
@@ -895,7 +895,7 @@ export function DetailView({
                   <FocusButton
                     onClick={() => {
                       document
-                        .querySelector('[data-anime-episodes]')
+                        .querySelector("[data-episodes]")
                         ?.scrollIntoView({ behavior: "smooth", block: "start" });
                     }}
                     className="flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/12 px-3 py-1 text-[12.5px] font-semibold text-accent transition-colors hover:bg-accent/20"
@@ -1121,9 +1121,7 @@ export function DetailView({
                   >
                     {meta.type === "series" || meta.type === "tv"
                       ? t("Open in TV Shows")
-                      : meta.type === "anime"
-                        ? t("Open in Anime")
-                        : t("Open in Movies")}
+                      : t("Open in Movies")}
                   </FocusButton>
                 )}
               </div>

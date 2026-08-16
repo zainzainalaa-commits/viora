@@ -38,7 +38,6 @@ type ResolvedEpisode = {
 type ResolvedSeries = {
   name: string;
   poster: string | null;
-  isAnime: boolean;
   episodes: ResolvedEpisode[];
 };
 
@@ -68,13 +67,6 @@ function inMonthFactory(year: number, month: number): (iso: string) => boolean {
   };
 }
 
-function isAnimationGenre(genres: string[] | undefined): boolean {
-  if (!genres) return false;
-  return genres.some((g) => {
-    const l = g.toLowerCase();
-    return l === "animation" || l === "anime";
-  });
-}
 
 async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const out: R[] = [];
@@ -124,7 +116,7 @@ async function cinemetaSeriesUpcoming(
     });
   }
   if (episodes.length === 0) return null;
-  return { name: m.name, poster: m.poster ?? null, isAnime: isAnimationGenre(m.genres), episodes };
+  return { name: m.name, poster: m.poster ?? null, episodes };
 }
 
 async function seriesUpcoming(
@@ -145,7 +137,6 @@ async function seriesUpcoming(
       return {
         name: up.show.name,
         poster: up.show.image,
-        isAnime: up.show.isAnime,
         episodes: up.episodes.map((e) => ({
           season: e.season,
           number: e.number,
@@ -182,7 +173,6 @@ async function movieRelease(
       poster: m.poster,
       background: m.background,
       releaseDate: m.releaseDate,
-      isAnime: m.isAnime,
       overview: m.overview,
       voteAverage: m.voteAverage,
     };
@@ -200,7 +190,6 @@ async function movieRelease(
       poster: m.poster ?? null,
       background: m.background ?? null,
       releaseDate: date,
-      isAnime: isAnimationGenre(m.genres),
       overview: m.description ?? "",
       voteAverage: parseFloat(m.imdbRating ?? "0") || 0,
     };
@@ -331,7 +320,6 @@ export async function resolveSavedCalendar(
         poster: ep.image ?? r.poster ?? null,
         background: null,
         releaseDate: ep.airDate,
-        isAnime: r.isAnime,
         overview: ep.overview,
         voteAverage: ep.voteAverage,
       });

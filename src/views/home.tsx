@@ -23,7 +23,6 @@ import {
 import { StreamingRail } from "@/components/streaming-rail";
 import { TopRankCard } from "@/components/top-rank-card";
 import { loadAddonRows, type AddonRow } from "@/lib/addons";
-import { isAnimeRow } from "@/lib/anime-row";
 import { buildArabicHomeRows } from "@/lib/arabic/home-rows";
 import { useAuth } from "@/lib/auth";
 import { type Meta } from "@/lib/cinemeta";
@@ -181,7 +180,7 @@ export function Home({ active = true }: { active?: boolean }) {
       if (cancelled) return;
       const filtered = isClassic
         ? addons
-        : addons.filter((a) => !isAnimeRow(a) && !isStreamingServiceRow(a.name));
+        : addons.filter((a) => !isStreamingServiceRow(a.name));
       setRows(mergeRows(built.rows, filtered, { dedup: dedupRows }));
     })().catch(console.error);
     return () => {

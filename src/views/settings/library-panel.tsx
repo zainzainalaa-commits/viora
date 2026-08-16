@@ -113,7 +113,7 @@ export function LibraryPanel({
     if (extraTimerRef.current) window.clearTimeout(extraTimerRef.current);
     extraTimerRef.current = window.setTimeout(() => setExtraSaved(null), 1800);
   };
-  const pushHideContent = (key: "anime" | "sports" | "liveTv" | "adult", value: boolean) => {
+  const pushHideContent = (key: "sports" | "liveTv" | "adult", value: boolean) => {
     const next = { ...settings.hideContent, [key]: value };
     update({ hideContent: next });
     if (activeProfile) updateProfile(activeProfile.id, { hideContent: next });
@@ -625,7 +625,7 @@ export function LibraryPanel({
 
       <Section
         title={t("Spoilers")}
-        subtitle={t("Blur episode artwork, titles, and descriptions for episodes you have not watched yet, on both shows and anime. Hover an episode to peek.")}
+        subtitle={t("Blur episode artwork, titles, and descriptions for episodes you have not watched yet, on shows. Hover an episode to peek.")}
       >
         <ToggleRow
           label={t("Blur spoilers")}

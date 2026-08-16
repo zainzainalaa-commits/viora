@@ -44,7 +44,6 @@ function fireWindowEnd(): string {
 
 function applyContentTypeFilter(items: CalendarItem[], opts: Settings["webhooks"]): CalendarItem[] {
   return items.filter((i) => {
-    if (i.isAnime) return opts.notifyAnime;
     if (i.type === "movie") return opts.notifyMovies;
     if (i.type === "tv") return opts.notifyTv;
     return false;
@@ -120,11 +119,9 @@ function matchesTrigger(
   void trackedPersonIds;
   switch (trigger.event) {
     case "newMovie":
-      return item.type === "movie" && !item.isAnime;
+      return item.type === "movie";
     case "newSeries":
-      return item.type === "tv" && !item.isAnime;
-    case "newAnime":
-      return item.isAnime;
+      return item.type === "tv";
     case "fromTraktAnticipated":
     case "fromTraktWatchlist":
       return true;
@@ -201,7 +198,6 @@ async function fetchLiveTvEvents(
           poster: channel.logo,
           background: null,
           releaseDate: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
-          isAnime: false,
           overview: p.description ?? "",
           voteAverage: 0,
         });

@@ -284,7 +284,6 @@ export const DEFAULT: Settings = {
     telegramUrl: "",
     notifyMovies: true,
     notifyTv: true,
-    notifyAnime: true,
     sources: {
       library: true,
       all: false,
@@ -305,7 +304,7 @@ export const DEFAULT: Settings = {
     genres: [],
     watchProviders: [],
     originCountries: [],
-    mediaTypes: { movie: true, tv: true, anime: true },
+    mediaTypes: { movie: true, tv: true },
   },
   webhookRules: [],
   downloadDir: "",

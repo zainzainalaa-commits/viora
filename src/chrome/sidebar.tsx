@@ -19,7 +19,7 @@ import { isDpadPrimary } from "@/lib/platform";
 import { FocusSection, focusKeys, useFocusableControl } from "@/lib/tv-focus";
 import { focusInsideScope, focusWithin } from "@/lib/tv-focus/keys";
 
-const PRIMARY_IDS = new Set(["home", "discover", "movies", "shows", "kids", "anime", "live", "vod"]);
+const PRIMARY_IDS = new Set(["home", "discover", "movies", "shows", "kids", "live", "vod"]);
 
 export function Sidebar() {
   const { view, setView, chromeHidden } = useView();

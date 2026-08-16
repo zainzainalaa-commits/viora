@@ -4,11 +4,10 @@ import type { Meta } from "@/lib/cinemeta";
 import type { PlayEpisode } from "@/lib/view";
 import { getEpisodeProgress } from "@/lib/episode-progress";
 import { simklWatchedForId, statusForId, type WatchlistStatus } from "@/lib/simkl/list-status";
-import { episodeFromVideoId, isAnimeCwItem, libraryMetaType, type LibraryItem } from "@/lib/stremio";
+import { episodeFromVideoId, libraryMetaType, type LibraryItem } from "@/lib/stremio";
 import { isNextAired, resurfaceCandidates } from "@/lib/cw-resurface";
 
 const FINISHED_RATIO = 0.9;
-const ANIME_ID = /^(kitsu|mal|anilist|anidb):/;
 
 const EMPTY_TRAKT_WATCHED: Set<string> = new Set();
 const EMPTY_SIMKL_WATCHED: Map<string, Set<string>> = new Map();
@@ -153,7 +152,7 @@ export function useCwAdvance(
           cur,
           watchedPredicate(i, cur, traktWatched, simklWatched, anilistWatched, simklStatus),
         );
-        if (nextEp && isNextAired(isAnimeCwItem(i) || ANIME_ID.test(i._id), nextEp.airDate)) {
+        if (nextEp && isNextAired(false, nextEp.airDate)) {
           next.set(i._id, {
             ...i,
             state: {

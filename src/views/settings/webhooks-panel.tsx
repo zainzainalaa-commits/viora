@@ -87,7 +87,7 @@ export function WebhooksPanel() {
       },
     });
 
-  const setNotify = (key: "notifyMovies" | "notifyTv" | "notifyAnime", on: boolean) =>
+  const setNotify = (key: "notifyMovies" | "notifyTv", on: boolean) =>
     update({ webhooks: { ...settings.webhooks, [key]: on } });
 
   const send = async (kind: WebhookKind) => {
@@ -167,7 +167,6 @@ export function WebhooksPanel() {
         <div className="flex flex-wrap gap-2">
           <ChipToggle label={t("Movies")} on={settings.webhooks.notifyMovies} onToggle={(v) => setNotify("notifyMovies", v)} />
           <ChipToggle label={t("TV")} on={settings.webhooks.notifyTv} onToggle={(v) => setNotify("notifyTv", v)} />
-          <ChipToggle label={t("Anime")} on={settings.webhooks.notifyAnime} onToggle={(v) => setNotify("notifyAnime", v)} />
         </div>
       </Section>
 

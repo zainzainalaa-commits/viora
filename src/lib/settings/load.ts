@@ -253,7 +253,6 @@ function buildStoredSettings(raw: string | null): Settings {
         mediaTypes: {
           movie: parsed.customCalendar?.mediaTypes?.movie !== false,
           tv: parsed.customCalendar?.mediaTypes?.tv !== false,
-          anime: parsed.customCalendar?.mediaTypes?.anime !== false,
         },
       },
       webhookRules: Array.isArray(parsed.webhookRules) ? parsed.webhookRules : [],

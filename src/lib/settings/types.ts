@@ -17,7 +17,6 @@ export type StreamingService =
 export type WebhookTrigger =
   | { event: "newMovie" }
   | { event: "newSeries" }
-  | { event: "newAnime" }
   | { event: "fromTrackedPerson"; personIds?: number[] }
   | { event: "fromGenre"; genreIds: number[]; mediaType: "movie" | "tv" }
   | { event: "fromProvider"; providerIds: number[] }
@@ -323,7 +322,6 @@ export type Settings = {
     telegramUrl: string;
     notifyMovies: boolean;
     notifyTv: boolean;
-    notifyAnime: boolean;
     sources: {
       library: boolean;
       all: boolean;
@@ -356,7 +354,7 @@ export type Settings = {
     genres: Array<{ id: number; name: string; mediaType: "movie" | "tv" }>;
     watchProviders: Array<{ id: number; name: string }>;
     originCountries: string[];
-    mediaTypes: { movie: boolean; tv: boolean; anime: boolean };
+    mediaTypes: { movie: boolean; tv: boolean };
   };
   webhookRules: Array<{
     id: string;

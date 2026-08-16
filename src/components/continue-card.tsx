@@ -8,7 +8,7 @@ import { useContextMenu } from "@/lib/context-menu";
 import { useT } from "@/lib/i18n";
 import { isDpadPrimary } from "@/lib/platform";
 import { readSnapshot, useSnapshotVersion } from "@/lib/snapshots";
-import { episodeFromVideoId, isAnimeCwItem, libraryMetaType, type LibraryItem } from "@/lib/stremio";
+import { episodeFromVideoId, libraryMetaType, type LibraryItem } from "@/lib/stremio";
 import { useHasNewEpisode } from "@/lib/new-episodes";
 import { peekCachedLogo, resolveLogo } from "@/lib/logo";
 import { Tooltip } from "@/views/detail/tooltip";
@@ -46,26 +46,11 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
   const progress = dur > 0 ? Math.min(1, off / dur) : 0;
   const remaining = dur > 0 && !isExternal ? formatRemaining(t, dur - off) : "";
   const upNext = item.upNext === true;
-  const kitsuThreeSeg =
-    /^(kitsu|mal|anilist|anidb):/.test(item._id) &&
-    (item.state?.video_id ?? "").split(":").length === 3;
   const ep =
     item.state?.season && item.state?.episode
       ? { season: item.state.season, episode: item.state.episode }
-      : kitsuThreeSeg
-        ? null
-        : episodeFromVideoId(item.state?.video_id);
-  const animeEp = kitsuThreeSeg
-    ? Number((item.state?.video_id ?? "").split(":")[2])
-    : isAnimeCwItem(item) && ep
-      ? ep.episode
-      : null;
-  const sub =
-    animeEp && Number.isFinite(animeEp) && animeEp > 0
-      ? `Ep ${animeEp}`
-      : ep
-        ? `S${ep.season}E${ep.episode}`
-        : "";
+      : episodeFromVideoId(item.state?.video_id);
+  const sub = ep ? `S${ep.season}E${ep.episode}` : "";
   const [logo, setLogo] = useState<string | undefined>();
   const [metaBg, setMetaBg] = useState<string | undefined>();
   const [hydratedMeta, setHydratedMeta] = useState<Meta | null>(null);
@@ -157,8 +142,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
 
   useEffect(() => {
     setEpTitle(null);
-    if (!ep || kitsuThreeSeg) return;
-    if (/^(kitsu|mal|anilist|anidb):/.test(item._id)) return;
+    if (!ep) return;
     let cancelled = false;
     const epMeta: Meta = { id: item._id, type: "series", name: item.name };
     fetchSeasonEpisodes(epMeta, ep.season, { tmdbKey: settingsRef.current.tmdbKey })
@@ -172,7 +156,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item._id, ep?.season, ep?.episode, kitsuThreeSeg]);
+  }, [item._id, ep?.season, ep?.episode]);
 
   const episodeTitle = epTitle;
 
@@ -193,12 +177,6 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
   const onPlay = (e: React.MouseEvent) => {
     e.stopPropagation();
     let episode: PlayEpisode | undefined = item.type === "series" && ep ? ep : undefined;
-    if (!episode && kitsuThreeSeg) {
-      {
-        const epNum = Number((item.state?.video_id ?? "").split(":")[2]);
-        if (Number.isFinite(epNum) && epNum > 0) episode = { season: 1, episode: epNum };
-      }
-    }
     playLocalAware({
       meta,
       episode: episode ?? null,

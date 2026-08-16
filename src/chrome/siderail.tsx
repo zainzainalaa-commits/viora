@@ -15,7 +15,7 @@ import { useView, type View } from "@/lib/view";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
 
 
-const PRIMARY_IDS = new Set(["home", "discover", "movies", "shows", "kids", "anime", "live", "vod"]);
+const PRIMARY_IDS = new Set(["home", "discover", "movies", "shows", "kids", "live", "vod"]);
 
 export function SideRail() {
   const { view, setView, chromeHidden } = useView();

@@ -34,24 +34,17 @@ export type LibraryItem = {
   _ctime: string;
   _mtime: string;
   external?: "simkl";
-  isAnime?: boolean;
   upNext?: boolean;
   local?: boolean;
   manualWatched?: boolean;
 };
 
 export function libraryMetaType(t: string): import("@/lib/cinemeta").MetaType {
-  return t === "series" || t === "channel" || t === "tv" || t === "anime" || t === "other"
+  return t === "series" || t === "channel" || t === "tv" || t === "other"
     ? t
     : "movie";
 }
 
-export function isAnimeCwItem(i: LibraryItem): boolean {
-  // What is left of anime detection. The Kitsu/MAL lookups are gone, so this
-  // now trusts only what the item itself says: an id from an anime add-on, or
-  // the flag Stremio's own library carries.
-  return i._id.startsWith("kitsu:") || i._id.startsWith("mal:") || i.isAnime === true;
-}
 
 export function episodeFromVideoId(
   videoId: string | undefined | null,
