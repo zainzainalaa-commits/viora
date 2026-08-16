@@ -258,7 +258,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
         }
         className="flex w-full min-w-0 flex-col gap-2.5 text-start"
       >
-      <div className="viora-poster relative aspect-[16/9] overflow-hidden rounded-xl bg-elevated shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] will-change-transform [transform:translate3d(0,0,0)] transition-transform duration-[220ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.02]">
+      <div data-preview-anchor className="viora-poster relative aspect-[16/9] overflow-hidden rounded-xl bg-elevated shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] will-change-transform [transform:translate3d(0,0,0)] transition-transform duration-[220ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.02]">
         <div className="absolute inset-0 bg-gradient-to-br from-raised via-elevated to-surface" />
         {src && (
           <img

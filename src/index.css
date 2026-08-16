@@ -1929,8 +1929,12 @@ html[data-input="dpad"] [data-tv-focused="true"] > button > [data-preview-anchor
   outline: 3px solid var(--color-accent);
   outline-offset: 4px;
   border-radius: calc(var(--poster-radius, 12px) + 4px);
-  transform: translate3d(0, -8px, 0) scale(1.03);
-  transition: transform 140ms ease-out;
+  /* And it does not lift.
+     A card in a row can rise into the clear because the row keeps space above
+     it. This one sits directly under its heading, and the ring already stands
+     7px proud of the photograph — 3px of line at a 4px offset — so raising it
+     another 8px pushed the top edge past what the row will draw and the frame
+     came out open at the top. Standing still, the whole rectangle fits. */
   z-index: 2;
 }
 
@@ -1956,8 +1960,16 @@ html[data-input="dpad"] [data-tv-focused="true"] > [data-preview-anchor] {
    of whatever holds them: measured on the Discover type menu, the focused item
    went from its container's 298px to 316px and hung 9px past each edge, where
    the list clipped it — so the ring lost its sides and showed as two orange
-   lines above and below the row. Cards get their lift on the poster itself. */
-html[data-input="dpad"] [role="gridcell"]:focus {
+   lines above and below the row. Cards get their lift on the poster itself.
+
+   Which is why a cell holding a card is excluded. That was already true for
+   every card that is its own focus stop, because then the cell never takes
+   focus — but a cast card is a plain button, so focus settles on the cell and
+   it read as a tile. The two lifts stacked: measured on the device, the cell
+   grew 7.5px upward at 1.06 and the poster then rose 8 more inside it, putting
+   the top of the ring 6.2px outside what the row draws. The card keeps its
+   lift; the cell underneath it stops taking one. */
+html[data-input="dpad"] [role="gridcell"]:focus:not(:has(> button > [data-preview-anchor])) {
   transform: scale(1.06);
   transition: transform 120ms ease-out;
 }

@@ -187,7 +187,7 @@ function EpisodeCard({
   const rating = ep.voteAverage && ep.voteAverage > 0 ? ep.voteAverage.toFixed(1) : undefined;
   return (
     <FocusButton type="button" onClick={onPlay} className="group flex flex-col gap-2 text-start">
-      <div className="relative aspect-video overflow-hidden rounded-2xl bg-surface shadow-[0_12px_28px_-14px_rgba(20,40,60,0.45)] ring-2 ring-white transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_18px_36px_-14px_rgba(20,40,60,0.55)]">
+      <div data-preview-anchor className="relative aspect-video overflow-hidden rounded-2xl bg-surface shadow-[0_12px_28px_-14px_rgba(20,40,60,0.45)] ring-2 ring-white transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_18px_36px_-14px_rgba(20,40,60,0.55)]">
         {still && (
           <img src={still} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover" />
         )}

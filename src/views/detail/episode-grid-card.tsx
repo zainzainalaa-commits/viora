@@ -85,7 +85,7 @@ export function EpisodeGridCard({
         onFocus={() => prefetchSegments(cardMeta, { season: g.season, episode: g.number })}
         className="flex w-full flex-col gap-2.5 text-start"
       >
-        <div className="relative aspect-video overflow-hidden rounded-xl">
+        <div data-preview-anchor className="relative aspect-video overflow-hidden rounded-xl">
           <div className={thumbDim}>
             <Poster src={still} seed={g.key} ratio="landscape" lazy onError={() => setImgIdx((i) => i + 1)} />
           </div>
