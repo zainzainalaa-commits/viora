@@ -1,5 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { PickCard } from "@/components/pick-card";
@@ -140,7 +140,6 @@ export function ServiceView({ service }: { service: StreamingService }) {
       </div>
 
       <CategoryPills active={category} onChange={setCategory} />
-      <CategoryFab active={category} onChange={setCategory} />
 
       <div className="px-12 pt-10">
         {loading && (
@@ -285,7 +284,16 @@ function CategoryPills({
       <div className="group/pills relative">
         <div
           ref={trackRef}
-          className="flex gap-2 overflow-x-auto scroll-smooth pb-1 [scroll-padding:0_24px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          // `p-5 -m-5` is the app's answer to a focus ring inside a scroller.
+          //
+          // `overflow-x: auto` clips on all four sides, not only the one it
+          // scrolls, and the ring stands 9px proud of a control — 3px of line
+          // and a 6px halo. This track had `pb-1`, four pixels, and nothing at
+          // the top or the ends, so every pill lost the top and bottom of its
+          // frame and the first one — All — lost its left edge as well. The
+          // padding gives the ring room inside the clip; the negative margin
+          // takes the same amount back off the layout, so nothing moves.
+          className="flex gap-2 overflow-x-auto scroll-smooth p-5 -m-5 [scroll-padding:0_44px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {CATEGORIES.map((c) => {
             const isActive = c.id === active.id;
@@ -353,65 +361,6 @@ function EdgeFade({ side, visible }: { side: "left" | "right"; visible: boolean 
   );
 }
 
-function CategoryFab({
-  active,
-  onChange,
-}: {
-  active: Category;
-  onChange: (c: Category) => void;
-}) {
-  const t = useT();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      if (!t.closest("[data-filter-fab]")) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  return (
-    <div data-filter-fab className="fixed bottom-16 end-5 z-40">
-      {open && (
-        <div className="absolute bottom-full end-0 mb-2 max-h-[60vh] w-44 overflow-y-auto rounded-2xl border border-edge-soft/60 bg-canvas py-1.5 shadow-2xl">
-          {CATEGORIES.map((c) => (
-            <FocusButton
-              key={c.id}
-              onClick={() => {
-                onChange(c);
-                setOpen(false);
-              }}
-              className={`block w-full px-4 py-2 text-start text-[13.5px] transition-colors ${
-                c.id === active.id
-                  ? "bg-ink/10 text-ink"
-                  : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
-              }`}
-            >
-              {t(c.label)}
-            </FocusButton>
-          ))}
-        </div>
-      )}
-      <FocusButton
-        onClick={() => setOpen((v) => !v)}
-        className="flex h-8 items-center gap-1.5 rounded-md border border-edge-soft/40 bg-canvas/90 px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
-      >
-        <SlidersHorizontal size={12} strokeWidth={2.2} />
-        {t(active.label)}
-      </FocusButton>
-    </div>
-  );
-}
 
 function EmptyState({ hasKey }: { hasKey: boolean }) {
   const t = useT();

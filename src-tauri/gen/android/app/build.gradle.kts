@@ -46,19 +46,6 @@ android {
     }
     buildTypes {
         getByName("debug") {
-            // Signed with the release key when there is one.
-            //
-            // Android refuses to install a build over one signed by a different
-            // key, so a debug build normally means uninstalling first — which
-            // takes the profile, the library and the Stremio session with it.
-            // `tauri android dev` is the fast loop for interface work: the web
-            // bundle is served with hot reload, and Rust compiles unoptimised,
-            // against four minutes of relinking for a release build. Sharing the
-            // key is what makes that loop land on a device that already has the
-            // app. Release is still the build that gets verified, because only
-            // it runs R8.
-            signingConfig = signingConfigs.findByName("release")
-                ?: signingConfigs.getByName("debug")
             manifestPlaceholders["usesCleartextTraffic"] = "true"
             isDebuggable = true
             isJniDebuggable = true
