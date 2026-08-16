@@ -112,7 +112,7 @@ export function TitlePanel({
       <div className="relative flex gap-5">
         {awardSummaryItems.length > 0 && (
           <div className="pointer-events-none absolute bottom-1 right-0 z-10 hidden max-w-[42%] justify-end md:flex">
-            <HeroAwardsCorner summary={awardSummaryItems} inline interactive={false} />
+            <HeroAwardsCorner summary={awardSummaryItems} inline />
           </div>
         )}
         {poster && (

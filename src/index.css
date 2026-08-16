@@ -1906,6 +1906,34 @@ html[data-input="dpad"] [data-focusable="true"]:has(> [data-preview-anchor]):foc
    hero is an ancestor of the row beneath it — so standing on the anime hero lit
    up all six cards in "Top Picks for You" at once. A card is the direct parent
    of its artwork, so that is the relationship to name. */
+/* And the same card when it is not itself the stop.
+
+   A cast card is a plain button, not a focusable one, so the remote settles on
+   the row cell holding it rather than on the card. The two rules above look for
+   the artwork as a direct child of whatever has focus, and a cell's direct
+   child is the button — so they never fired, and the generic `[tabindex]:focus`
+   ring took the whole cell instead. Measured on the device: the cell rings at
+   135x249 against a photo of 135x203, the extra 46 pixels being the actor's
+   name and the character they play, boxed in with the picture.
+
+   Naming the grandchild puts the frame back on the photograph without moving
+   where focus lands, which is the part that is not ours to change. */
+html[data-input="dpad"] [tabindex]:focus:has(> button > [data-preview-anchor]),
+html[data-input="dpad"] [data-tv-focused="true"]:has(> button > [data-preview-anchor]) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+html[data-input="dpad"] [tabindex]:focus > button > [data-preview-anchor],
+html[data-input="dpad"] [data-tv-focused="true"] > button > [data-preview-anchor] {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: calc(var(--poster-radius, 12px) + 4px);
+  transform: translate3d(0, -8px, 0) scale(1.03);
+  transition: transform 140ms ease-out;
+  z-index: 2;
+}
+
 html[data-input="dpad"] button:focus > [data-preview-anchor],
 html[data-input="dpad"] [data-tv-focused="true"] > [data-preview-anchor] {
   /* Same three pixels as every other stop, so a card and a button are the same

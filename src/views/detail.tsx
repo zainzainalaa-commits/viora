@@ -2,7 +2,6 @@ import { isDpadPrimary } from "@/lib/platform";
 import { FocusButton, FocusSection } from "@/lib/tv-focus";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Check, HardDrive, Layers, Play, Plus, Star } from "lucide-react";
-import { AwardsBlock } from "@/components/awards-block";
 import { BackToTop } from "@/components/back-to-top";
 import { PickCard } from "@/components/pick-card";
 import { Row } from "@/components/row";
@@ -83,7 +82,6 @@ import { SeriesEpisodes } from "./detail/series-episodes";
 import { CinemetaEpisodes } from "./detail/cinemeta-episodes";
 import { EpisodeGridSkeleton } from "./detail/episode-grid-skeleton";
 import { WatchOn } from "./detail/watch-on";
-import { InfoBlock } from "./detail/info-block";
 import { TraktComments } from "./detail/trakt-comments";
 import { LetterboxdPanel } from "./detail/letterboxd-panel";
 import { LetterboxdReviews } from "./detail/letterboxd-reviews";
@@ -1232,22 +1230,6 @@ export function DetailView({
               key: "mediaGallery",
               label: t("Media"),
               node: <MediaGallery detail={detail} title={title} />,
-            });
-          }
-          if (detail && awards) {
-            railSections.push({
-              key: "awards",
-              label: t("Awards & Recognition"),
-              minHeight: 200,
-              node: <AwardsBlock awards={awards} />,
-            });
-          }
-          if (detail) {
-            railSections.push({
-              key: "info",
-              label: t("Information"),
-              minHeight: 200,
-              node: <InfoBlock detail={detail} />,
             });
           }
           if (settings.showTraktComments === true) {
