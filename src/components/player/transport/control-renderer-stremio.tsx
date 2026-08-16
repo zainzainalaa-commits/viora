@@ -28,9 +28,7 @@ import { AudioMenu } from "../audio-menu";
 import { DownloadButton } from "./download-button";
 import { Tooltip } from "./tooltip";
 import { SpeedMenu } from "./speed-menu";
-import { Anime4kMenu } from "./anime4k-menu";
 import { HdrToggleStremioBtn } from "./hdr-toggle-btn";
-import type { Anime4kChoice } from "@/views/player/hooks/use-anime4k";
 import { DrawToggle } from "./draw-toggle";
 import { CastButton } from "./cast-button";
 import { TimeStart } from "./time-display";
@@ -95,10 +93,6 @@ export type StremioRenderCtx = {
   setAspectMenuOpen: (v: boolean) => void;
   cropMode?: string;
   onCropMode?: (id: string) => void;
-  setAnime4kMenuOpen: (v: boolean) => void;
-  anime4kMode?: string;
-  onAnime4kMode?: (id: string) => void;
-  anime4kAvailable?: boolean;
   onPlayPause: () => void;
   onMute: () => void;
   onVolume: (v: number) => void;
@@ -338,15 +332,6 @@ export function RenderedStremioControl({
         </Tooltip>
       );
     }
-    case "anime4k-menu":
-      if (!ctx.onAnime4kMode || !ctx.anime4kAvailable) return null;
-      return (
-        <Anime4kMenu
-          mode={(ctx.anime4kMode as Anime4kChoice) ?? "auto"}
-          onMode={ctx.onAnime4kMode}
-          onOpenChange={ctx.setAnime4kMenuOpen}
-        />
-      );
     case "hdr-toggle":
       // Tone mapping is an mpv render option; the native engine has nothing
       // here to toggle.

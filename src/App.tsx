@@ -38,10 +38,6 @@ import { TogetherHostLeavingPrompt } from "@/components/together-host-leaving-pr
 import { TogetherInviteToast } from "@/components/together-invite-toast";
 import { TogetherSummonToast } from "@/components/together-summon-toast";
 import { TogetherParticipantLeftToast } from "@/components/together-participant-left-toast";
-import { AnilistSyncToast } from "@/components/anilist/anilist-sync-toast";
-import { AnilistAvatarSync } from "@/components/anilist/anilist-avatar-sync";
-import { MalAvatarSync } from "@/components/mal/mal-avatar-sync";
-import { MalSyncToast } from "@/components/mal/mal-sync-toast";
 import { TogetherLeaveForLiveModal } from "@/components/together-leave-for-live-modal";
 import { ThemeBackdrop } from "@/components/theme-backdrop";
 import { TopRankModal } from "@/components/top-rank-modal";
@@ -75,19 +71,15 @@ import { SHOWS_HERO } from "@/components/peek-hero";
 import { SETTINGS_NAV } from "@/views/settings/nav";
 import { ParentalProvider } from "@/lib/parental";
 import { TraktProvider } from "@/lib/trakt/provider";
-import { AnilistProvider } from "@/lib/anilist/provider";
-import { MalProvider } from "@/lib/mal/provider";
 import { SimklProvider } from "@/lib/simkl/provider";
 import { LetterboxdProvider } from "@/lib/stremboxd/provider";
 import { FocusLayer, FocusSection, focusKeys, setFocusSafely, useBackHandler } from "@/lib/tv-focus";
 
-const importAnime = () => import("@/views/anime");
 const importCalendar = () => import("@/views/calendar");
 const importDetail = () => import("@/views/detail");
 const importAddons = () => import("@/views/addons");
 const importDiscover = () => import("@/views/discover");
 const importAward = () => import("@/views/award");
-const importAnimeAward = () => import("@/views/anime-award");
 const importFilter = () => import("@/views/filter");
 const importGrid = () => import("@/views/grid");
 const importPerson = () => import("@/views/person");
@@ -108,13 +100,11 @@ const importDownloads = () => import("@/views/downloads");
 const importMatchDetail = () => import("@/views/live/match-detail-view");
 const importOnboarding = () => import("@/components/onboarding");
 
-const AnimeView = lazy(() => importAnime().then((m) => ({ default: m.AnimeView })));
 const CalendarView = lazy(() => importCalendar().then((m) => ({ default: m.CalendarView })));
 const DetailView = lazy(() => importDetail().then((m) => ({ default: m.DetailView })));
 const AddonsView = lazy(() => importAddons().then((m) => ({ default: m.AddonsView })));
 const Discover = lazy(() => importDiscover().then((m) => ({ default: m.Discover })));
 const AwardView = lazy(() => importAward().then((m) => ({ default: m.AwardView })));
-const AnimeAwardView = lazy(() => importAnimeAward().then((m) => ({ default: m.AnimeAwardView })));
 const FilterView = lazy(() => importFilter().then((m) => ({ default: m.FilterView })));
 const GridView = lazy(() => importGrid().then((m) => ({ default: m.GridView })));
 const PersonView = lazy(() => importPerson().then((m) => ({ default: m.PersonView })));
@@ -164,10 +154,8 @@ function useViewPreloader() {
       void importMovies();
       void importShows();
       void importLive();
-      void importAnime();
       void importQueue();
       void importAward();
-      void importAnimeAward();
       void importService();
       void importMatchDetail();
       void importOnboarding();
@@ -231,8 +219,6 @@ export function App() {
       <ProfilesProvider>
       <ParentalProvider>
       <TraktProvider>
-      <AnilistProvider>
-      <MalProvider>
       <SimklProvider>
       <LetterboxdProvider>
       <RankingsProvider>
@@ -250,8 +236,6 @@ export function App() {
                       <ProfileIdentitySync />
                       <SettingsProfileBridge />
                       <TrackerProfileBridge />
-                      <AnilistAvatarSync />
-                      <MalAvatarSync />
                       <MiddleClickScroll />
                       <ThemeBackdrop />
                       <WatchlistSync />
@@ -264,8 +248,6 @@ export function App() {
                       <TogetherHostLeavingPrompt />
                       <TogetherSummonToast />
                       <TogetherParticipantLeftToast />
-                      <AnilistSyncToast />
-                      <MalSyncToast />
                       <ListToastHost />
                       <TogetherLeaveForLiveModal />
                       <TogetherLocationPublisher />
@@ -297,8 +279,6 @@ export function App() {
       </RankingsProvider>
       </LetterboxdProvider>
       </SimklProvider>
-      </MalProvider>
-      </AnilistProvider>
       </TraktProvider>
       </ParentalProvider>
       </ProfilesProvider>
@@ -363,7 +343,6 @@ function TogetherLocationPublisher() {
         return { kind: "addon-detail" as const, addonId: addonDetailId };
       if (topKind === "home") return { kind: "home" };
       if (topKind === "discover") return { kind: "discover" };
-      if (topKind === "anime") return { kind: "anime" };
       if (topKind === "queue") return { kind: "queue" };
       if (topKind === "addons") return { kind: "addons" };
       if (topKind === "library") return { kind: "home" };
@@ -410,7 +389,7 @@ function parseDeepLinkEpisode(videoId?: string): { season: number; episode: numb
 }
 
 function Shell() {
-  const { topKind, service, meta, metaLiveContext, metaEpisodeHint, episodeDetail, personId, collectionId, filter, grid, awardType, animeAwardSource, picker, player, setView, canGoBack, goBack, canGoForward, goForward, openMeta, openPlayer, stackKinds, chromeHidden } = useView();
+  const { topKind, service, meta, metaLiveContext, metaEpisodeHint, episodeDetail, personId, collectionId, filter, grid, awardType, picker, player, setView, canGoBack, goBack, canGoForward, goForward, openMeta, openPlayer, stackKinds, chromeHidden } = useView();
   const { settings, update } = useSettings();
   const { setOpen: setSearchOpen } = useSearch();
   const uiScaleRef = useRef(settings.uiScale);
@@ -732,8 +711,7 @@ function Shell() {
   }, [setView, openMeta, openPlayer]);
 
   useEffect(() => {
-    if (topKind === "anime" && settings.hideContent.anime) setView("home");
-  }, [topKind, settings.hideContent.anime, setView]);
+  }, [topKind, setView]);
 
   useEffect(() => {
     if (!kid || player) return;
@@ -766,9 +744,7 @@ function Shell() {
   const filterTop = topKind === "filter";
   const gridTop = topKind === "grid";
   const awardTop = topKind === "award";
-  const animeAwardTop = topKind === "anime-award";
   const settingsTop = topKind === "settings";
-  const animeTop = topKind === "anime";
   const discoverTop = topKind === "discover";
   const addonsTop = topKind === "addons" || topKind === "addon-detail";
   const calendarTop = topKind === "calendar";
@@ -827,7 +803,6 @@ function Shell() {
 
   const overlayPinned = useOverlayPinned();
   const settingsAlive = useIdleEvict(settingsTop, overlayPinned);
-  const animeAlive = useIdleEvict(animeTop);
   const discoverAlive = useIdleEvict(discoverTop);
   const addonsAlive = useIdleEvict(addonsTop);
   const calendarAlive = useIdleEvict(calendarTop);
@@ -850,7 +825,6 @@ function Shell() {
   const filterAlive = useKeepAlive(filterTop, !!filter);
   const gridAlive = useKeepAlive(gridTop, !!grid, stackKinds.includes("grid"));
   const awardAlive = useKeepAlive(awardTop, awardTop);
-  const animeAwardAlive = useKeepAlive(animeAwardTop, animeAwardTop && !!animeAwardSource);
   const pickerAlive = useKeepAlive(pickerTop, !!picker);
   const moviesAlive = useIdleEvict(moviesTop);
   const kidsAlive = useIdleEvict(kidsTop);
@@ -892,13 +866,6 @@ function Shell() {
           <FocusLayer top={settingsTop} className={layer(settingsTop)} preferredChildFocusKey={SETTINGS_NAV}>
             <Suspense fallback={null}>
               <Settings active={settingsTop} />
-            </Suspense>
-          </FocusLayer>
-        )}
-        {animeAlive && (
-          <FocusLayer top={animeTop} className={layer(animeTop)} preferredChildFocusKey="row:anime:topPicks">
-            <Suspense fallback={null}>
-              <AnimeView active={animeTop} />
             </Suspense>
           </FocusLayer>
         )}
@@ -1060,13 +1027,6 @@ function Shell() {
           <FocusLayer top={awardTop} className={layer(awardTop)}>
             <Suspense fallback={null}>
               <AwardView key={`award-${awardType}`} awardType={awardType} />
-            </Suspense>
-          </FocusLayer>
-        )}
-        {animeAwardAlive && animeAwardSource && (
-          <FocusLayer top={animeAwardTop} className={layer(animeAwardTop)}>
-            <Suspense fallback={null}>
-              <AnimeAwardView key={`anime-award-${animeAwardSource}`} sourceId={animeAwardSource} />
             </Suspense>
           </FocusLayer>
         )}

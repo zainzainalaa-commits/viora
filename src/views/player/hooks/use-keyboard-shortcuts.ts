@@ -39,9 +39,6 @@ export function useKeyboardShortcuts(params: {
   onPanscanUp?: () => void;
   onPanscanDown?: () => void;
   onPrevChannel?: () => void;
-  onToggleAnime4k?: () => void;
-  onAnime4kOn?: () => void;
-  onAnime4kOff?: () => void;
   onVolumeFeedback?: (volume: number, muted: boolean) => void;
 }) {
   const {
@@ -74,9 +71,6 @@ export function useKeyboardShortcuts(params: {
     onPanscanUp,
     onPanscanDown,
     onPrevChannel,
-    onToggleAnime4k,
-    onAnime4kOn,
-    onAnime4kOff,
     onVolumeFeedback,
   } = params;
   const { settings, update } = useSettings();
@@ -223,21 +217,6 @@ export function useKeyboardShortcuts(params: {
       if (match("playerCrop") && onToggleCrop) {
         e.preventDefault();
         onToggleCrop();
-        return;
-      }
-      if (match("playerAnime4kToggle") && onToggleAnime4k) {
-        e.preventDefault();
-        onToggleAnime4k();
-        return;
-      }
-      if (match("playerAnime4kOn") && onAnime4kOn) {
-        e.preventDefault();
-        onAnime4kOn();
-        return;
-      }
-      if (match("playerAnime4kOff") && onAnime4kOff) {
-        e.preventDefault();
-        onAnime4kOff();
         return;
       }
       if (match("playerPanscanUp") && onPanscanUp) {
@@ -401,7 +380,7 @@ export function useKeyboardShortcuts(params: {
       window.removeEventListener("blur", onBlur);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [closePlayer, togglePip, drawMode, snap.muted, snap.volume, snap.rate, snap.durationSec, snap.subDelaySec, overrides, seekBackStepSec, seekForwardStepSec, seekTo, toggleSwitcher, toggleEpisodePanel, toggleGuide, toggleSleep, onScreenshot, onGifRecord, onClipRecord, onToggleCrop, onPanscanUp, onPanscanDown, onPrevChannel, onToggleAnime4k, onAnime4kOn, onAnime4kOff, onFrameStep, onVolumeFeedback, settings.playerEscExitsFullscreen, settings.playerConfirmLeave, update]);
+  }, [closePlayer, togglePip, drawMode, snap.muted, snap.volume, snap.rate, snap.durationSec, snap.subDelaySec, overrides, seekBackStepSec, seekForwardStepSec, seekTo, toggleSwitcher, toggleEpisodePanel, toggleGuide, toggleSleep, onScreenshot, onGifRecord, onClipRecord, onToggleCrop, onPanscanUp, onPanscanDown, onPrevChannel, onFrameStep, onVolumeFeedback, settings.playerEscExitsFullscreen, settings.playerConfirmLeave, update]);
 
   return { holdSpeedActive };
 }

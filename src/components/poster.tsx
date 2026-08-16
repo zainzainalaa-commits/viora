@@ -8,7 +8,6 @@ import {
   useTmdbImdbId,
 } from "@/lib/providers/tmdb/tmdb-imdb-resolve";
 import { useSettings } from "@/lib/settings";
-import { externalToKitsu, kitsuToImdb, kitsuToTvdb } from "@/lib/providers/anime-mapping";
 import { tmdbLocalizedPoster } from "@/lib/providers/tmdb/tmdb-images";
 import { shouldLocalizePosters } from "@/lib/providers/tmdb/tmdb-image-lang";
 
@@ -53,48 +52,6 @@ export function useRpdbAltId(
   return { altId, pending };
 }
 
-function useAnimeRpdbIds(
-  rpdbKey: string,
-  metaId: string,
-): { animeImdb?: string; animeTvdb?: string; animeTmdb?: string } {
-  const { settings } = useSettings();
-  const [animeImdb, setAnimeImdb] = useState<string>();
-  const [animeTvdb, setAnimeTvdb] = useState<string>();
-  const isAnime = /^(kitsu|mal|anilist|anidb):/.test(metaId);
-  useEffect(() => {
-    setAnimeImdb(undefined);
-    setAnimeTvdb(undefined);
-  }, [metaId]);
-  useEffect(() => {
-    if (!isAnime || (!rpdbKey && !settings.posterBaseUrl)) return;
-    const m = metaId.match(/^(kitsu|mal|anilist|anidb):(\d+)/);
-    if (!m) return;
-    const source = m[1];
-    const idNum = Number(m[2]);
-    if (!Number.isFinite(idNum)) return;
-    let cancelled = false;
-    (async () => {
-      let kitsuId: number | null = source === "kitsu" ? idNum : null;
-      if (kitsuId == null) {
-        const armSource = source === "mal" ? "myanimelist" : source;
-        kitsuId = await externalToKitsu(armSource, idNum).catch(() => null);
-      }
-      if (cancelled || kitsuId == null) return;
-      const [tt, tv] = await Promise.all([
-        kitsuToImdb(kitsuId).catch(() => null),
-        kitsuToTvdb(kitsuId).catch(() => null),
-      ]);
-      if (cancelled) return;
-      if (tt) setAnimeImdb(tt);
-      if (tv) setAnimeTvdb(String(tv));
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [metaId, isAnime, rpdbKey, settings.posterBaseUrl]);
-  const animeTmdb = useTmdbIdFromImdb(animeImdb) ?? undefined;
-  return { animeImdb, animeTvdb, animeTmdb };
-}
 
 export function usePosterChain(
   rpdbKey: string,
@@ -103,7 +60,6 @@ export function usePosterChain(
   type?: "movie" | "series",
 ) {
   const { altId, pending } = useRpdbAltId(rpdbKey, metaId, type);
-  const { animeImdb, animeTvdb, animeTmdb } = useAnimeRpdbIds(rpdbKey, metaId);
   const localized = useLocalizedPoster(metaId);
   const candidates = useMemo(() => {
     if (pending) return [];
@@ -111,8 +67,6 @@ export function usePosterChain(
     const out: string[] = [];
     const seen = new Set<string>();
     for (const u of [
-      animeImdb ? rpdbPoster(rpdbKey, animeImdb, base, animeTmdb) : undefined,
-      animeTvdb ? rpdbPoster(rpdbKey, `tvdb:${animeTvdb}`, base) : undefined,
       rpdbPoster(rpdbKey, metaId, base, altId),
       localized,
       metaPoster,
@@ -123,7 +77,7 @@ export function usePosterChain(
       }
     }
     return out;
-  }, [rpdbKey, metaId, altId, metaPoster, animeImdb, animeTvdb, animeTmdb, localized, pending]);
+  }, [rpdbKey, metaId, altId, metaPoster, localized, pending]);
   const sig = candidates.join("|");
   const failedRef = useRef<Set<string>>(new Set());
   const sigRef = useRef(sig);

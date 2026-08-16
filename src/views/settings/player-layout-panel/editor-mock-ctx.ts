@@ -111,12 +111,8 @@ export function buildDefaultCtx(opts: MockOptions): ControlContext {
     setSubtitleMenuOpen: NOOP_BOOL,
     setSpeedMenuOpen: NOOP_BOOL,
     setAspectMenuOpen: NOOP_BOOL,
-    setAnime4kMenuOpen: NOOP_BOOL,
     cropMode: "fit",
     onCropMode: NOOP_STR,
-    anime4kMode: "auto",
-    onAnime4kMode: NOOP_STR,
-    anime4kAvailable: true,
     editing: true,
   };
 }

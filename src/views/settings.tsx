@@ -10,10 +10,7 @@ import { SettingsNav, isSectionHiddenHere } from "./settings/nav";
 import { PlayerLayoutPanel } from "./settings/player-layout-panel";
 import { QualityPanel } from "./settings/quality-panel";
 import { P2PPanel } from "./settings/p2p-panel";
-import { AnimePanel } from "./settings/anime-panel";
 import { TraktPanel } from "./settings/trakt-panel";
-import { AnilistPanel } from "./settings/anilist-panel";
-import { MalPanel } from "./settings/mal-panel";
 import { SimklPanel } from "./settings/simkl-panel";
 import { LetterboxdPanel } from "./settings/letterboxd-panel";
 import { RelaySection, type RelayMode } from "./settings/relay-section";
@@ -46,14 +43,6 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   trakt: {
     label: "Trakt",
     sub: "Connect your Trakt account to scrobble playback, sync your watchlist, and pull personalized recommendations.",
-  },
-  anilist: {
-    label: "AniList",
-    sub: "Connect your AniList account to show your anime lists as rails on the Anime page.",
-  },
-  mal: {
-    label: "MyAnimeList",
-    sub: "Connect your MyAnimeList account to sync your watch progress and browse your list.",
   },
   simkl: {
     label: "Simkl",
@@ -92,10 +81,6 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   mpv: {
     label: "Video tuning",
     sub: "Match the picture quality to your computer, smooth out weak connections, and fine-tune the mpv engine with plain-language controls.",
-  },
-  anime: {
-    label: "Anime tweaks",
-    sub: "Anime4K real-time upscaling, smooth motion, and where SVP fits in. All the anime-specific picture enhancements in one place.",
   },
   playerLayout: {
     label: "Player layout",
@@ -320,16 +305,13 @@ export function Settings(_: { active?: boolean } = {}) {
           {active === "player" && <QualityPanel />}
 
 
-          {active === "anime" && <AnimePanel />}
 
           {active === "playerLayout" && <PlayerLayoutPanel />}
 
 
           {active === "trakt" && <TraktPanel />}
 
-          {active === "anilist" && <AnilistPanel />}
 
-          {active === "mal" && <MalPanel />}
 
           {active === "simkl" && <SimklPanel />}
 

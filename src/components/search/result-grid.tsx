@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { FocusButton } from "@/lib/tv-focus";
 import type { Meta } from "@/lib/cinemeta";
-import { animeHitMeta, type SearchResults } from "@/lib/search";
+import { type SearchResults } from "@/lib/search";
 import { dedupeByTitle, rankMetas } from "@/lib/search-rank";
 import { useView } from "@/lib/view";
 import { ResultPoster } from "./result-poster";
@@ -40,7 +40,7 @@ export function ResultGrid({
   const { openMeta } = useView();
 
   const items = useMemo(() => {
-    const all: Meta[] = [...results.movies, ...results.series, ...results.anime.map(animeHitMeta)];
+    const all: Meta[] = [...results.movies, ...results.series];
     const seen = new Set<string>(excludeId ? [excludeId] : []);
     const unique = all.filter((m) => {
       if (!m.id || seen.has(m.id)) return false;
@@ -51,7 +51,7 @@ export function ResultGrid({
     // lists from separate sources, so the same title can reach the grid under
     // two different identifiers.
     return dedupeByTitle(rankMetas(unique, query));
-  }, [results.movies, results.series, results.anime, query, excludeId]);
+  }, [results.movies, results.series, query, excludeId]);
 
   if (items.length === 0) return null;
 

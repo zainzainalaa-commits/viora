@@ -8,7 +8,6 @@ import {
   tmdbMovieRelease,
   tmdbTvUpcoming,
 } from "./providers/tmdb/tmdb-calendar";
-import { aniZipByAnilist, aniZipByKitsu, aniZipByMal, pickEpisodeTitle } from "./providers/anizip";
 import type { CalendarItem } from "./calendar";
 
 const SERIES_LIMIT = 80;
@@ -85,48 +84,8 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
   return out;
 }
 
-function isAnimeId(id: string): boolean {
-  return id.startsWith("kitsu:") || id.startsWith("mal:") || id.startsWith("anilist:");
-}
 
-function animeNumericId(id: string): number | null {
-  const n = Number(id.split(":")[1]);
-  return Number.isFinite(n) ? n : null;
-}
 
-async function animeUpcoming(
-  id: string,
-  inWindow: (date: string) => boolean,
-): Promise<ResolvedSeries | null> {
-  const numId = animeNumericId(id);
-  if (numId == null) return null;
-  const mapping = id.startsWith("kitsu:")
-    ? await aniZipByKitsu(numId)
-    : id.startsWith("mal:")
-      ? await aniZipByMal(numId)
-      : await aniZipByAnilist(numId);
-  if (!mapping?.episodes) return null;
-  const episodes: ResolvedEpisode[] = [];
-  for (const [k, ep] of Object.entries(mapping.episodes)) {
-    const date = (ep.airDate ?? ep.airDateUtc ?? "").slice(0, 10);
-    if (!date || !inWindow(date)) continue;
-    episodes.push({
-      season: ep.seasonNumber ?? 1,
-      number: ep.episodeNumber ?? (Number(k) || 0),
-      name: pickEpisodeTitle(ep) ?? "",
-      airDate: date,
-      image: ep.image ?? null,
-      overview: ep.overview ?? "",
-      voteAverage: 0,
-    });
-  }
-  return {
-    name: mapping.titles?.en ?? mapping.titles?.["x-jat"] ?? "",
-    poster: null,
-    isAnime: true,
-    episodes,
-  };
-}
 
 async function tmdbSeries(
   id: string,
@@ -173,7 +132,6 @@ async function seriesUpcoming(
   inWindow: (date: string) => boolean,
   tmdbKey: string,
 ): Promise<ResolvedSeries | null> {
-  if (isAnimeId(c.id)) return animeUpcoming(c.id, inWindow);
   if (c.id.startsWith("tt")) {
     const cm = await cinemetaSeriesUpcoming(c.id, inWindow);
     if (cm) return cm;

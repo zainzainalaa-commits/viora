@@ -30,7 +30,6 @@ function isEditableTarget(el: EventTarget | null): el is HTMLElement {
 const VIEW_LABELS: Record<ViewSummonable, string> = {
   home: "Home",
   discover: "Discover",
-  anime: "Anime",
   queue: "My Library",
   addons: "Addons",
 };
@@ -453,7 +452,7 @@ export function ContextMenu() {
 }
 
 function topKindToView(topKind: string): ViewSummonable | null {
-  if (topKind === "home" || topKind === "discover" || topKind === "anime" || topKind === "queue") {
+  if (topKind === "home" || topKind === "discover" || topKind === "queue") {
     return topKind;
   }
   if (topKind === "addons" || topKind === "addon-detail") return "addons";
@@ -475,8 +474,6 @@ function navigateToLocation(loc: ParticipantLocation, nav: LocationNavigators) {
   switch (loc.kind) {
     case "home":
     case "discover":
-    case "anime":
-    case "addons":
       nav.setView(loc.kind);
       return;
     case "queue":

@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
-import { MetaAwardsCorner } from "@/components/meta-awards-corner";
 import { RtBadge } from "@/components/rt-badge";
 import { meta as fetchMeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
 import { useT } from "@/lib/i18n";
@@ -121,7 +120,6 @@ export const Hero = memo(function Hero({
         style={{ opacity: settings.heroShadow / 100 }}
       />
       <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-canvas via-canvas/70 via-50% to-transparent" />
-      <MetaAwardsCorner meta={meta} imdbId={resolvedImdb} />
 
       <div className={`relative flex h-full flex-col justify-center p-14 ${full ? "pt-28 lg:pt-32" : ""}`}>
         <div className="max-w-2xl">

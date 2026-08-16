@@ -38,9 +38,7 @@ import { Tooltip } from "./tooltip";
 import { BigButton } from "./big-button";
 import { VolumeControl } from "./volume-control";
 import { SpeedMenu } from "./speed-menu";
-import { Anime4kMenu } from "./anime4k-menu";
 import { HdrToggleBigBtn } from "./hdr-toggle-btn";
-import type { Anime4kChoice } from "@/views/player/hooks/use-anime4k";
 import { DrawToggle } from "./draw-toggle";
 import { CastButton } from "./cast-button";
 import { SeekStepBtn } from "./seek-step-btn";
@@ -126,10 +124,6 @@ export type ControlContext = {
   setAspectMenuOpen: (v: boolean) => void;
   cropMode?: string;
   onCropMode?: (id: string) => void;
-  setAnime4kMenuOpen: (v: boolean) => void;
-  anime4kMode?: string;
-  onAnime4kMode?: (id: string) => void;
-  anime4kAvailable?: boolean;
 };
 
 export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNode {
@@ -428,16 +422,6 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
             )}
           </span>
         </BigButton>
-      );
-    }
-    case "anime4k-menu": {
-      if (ctx.tight || !ctx.onAnime4kMode || !ctx.anime4kAvailable) return null;
-      return (
-        <Anime4kMenu
-          mode={(ctx.anime4kMode as Anime4kChoice) ?? "auto"}
-          onMode={ctx.onAnime4kMode}
-          onOpenChange={ctx.setAnime4kMenuOpen}
-        />
       );
     }
     case "hdr-toggle": {

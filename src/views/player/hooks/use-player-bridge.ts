@@ -58,20 +58,7 @@ export function usePlayerBridge(params: {
   // window carrying the video so the compositor left the colours alone. There
   // is one WebView here and no window to open.
   const embedActive = settings.playerMpvEmbed;
-  const isAnimeSrc =
-    !!src.meta.id?.startsWith("kitsu:") ||
-    !!src.meta.id?.startsWith("mal:") ||
-    !!src.meta.id?.startsWith("anilist:") ||
-    !!src.meta.id?.startsWith("anidb:") ||
-    (src.meta.genres ?? []).some((g) => {
-      const l = g.toLowerCase();
-      return l === "anime" || l === "animation";
-    });
-  const anime4kOn = settings.playerAnime4k && (!settings.playerAnime4kAnimeOnly || isAnimeSrc);
-  const svpOn =
-    settings.playerSvp &&
-    !!settings.svpVpyPath &&
-    (settings.svpScope === "all" || (settings.svpScope === "anime" ? isAnimeSrc : !isAnimeSrc));
+  const svpOn = settings.playerSvp && !!settings.svpVpyPath;
   useEffect(() => {
     if (svpOn) void svpEnsureRunning().catch(() => {});
   }, [svpOn]);
@@ -87,7 +74,7 @@ export function usePlayerBridge(params: {
     : autoFallbackTried
       ? fallbackEngine
       : settings.playerEngine;
-  const bridgeKey = `${chosenEngine}|${anime4kOn}|${settings.playerHdrToSdr}|${embedActive}|${anime4kOn ? settings.playerAnime4kShaders.join(",") : ""}|${svpOn}|${svpOn ? settings.svpVpyPath : ""}`;
+  const bridgeKey = `${chosenEngine}|${settings.playerHdrToSdr}|${embedActive}|${svpOn}|${svpOn ? settings.svpVpyPath : ""}`;
   const [bridgeReady, setBridgeReady] = useState(false);
   useEffect(() => {
     const host = videoMountRef.current;

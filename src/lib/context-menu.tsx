@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Meta } from "@/lib/cinemeta";
 
-export type ViewSummonable = "home" | "discover" | "anime" | "queue" | "addons";
+export type ViewSummonable = "home" | "discover" | "queue" | "addons";
 
 export type ContextMenuTarget =
   | { kind: "meta"; meta: Meta }

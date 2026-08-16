@@ -261,7 +261,6 @@ export function EpisodeDetailView({
                 )}
                 <HeroRatings
                   rating={episodeRating ?? seriesRating}
-                  isAnime={false}
                   scores={episodeOmdbScores ?? omdbScores}
                   mdblist={null}
                   imdbId={episodeImdbId ?? imdbId}

@@ -1,5 +1,4 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { TvSelect } from "@/components/tv-controls";
 import { Check, ExternalLink, Link2, LogOut, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SimklDeviceModal } from "@/components/simkl/simkl-device-modal";
@@ -13,7 +12,6 @@ import { Section, ToggleRow } from "./shared";
 import { clearCalendarCache } from "@/lib/simkl/calendar";
 import { clearHomeRailsCache } from "@/lib/simkl/home-rails";
 import { clearCalendarSourceCache } from "@/lib/calendar-sources";
-import { clearAnimeGroupingCache } from "@/lib/simkl/anime-grouping";
 
 export function SimklPanel() {
   const t = useT();
@@ -169,33 +167,6 @@ export function SimklPanel() {
               value={settings.simklEnableUserRatings}
               onChange={(val) => update({ simklEnableUserRatings: val })}
             />
-            <div className="flex flex-col gap-1.5 pt-1">
-              <p className="text-[13px] font-medium text-ink">{t("Anime Title Language")}</p>
-              <p className="text-[12px] leading-relaxed text-ink-subtle">
-                {t("Preferred language for anime titles displayed on poster cards.")}
-              </p>
-              <TvSelect
-                value={settings.simklAnimeTitleLanguage}
-                title={t("Anime Title Language")}
-                onChange={(v) => update({ simklAnimeTitleLanguage: v })}
-                className="w-full max-w-[340px]"
-                options={[
-                  { value: "english" as const, label: t("English") },
-                  { value: "romaji" as const, label: t("Romaji") },
-                  { value: "native" as const, label: t("Native/Japanese") },
-                ]}
-              >
-                <select
-                  value={settings.simklAnimeTitleLanguage}
-                  onChange={(e) => update({ simklAnimeTitleLanguage: e.target.value as "english" | "romaji" | "native" })}
-                  className="h-11 w-full max-w-[340px] rounded-xl border border-edge-soft bg-canvas/40 px-3.5 text-[13.5px] text-ink outline-none transition-colors hover:border-edge focus:border-accent cursor-pointer"
-                >
-                  <option value="english" className="bg-elevated text-ink">{t("English")}</option>
-                  <option value="romaji" className="bg-elevated text-ink">{t("Romaji")}</option>
-                  <option value="native" className="bg-elevated text-ink">{t("Native/Japanese")}</option>
-                </select>
-              </TvSelect>
-            </div>
             {!confirmDisconnect ? (
               <FocusButton
                 onClick={() => setConfirmDisconnect(true)}
@@ -229,17 +200,14 @@ export function SimklPanel() {
                         simklUpNextRailEnabled: false,
                         simklTrendingRailEnabled: false,
                         showSimklBadge: true,
-                        simklAnimeTitleLanguage: "english",
                         simklGranularFilters: {
                           movies: { plantowatch: true },
                           shows: { watching: true, plantowatch: true },
-                          anime: { watching: true, plantowatch: true },
                         },
                       });
                       clearCalendarCache();
                       clearHomeRailsCache();
                       clearCalendarSourceCache();
-                      clearAnimeGroupingCache();
                       disconnect();
                       setConfirmDisconnect(false);
                     }}
@@ -302,33 +270,6 @@ export function SimklPanel() {
                 />
               </div>
 
-              <div className="flex flex-col gap-2 rounded-xl border border-edge-soft/60 bg-canvas/30 p-4">
-                <h3 className="text-[14px] font-bold text-ink">{t("Anime")}</h3>
-                <ToggleRow
-                  label={t("Watching")}
-                  value={settings.simklGranularFilters.anime.watching}
-                  onChange={(val) =>
-                    update({
-                      simklGranularFilters: {
-                        ...settings.simklGranularFilters,
-                        anime: { ...settings.simklGranularFilters.anime, watching: val },
-                      },
-                    })
-                  }
-                />
-                <ToggleRow
-                  label={t("Plan to Watch")}
-                  value={settings.simklGranularFilters.anime.plantowatch}
-                  onChange={(val) =>
-                    update({
-                      simklGranularFilters: {
-                        ...settings.simklGranularFilters,
-                        anime: { ...settings.simklGranularFilters.anime, plantowatch: val },
-                      },
-                    })
-                  }
-                />
-              </div>
             </div>
           </Section>
         </>

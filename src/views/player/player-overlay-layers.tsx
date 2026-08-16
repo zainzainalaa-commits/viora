@@ -17,8 +17,6 @@ import { ShellLayer } from "./shell-layer";
 import { StageOverlays } from "./stage-overlays";
 import { ToolsLayer } from "./tools-layer";
 import { TextSyncOverlay } from "./text-sync-overlay";
-import { Toaster } from "@/views/addons/toaster";
-import type { ToastInfo } from "@/views/addons/addons-types";
 import type { usePlayerCast } from "./hooks/use-player-cast";
 import type { useTextSync } from "./hooks/use-text-sync";
 
@@ -104,9 +102,6 @@ export type PlayerOverlayLayersProps = {
   rememberSubChoice: Shell["rememberSubChoice"];
   cropMode: Shell["cropMode"];
   onCropMode: Shell["onCropMode"];
-  anime4kMode: Shell["anime4kMode"];
-  onAnime4kMode: Shell["onAnime4kMode"];
-  anime4kAvailable: Shell["anime4kAvailable"];
   togglePipMode: () => void;
   setDrawMode: (fn: (d: boolean) => boolean) => void;
   wakeChrome: () => void;
@@ -169,7 +164,6 @@ export type PlayerOverlayLayersProps = {
   onEnterSync?: () => void;
   syncMode: ReturnType<typeof useTextSync>["syncMode"];
   syncApi: ReturnType<typeof useTextSync>;
-  syncToast: ToastInfo | null;
   onSyncPlayPause: () => void;
 };
 
@@ -297,9 +291,6 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
           onEnterSync={p.onEnterSync}
           cropMode={p.cropMode}
           onCropMode={p.onCropMode}
-          anime4kMode={p.anime4kMode}
-          onAnime4kMode={p.onAnime4kMode}
-          anime4kAvailable={p.anime4kAvailable}
           onPiP={() => p.togglePipMode()}
           onFullscreen={p.toggleFullscreen}
           openCastMenu={p.cast.openCastMenu}
@@ -349,7 +340,6 @@ export function PlayerOverlayLayers(p: PlayerOverlayLayersProps) {
         />
       )}
 
-      <Toaster toast={p.syncToast} />
 
       <RoomLayer
         inRoom={p.inRoom}

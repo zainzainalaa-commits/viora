@@ -139,7 +139,6 @@ export function TitlePanel({
             bare
             rating={primaryRating}
             tmdbRating={tmdbRating}
-            isAnime={anime}
             scores={scores}
             mdblist={mdblist}
             imdbId={imdbId}

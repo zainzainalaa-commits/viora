@@ -22,9 +22,6 @@ export type HotkeyId =
   | "playerStart"
   | "playerEnd"
   | "playerStats"
-  | "playerAnime4kToggle"
-  | "playerAnime4kOn"
-  | "playerAnime4kOff"
   | "playerCrop"
   | "playerPanscanUp"
   | "playerPanscanDown"
@@ -70,9 +67,6 @@ export const HOTKEYS: HotkeyDef[] = [
   { id: "playerScreenshot", scope: "Player", group: "Playback", label: "Screenshot", description: "Save the current frame (video only, no subtitles) as a PNG to Pictures/Viora.", defaultBinding: "p" },
   { id: "playerGifRecord", scope: "Player", group: "Playback", label: "Record GIF", description: "Start or stop recording a GIF of the video (no subtitles). Saves to Pictures/Viora.", defaultBinding: "o" },
   { id: "playerClipRecord", scope: "Player", group: "Playback", label: "Save video clip", description: "Save the last 30 seconds as a video clip with audio, choosing subtitles on or off. Saves to Pictures/Viora.", defaultBinding: "c" },
-  { id: "playerAnime4kToggle", scope: "Player", group: "Playback", label: "Toggle Anime4K", description: "Turn Anime4K upscaling on (auto) or off. Only active when shaders are available.", defaultBinding: "a" },
-  { id: "playerAnime4kOn", scope: "Player", group: "Playback", label: "Anime4K on", description: "Turn Anime4K upscaling on. Only active when shaders are available.", defaultBinding: "ctrl+1" },
-  { id: "playerAnime4kOff", scope: "Player", group: "Playback", label: "Anime4K off", description: "Turn Anime4K upscaling off.", defaultBinding: "ctrl+0" },
 
   { id: "playerSeekBack10", scope: "Player", group: "Seeking", label: "Seek back", description: "Jump back by the Back seek step set under Behavior.", defaultBinding: "ArrowLeft" },
   { id: "playerSeekForward10", scope: "Player", group: "Seeking", label: "Seek forward", description: "Jump forward by the Forward seek step set under Behavior.", defaultBinding: "ArrowRight" },

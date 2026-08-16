@@ -42,7 +42,6 @@ import { useStreamSwitcher } from "./player/hooks/use-stream-switcher";
 import { usePlayerBridge } from "./player/hooks/use-player-bridge";
 import { useTvPlayerKeys } from "./player/hooks/use-tv-player-keys";
 import { useTextSync } from "./player/hooks/use-text-sync";
-import { useT } from "@/lib/i18n";
 import { useEpisodeNavigation } from "./player/hooks/use-episode-navigation";
 import { useAbLoop } from "./player/hooks/use-ab-loop";
 import { useAutoNextEpisode } from "./player/hooks/use-auto-next-episode";
@@ -62,7 +61,6 @@ import { useStubDetection } from "./player/hooks/use-stub-detection";
 import { useBridgeLoad } from "./player/hooks/use-bridge-load";
 import { useVideoFill } from "./player/hooks/use-video-fill";
 import { useLivePictureEq } from "./player/hooks/use-live-picture-eq";
-import { useAnime4k } from "./player/hooks/use-anime4k";
 import { useSdrBoostGate } from "./player/hooks/use-sdr-boost-gate";
 import { PlayerOverlayLayers, type PlayerOverlayLayersProps } from "./player/player-overlay-layers";
 import { LeaveConfirmModal } from "@/components/player/leave-confirm-modal";
@@ -70,13 +68,11 @@ import { PlaybackFailedPanel } from "./player/playback-failed-panel";
 import { setSkipSegmentsView } from "@/lib/skip-intro/segment-store";
 import { markStreamDead, STUB_TTL_MS } from "@/lib/dead-streams";
 import type { VolumeIndicatorState } from "@/components/player/volume-indicator";
-import type { ToastInfo } from "@/views/addons/addons-types";
 
 export function PlayerView({ src }: { src: PlayerSrc }) {
   const { setChromeHidden, topPath, openPicker, exitPlayback, replacePlayerSrc, exitPlayer } = useView();
   const { settings } = useSettings();
   const isKid = useActiveKid() != null;
-  const t = useT();
   const chromeTheme = resolveChromeTheme(settings.theme, settings.playerChromeTheme);
   useEffect(() => {
     const root = document.documentElement;
@@ -513,13 +509,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
   });
 
   const textSync = useTextSync(bridgeRef.current, src.meta.id);
-  const [syncToast, setSyncToast] = useState<ToastInfo | null>(null);
-  const syncToastTimerRef = useRef<number | null>(null);
-  const showSyncToast = useCallback((kind: "ok" | "error", text: string) => {
-    if (syncToastTimerRef.current != null) window.clearTimeout(syncToastTimerRef.current);
-    setSyncToast({ kind, text });
-    syncToastTimerRef.current = window.setTimeout(() => setSyncToast(null), kind === "error" ? 5000 : 3000);
-  }, []);
   const handleEnterSync = useCallback(() => {
     void textSync.enter();
   }, [textSync.enter, src.url, src.headers]);
@@ -555,7 +544,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
 
   const videoFill = useVideoFill(bridgeRef, src.url, playing);
   useLivePictureEq(bridgeRef, src.url);
-  const anime4k = useAnime4k(bridgeRef, src.url, src, snap.videoWidth);
   const { holdSpeedActive, showStats } = usePlayerHotkeys({
     bridgeRef,
     snap,
@@ -579,23 +567,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     sleep,
     quickToolsEnabled,
     frameGrab,
-    onToggleAnime4k: () => {
-      if (!anime4k.available) {
-        showSyncToast("error", t("Anime4K isn't set up yet. Turn it on in Settings under Anime."));
-        return;
-      }
-      anime4k.setMode(anime4k.mode === "off" ? "auto" : "off");
-    },
-    onAnime4kOn: () => {
-      if (!anime4k.available) {
-        showSyncToast("error", t("Anime4K isn't set up yet. Turn it on in Settings under Anime."));
-        return;
-      }
-      anime4k.setMode("auto");
-    },
-    onAnime4kOff: () => {
-      anime4k.setMode("off");
-    },
     gif,
     clip,
     videoFill,
@@ -753,9 +724,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     videoFillPill: videoFill.pill,
     cropMode: videoFill.mode,
     onCropMode: videoFill.setMode,
-    anime4kMode: anime4k.mode,
-    onAnime4kMode: anime4k.setMode,
-    anime4kAvailable: anime4k.available,
     subDropToast: svpToast ?? subDropToast,
     pipMode,
     drawMode,
@@ -889,7 +857,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     onEnterSync: handleEnterSync,
     syncMode: textSync.syncMode,
     syncApi: textSync,
-    syncToast,
     onSyncPlayPause: playPauseToggle,
   };
   return (

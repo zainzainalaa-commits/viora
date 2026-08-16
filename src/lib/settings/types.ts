@@ -26,7 +26,7 @@ export type WebhookTrigger =
   | { event: "fromTraktWatchlist" }
   | { event: "liveTvEvent"; channelIds?: string[]; favoritesOnly?: boolean; leadMinutes?: number };
 
-export type ContentCategory = "anime" | "liveTv" | "sports" | "adult";
+export type ContentCategory = "liveTv" | "sports" | "adult";
 
 export type ContentFilters = Record<ContentCategory, boolean>;
 
@@ -47,10 +47,6 @@ export interface SimklGranularFilters {
     plantowatch: boolean;
   };
   shows: {
-    watching: boolean;
-    plantowatch: boolean;
-  };
-  anime: {
     watching: boolean;
     plantowatch: boolean;
   };
@@ -75,8 +71,6 @@ export type Settings = {
   showImdbBadge: boolean;
   showTmdbBadge: boolean;
   showRtBadge: boolean;
-  showMalBadge: boolean;
-  animeCardRating: "mal" | "imdb";
   showMetacriticBadge: boolean;
   showLetterboxdBadge: boolean;
   showMdblistBadge: boolean;
@@ -84,7 +78,6 @@ export type Settings = {
   showDetailRatings: boolean;
   showImdbDetail: boolean;
   showTmdbDetail: boolean;
-  showMalDetail: boolean;
   showRtDetail: boolean;
   showRtAudienceDetail: boolean;
   showLetterboxdDetail: boolean;
@@ -171,9 +164,6 @@ export type Settings = {
   playerRtxHdr: boolean;
   playerDisplayPanel: "auto" | "oled" | "lcd";
   playerMotionInterp: boolean;
-  playerAnime4k: boolean;
-  playerAnime4kAnimeOnly: boolean;
-  playerAnime4kIndicator: boolean;
   playerMpvEmbed: boolean;
   playerP2pChip: boolean;
   showQualityInfo: boolean;
@@ -187,11 +177,6 @@ export type Settings = {
   streamCacheDir: string;
   remoteStreamServerUrl: string;
   remoteStreamServerStrict: boolean;
-  playerAnime4kShaders: string[];
-  playerAnime4kMode: string;
-  playerAnime4kTier: string;
-  playerAnime4kFolder: string;
-  playerAnime4kOverride: string;
   preferredSubLangs: string[];
   preferredAudioLangs: string[];
   subFontSize: number;
@@ -253,7 +238,6 @@ export type Settings = {
   mpvTweaks: Record<string, string>;
   playerSvp: boolean;
   svpVpyPath: string;
-  svpScope: "all" | "anime" | "non-anime";
   seekBackStepSec: number;
   seekForwardStepSec: number;
   playerHdrOpaqueWindow: boolean;
@@ -293,7 +277,6 @@ export type Settings = {
   libraryBookmarkedOnly: boolean;
   librarySort: "recent" | "title" | "year";
   preferCustomMetaAddon: boolean;
-  animeOnlyInAnimeRoom: boolean;
   cwAdvanceNext: boolean;
   useNativeTitleBar: boolean;
   closeToTray: boolean;
@@ -318,10 +301,6 @@ export type Settings = {
     renamed: Record<string, string>;
   };
   hotkeys: Record<string, string>;
-  animeFavoriteGenres: number[];
-  animePicksDismissedAt: number;
-  animeAnilistRowsHidden: string[];
-  animeMalRowsHidden: string[];
   pickerLayout: "condensed" | "stremio";
   streamSort: "harbor" | "addon";
   fullStreamDescription: boolean;
@@ -364,7 +343,6 @@ export type Settings = {
   simklHomeRailsEnabled: boolean;
   simklUpNextRailEnabled: boolean;
   simklTrendingRailEnabled: boolean;
-  simklAnimeTitleLanguage: "english" | "romaji" | "native";
   weekStartsMonday: boolean;
   customCalendar: {
     trackedPeople: Array<{

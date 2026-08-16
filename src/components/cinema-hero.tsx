@@ -12,7 +12,6 @@ import { useFocusableControl } from "@/lib/tv-focus";
 export const MOVIES_HERO = "MOVIES_HERO";
 import { useEffect, useRef, useState } from "react";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
-import { MetaAwardsCorner } from "@/components/meta-awards-corner";
 import { meta as fetchMeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
 import { tmdbLogo, useTmdbImdbId } from "@/lib/providers/tmdb";
 import { useImdbRating } from "@/lib/imdb-rating";
@@ -319,7 +318,6 @@ function CinemaSlide({
         />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/70 via-30% to-transparent" />
-      <MetaAwardsCorner meta={meta} imdbId={resolvedImdb} />
       <div className="absolute inset-y-0 start-0 w-3/5 bg-gradient-to-r from-canvas/95 via-canvas/55 to-transparent rtl:bg-gradient-to-l" />
 
       <div className="relative flex h-full items-end pb-28 ps-20 pe-20">

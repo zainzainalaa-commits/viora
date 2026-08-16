@@ -176,7 +176,6 @@ export function Shows({ active = true }: { active?: boolean }) {
     settings.tmdbKey,
     settings.cwAdvanceNext,
     resurfaceLibrary,
-    "exclude",
     manualWatchedVer,
   );
 

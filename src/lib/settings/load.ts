@@ -124,7 +124,6 @@ function buildStoredSettings(raw: string | null): Settings {
       _mpvEmbedV2?: boolean;
       _mpvEmbedV3?: boolean;
       _mpvEmbedV4?: boolean;
-      _anime4kIndicatorOffV1?: boolean;
       _pickerLayoutStremio?: boolean;
       _pickerLayoutStremioV2?: boolean;
       _stremioDeeplinkOnByDefault?: boolean;
@@ -168,10 +167,6 @@ function buildStoredSettings(raw: string | null): Settings {
       parsed.playerMpvEmbed = true;
       parsed._mpvEmbedV4 = true;
     }
-    if (!parsed._anime4kIndicatorOffV1) {
-      parsed.playerAnime4kIndicator = false;
-      parsed._anime4kIndicatorOffV1 = true;
-    }
     if (!parsed._subStyleV2) {
       if (parsed.subFontSize === 55) parsed.subFontSize = DEFAULT.subFontSize;
       if (parsed.subBorderSize === 3) parsed.subBorderSize = DEFAULT.subBorderSize;
@@ -211,7 +206,6 @@ function buildStoredSettings(raw: string | null): Settings {
       preferredAudioLangs: (parsed.preferredAudioLangs ?? DEFAULT.preferredAudioLangs).map(
         languageName,
       ),
-      showMalBadge: parsed.showMalBadge ?? DEFAULT.showMalBadge,
       badgePlacement:
         parsed.badgePlacement === "top" || parsed.badgePlacement === "bottom"
           ? parsed.badgePlacement
@@ -264,16 +258,6 @@ function buildStoredSettings(raw: string | null): Settings {
       },
       webhookRules: Array.isArray(parsed.webhookRules) ? parsed.webhookRules : [],
       customStreamFilters: Array.isArray(parsed.customStreamFilters) ? parsed.customStreamFilters : DEFAULT.customStreamFilters,
-      animeFavoriteGenres: Array.isArray(parsed.animeFavoriteGenres)
-        ? parsed.animeFavoriteGenres.filter((g): g is number => typeof g === "number")
-        : DEFAULT.animeFavoriteGenres,
-      animePicksDismissedAt:
-        typeof parsed.animePicksDismissedAt === "number"
-          ? parsed.animePicksDismissedAt
-          : DEFAULT.animePicksDismissedAt,
-      animeAnilistRowsHidden: Array.isArray(parsed.animeAnilistRowsHidden)
-        ? parsed.animeAnilistRowsHidden.filter((k): k is string => typeof k === "string")
-        : DEFAULT.animeAnilistRowsHidden,
       tmdbImageLangs: Array.isArray(parsed.tmdbImageLangs)
         ? parsed.tmdbImageLangs.filter((l): l is string => typeof l === "string")
         : DEFAULT.tmdbImageLangs,

@@ -24,7 +24,6 @@ import auddLogo from "@/assets/addon-logos/auddio.webp";
 import tmdbLogo from "@/assets/addon-logos/tmdb.png";
 import tvdbLogo from "@/assets/addon-logos/tvdb.svg";
 import { ImdbIcon } from "@/components/icons/imdb-icon";
-import { MalLogo } from "@/components/icons/mal-logo";
 import { RtFresh } from "@/components/icons/rt-fresh";
 import { RtRotten } from "@/components/icons/rt-rotten";
 import { useProfiles } from "@/lib/profiles";
@@ -81,11 +80,10 @@ export function LibraryPanel({
     showLetterboxd: settings.showLetterboxdBadge && !!settings.mdblistKey,
     showMdblist: settings.showMdblistBadge && !!settings.mdblistKey,
     showTrakt: settings.showTraktBadge && !!settings.mdblistKey,
-    showMal: settings.showMalBadge,
     showSimkl: settings.showSimklBadge,
   };
   const enabledBadgeCount =
-    (badgeFlags.showImdb || badgeFlags.showTmdb || badgeFlags.showMal ? 1 : 0) +
+    (badgeFlags.showImdb || badgeFlags.showTmdb ? 1 : 0) +
     (badgeFlags.showRt ? 1 : 0) +
     (badgeFlags.showPopcorn ? 1 : 0) +
     (badgeFlags.showMetacritic ? 1 : 0) +
@@ -374,12 +372,6 @@ export function LibraryPanel({
                   onChange={(v) => update({ showTmdbDetail: v })}
                 />
                 <ToggleRow
-                  label={t("MAL on details page")}
-                  leading={<MalBadge compact />}
-                  value={settings.showMalDetail}
-                  onChange={(v) => update({ showMalDetail: v })}
-                />
-                <ToggleRow
                   label={t("Rotten Tomatoes on details page")}
                   leading={<RtPairBadge />}
                   value={settings.showRtDetail}
@@ -463,45 +455,6 @@ export function LibraryPanel({
               onChange={(v) => update({ showPopcornBadge: v })}
               lockReason={!settings.mdblistKey ? t("Add an MDBList API key to unlock this.") : undefined}
             />
-            <ToggleRow
-              label={t("Show MAL score on cards")}
-              sub={t("MyAnimeList scores for anime titles. RPDB doesn't cover anime, so this stays optional.")}
-              leading={<MalBadge />}
-              value={settings.showMalBadge}
-              onChange={(v) => update({ showMalBadge: v })}
-            />
-            {settings.showMalBadge && (
-              <div className="flex items-center justify-between gap-4 rounded-xl bg-canvas/40 px-4 py-3">
-                <div className="flex min-w-0 flex-col gap-0.5">
-                  <span className="text-[13.5px] font-medium text-ink">{t("Anime card rating source")}</span>
-                  <span className="text-[12px] leading-snug text-ink-muted">
-                    {t("Pick which score anime cards show. IMDb falls back to MAL when a title has no IMDb rating yet.")}
-                  </span>
-                </div>
-                <div className="flex shrink-0 gap-1.5">
-                  {(
-                    [
-                      { id: "mal", label: t("MAL") },
-                      { id: "imdb", label: t("IMDb") },
-                    ] as const
-                  ).map((s) => (
-                    <FocusButton
-                      key={s.id}
-                      type="button"
-                      onClick={() => update({ animeCardRating: s.id })}
-                      aria-pressed={settings.animeCardRating === s.id}
-                      className={`rounded-full px-3 py-1.5 text-[12.5px] font-semibold transition-colors ${
-                        settings.animeCardRating === s.id
-                          ? "bg-ink text-canvas"
-                          : "bg-elevated/50 text-ink-muted ring-1 ring-edge-soft/60 hover:bg-elevated hover:text-ink"
-                      }`}
-                    >
-                      {s.label}
-                    </FocusButton>
-                  ))}
-                </div>
-              </div>
-            )}
             <ToggleRow
               label={t("Show Metacritic score on cards")}
               sub={t("Metascore (0-100), colored green / yellow / red.")}
@@ -646,13 +599,6 @@ export function LibraryPanel({
           value={settings.showPlaylistsTab}
           onChange={(v) => update({ showPlaylistsTab: v })}
           preview={<HomeRowPreview kind="playlists-tab" />}
-        />
-        <ToggleRow
-          label={t("Keep anime in the Anime room only")}
-          sub={t("Hides anime from the Home Continue Watching row. It still appears in the Anime tab's own Continue Watching.")}
-          value={settings.animeOnlyInAnimeRoom}
-          onChange={(v) => update({ animeOnlyInAnimeRoom: v })}
-          preview={<HomeRowPreview kind="anime-room" />}
         />
         <ToggleRow
           label={t("Advance Continue Watching to the next episode")}
@@ -832,12 +778,6 @@ export function LibraryPanel({
         subtitle={t("Hide entire categories. Toggling these also removes the matching sidebar entries and rails.")}
       >
         <ToggleRow
-          label={t("Hide anime")}
-          sub={t("Removes the Anime tab and any Trending/Popular/Upcoming/New anime rows from Home.")}
-          value={settings.hideContent.anime}
-          onChange={(v) => pushHideContent("anime", v)}
-        />
-        <ToggleRow
           label={t("Hide Live TV")}
           sub={t("Removes the Live TV tab from the sidebar.")}
           value={settings.hideContent.liveTv}
@@ -976,19 +916,6 @@ function TmdbBadge() {
   return <img src={tmdbLogo} alt="" className="h-7 w-7 shrink-0 rounded-md object-contain" />;
 }
 
-function MalBadge({ compact = false }: { compact?: boolean } = {}) {
-  return (
-    <span
-      className={`flex shrink-0 items-center justify-center rounded-md text-white shadow-[0_1px_2px_rgba(0,0,0,0.25)] ${
-        compact ? "h-[18px] w-10 px-1.5" : "h-7 w-[52px] px-2.5"
-      }`}
-      style={{ background: "#2E51A2" }}
-    >
-      <MalLogo className={compact ? "h-2.5 w-auto" : "h-[14px] w-auto"} />
-    </span>
-  );
-}
-
 function RtPairBadge() {
   return (
     <span className="flex shrink-0 items-center -space-x-2">
@@ -1049,7 +976,6 @@ type PreviewFlags = {
   showLetterboxd: boolean;
   showMdblist: boolean;
   showTrakt: boolean;
-  showMal: boolean;
   showSimkl: boolean;
 };
 
@@ -1177,13 +1103,6 @@ function PreviewCard({
   normal.push(...extras);
 
   const anime: React.ReactNode[] = [];
-  if (flags.showMal)
-    anime.push(
-      <span className="flex items-center gap-0.5">
-        <MalLogo className="h-[10px] w-auto text-ink-muted" />
-        <span>8.7</span>
-      </span>,
-    );
   anime.push(...extras);
 
   const cap = Math.max(1, limit);

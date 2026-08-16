@@ -5,31 +5,9 @@ import type { TmdbDetail } from "@/lib/providers/tmdb";
 import { useView } from "@/lib/view";
 import { useT } from "@/lib/i18n";
 
-const ANIME_ROW_BY_GENRE: Record<string, string> = {
-  Action: "genre-action",
-  Adventure: "genre-action",
-  Romance: "genre-romance",
-  "Slice of Life": "genre-slice",
-  Mecha: "genre-mecha",
-  Fantasy: "genre-fantasy",
-  "Science Fiction": "genre-scifi",
-  "Sci-Fi": "genre-scifi",
-  "Sci-Fi & Fantasy": "genre-fantasy",
-  Psychological: "genre-psych",
-  Thriller: "genre-psych",
-  Horror: "genre-horror",
-  Supernatural: "genre-horror",
-};
-
-function focusAnimeRow(key: string) {
-  window.dispatchEvent(
-    new CustomEvent("harbor:anime-focus-row", { detail: { anchor: `row:${key}` } }),
-  );
-}
-
-export function InfoBlock({ detail, isAnime = false }: { detail: TmdbDetail; isAnime?: boolean }) {
+export function InfoBlock({ detail }: { detail: TmdbDetail }) {
   const t = useT();
-  const { openFilter, setView } = useView();
+  const { openFilter } = useView();
   const mediaType: "movie" | "tv" = detail.kind === "tv" ? "tv" : "movie";
 
   const fmtMoney = (n?: number) =>
@@ -53,18 +31,6 @@ export function InfoBlock({ detail, isAnime = false }: { detail: TmdbDetail; isA
   }));
   const genreChips = detail.genres
     .map((name) => {
-      if (isAnime) {
-        const anchor = ANIME_ROW_BY_GENRE[name];
-        return {
-          label: name,
-          onClick: () => {
-            setView("anime");
-            if (anchor) {
-              window.setTimeout(() => focusAnimeRow(anchor), 60);
-            }
-          },
-        };
-      }
       const id = (mediaType === "movie" ? MOVIE_GENRES : TV_GENRES)[name];
       if (id == null) return null;
       return {

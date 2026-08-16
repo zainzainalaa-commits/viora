@@ -2,7 +2,6 @@ import { fetchAdjacentEpisodes } from "@/lib/series-episodes";
 import type { Meta } from "@/lib/cinemeta";
 import {
   episodeFromVideoId,
-  isAnimeCwItem,
   isCwMember,
   libraryMetaType,
   type LibraryItem,
@@ -11,7 +10,6 @@ import { isCwDismissed } from "@/lib/cw-dismiss";
 
 const ANIME_ID = /^(kitsu|mal|anilist|anidb):/;
 
-export type AnimeMode = "all" | "exclude" | "only";
 
 export function isNextAired(isAnime: boolean, airDate: string | undefined): boolean {
   const t = airDate ? Date.parse(airDate) : NaN;
@@ -46,7 +44,7 @@ export function clearResurfaceCache(): void {
 export async function resurfaceCandidates(
   library: LibraryItem[],
   inCw: Set<string>,
-  opts: { tmdbKey: string; animeMode: AnimeMode },
+  opts: { tmdbKey: string },
 ): Promise<Map<string, { season: number; episode: number }>> {
   const now = Date.now();
   const out = new Map<string, { season: number; episode: number }>();
@@ -54,9 +52,6 @@ export async function resurfaceCandidates(
     if (i.type !== "series" && !ANIME_ID.test(i._id)) return false;
     if (!i.state || (i.removed && !i.temp)) return false;
     if (inCw.has(i._id) || isCwMember(i) || isCwDismissed(i)) return false;
-    const anime = isAnimeCwItem(i);
-    if (opts.animeMode === "exclude" && anime) return false;
-    if (opts.animeMode === "only" && !anime) return false;
     if ((i.state.flaggedWatched ?? 0) <= 0) return false;
     const lw = Date.parse(i.state.lastWatched ?? "");
     if (!Number.isFinite(lw) || now - lw > RECENT_MS) return false;

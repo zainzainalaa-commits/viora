@@ -24,7 +24,6 @@ export function FloatingBack({
     topKind === "person" ||
     topKind === "filter" ||
     topKind === "award" ||
-    topKind === "anime-award" ||
     topKind === "service" ||
     topKind === "addon-detail" ||
     topKind === "queue";

@@ -3,7 +3,6 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Play, X } from "lucide-react";
 import simklLogo from "@/assets/simkl.png";
 import { meta as fetchMeta, narrowMediaType, type Meta } from "@/lib/cinemeta";
-import { animeKitsuMeta, type AnimeKitsuVideo } from "@/lib/providers/anime-kitsu-addon";
 import { tmdbLiteMeta } from "@/lib/providers/tmdb/tmdb-lite";
 import { useContextMenu } from "@/lib/context-menu";
 import { useT } from "@/lib/i18n";
@@ -70,7 +69,6 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
   const [logo, setLogo] = useState<string | undefined>();
   const [metaBg, setMetaBg] = useState<string | undefined>();
   const [hydratedMeta, setHydratedMeta] = useState<Meta | null>(null);
-  const [kitsuVideo, setKitsuVideo] = useState<AnimeKitsuVideo | null>(null);
   const [epTitle, setEpTitle] = useState<string | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
   const cardRef = useRef<HTMLButtonElement>(null);
@@ -95,7 +93,6 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
     setLogo(undefined);
     setMetaBg(undefined);
     setHydratedMeta(null);
-    setKitsuVideo(null);
     setImgIdx(0);
     const el = cardRef.current;
     if (!el) return;
@@ -104,31 +101,6 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
     const start = () => {
       if (started) return;
       started = true;
-      if (/^(kitsu|mal|anilist|anidb):/.test(item._id)) {
-        animeKitsuMeta(item._id)
-          .then((m) => {
-            if (cancelled || !m) return;
-            setHydratedMeta({
-              id: item._id,
-              type: libraryMetaType(item.type),
-              name: m.name?.trim() ? m.name : item.name,
-              poster: m.poster,
-              background: m.background,
-              logo: m.logo,
-            });
-            if (m.logo) setLogo(m.logo);
-            const bg = m.background || (item.background ? undefined : m.poster);
-            if (bg) setMetaBg(bg);
-            if (kitsuThreeSeg) {
-              const vid =
-                m.videos.find((v) => v.id === item.state?.video_id) ??
-                m.videos.find((v) => v.episode === animeEp);
-              if (vid) setKitsuVideo(vid);
-            }
-          })
-          .catch(() => {});
-        return;
-      }
       if (item._id.startsWith("tmdb:")) {
         tmdbLiteMeta(settingsRef.current.tmdbKey, item._id)
           .then((m) => {
@@ -202,7 +174,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item._id, ep?.season, ep?.episode, kitsuThreeSeg]);
 
-  const episodeTitle = epTitle ?? kitsuVideo?.title ?? null;
+  const episodeTitle = epTitle;
 
   const meta: Meta = hydratedMeta
     ? { ...hydratedMeta, id: item._id, type: libraryMetaType(item.type) }
@@ -222,19 +194,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
     e.stopPropagation();
     let episode: PlayEpisode | undefined = item.type === "series" && ep ? ep : undefined;
     if (!episode && kitsuThreeSeg) {
-      if (kitsuVideo) {
-        episode = {
-          season: kitsuVideo.season || 1,
-          episode: kitsuVideo.episode,
-          name: kitsuVideo.title,
-          still: kitsuVideo.thumbnail,
-          overview: kitsuVideo.overview,
-          kitsuStreamId: kitsuVideo.id,
-          imdbId: kitsuVideo.imdb_id,
-          imdbSeason: kitsuVideo.imdbSeason,
-          imdbEpisode: kitsuVideo.imdbEpisode,
-        };
-      } else {
+      {
         const epNum = Number((item.state?.video_id ?? "").split(":")[2]);
         if (Number.isFinite(epNum) && epNum > 0) episode = { season: 1, episode: epNum };
       }

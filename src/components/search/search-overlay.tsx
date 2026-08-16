@@ -10,7 +10,6 @@ import { useT } from "@/lib/i18n";
 import { useSearch } from "@/lib/search-context";
 import { useView } from "@/lib/view";
 import { MOVIE_GENRES, TV_GENRES } from "@/lib/feed/tags";
-import { AnimeRow } from "./anime-row";
 import { EmptyState } from "./empty-state";
 import { GuideModal } from "./guide-modal";
 import { LiveTvRow } from "./live-tv-row";
@@ -87,7 +86,6 @@ export function SearchOverlay() {
       results.movies.length ||
       results.series.length ||
       results.liveTv.length ||
-      results.anime.length ||
       results.addons.length ||
       results.addonGroups.length)
   );
@@ -100,7 +98,6 @@ export function SearchOverlay() {
     results.movies.length === 0 &&
     results.series.length === 0 &&
     results.liveTv.length === 0 &&
-    results.anime.length === 0 &&
     results.addons.length === 0 &&
     results.addonGroups.length === 0
   );
@@ -319,7 +316,6 @@ export function SearchOverlay() {
                 <MetaList title={t("Movies")} items={results.movies} onClose={close} />
                 <MetaList title={t("Series")} items={results.series} onClose={close} />
               </div>
-              <AnimeRow items={results.anime} onClose={close} />
               <AddonResults groups={results.addonGroups} onClose={close} />
             </div>
           )}
