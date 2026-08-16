@@ -129,7 +129,7 @@ function LocaleConfirm({
             </span>
             <div className="flex flex-col">
               <h2 className="font-display text-[19px] font-medium tracking-tight text-ink">
-                {t("Switch Harbor to {language}?", { language: label })}
+                {t("Switch Viora to {language}?", { language: label })}
               </h2>
               <p className="text-[12.5px] text-ink-muted">
                 {t("This sets the interface, metadata, subtitle, and audio languages to match.")}

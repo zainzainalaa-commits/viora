@@ -420,7 +420,7 @@ function RuleEditor({
               </select>
             </label>
             <p className="text-[11.5px] text-ink-subtle">
-              Harbor scans your IPTV playlists' EPG every 30 min for programs about to start.
+              Viora scans your IPTV playlists' EPG every 30 min for programs about to start.
             </p>
           </TriggerSubFields>
         )}

@@ -20,7 +20,7 @@ import { useMdblistScores } from "@/lib/providers/mdblist";
 import { lastPlayedEpisode, readResumeEntry, saveResumeMs } from "@/lib/resume";
 import { localCwEntry } from "@/lib/local-cw";
 import { omdbPrefetch, omdbScores, type OmdbScores } from "@/lib/providers/omdb";
-import { harborImdbTitle } from "@/lib/providers/harbor-imdb";
+import { harborImdbTitle } from "@/lib/providers/viora-imdb";
 import { awardSummary, useAwards } from "@/lib/providers/wikidata";
 import { mergeBundledAwards } from "@/lib/awards-history";
 import {
@@ -135,18 +135,18 @@ async function kitsuYearVerdict(
 }
 
 if (typeof document !== "undefined") {
-  const __id = "harbor-fade-in-up-style";
+  const __id = "viora-fade-in-up-style";
   if (!document.getElementById(__id)) {
     const __el = document.createElement("style");
     __el.id = __id;
     __el.textContent =
-      "@keyframes harborFadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.harbor-fade-in-up{animation:harborFadeInUp .4s ease-out both}";
+      "@keyframes harborFadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.viora-fade-in-up{animation:harborFadeInUp .4s ease-out both}";
     document.head.appendChild(__el);
   }
 }
 
 function FadeInUp({ children }: { children: ReactNode }) {
-  return <div className="harbor-fade-in-up">{children}</div>;
+  return <div className="viora-fade-in-up">{children}</div>;
 }
 
 export function DetailView({
@@ -187,7 +187,7 @@ export function DetailView({
   const layoutEdit = false;
   const [scores, setScores] = useState<OmdbScores | null>(null);
   const [cinemetaRating, setCinemetaRating] = useState<string | null>(null);
-  const [harborImdbRating, setHarborImdbRating] = useState<string | null>(null);
+  const [harborImdbRating, setVioraImdbRating] = useState<string | null>(null);
   const [watchProviders, setWatchProviders] = useState<WatchProvider[]>([]);
   const mdblist = useMdblistScores(
     settings.mdblistKey,
@@ -316,13 +316,13 @@ export function DetailView({
     stickyAwardName.current = null;
   }, [meta.id]);
   useEffect(() => {
-    setHarborImdbRating(null);
+    setVioraImdbRating(null);
     const tt = detail?.imdbId ?? (meta.id.startsWith("tt") ? meta.id : null);
     if (!tt || !tt.startsWith("tt")) return;
     let cancelled = false;
     harborImdbTitle(tt)
       .then((r) => {
-        if (!cancelled && r != null) setHarborImdbRating(r.toFixed(1));
+        if (!cancelled && r != null) setVioraImdbRating(r.toFixed(1));
       })
       .catch(() => {});
     return () => {
@@ -1020,7 +1020,7 @@ export function DetailView({
       <section className="relative">
         <div
           data-tauri-drag-region
-          className="harbor-bleed-stremio relative h-[78vh] min-h-[640px] overflow-hidden"
+          className="viora-bleed-stremio relative h-[78vh] min-h-[640px] overflow-hidden"
         >
           {!pinnedBackdrop && backdrops.length >= 2 ? (
             backdrops.map((b, i) => (

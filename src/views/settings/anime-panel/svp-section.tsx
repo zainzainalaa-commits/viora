@@ -55,17 +55,17 @@ export function SvpSection() {
   return (
     <Section
       title={t("SVP frame interpolation")}
-      subtitle={t("Genuine 48/60fps motion on anime, rendered right inside Harbor's player. SVP supplies the engine (VapourSynth + svpflow) and runs in your tray for licensing; Harbor's own player applies the interpolation, so it stays embedded and fully under your control. One-time install, then flip it on.")}
+      subtitle={t("Genuine 48/60fps motion on anime, rendered right inside Viora's player. SVP supplies the engine (VapourSynth + svpflow) and runs in your tray for licensing; Viora's own player applies the interpolation, so it stays embedded and fully under your control. One-time install, then flip it on.")}
     >
       <Step n={1} title={t("SVP (free)")} ok={ready && !loadFailed}>
         <p className="text-[12.5px] leading-relaxed text-ink-muted">
           {loadFailed
-            ? t("SVP's files are here but its VapourSynth engine won't load ({err}). This usually means a stale VapourSynth entry or a missing Microsoft VC++ runtime. Reinstall SVP, or install the latest \"Visual C++ Redistributable (x64)\" from Microsoft, then reopen Harbor.", { err: status?.load_error ?? "load error" })
+            ? t("SVP's files are here but its VapourSynth engine won't load ({err}). This usually means a stale VapourSynth entry or a missing Microsoft VC++ runtime. Reinstall SVP, or install the latest \"Visual C++ Redistributable (x64)\" from Microsoft, then reopen Viora.", { err: status?.load_error ?? "load error" })
             : ready
-              ? t("Installed and detected. Harbor found its interpolation engine and will drive it directly.")
+              ? t("Installed and detected. Viora found its interpolation engine and will drive it directly.")
               : installed
-                ? t("SVP is installed but Harbor couldn't find its engine files (svpflow + VapourSynth). Try repairing the SVP install, or reopen SVP once.")
-                : t("Install SVP once (the free tier is enough). It bundles VapourSynth + svpflow; Harbor reuses them, no extra setup.")}
+                ? t("SVP is installed but Viora couldn't find its engine files (svpflow + VapourSynth). Try repairing the SVP install, or reopen SVP once.")
+                : t("Install SVP once (the free tier is enough). It bundles VapourSynth + svpflow; Viora reuses them, no extra setup.")}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {installed ? (
@@ -88,8 +88,8 @@ export function SvpSection() {
         label={t("Enable SVP")}
         sub={
           ready
-            ? t("Harbor's player applies the interpolation itself, embedded like normal playback, and starts SVP Manager in the tray for licensing. Restart playback to apply. If video goes black or won't start, turn this off.")
-            : t("Finish the install above first. Flipping this on now won't do anything until Harbor can find SVP's engine.")
+            ? t("Viora's player applies the interpolation itself, embedded like normal playback, and starts SVP Manager in the tray for licensing. Restart playback to apply. If video goes black or won't start, turn this off.")
+            : t("Finish the install above first. Flipping this on now won't do anything until Viora can find SVP's engine.")
         }
         value={settings.playerSvp}
         onChange={(v) => void onToggle(v)}

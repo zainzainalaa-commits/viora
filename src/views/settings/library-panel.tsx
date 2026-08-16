@@ -5,7 +5,7 @@ import mdblistLogo from "@/assets/addon-logos/mdblist.png";
 import letterboxdLogo from "@/assets/addon-logos/letterboxd.png";
 import traktLogo from "@/assets/trakt.svg";
 import simklLogo from "@/assets/simkl.png";
-import harborStyleImg from "@/assets/onboarding/harborstyle.png";
+import harborStyleImg from "@/assets/onboarding/viorastyle.png";
 import traditionalStyleImg from "@/assets/onboarding/traditional.png";
 import omdbLogo from "@/assets/addon-logos/omdb.png";
 import previewPoster1 from "@/assets/preview/poster1.webp";
@@ -134,7 +134,7 @@ export function LibraryPanel({
           that is not a setting, it is a rumour. */}
       <Section
         title={t("Metadata providers")}
-        subtitle={t("A free TMDB key is highly recommended. It unlocks the full Harbor experience. The rest are optional, and Cinemeta works out of the box without any.")}
+        subtitle={t("A free TMDB key is highly recommended. It unlocks the full Viora experience. The rest are optional, and Cinemeta works out of the box without any.")}
       >
         <KeyField
           label={t("TMDB · catalogs and rails")}
@@ -163,7 +163,7 @@ export function LibraryPanel({
           }
           help={
             <>
-              Highly recommended. This is what gives you the full Harbor experience: Popular,
+              Highly recommended. This is what gives you the full Viora experience: Popular,
               Trending, In Theaters, and per-service rails. Free at{" "}
               <ExtLink href="https://www.themoviedb.org/settings/api">
                 themoviedb.org/settings/api
@@ -807,7 +807,7 @@ export function LibraryPanel({
 
       <Section
         title={t("Continue Watching screenshots")}
-        subtitle={t("When you back out of a title, Harbor saves a frame so the Continue Watching card looks like the spot you left. Tune how long they stick around, or wipe them all.")}
+        subtitle={t("When you back out of a title, Viora saves a frame so the Continue Watching card looks like the spot you left. Tune how long they stick around, or wipe them all.")}
       >
         <CwSnapshotShowcase />
         <RetentionPicker
@@ -853,7 +853,7 @@ export function LibraryPanel({
 
       <Section
         title={t("Local library")}
-        subtitle={t("Options for the Library → Local tab: folders you scan from your own drive. When you export metadata, Harbor writes a Kodi-style .nfo and downloads artwork next to each file at the sizes below.")}
+        subtitle={t("Options for the Library → Local tab: folders you scan from your own drive. When you export metadata, Viora writes a Kodi-style .nfo and downloads artwork next to each file at the sizes below.")}
       >
         <ToggleRow
           label={t("Show an “on disk” badge on cards")}
@@ -1229,7 +1229,7 @@ function HomeModePicker({
   const options: Array<{ id: "harbor" | "classic"; label: string; sub: string; img: string }> = [
     {
       id: "harbor",
-      label: "Harbor curated",
+      label: "Viora curated",
       sub: "Hero carousel, Top 10, Trending, In Theaters, per-service rails. Addon catalogs append underneath, deduped.",
       img: harborStyleImg,
     },

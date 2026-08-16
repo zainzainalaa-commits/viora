@@ -111,7 +111,7 @@ export function SearchOverlay() {
         aria-label={t("Close search")}
         onClick={close}
         data-tauri-drag-region
-        className="harbor-search-backdrop absolute inset-0 cursor-default"
+        className="viora-search-backdrop absolute inset-0 cursor-default"
       />
 
       {isDpadPrimary() ? (

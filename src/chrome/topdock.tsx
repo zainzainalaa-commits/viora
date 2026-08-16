@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Pencil, Search, Settings as SettingsIcon, Users } from "lucide-react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { CatAvatar } from "@/components/icons/cat-avatar";
 import { TogetherButton } from "@/chrome/topbar";
 import { useAuth } from "@/lib/auth";
@@ -96,7 +96,7 @@ export function TopDock() {
             {customMark ? (
               <img src={customMark} alt="" draggable={false} className="h-7 w-7 object-contain" />
             ) : (
-              <HarborMark className="h-7 w-7" />
+              <VioraMark className="h-7 w-7" />
             )}
             {themePreset?.id === "crunch" && (
               <span className="font-display text-[22px] font-bold leading-none text-ink">
@@ -226,7 +226,7 @@ function ProfileChipCompact({
         <span className="hidden max-w-[8rem] truncate sm:inline">{name}</span>
       </FocusButton>
       {open && (
-        <div className="harbor-profile-dropdown absolute end-0 top-[calc(100%+8px)] z-40 w-60 overflow-hidden rounded-2xl border border-white/15 bg-canvas/95 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
+        <div className="viora-profile-dropdown absolute end-0 top-[calc(100%+8px)] z-40 w-60 overflow-hidden rounded-2xl border border-white/15 bg-canvas/95 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
           <div className="border-b border-white/10 px-4 py-3">
             <div className="text-[13.5px] font-semibold text-ink">{name}</div>
             {user?.email && (

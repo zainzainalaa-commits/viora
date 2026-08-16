@@ -1,8 +1,7 @@
 import { APP_NAME } from "@/lib/brand";
-import { VioraSignature } from "@/components/icons/viora-wordmark";
 import { ChevronDown, Lock } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { ProfileChip } from "@/chrome/sidebar/profile-chip";
 import { useT } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
@@ -59,7 +58,7 @@ export function Sidebar() {
         // without this the remote can still walk into an invisible sidebar.
         inert={chromeHidden}
         aria-hidden={chromeHidden}
-        data-harbor-sidebar
+        data-viora-sidebar
         className={`relative z-[60] flex w-[72px] shrink-0 flex-col border-e border-edge-soft bg-canvas transition-[opacity,transform,width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width] ${
           collapsed ? "" : "lg:w-52"
         } ${
@@ -83,7 +82,9 @@ export function Sidebar() {
               className={`h-9 w-9 shrink-0 object-contain ${collapsed ? "" : "lg:h-10 lg:w-10"}`}
             />
           ) : (
-            <HarborMark className={`h-9 w-9 shrink-0 ${collapsed ? "" : "lg:h-10 lg:w-10"}`} />
+            /* Collapsed only: expanded, the lockup beside this already has the
+               mark in it, and two of them would be one too many. */
+            <VioraMark className={`h-9 w-9 shrink-0 ${collapsed ? "" : "lg:hidden"}`} />
           )}
           {!collapsed &&
             (customWordmark ? (
@@ -112,18 +113,19 @@ export function Sidebar() {
                 ra
               </span>
             ) : (
-              <span
-                className="hidden flex-col whitespace-nowrap leading-none lg:inline-flex"
-                style={{ transform: "translateY(2px)" }}
-              >
-                <span
-                  className="text-[44px] font-medium leading-none tracking-tight"
-                  style={{ fontFamily: '"Fraunces", "Iowan Old Style", "Georgia", serif' }}
-                >
-                  {APP_NAME}
-                </span>
-                <VioraSignature className="mt-1 ps-0.5 text-[15px]" />
-              </span>
+              /* The name and the signature as they were drawn, not retypeset.
+                 This was the app name in Fraunces with a script signature under
+                 it — the right words in the wrong hand. The letterforms, the
+                 spacing and the dot inside the O all belong to the original
+                 artwork, and none of them survive being set in an interface
+                 font. The mark to the left is hidden here because this image
+                 already carries it. */
+              <img
+                src="/viora-lockup.png"
+                alt={APP_NAME}
+                draggable={false}
+                className="hidden h-[52px] w-auto object-contain lg:inline-block"
+              />
             ))}
         </div>
         <ScrollableNav
@@ -480,7 +482,7 @@ function NavItem({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       {...focusProps}
-      data-harbor-nav={view}
+      data-viora-nav={view}
       data-active={active ? "" : undefined}
       aria-label={gated ? t("chrome.lockedRequiresPin", { label: text }) : text}
       title={gated ? t("chrome.lockedShort", { label: text }) : text}

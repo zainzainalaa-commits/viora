@@ -901,7 +901,7 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
       isFocusBoundary
       focusKey={focusKeys.player}
       ref={stageRef}
-      data-harbor-player
+      data-viora-player
       dir="ltr"
       className={`fixed inset-0 z-[100] overflow-hidden ${stageBg}`}
       style={cursorStyle}

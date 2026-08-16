@@ -28,7 +28,7 @@ export function MalSyncToast() {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[130] flex justify-center px-6">
-      <div className="harbor-together-pill flex items-center gap-2.5 rounded-full border border-edge bg-surface/98 py-2 ps-2.5 pe-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.75)] animate-popover-in">
+      <div className="viora-together-pill flex items-center gap-2.5 rounded-full border border-edge bg-surface/98 py-2 ps-2.5 pe-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.75)] animate-popover-in">
         <span
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
             good

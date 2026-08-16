@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { ProfileBlock } from "@/chrome/siderail/profile-block";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
 import { TogetherButton } from "@/chrome/topbar";
@@ -71,14 +71,21 @@ export function SideRail() {
             className="relative flex items-center gap-2 text-accent"
             aria-label={t("chrome.harborHome")}
           >
-            <HarborMark className="h-[22px] w-[22px] shrink-0 drop-shadow-[0_0_10px_var(--color-accent-soft)]" />
-            {!collapsed && (
-              <span
-                className="text-[25px] font-medium leading-none tracking-tight"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                {APP_NAME}
-              </span>
+            {/* The lockup as one piece of artwork — mark, name and signature
+                together, exactly as it was drawn. It used to be the mark beside
+                the name set in the interface font, which is a different thing
+                wearing the same words: the letterforms, the spacing and the
+                script signature all belong to the original and none of them
+                survive being retypeset. Collapsed, only the mark shows. */}
+            {collapsed ? (
+              <VioraMark className="h-[26px] w-[26px] shrink-0" />
+            ) : (
+              <img
+                src="/viora-lockup.png"
+                alt={APP_NAME}
+                draggable={false}
+                className="h-[34px] w-auto shrink-0 object-contain"
+              />
             )}
           </FocusButton>
         </div>

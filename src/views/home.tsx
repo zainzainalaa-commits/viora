@@ -554,10 +554,10 @@ export function Home({ active = true }: { active?: boolean }) {
         .map((e) => ({ id: e.id, type: e.type, name: e.name, poster: e.poster }));
     const out: HomeRow[] = [];
     if (favItems.size > 0) {
-      out.push({ key: "harbor-favorites", type: "movie", name: "Favorites", metas: toMetas(favItems), page: 1, hasMore: false, noDedup: true });
+      out.push({ key: "viora-favorites", type: "movie", name: "Favorites", metas: toMetas(favItems), page: 1, hasMore: false, noDedup: true });
     }
     if (localItems.size > 0) {
-      out.push({ key: "harbor-watchlist", type: "movie", name: "My Watchlist", metas: toMetas(localItems), page: 1, hasMore: false, noDedup: true });
+      out.push({ key: "viora-watchlist", type: "movie", name: "My Watchlist", metas: toMetas(localItems), page: 1, hasMore: false, noDedup: true });
     }
     return out;
   }, [favItems, localItems]);
@@ -726,7 +726,7 @@ export function Home({ active = true }: { active?: boolean }) {
           {settings.homeMode !== "classic" && !homeRowsCustom.hidden.includes("hero") && (
             <div
               data-scroll-anchor="hero"
-              className={`relative -mt-24 lg:-mt-28 ${settings.heroFull ? "-mb-12 harbor-hero-full" : ""}`}
+              className={`relative -mt-24 lg:-mt-28 ${settings.heroFull ? "-mb-12 viora-hero-full" : ""}`}
             >
               <HeroCarousel
                 slides={heroSlides}

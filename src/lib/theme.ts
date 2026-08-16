@@ -2,7 +2,7 @@ import auroraPreview from "@/assets/theme-previews/aurora.png";
 import crunchPreview from "@/assets/theme-previews/crunchy.png";
 import draculaPreview from "@/assets/theme-previews/dracula.png";
 import forestPreview from "@/assets/theme-previews/forest.png";
-import harborPreview from "@/assets/theme-previews/harbor.png";
+import vioraPreview from "@/assets/theme-previews/viora.png";
 import minuiPreview from "@/assets/theme-previews/minui.png";
 import noirPreview from "@/assets/theme-previews/noir.png";
 import nordPreview from "@/assets/theme-previews/nord.png";
@@ -101,9 +101,9 @@ export type FontPair = {
 export const THEME_PRESETS: Record<ThemePresetId, ThemePreset> = {
   "cool-grey": {
     id: "cool-grey",
-    name: "Harbor default",
+    name: "Viora default",
     blurb: "What ships out of the box.",
-    previewImage: harborPreview,
+    previewImage: vioraPreview,
     swatch: ["#2c2e36", "#3a3d47", "#dcdde4"],
     tokens: {
       "--color-canvas": "oklch(0.18 0.004 260)",
@@ -299,10 +299,10 @@ export const THEME_PRESETS: Record<ThemePresetId, ThemePreset> = {
 const elegantFinCss = `@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 /* ==========================================================================
-   ElegantFin for Harbor  (after lscambo13's ElegantFin Jellyfin theme)
+   ElegantFin for Viora  (after lscambo13's ElegantFin Jellyfin theme)
    Dark navy glass, one purple accent, 1em rounded cards, white shine-sweep,
    Inter 425 body / 600 headings, calm 125ms motion, hairline + blur structure.
-   Injected raw into <style id="harbor-theme-css"> so !important + any selector wins.
+   Injected raw into <style id="viora-theme-css"> so !important + any selector wins.
    ========================================================================== */
 
 :root {
@@ -351,7 +351,7 @@ body {
 /* ==========================================================================
    SIDEBAR / LEFT DRAWER  (glass rgba(30,40,54,.9)+blur10, right hairline, no radius)
    ========================================================================== */
-aside[data-harbor-sidebar] {
+aside[data-viora-sidebar] {
   background-color: var(--ef-drawer-glass) !important;
   background-image: none !important;
   backdrop-filter: blur(14px) saturate(120%);
@@ -367,14 +367,14 @@ aside[data-harbor-sidebar] {
   transition: transform 170ms ease !important;
   box-shadow: 0.5em 0 2.5em rgba(0, 0, 0, 0.5);
 }
-html[dir="rtl"] aside[data-harbor-sidebar] {
+html[dir="rtl"] aside[data-viora-sidebar] {
   transform: translateX(103%);
 }
-html.ef-drawer-open aside[data-harbor-sidebar],
-html[dir="rtl"].ef-drawer-open aside[data-harbor-sidebar] {
+html.ef-drawer-open aside[data-viora-sidebar],
+html[dir="rtl"].ef-drawer-open aside[data-viora-sidebar] {
   transform: translateX(0);
 }
-aside[data-harbor-sidebar] [data-tauri-drag-region] > span {
+aside[data-viora-sidebar] [data-tauri-drag-region] > span {
   font-family: "Inter", system-ui, sans-serif !important;
   font-size: 26px !important;
   font-weight: 600 !important;
@@ -382,35 +382,35 @@ aside[data-harbor-sidebar] [data-tauri-drag-region] > span {
   transform: translateY(0) !important;
   color: var(--color-ink) !important;
 }
-aside[data-harbor-sidebar] [data-tauri-drag-region] > span > span {
+aside[data-viora-sidebar] [data-tauri-drag-region] > span > span {
   transform: none !important;
   transform-origin: center !important;
 }
-[data-harbor-nav] {
+[data-viora-nav] {
   border-radius: var(--largeRadius, 0.6em) !important;
   font-weight: 500 !important;
   letter-spacing: -0.005em;
   color: var(--color-ink-muted);
   transition: background-color 125ms ease, color 125ms ease, box-shadow 125ms ease !important;
 }
-[data-harbor-nav]:hover {
+[data-viora-nav]:hover {
   background-color: color-mix(in srgb, var(--color-raised) 42%, transparent) !important;
   color: var(--color-ink) !important;
 }
-[data-harbor-nav][data-active] {
+[data-viora-nav][data-active] {
   background-color: var(--color-accent-soft) !important;
   color: var(--color-accent) !important;
   box-shadow: inset 0 0 0 var(--ef-border-w) color-mix(in srgb, var(--color-accent) 55%, transparent) !important;
 }
-[data-harbor-nav][data-active]:hover {
+[data-viora-nav][data-active]:hover {
   background-color: color-mix(in srgb, var(--color-accent) 24%, transparent) !important;
   color: var(--color-accent) !important;
 }
-aside[data-harbor-sidebar].w-\[72px\] [data-harbor-nav][data-active],
-html:not(.lg) [data-harbor-nav][data-active] {
+aside[data-viora-sidebar].w-\[72px\] [data-viora-nav][data-active],
+html:not(.lg) [data-viora-nav][data-active] {
   box-shadow: inset 0 0 0 var(--ef-border-w) color-mix(in srgb, var(--color-accent) 55%, transparent) !important;
 }
-aside[data-harbor-sidebar] .h-px.bg-gradient-to-r {
+aside[data-viora-sidebar] .h-px.bg-gradient-to-r {
   background-image: linear-gradient(
     to right,
     transparent,
@@ -418,8 +418,8 @@ aside[data-harbor-sidebar] .h-px.bg-gradient-to-r {
     transparent
   ) !important;
 }
-aside[data-harbor-sidebar] > div:last-child .rounded-full.border,
-aside[data-harbor-sidebar] > div:last-child .bg-elevated\/50 {
+aside[data-viora-sidebar] > div:last-child .rounded-full.border,
+aside[data-viora-sidebar] > div:last-child .bg-elevated\/50 {
   background-color: color-mix(in srgb, var(--color-raised) 40%, transparent) !important;
   border-color: color-mix(in srgb, var(--ef-hairline) 80%, transparent) !important;
 }
@@ -435,7 +435,7 @@ header.fixed.inset-x-0.top-0 > div {
   border-bottom: 0 !important;
   padding-inline-start: 4.25rem !important;
 }
-.harbor-search-pill {
+.viora-search-pill {
   background-color: color-mix(in srgb, var(--color-raised) 45%, transparent) !important;
   background-image: none !important;
   border: var(--ef-border-w) solid color-mix(in srgb, #ffffff 16%, transparent) !important;
@@ -445,15 +445,15 @@ header.fixed.inset-x-0.top-0 > div {
   opacity: 1 !important;
   transition: background-color 125ms ease, border-color 125ms ease !important;
 }
-.harbor-search-pill:hover {
+.viora-search-pill:hover {
   background-color: color-mix(in srgb, var(--color-raised) 62%, transparent) !important;
   border-color: color-mix(in srgb, #ffffff 26%, transparent) !important;
 }
-.harbor-search-pill kbd {
+.viora-search-pill kbd {
   border-color: color-mix(in srgb, var(--ef-hairline) 70%, transparent) !important;
   background-color: color-mix(in srgb, var(--color-canvas) 55%, transparent) !important;
 }
-.harbor-win-control {
+.viora-win-control {
   background-color: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -461,15 +461,15 @@ header.fixed.inset-x-0.top-0 > div {
   color: var(--color-ink-muted) !important;
   transition: background-color 125ms ease, color 125ms ease !important;
 }
-.harbor-win-control:hover {
+.viora-win-control:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
   color: var(--color-ink) !important;
 }
-.harbor-win-close:hover {
+.viora-win-close:hover {
   background-color: var(--color-danger) !important;
   color: #ffffff !important;
 }
-.harbor-together-btn:not(.harbor-wt-tab) {
+.viora-together-btn:not(.viora-wt-tab) {
   background-color: transparent !important;
   background-image: none !important;
   border: 0 !important;
@@ -478,23 +478,23 @@ header.fixed.inset-x-0.top-0 > div {
   color: var(--color-ink-muted) !important;
   transition: background-color 125ms ease, color 125ms ease !important;
 }
-.harbor-together-btn:not(.harbor-wt-tab):hover {
+.viora-together-btn:not(.viora-wt-tab):hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
   color: var(--color-ink) !important;
 }
-.harbor-together-surface {
+.viora-together-surface {
   background-color: var(--ef-panel-glass) !important;
   background-image: none !important;
   border-color: color-mix(in srgb, var(--ef-hairline) 90%, transparent) !important;
   backdrop-filter: blur(24px) saturate(130%);
   -webkit-backdrop-filter: blur(24px) saturate(130%);
 }
-.harbor-wt-tab {
+.viora-wt-tab {
   background-color: var(--ef-panel-glass) !important;
   color: var(--color-ink) !important;
 }
-.harbor-wt-modal .modal-panel,
-.harbor-wt-modal > div {
+.viora-wt-modal .modal-panel,
+.viora-wt-modal > div {
   background-color: var(--ef-panel-glass) !important;
   backdrop-filter: blur(24px) saturate(130%);
   -webkit-backdrop-filter: blur(24px) saturate(130%);
@@ -523,7 +523,7 @@ h3.truncate.font-medium.tracking-tight {
 .group\/va:hover {
   color: var(--color-accent) !important;
 }
-.harbor-row-arrow {
+.viora-row-arrow {
   background-color: color-mix(in srgb, var(--color-canvas) 82%, transparent) !important;
   border: var(--ef-border-w) solid color-mix(in srgb, var(--ef-hairline) 70%, transparent) !important;
   box-shadow: var(--ef-shadow) !important;
@@ -531,18 +531,18 @@ h3.truncate.font-medium.tracking-tight {
   -webkit-backdrop-filter: blur(10px) saturate(120%);
   transition: transform 125ms ease, background-color 125ms ease !important;
 }
-.harbor-row-arrow:hover {
+.viora-row-arrow:hover {
   background-color: color-mix(in srgb, var(--color-canvas) 96%, transparent) !important;
   transform: scale(1.06) !important;
 }
-.harbor-service-tile {
+.viora-service-tile {
   background-color: color-mix(in srgb, var(--color-raised) 34%, transparent) !important;
   border: var(--ef-border-w) solid color-mix(in srgb, var(--ef-hairline) 55%, transparent) !important;
   border-radius: var(--largeRadius, 0.75em) !important;
   box-shadow: var(--ef-shadow);
   transition: background-color 125ms ease, border-color 125ms ease, transform 125ms ease !important;
 }
-.harbor-service-tile:hover {
+.viora-service-tile:hover {
   background-color: color-mix(in srgb, var(--color-raised) 55%, transparent) !important;
   border-color: color-mix(in srgb, var(--ef-hairline) 90%, transparent) !important;
   transform: translateY(-1px);
@@ -562,26 +562,26 @@ button.group:hover > div.relative.w-full.transition-transform,
 button.group:hover > div.relative[class*="translate3d"] {
   --tw-translate-y: 0 !important;
 }
-.harbor-poster,
+.viora-poster,
 .your-card {
   border-radius: var(--poster-radius, 1em) !important;
   overflow: hidden !important;
 }
-button.group .harbor-poster {
+button.group .viora-poster {
   box-shadow:
     var(--ef-shadow),
     inset 0 0 0 var(--ef-border-w) color-mix(in srgb, #ffffff 8%, transparent) !important;
   transition: box-shadow 125ms ease !important;
 }
-button.group:hover .harbor-poster {
+button.group:hover .viora-poster {
   box-shadow:
     0.15em 0.2em 0.35em rgba(0, 0, 0, 0.4),
     inset 0 0 0 var(--ef-border-w) color-mix(in srgb, #ffffff 12%, transparent) !important;
 }
-.harbor-poster::before {
+.viora-poster::before {
   content: none;
 }
-button.group:not([data-no-card-ring]):hover .harbor-card-ring::after {
+button.group:not([data-no-card-ring]):hover .viora-card-ring::after {
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-accent) 70%, transparent) !important;
 }
 button.group > p.line-clamp-2 {
@@ -589,30 +589,30 @@ button.group > p.line-clamp-2 {
   font-weight: 500 !important;
   color: var(--color-ink) !important;
 }
-.harbor-poster > .absolute.rounded-md.bg-canvas\/95 {
+.viora-poster > .absolute.rounded-md.bg-canvas\/95 {
   background-color: color-mix(in srgb, var(--ef-panel-glass) 95%, transparent) !important;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
-.harbor-cinema-badge {
+.viora-cinema-badge {
   color: var(--color-accent) !important;
   border: var(--ef-border-w) solid color-mix(in srgb, var(--color-accent) 45%, transparent) !important;
 }
-.harbor-poster .rounded-full.bg-canvas\/85 {
+.viora-poster .rounded-full.bg-canvas\/85 {
   background-color: color-mix(in srgb, var(--ef-panel-glass) 85%, transparent) !important;
 }
 
 /* ==========================================================================
    DETAIL PAGE  (Inter title, glass pills, green Play, flat-glass secondaries)
    ========================================================================== */
-.harbor-bleed-stremio h1,
-.harbor-bleed-stremio .font-display,
+.viora-bleed-stremio h1,
+.viora-bleed-stremio .font-display,
 main.absolute .font-display {
   font-family: "Inter", system-ui, sans-serif !important;
   font-weight: 600 !important;
   letter-spacing: -0.02em !important;
 }
-.harbor-bleed-stremio ~ * .rounded-full.border,
+.viora-bleed-stremio ~ * .rounded-full.border,
 main.absolute .mt-6 .rounded-full,
 main.absolute .mt-6 .rounded-md {
   border-color: color-mix(in srgb, var(--ef-hairline) 80%, transparent) !important;
@@ -683,13 +683,13 @@ main.absolute .border-b {
   -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
   box-shadow: 0 1.5em 3em rgba(0, 0, 0, 0.45) !important;
 }
-.harbor-search-backdrop {
+.viora-search-backdrop {
   background: color-mix(in srgb, var(--ef-drawer-glass) 90%, transparent) !important;
   backdrop-filter: blur(20px) saturate(130%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
 }
-.harbor-chat-toast,
-.harbor-together-pill {
+.viora-chat-toast,
+.viora-together-pill {
   background-color: color-mix(in srgb, var(--ef-panel-glass) 90%, transparent) !important;
   background-image: none !important;
   border-color: color-mix(in srgb, var(--ef-hairline) 80%, transparent) !important;
@@ -700,10 +700,10 @@ main.absolute .border-b {
 /* ==========================================================================
    PLAYER  (recolor progress to the single purple)
    ========================================================================== */
-[data-harbor-player] .player-progress-fill {
+[data-viora-player] .player-progress-fill {
   background-color: var(--color-accent) !important;
 }
-[data-harbor-player] [role="slider"] {
+[data-viora-player] [role="slider"] {
   accent-color: var(--color-accent);
 }
 
@@ -760,7 +760,7 @@ textarea {
 header.fixed.inset-x-0.top-0 > div > :first-child button.rounded-full {
   display: none !important;
 }
-.harbor-search-pill {
+.viora-search-pill {
   display: none !important;
 }
 #ef-search {
@@ -826,37 +826,37 @@ html.ef-drawer-open #ef-scrim {
   opacity: 1;
 }
 html:not(:has(header.fixed.inset-x-0.top-0)) #ef-topleft,
-html:not(:has(aside[data-harbor-sidebar])) #ef-menu,
-html:not(:has(aside[data-harbor-sidebar])) #ef-home,
-html:not(:has(aside[data-harbor-sidebar])) #ef-profile,
-html:not(:has(aside[data-harbor-sidebar])) #ef-scrim {
+html:not(:has(aside[data-viora-sidebar])) #ef-menu,
+html:not(:has(aside[data-viora-sidebar])) #ef-home,
+html:not(:has(aside[data-viora-sidebar])) #ef-profile,
+html:not(:has(aside[data-viora-sidebar])) #ef-scrim {
   display: none !important;
 }
 
 /* ==========================================================================
    DETAIL HERO
    ========================================================================== */
-.harbor-bleed-stremio {
+.viora-bleed-stremio {
   height: 88vh !important;
   min-height: 700px !important;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div {
   margin-inline: auto;
   text-align: center;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col),
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div .flex.flex-wrap {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col),
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div .flex.flex-wrap {
   justify-content: center;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div img {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div img {
   margin-inline: auto;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 img.absolute {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 img.absolute {
   inset-inline: 0 !important;
   margin-inline: auto !important;
   object-position: center bottom !important;
 }
-.harbor-bleed-stremio > div.absolute.inset-0.bg-gradient-to-r {
+.viora-bleed-stremio > div.absolute.inset-0.bg-gradient-to-r {
   background-image: linear-gradient(
     to top,
     color-mix(in srgb, var(--color-canvas) 55%, transparent),
@@ -867,31 +867,31 @@ html:not(:has(aside[data-harbor-sidebar])) #ef-scrim {
 /* ==========================================================================
    DETAIL HERO FLAT META + ACTIONS
    ========================================================================== */
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 .rounded-full.border,
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 .inline-flex.rounded-full {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 .rounded-full.border,
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 .inline-flex.rounded-full {
   background-color: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) button:not(.bg-accent):not(.bg-ink) {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) button:not(.bg-accent):not(.bg-ink) {
   background-color: transparent !important;
   border: 0 !important;
   border-color: transparent !important;
   box-shadow: none !important;
   color: var(--color-ink) !important;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) button:not(.bg-accent):not(.bg-ink):hover {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) button:not(.bg-accent):not(.bg-ink):hover {
   background-color: rgba(255, 255, 255, 0.08) !important;
   border-radius: 999px;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) > :first-child button,
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) > :first-child button:not(.bg-accent):not(.bg-ink) {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) > :first-child button,
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) > :first-child button:not(.bg-accent):not(.bg-ink) {
   background-color: #f3f4f6 !important;
   color: #111827 !important;
   border-radius: 999px !important;
   box-shadow: 0.1em 0.15em 0.4em rgba(0, 0, 0, 0.35) !important;
 }
-.harbor-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) > :first-child button:not(.bg-accent):not(.bg-ink):hover {
+.viora-bleed-stremio > div.absolute.inset-x-0.bottom-0 > div > .flex:not(.flex-col) > :first-child button:not(.bg-accent):not(.bg-ink):hover {
   background-color: #ffffff !important;
   color: #111827 !important;
 }
@@ -922,7 +922,7 @@ main.absolute.inset-0 .rounded-xl.border.bg-elevated\\/70 {
 [data-scroll-anchor="hero"] .overflow-hidden {
   border-radius: 0 !important;
 }
-[data-scroll-anchor="hero"].harbor-anime-hero {
+[data-scroll-anchor="hero"].viora-anime-hero {
   margin: 0 !important;
 }
 
@@ -975,12 +975,12 @@ const elegantFinJs = `(function () {
       return;
     }
     if (t.closest("#ef-home")) {
-      var home = document.querySelector("aside[data-harbor-sidebar] [data-harbor-nav]");
+      var home = document.querySelector("aside[data-viora-sidebar] [data-viora-nav]");
       if (home) home.click();
       return;
     }
     if (t.closest("#ef-search")) {
-      var pill = document.querySelector(".harbor-search-pill");
+      var pill = document.querySelector(".viora-search-pill");
       if (pill) pill.click();
       return;
     }
@@ -992,11 +992,11 @@ const elegantFinJs = `(function () {
       setOpen(true);
       return;
     }
-    if (t.closest("aside[data-harbor-sidebar] [data-harbor-nav]")) {
+    if (t.closest("aside[data-viora-sidebar] [data-viora-nav]")) {
       setOpen(false);
       return;
     }
-    var bottom = t.closest("aside[data-harbor-sidebar] > div:last-child");
+    var bottom = t.closest("aside[data-viora-sidebar] > div:last-child");
     if (bottom && t.closest("button") && !t.closest("div.relative")) {
       e.preventDefault();
       e.stopPropagation();
@@ -1040,8 +1040,8 @@ const elegantFinJs = `(function () {
       else cluster.appendChild(prof);
     }
     if (search.nextElementSibling !== prof) cluster.insertBefore(search, prof);
-    var img = document.querySelector('aside[data-harbor-sidebar] > div:last-child .h-12.w-12.rounded-full > img');
-    if (!img) img = document.querySelector('aside[data-harbor-sidebar] > div:last-child .rounded-full > img');
+    var img = document.querySelector('aside[data-viora-sidebar] > div:last-child .h-12.w-12.rounded-full > img');
+    if (!img) img = document.querySelector('aside[data-viora-sidebar] > div:last-child .rounded-full > img');
     var src = img && img.getAttribute("src") ? img.getAttribute("src") : "";
     var slot = prof.querySelector("img");
     if (src) {
@@ -1073,7 +1073,7 @@ const elegantFinJs = `(function () {
 })();`;
 
 const feishinCss = `/* ===== FEISHIN THEME FOR HARBOR ===== */
-/* Retoken Harbor's @theme palette to Feishin's near-black ladder + electric blue */
+/* Retoken Viora's @theme palette to Feishin's near-black ladder + electric blue */
 :root {
   --color-canvas: #0C0C0C;
   --color-surface: #141414;
@@ -1233,31 +1233,31 @@ html[data-theme-layout="custom"]:not([data-chrome-hidden]) main {
 html:not([data-theme-layout="custom"]) .fsh-rail,
 html[data-chrome-hidden] .fsh-rail { display: none !important; }
 
-/* Hide Harbor's floating-back + retint window controls (rail carries nav) */
-html[data-theme-layout="custom"]:not([data-chrome-hidden]) .harbor-win-control,
-html[data-theme-layout="custom"]:not([data-chrome-hidden]) .harbor-win-close {
+/* Hide Viora's floating-back + retint window controls (rail carries nav) */
+html[data-theme-layout="custom"]:not([data-chrome-hidden]) .viora-win-control,
+html[data-theme-layout="custom"]:not([data-chrome-hidden]) .viora-win-close {
   background: #141414 !important;
   color: #E1E1E1 !important;
 }
 
 /* ===== CARDS: square-ish, 5px corners, flat, Feishin hover ===== */
-html[data-theme-layout="custom"] .harbor-poster,
+html[data-theme-layout="custom"] .viora-poster,
 html[data-theme-layout="custom"] .your-card { border-radius: 5px !important; }
-html[data-theme-layout="custom"] .harbor-card-ring {
+html[data-theme-layout="custom"] .viora-card-ring {
   border-radius: 5px !important;
   box-shadow: none !important;
 }
-html[data-theme-layout="custom"] .group:hover .harbor-card-ring {
+html[data-theme-layout="custom"] .group:hover .viora-card-ring {
   box-shadow: 0 0 0 1px rgba(255,255,255,0.06) !important;
 }
 /* Card title row: 500 weight foreground, muted meta */
-html[data-theme-layout="custom"] .harbor-row-track p { font-weight: 500; }
+html[data-theme-layout="custom"] .viora-row-track p { font-weight: 500; }
 
 /* ===== ROWS: Feishin carousel look, 700 titles ===== */
-html[data-theme-layout="custom"] .harbor-row-track h3,
+html[data-theme-layout="custom"] .viora-row-track h3,
 html[data-theme-layout="custom"] main h3 { font-weight: 700 !important; color: #E1E1E1; }
 /* Row scroll arrows: flat surface discs, no shadow */
-html[data-theme-layout="custom"] .harbor-row-arrow {
+html[data-theme-layout="custom"] .viora-row-arrow {
   background: #181818 !important;
   border: 1px solid rgba(255,255,255,0.08) !important;
   box-shadow: none !important;
@@ -1266,10 +1266,10 @@ html[data-theme-layout="custom"] .harbor-row-arrow {
 }
 
 /* Continue-watching progress + cinema chip retint to blue */
-html[data-theme-layout="custom"] .harbor-cinema-badge { background: rgba(53,116,252,0.16) !important; color: #3574FC !important; }
+html[data-theme-layout="custom"] .viora-cinema-badge { background: rgba(53,116,252,0.16) !important; color: #3574FC !important; }
 
 /* ===== DETAIL HERO: flat scrims, blue play disc already white in Feishin ===== */
-html[data-theme-layout="custom"] .harbor-bleed-stremio { border-radius: 0 !important; }
+html[data-theme-layout="custom"] .viora-bleed-stremio { border-radius: 0 !important; }
 /* Detail action Play button: Feishin white circular disc */
 html[data-theme-layout="custom"] main.absolute .max-w-3xl button.rounded-full.bg-ink {
   background: #ffffff !important;
@@ -1305,31 +1305,31 @@ const feishinHtml = `<aside class="fsh-rail" data-tauri-drag-region>
     <div class="fsh-section">
       <div class="fsh-section-head">My Library</div>
       <nav class="fsh-nav">
-        <button data-harbor-nav="home" onclick="window.harbor.navigate('home')">
+        <button data-viora-nav="home" onclick="window.harbor.navigate('home')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>
           <span>Home</span>
         </button>
-        <button data-harbor-nav="discover" onclick="window.harbor.navigate('discover')">
+        <button data-viora-nav="discover" onclick="window.harbor.navigate('discover')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m15.5 8.5-2.2 5.3-5.3 2.2 2.2-5.3z"></path></svg>
           <span>Discover</span>
         </button>
-        <button data-harbor-nav="movies" onclick="window.harbor.navigate('movies')">
+        <button data-viora-nav="movies" onclick="window.harbor.navigate('movies')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 4v16M17 4v16M3 9h4M17 9h4M3 15h4M17 15h4"></path></svg>
           <span>Movies</span>
         </button>
-        <button data-harbor-nav="shows" onclick="window.harbor.navigate('shows')">
+        <button data-viora-nav="shows" onclick="window.harbor.navigate('shows')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="13" rx="2"></rect><path d="m8 3 4 4 4-4"></path></svg>
           <span>Shows</span>
         </button>
-        <button data-harbor-nav="anime" onclick="window.harbor.navigate('anime')">
+        <button data-viora-nav="anime" onclick="window.harbor.navigate('anime')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4.5 0 8 3 8 7 0 3-2 5-5 6l1 4-4-2.5L8 20l1-4c-3-1-5-3-5-6 0-4 3.5-7 8-7z"></path></svg>
           <span>Anime</span>
         </button>
-        <button data-harbor-nav="live" onclick="window.harbor.navigate('live')">
+        <button data-viora-nav="live" onclick="window.harbor.navigate('live')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="m8 7 4-4 4 4"></path></svg>
           <span>Live TV</span>
         </button>
-        <button data-harbor-nav="vod" onclick="window.harbor.navigate('vod')">
+        <button data-viora-nav="vod" onclick="window.harbor.navigate('vod')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h11M4 12h11M4 18h7"></path><path d="m17 9 4 3-4 3z"></path></svg>
           <span>Playlists</span>
         </button>
@@ -1339,23 +1339,23 @@ const feishinHtml = `<aside class="fsh-rail" data-tauri-drag-region>
     <div class="fsh-section">
       <div class="fsh-section-head">Collections</div>
       <nav class="fsh-nav">
-        <button data-harbor-nav="library" onclick="window.harbor.navigate('library')">
+        <button data-viora-nav="library" onclick="window.harbor.navigate('library')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"></path><path d="m17 5 3.5 1-3 14-3.4-1z"></path></svg>
           <span>Library</span>
         </button>
-        <button data-harbor-nav="calendar" onclick="window.harbor.navigate('calendar')">
+        <button data-viora-nav="calendar" onclick="window.harbor.navigate('calendar')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>
           <span>Calendar</span>
         </button>
-        <button data-harbor-nav="downloads" onclick="window.harbor.navigate('downloads')">
+        <button data-viora-nav="downloads" onclick="window.harbor.navigate('downloads')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 11 5 5 5-5"></path><path d="M4 20h16"></path></svg>
           <span>Downloads</span>
         </button>
-        <button data-harbor-nav="addons" onclick="window.harbor.navigate('addons')">
+        <button data-viora-nav="addons" onclick="window.harbor.navigate('addons')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"></rect><rect x="13" y="3" width="8" height="8" rx="1.5"></rect><rect x="3" y="13" width="8" height="8" rx="1.5"></rect><path d="M17 13v8M13 17h8"></path></svg>
           <span>Addons</span>
         </button>
-        <button data-harbor-nav="settings" onclick="window.harbor.navigate('settings')">
+        <button data-viora-nav="settings" onclick="window.harbor.navigate('settings')">
           <svg class="fsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>
           <span>Settings</span>
         </button>
@@ -1369,12 +1369,12 @@ const feishinJs = `(function () {
   var root = document.documentElement;
   function syncActive() {
     var kind = "";
-    document.querySelectorAll("[data-harbor-nav][data-active]").forEach(function (el) {
-      kind = el.getAttribute("data-harbor-nav") || kind;
+    document.querySelectorAll("[data-viora-nav][data-active]").forEach(function (el) {
+      kind = el.getAttribute("data-viora-nav") || kind;
     });
   }
   var obs = new MutationObserver(syncActive);
-  document.querySelectorAll(".fsh-rail [data-harbor-nav]").forEach(function (el) {
+  document.querySelectorAll(".fsh-rail [data-viora-nav]").forEach(function (el) {
     obs.observe(el, { attributes: true, attributeFilter: ["data-active"] });
   });
   syncActive();
@@ -1548,7 +1548,7 @@ export const FONT_PAIRS: Record<FontPairId, FontPair> = {
   "fraunces-inter": {
     id: "fraunces-inter",
     name: "Fraunces + Inter",
-    blurb: "Classic. Was Harbor's original pair.",
+    blurb: "Classic. Was Viora's original pair.",
     display: '"Fraunces", "Iowan Old Style", "Georgia", serif',
     sans: '"Inter", system-ui, sans-serif',
   },
@@ -1696,7 +1696,7 @@ export function applyTheme(theme: ThemeSettings): void {
   const fontPairId = preset?.fontPair ?? theme.fontPair;
   const pair = FONT_PAIRS[fontPairId] ?? FONT_PAIRS["sentient-switzer"];
   if (theme.customFontId) {
-    const custom = `"harbor-font-${theme.customFontId}"`;
+    const custom = `"viora-font-${theme.customFontId}"`;
     root.style.setProperty("--font-display", `${custom}, ${pair.display}`);
     root.style.setProperty("--font-sans", `${custom}, ${pair.sans}`);
   } else {

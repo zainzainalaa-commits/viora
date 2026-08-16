@@ -119,7 +119,7 @@ export function ServiceView({ service }: { service: StreamingService }) {
       <div className="relative px-12 pt-28 pb-12">
         <div
           aria-hidden
-          className="harbor-bleed-stremio pointer-events-none absolute inset-0"
+          className="viora-bleed-stremio pointer-events-none absolute inset-0"
           style={{
             backgroundImage: `radial-gradient(ellipse 90% 100% at 30% 0%, ${meta.tint}38 0%, transparent 65%)`,
           }}

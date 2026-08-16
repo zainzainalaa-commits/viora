@@ -11,7 +11,7 @@ import { useScrollMemory, useView, type PlayEpisode } from "@/lib/view";
 import { useT } from "@/lib/i18n";
 import { openUrl } from "@/lib/window";
 import { useOmdbScores, omdbScores as fetchOmdbScores } from "@/lib/providers/omdb";
-import { harborImdbEpisodes } from "@/lib/providers/harbor-imdb";
+import { harborImdbEpisodes } from "@/lib/providers/viora-imdb";
 import { useTmdbImdbId } from "@/lib/providers/tmdb";
 import { HeroRatings } from "@/views/detail/hero-ratings";
 import { CastCard } from "@/views/detail/cast-card";
@@ -52,15 +52,15 @@ export function EpisodeDetailView({
   const omdbScores = useOmdbScores(imdbId ?? undefined);
   const episodeImdbId = episodeData?.imdbId ?? undefined;
   const episodeOmdbScores = useOmdbScores(episodeImdbId);
-  const [harborEpisodeRating, setHarborEpisodeRating] = useState<string | undefined>();
+  const [harborEpisodeRating, setVioraEpisodeRating] = useState<string | undefined>();
   useEffect(() => {
-    setHarborEpisodeRating(undefined);
+    setVioraEpisodeRating(undefined);
     if (!imdbId || !imdbId.startsWith("tt")) return;
     let cancelled = false;
     void harborImdbEpisodes(imdbId).then((map) => {
       if (cancelled) return;
       const r = map.get(`${season}:${episode}`);
-      if (r != null) setHarborEpisodeRating(r.toFixed(1));
+      if (r != null) setVioraEpisodeRating(r.toFixed(1));
     }).catch(() => {});
     return () => {
       cancelled = true;
@@ -221,7 +221,7 @@ export function EpisodeDetailView({
       <section className="relative">
         <div
           data-tauri-drag-region
-          className="harbor-bleed-stremio relative h-[78vh] min-h-[640px] overflow-hidden"
+          className="viora-bleed-stremio relative h-[78vh] min-h-[640px] overflow-hidden"
         >
           {background && (
             <img

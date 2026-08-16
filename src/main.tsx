@@ -71,7 +71,7 @@ async function boot() {
  * held longer than it takes to decide the content is not coming.
  */
 function revealWhenReady() {
-  const bootEl = document.getElementById("harbor-boot");
+  const bootEl = document.getElementById("viora-boot");
   if (!bootEl) return;
 
   let done = false;

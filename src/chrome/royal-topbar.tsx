@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LogIn, LogOut, Pencil, Search, Settings as SettingsLucide, Users } from "lucide-react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { CatAvatar } from "@/components/icons/cat-avatar";
 import { AuthModal } from "@/components/auth-modal";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
@@ -91,7 +91,7 @@ export function RoyalTopbar() {
       >
         <div
           data-tauri-drag-region
-          className="harbor-royal-bar pointer-events-auto grid h-14 w-full grid-cols-[1fr_auto] items-center gap-3 rounded-[10px] border border-[color-mix(in_srgb,var(--color-accent)_22%,var(--color-edge))] bg-canvas/85 ps-3.5 pe-2 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-accent)_14%,transparent),0_22px_60px_-26px_rgba(0,0,0,0.85)] backdrop-blur-xl"
+          className="viora-royal-bar pointer-events-auto grid h-14 w-full grid-cols-[1fr_auto] items-center gap-3 rounded-[10px] border border-[color-mix(in_srgb,var(--color-accent)_22%,var(--color-edge))] bg-canvas/85 ps-3.5 pe-2 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-accent)_14%,transparent),0_22px_60px_-26px_rgba(0,0,0,0.85)] backdrop-blur-xl"
         >
           <div className="flex min-w-0 items-center gap-2.5">
             <FocusButton
@@ -103,7 +103,7 @@ export function RoyalTopbar() {
               {customMark ? (
                 <img src={customMark} alt="" draggable={false} className="h-7 w-7 object-contain" />
               ) : (
-                <HarborMark className="h-7 w-7" />
+                <VioraMark className="h-7 w-7" />
               )}
               <span
                 className="hidden text-[18px] font-medium uppercase leading-none tracking-[0.14em] text-ink lg:inline"
@@ -153,9 +153,9 @@ export function RoyalTopbar() {
 
 function Filigree() {
   return (
-    <span aria-hidden className="harbor-royal-filigree relative mx-1 h-6 w-px shrink-0 overflow-hidden">
+    <span aria-hidden className="viora-royal-filigree relative mx-1 h-6 w-px shrink-0 overflow-hidden">
       <span className="absolute inset-0 bg-[color-mix(in_srgb,var(--color-accent)_42%,transparent)]" />
-      <span className="harbor-royal-glint absolute inset-x-0 top-0 h-1.5 bg-[linear-gradient(to_bottom,transparent,color-mix(in_srgb,var(--color-accent)_85%,white),transparent)]" />
+      <span className="viora-royal-glint absolute inset-x-0 top-0 h-1.5 bg-[linear-gradient(to_bottom,transparent,color-mix(in_srgb,var(--color-accent)_85%,white),transparent)]" />
     </span>
   );
 }
@@ -249,7 +249,7 @@ function RoyalProfileMenu({
         <span className="hidden max-w-[8rem] truncate md:inline">{name}</span>
       </FocusButton>
       {open && (
-        <div className="harbor-royal-menu absolute end-0 top-[calc(100%+10px)] z-40 w-60 overflow-hidden rounded-[10px] border border-[color-mix(in_srgb,var(--color-accent)_24%,var(--color-edge))] bg-canvas/95 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.85)] backdrop-blur-2xl">
+        <div className="viora-royal-menu absolute end-0 top-[calc(100%+10px)] z-40 w-60 overflow-hidden rounded-[10px] border border-[color-mix(in_srgb,var(--color-accent)_24%,var(--color-edge))] bg-canvas/95 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.85)] backdrop-blur-2xl">
           <div className="border-b border-edge-soft px-4 py-3">
             <div
               className="text-[14px] leading-tight text-ink"

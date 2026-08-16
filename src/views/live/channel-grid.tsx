@@ -272,7 +272,7 @@ function classifyError(raw: string): { title: string; hint: string; raw: string 
   if (lower.includes("too large")) {
     return {
       title: "Playlist is too large",
-      hint: "Harbor caps playlists at 80 MB to stay responsive. Most providers offer a filtered URL with fewer channels.",
+      hint: "Viora caps playlists at 80 MB to stay responsive. Most providers offer a filtered URL with fewer channels.",
       raw,
     };
   }

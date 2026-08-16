@@ -20,7 +20,7 @@ import { activeLayout } from "@/lib/theme";
 import { useThemePreview } from "@/lib/theme-preview";
 import { DevErrorTrigger } from "@/components/dev-error-trigger";
 import { ErrorView } from "@/components/error-view";
-import { HarborErrorBoundary } from "@/components/error-boundary";
+import { VioraErrorBoundary } from "@/components/error-boundary";
 import { ContextMenu } from "@/components/context-menu";
 import { WatchLocalModal } from "@/components/player/watch-local-modal";
 import { LocalEpisodesModal } from "@/components/player/local-episodes-modal";
@@ -246,7 +246,7 @@ export function App() {
                 <LocalWatchlistProvider>
                 <ContextMenuProvider>
                   <TopRankModalProvider>
-                    <HarborErrorBoundary>
+                    <VioraErrorBoundary>
                       <ProfileIdentitySync />
                       <SettingsProfileBridge />
                       <TrackerProfileBridge />
@@ -281,7 +281,7 @@ export function App() {
                       <SearchOverlay />
                       <SearchHotkey />
                       <EmbedViewportRoot />
-                    </HarborErrorBoundary>
+                    </VioraErrorBoundary>
                     <ErrorView />
                     <DevErrorTrigger />
                   </TopRankModalProvider>
@@ -810,8 +810,8 @@ function Shell() {
   }, [playerActive, pickerTop, immersive, settingsTop, chromeHidden]);
 
   useEffect(() => {
-    document.querySelectorAll("[data-harbor-nav]").forEach((el) => {
-      el.toggleAttribute("data-active", el.getAttribute("data-harbor-nav") === topKind);
+    document.querySelectorAll("[data-viora-nav]").forEach((el) => {
+      el.toggleAttribute("data-active", el.getAttribute("data-viora-nav") === topKind);
     });
   }, [topKind]);
 

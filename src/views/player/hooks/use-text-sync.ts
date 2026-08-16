@@ -217,7 +217,7 @@ async function writeTemp(text: string, ext: "srt" | "vtt", name?: string): Promi
   try {
     const pathMod = await import("@tauri-apps/api/path");
     const tmpDir = await pathMod.tempDir();
-    const dir = await pathMod.join(tmpDir, "harbor-subs");
+    const dir = await pathMod.join(tmpDir, "viora-subs");
     const fileName = `${name ?? "preview"}.${ext}`;
     const filePath = await pathMod.join(dir, fileName);
     await invoke("save_text_file", { path: filePath, contents: text });

@@ -24,7 +24,7 @@ export function AnilistPanel() {
               {t("Connect your AniList account")}
             </h2>
             <p className="text-[13.5px] leading-relaxed text-ink-muted">
-              {t("Show your AniList lists as rails on the Anime page, keep your watch progress in sync as you finish episodes, and use your AniList avatar as your Harbor photo. Free at anilist.co.")}
+              {t("Show your AniList lists as rails on the Anime page, keep your watch progress in sync as you finish episodes, and use your AniList avatar as your Viora photo. Free at anilist.co.")}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -47,7 +47,7 @@ export function AnilistPanel() {
       ) : (
         <Section
           title={t("Connected")}
-          subtitle={t("Harbor shows your AniList lists on the Anime page and keeps your progress in sync.")}
+          subtitle={t("Viora shows your AniList lists on the Anime page and keeps your progress in sync.")}
         >
           <div className="flex items-center justify-between gap-4 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3">
             <div className="flex items-center gap-3">
@@ -90,8 +90,8 @@ export function AnilistPanel() {
             onChange={(v) => update({ anilistAutoSync: v })}
           />
           <ToggleRow
-            label={t("Use my AniList avatar as my Harbor avatar")}
-            sub={t("Show your AniList profile picture as your Harbor avatar.")}
+            label={t("Use my AniList avatar as my Viora avatar")}
+            sub={t("Show your AniList profile picture as your Viora avatar.")}
             value={settings.useAnilistAvatar}
             onChange={(v) => update({ useAnilistAvatar: v })}
           />

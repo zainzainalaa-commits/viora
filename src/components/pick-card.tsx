@@ -14,7 +14,7 @@ import {
 import { animeKitsuMeta } from "@/lib/providers/anime-kitsu-addon";
 import { omdbPrefetch, useOmdbScores } from "@/lib/providers/omdb";
 import { cinemetaRatingPrefetch, useCinemetaRating } from "@/lib/providers/cinemeta-rating";
-import { harborImdbTitle } from "@/lib/providers/harbor-imdb";
+import { harborImdbTitle } from "@/lib/providers/viora-imdb";
 import { mdblistCardPrefetch, useMdblistCardScores } from "@/lib/providers/mdblist-batch";
 import { needsImdbForPoster, needsTmdbForPoster, rpdbPoster } from "@/lib/providers/rpdb";
 import { externalToKitsu, kitsuToImdb, kitsuToTvdb } from "@/lib/providers/anime-mapping";
@@ -101,14 +101,14 @@ export const PickCard = memo(function PickCard({
   const [animeTvdb, setAnimeTvdb] = useState<string | undefined>();
   const animeWantsImdb = isAnimeCardId && settings.animeCardRating === "imdb";
   const ratingTt = isAnimeCardId ? (animeWantsImdb ? animeImdb : undefined) : imdbId;
-  const [harborRating, setHarborRating] = useState<string | undefined>();
+  const [harborRating, setVioraRating] = useState<string | undefined>();
   useEffect(() => {
-    setHarborRating(undefined);
+    setVioraRating(undefined);
     if (!ratingTt || !ratingTt.startsWith("tt")) return;
     let cancelled = false;
     harborImdbTitle(ratingTt)
       .then((r) => {
-        if (!cancelled && r != null) setHarborRating(r.toFixed(1));
+        if (!cancelled && r != null) setVioraRating(r.toFixed(1));
       })
       .catch(() => {});
     return () => {
@@ -449,7 +449,7 @@ export const PickCard = memo(function PickCard({
           lowResImdb={imdbId}
           ratio="portrait"
           onError={() => setImgIdx((i) => i + 1)}
-          className={`harbor-card-ring rounded-[var(--poster-radius,12px)] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] transition-[box-shadow] duration-300 group-hover:shadow-[0_24px_48px_-14px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] ${
+          className={`viora-card-ring rounded-[var(--poster-radius,12px)] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] transition-[box-shadow] duration-300 group-hover:shadow-[0_24px_48px_-14px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] ${
             customProps ? customProps.className : cardHoverPosterClass(inCardHover)
           }`}
         />
@@ -814,7 +814,7 @@ function shortCategory(win: AwardWin): string {
 function CinemaBadge() {
   const t = useT();
   return (
-    <span className="harbor-cinema-badge absolute start-2 top-2 flex items-center gap-1 rounded-md bg-canvas/95 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.14em]">
+    <span className="viora-cinema-badge absolute start-2 top-2 flex items-center gap-1 rounded-md bg-canvas/95 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.14em]">
       <ClapperMini size={10} />
       <span>{t("In Cinema")}</span>
     </span>

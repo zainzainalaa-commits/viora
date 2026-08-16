@@ -43,7 +43,7 @@ export function MalConnectModal({ onClose }: { onClose: () => void }) {
       ? t("Connected")
       : connectState.kind === "verifying"
         ? t("Verifying")
-        : t("Authorize Harbor on MyAnimeList");
+        : t("Authorize Viora on MyAnimeList");
 
   return (
     <div
@@ -79,7 +79,7 @@ export function MalConnectModal({ onClose }: { onClose: () => void }) {
         {connectState.kind === "needs-code" && (
           <div className="flex flex-col gap-5">
             <p className="text-[13px] leading-relaxed text-ink-muted">
-              {t("A browser tab opened on MyAnimeList. Approve Harbor there, then copy the code or the page URL and paste it below.")}
+              {t("A browser tab opened on MyAnimeList. Approve Viora there, then copy the code or the page URL and paste it below.")}
             </p>
             <textarea
               value={draftCode}

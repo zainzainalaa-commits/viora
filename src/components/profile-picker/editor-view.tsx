@@ -324,7 +324,7 @@ export function EditorView({
     <div className="flex w-full max-w-[680px] flex-col gap-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="flex flex-col items-center gap-1">
         <span className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
-          {t("Harbor identity")}
+          {t("Viora identity")}
         </span>
         <h1 className="font-display text-[28px] font-medium leading-tight tracking-tight text-ink">
           {editing ? t("Edit {name}", { name: editing.name }) : t("profile.new")}

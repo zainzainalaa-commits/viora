@@ -192,7 +192,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (typeof document === "undefined" || !("fonts" in document)) return;
     const desired = new Map<string, string>();
     for (const f of settings.customFonts ?? []) {
-      desired.set(`harbor-font-${f.id}`, f.dataUrl);
+      desired.set(`viora-font-${f.id}`, f.dataUrl);
     }
     const added: FontFace[] = [];
     desired.forEach((dataUrl, family) => {
@@ -215,7 +215,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const stillNeeded = new Set(desired.keys());
       const toRemove: FontFace[] = [];
       document.fonts.forEach((ff) => {
-        if (ff.family.startsWith("harbor-font-") && !stillNeeded.has(ff.family)) {
+        if (ff.family.startsWith("viora-font-") && !stillNeeded.has(ff.family)) {
           toRemove.push(ff);
         }
       });

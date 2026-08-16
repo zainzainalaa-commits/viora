@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { Lock } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { NAV_ITEMS, applyNavCustomization } from "@/chrome/nav-items";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
 import { useAuth } from "@/lib/auth";
@@ -55,7 +55,7 @@ export function StremioRail() {
               className="h-10 w-10 object-contain"
             />
           ) : (
-            <HarborMark className="h-10 w-10" />
+            <VioraMark className="h-10 w-10" />
           )}
         </div>
         <nav className="flex flex-1 flex-col items-center gap-3 overflow-y-auto px-2 pb-3 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

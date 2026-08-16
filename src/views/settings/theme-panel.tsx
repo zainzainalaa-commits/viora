@@ -57,7 +57,7 @@ export function ThemePanel() {
 
       <Section
         title={t("Typography")}
-        subtitle={t("Pick a display and body pairing, or upload your own font to use across Harbor.")}
+        subtitle={t("Pick a display and body pairing, or upload your own font to use across Viora.")}
       >
         <FontGrid
           pairValue={theme.fontPair}
@@ -86,7 +86,7 @@ export function ThemePanel() {
       {isTauri && (
         <Section
           title={t("Window title bar")}
-          subtitle={t("Use your operating system's native title bar and window buttons instead of Harbor's built-in ones. Handy if the in-app buttons ever feel out of reach, like during playback.")}
+          subtitle={t("Use your operating system's native title bar and window buttons instead of Viora's built-in ones. Handy if the in-app buttons ever feel out of reach, like during playback.")}
         >
           <NativeTitleBarRow />
         </Section>
@@ -111,7 +111,7 @@ function NativeTitleBarRow() {
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="text-[14px] font-medium text-ink">{t("Use the native window title bar")}</span>
         <p className="text-[12.5px] leading-relaxed text-ink-subtle">
-          {t("Show your operating system's own title bar with its minimize, maximize, and close buttons. They stay reachable everywhere, including while a video is playing. Turn this off to use Harbor's built-in window buttons.")}
+          {t("Show your operating system's own title bar with its minimize, maximize, and close buttons. They stay reachable everywhere, including while a video is playing. Turn this off to use Viora's built-in window buttons.")}
         </p>
       </div>
       <FocusButton

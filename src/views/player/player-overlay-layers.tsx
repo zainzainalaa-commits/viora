@@ -4,7 +4,7 @@ import { StreamSwitcher } from "@/components/player/stream-switcher";
 import { AdReportButton } from "@/components/player/ad-report-button";
 import { P2pStatusChip } from "@/components/player/p2p-status-chip";
 import type { VolumeHudPosition, VolumeIndicatorState } from "@/components/player/volume-indicator";
-import type { ParentalCategory } from "@/lib/providers/harbor-imdb";
+import type { ParentalCategory } from "@/lib/providers/viora-imdb";
 import type { PlayerEngine, PlayerBridge, PlayerSnapshot } from "@/lib/player/bridge";
 import type { PlayerSrc, PlayEpisode } from "@/lib/view";
 import { CastLayer } from "./cast-layer";

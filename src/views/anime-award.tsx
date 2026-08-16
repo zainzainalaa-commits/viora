@@ -121,7 +121,7 @@ function Banner({
         ? String(data.years[0])
         : `${data.years[data.years.length - 1]}–${data.years[0]}`;
   return (
-    <section className="harbor-bleed-stremio relative overflow-hidden border-b border-edge-soft">
+    <section className="viora-bleed-stremio relative overflow-hidden border-b border-edge-soft">
       <div
         aria-hidden
         className="absolute inset-0 -z-10"

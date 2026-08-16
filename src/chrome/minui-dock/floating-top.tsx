@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { ArrowLeft, LogOut, Pencil, Search, Settings as SettingsIcon, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { TogetherButton } from "@/chrome/topbar";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
@@ -35,13 +35,13 @@ export function FloatingTop() {
       <FocusButton
         type="button"
         onClick={() => setView("home")}
-        className="harbor-minui-mark flex shrink-0 items-center gap-2 rounded-full px-1.5 py-1 text-ink transition-colors"
+        className="viora-minui-mark flex shrink-0 items-center gap-2 rounded-full px-1.5 py-1 text-ink transition-colors"
         aria-label={t("chrome.harborHome")}
       >
         {customMark ? (
           <img src={customMark} alt="" draggable={false} className="h-8 w-8 object-contain" />
         ) : (
-          <HarborMark className="h-8 w-8" />
+          <VioraMark className="h-8 w-8" />
         )}
       </FocusButton>
       {showBack && (

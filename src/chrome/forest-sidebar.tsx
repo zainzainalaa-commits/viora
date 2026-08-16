@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { Lock } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { ProfileChip } from "@/chrome/sidebar/profile-chip";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
@@ -75,7 +75,7 @@ export function ForestSidebar() {
               aria-label={t("chrome.harborHome")}
               className="flex items-center gap-2.5 text-ink"
             >
-              <HarborMark className="h-[26px] w-[26px] shrink-0 drop-shadow-[0_0_11px_var(--color-accent-soft)]" />
+              <VioraMark className="h-[26px] w-[26px] shrink-0 drop-shadow-[0_0_11px_var(--color-accent-soft)]" />
               {!collapsed && (
                 <span
                   className="hidden text-[27px] font-medium leading-none lg:inline"
@@ -241,15 +241,15 @@ function Canopy() {
   return (
     <span aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <span
-        className="harbor-forest-ray absolute -top-12 left-[-12%] h-[360px] w-[130px] rotate-[20deg] blur-[42px]"
+        className="viora-forest-ray absolute -top-12 left-[-12%] h-[360px] w-[130px] rotate-[20deg] blur-[42px]"
         style={{ background: `linear-gradient(180deg, ${tint(SUN, 0.17)}, transparent 70%)`, opacity: 0.5 }}
       />
       <span
-        className="harbor-forest-ray absolute -top-20 left-[28%] h-[440px] w-[95px] rotate-[15deg] blur-[50px]"
+        className="viora-forest-ray absolute -top-20 left-[28%] h-[440px] w-[95px] rotate-[15deg] blur-[50px]"
         style={{ background: `linear-gradient(180deg, ${tint(LEAF, 0.16)}, transparent 72%)`, opacity: 0.45, animationDelay: "1.7s" }}
       />
       <span
-        className="harbor-forest-ray absolute -top-10 left-[64%] h-[320px] w-[80px] rotate-[23deg] blur-[44px]"
+        className="viora-forest-ray absolute -top-10 left-[64%] h-[320px] w-[80px] rotate-[23deg] blur-[44px]"
         style={{ background: `linear-gradient(180deg, ${tint(SUN, 0.12)}, transparent 74%)`, opacity: 0.4, animationDelay: "3.2s" }}
       />
       <span

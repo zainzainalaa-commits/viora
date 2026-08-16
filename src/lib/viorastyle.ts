@@ -5,12 +5,12 @@ const BLOCK_NAMES = new Set(["tokens", "css", "html", "js"]);
 
 type ParseResult = { ok: true; theme: CustomTheme } | { ok: false; error: string };
 
-export function isHarborStyleName(name: string): boolean {
+export function isVioraStyleName(name: string): boolean {
   const lower = name.toLowerCase();
-  return lower.endsWith(".harborstyle") || lower.endsWith(".harborstyle.txt");
+  return lower.endsWith(".viorastyle") || lower.endsWith(".viorastyle.txt");
 }
 
-export function parseHarborStyle(text: string): ParseResult {
+export function parseVioraStyle(text: string): ParseResult {
   const obj = harborStyleToObject(text);
   if (!obj.ok) return obj;
   return parseThemeJson(JSON.stringify(obj.value));
@@ -132,8 +132,8 @@ function joinBlock(arr: string[]): string {
   return arr.join("\n").replace(/^\n+/, "").replace(/\n+$/, "");
 }
 
-export function serializeHarborStyle(theme: ThemePreset | CustomTheme): string {
-  const lines: string[] = ["# Harbor Style", `name: ${theme.name}`];
+export function serializeVioraStyle(theme: ThemePreset | CustomTheme): string {
+  const lines: string[] = ["# Viora Style", `name: ${theme.name}`];
   if (theme.blurb) lines.push(`blurb: ${theme.blurb}`);
   if (theme.layout) lines.push(`layout: ${theme.layout}`);
   if (theme.cardStyle) lines.push(`card: ${theme.cardStyle}`);
@@ -170,7 +170,7 @@ export function serializeHarborStyle(theme: ThemePreset | CustomTheme): string {
 }
 
 export function harborStyleStarter(): string {
-  return `# Harbor Style
+  return `# Viora Style
 name: My Theme
 blurb: A short tagline shown in the picker.
 layout: sidebar
@@ -195,6 +195,6 @@ swatch: #0a0d14, #181d28, #7b5cff
 --color-danger: #ef5a5a
 
 @css
-.harbor-cinema-badge { color: #7b5cff; }
+.viora-cinema-badge { color: #7b5cff; }
 `;
 }

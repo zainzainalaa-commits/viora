@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { Lock } from "lucide-react";
 import { useState } from "react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { ProfileChip } from "@/chrome/sidebar/profile-chip";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
 import { ParentalPinModal } from "@/components/parental-pin-modal";
@@ -72,7 +72,7 @@ export function NordSidebar() {
               aria-label={t("chrome.harborHome")}
               className="flex items-center gap-2.5 text-ink"
             >
-              <HarborMark className="h-[26px] w-[26px] shrink-0 drop-shadow-[0_0_10px_#88c0d05c]" />
+              <VioraMark className="h-[26px] w-[26px] shrink-0 drop-shadow-[0_0_10px_#88c0d05c]" />
               {!collapsed && (
                 <span
                   className="hidden text-[27px] font-medium leading-none lg:inline"

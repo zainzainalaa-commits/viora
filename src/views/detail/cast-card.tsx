@@ -32,7 +32,7 @@ export function CastCard({ cast }: { cast: CastEntry }) {
           src={photo}
           seed={String(cast.id)}
           ratio="portrait"
-          className={`rounded-xl shadow-[0_0_0_rgba(0,0,0,0)] transition-shadow duration-300 ${isResolved ? "harbor-card-ring group-hover:shadow-[0_24px_44px_-14px_rgba(0,0,0,0.6)]" : ""}`}
+          className={`rounded-xl shadow-[0_0_0_rgba(0,0,0,0)] transition-shadow duration-300 ${isResolved ? "viora-card-ring group-hover:shadow-[0_24px_44px_-14px_rgba(0,0,0,0.6)]" : ""}`}
         />
         {r && <RankBadge rank={r} dept="Acting" />}
       </div>

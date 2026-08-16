@@ -97,11 +97,11 @@ export function QualityPanel() {
 
       <Section
         title={t("Skip intros & credits")}
-        subtitle={t("Harbor finds intro and credits timing from AniSkip, TheIntroDB, and the file's own chapters, then shows a Skip button at the right moment.")}
+        subtitle={t("Viora finds intro and credits timing from AniSkip, TheIntroDB, and the file's own chapters, then shows a Skip button at the right moment.")}
       >
         <ToggleRow
           label={t("Show the Skip button")}
-          sub={t("Show a Skip Intro / Skip Credits button when Harbor detects one. Turn this off to never show it. You can also tap the X on the button to dismiss a wrong one for the rest of the episode.")}
+          sub={t("Show a Skip Intro / Skip Credits button when Viora detects one. Turn this off to never show it. You can also tap the X on the button to dismiss a wrong one for the rest of the episode.")}
           value={settings.showSkipButton}
           onChange={(v) => update({ showSkipButton: v })}
         />

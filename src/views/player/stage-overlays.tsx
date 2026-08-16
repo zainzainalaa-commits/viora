@@ -9,7 +9,7 @@ import {
   type VolumeIndicatorState,
 } from "@/components/player/volume-indicator";
 import type { PlayerEngine, PlayerSnapshot } from "@/lib/player/bridge";
-import type { ParentalCategory } from "@/lib/providers/harbor-imdb";
+import type { ParentalCategory } from "@/lib/providers/viora-imdb";
 import { ContentAdvisoryToast } from "@/components/player/content-advisory-toast";
 import { useT } from "@/lib/i18n";
 

@@ -98,7 +98,7 @@ export function WebhooksPanel() {
     inFlightRef.current[kind] = true;
     setStatus({ state: "busy", message: "Sending…" });
     const testPayload: WebhookPayload = {
-      text: `Harbor test message (${kind === "discord" ? "Discord" : "Telegram"}). If you can read this, your webhook is wired up.`,
+      text: `Viora test message (${kind === "discord" ? "Discord" : "Telegram"}). If you can read this, your webhook is wired up.`,
       items: [],
     };
     try {
@@ -117,7 +117,7 @@ export function WebhooksPanel() {
     <>
       <Section
         title={t("Where alerts go")}
-        subtitle={t("Connect Discord or Telegram and Harbor posts a message when something you follow is about to drop. Hit Test to send yourself a sample first.")}
+        subtitle={t("Connect Discord or Telegram and Viora posts a message when something you follow is about to drop. Hit Test to send yourself a sample first.")}
       >
         <div className="flex flex-col gap-5">
           <WebhookField

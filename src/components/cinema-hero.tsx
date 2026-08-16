@@ -169,7 +169,7 @@ export function CinemaHero({
         tabIndex={-1}
         data-hero-stage=""
         {...heroFocus.focusProps}
-        className="harbor-bleed-stremio relative h-[420px] animate-pulse bg-elevated/30"
+        className="viora-bleed-stremio relative h-[420px] animate-pulse bg-elevated/30"
       />
     );
   }
@@ -191,7 +191,7 @@ export function CinemaHero({
       // that one still opens the rail.
       data-hero-can-step-back={active > 0 ? "" : undefined}
       {...heroFocus.focusProps}
-      className="harbor-bleed-stremio relative h-[420px] overflow-hidden bg-canvas"
+      className="viora-bleed-stremio relative h-[420px] overflow-hidden bg-canvas"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -398,7 +398,7 @@ function CinemaTitlePlate({
       ) : resolved ? (
         <h2
           className="font-display text-[72px] font-medium leading-[0.95] tracking-tight text-ink"
-          style={{ animation: "harbor-fade-in 420ms cubic-bezier(0.32, 0.72, 0.24, 1) both" }}
+          style={{ animation: "viora-fade-in 420ms cubic-bezier(0.32, 0.72, 0.24, 1) both" }}
         >
           {name}
         </h2>

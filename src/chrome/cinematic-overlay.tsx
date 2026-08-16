@@ -2,7 +2,7 @@ import { FocusButton } from "@/lib/tv-focus";
 import { APP_NAME } from "@/lib/brand";
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { HarborMark } from "@/components/icons/harbor-mark";
+import { VioraMark } from "@/components/icons/viora-mark";
 import { TogetherButton } from "@/chrome/topbar";
 import { useT } from "@/lib/i18n";
 import { useSearch } from "@/lib/search-context";
@@ -105,7 +105,7 @@ export function CinematicOverlay() {
                 className="h-7 w-7 object-contain"
               />
             ) : (
-              <HarborMark className="h-7 w-7" />
+              <VioraMark className="h-7 w-7" />
             )}
             {themePreset?.id === "crunch" && (
               <span className="font-display text-[22px] font-bold leading-none text-ink">

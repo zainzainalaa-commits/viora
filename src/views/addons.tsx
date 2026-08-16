@@ -4,7 +4,7 @@ import { isDpadPrimary } from "@/lib/platform";
 import { TvAddAddon } from "./addons/tv-add-addon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AgeGateModal } from "@/components/age-gate-modal";
-import { HarborLoader } from "@/components/harbor-loader";
+import { VioraLoader } from "@/components/viora-loader";
 import { useScrollMemory, useView } from "@/lib/view";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
@@ -520,7 +520,7 @@ export function AddonsView() {
       >
         {loading && allAddons.length === 0 ? (
           <div className="flex h-full items-center justify-center py-24">
-            <HarborLoader size="lg" caption={t("Loading the catalog")} keyed />
+            <VioraLoader size="lg" caption={t("Loading the catalog")} keyed />
           </div>
         ) : (
           <InstalledPane
@@ -683,7 +683,7 @@ function RemoteOrLocalDetail({
   if (!resolved) {
     return (
       <main className="flex h-full items-center justify-center bg-canvas">
-        <HarborLoader />
+        <VioraLoader />
       </main>
     );
   }

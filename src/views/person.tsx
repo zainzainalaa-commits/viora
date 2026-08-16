@@ -123,7 +123,7 @@ export function PersonView({ personId }: { personId: number }) {
 
       <div className="relative isolate">
         {backdrop && (
-          <div aria-hidden className="harbor-bleed-stremio pointer-events-none absolute inset-x-0 top-0 -z-10 h-[70vh] overflow-hidden">
+          <div aria-hidden className="viora-bleed-stremio pointer-events-none absolute inset-x-0 top-0 -z-10 h-[70vh] overflow-hidden">
             <div
               className="absolute inset-0 scale-110"
               style={{

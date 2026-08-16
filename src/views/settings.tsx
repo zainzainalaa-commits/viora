@@ -61,17 +61,17 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   },
   letterboxd: {
     label: "Letterboxd",
-    sub: "Bring your Letterboxd watchlist, diary, liked films and lists into Harbor via the Stremboxd bridge.",
+    sub: "Bring your Letterboxd watchlist, diary, liked films and lists into Viora via the Stremboxd bridge.",
   },
   relay: {
-    label: "Harbor Relay",
+    label: "Viora Relay",
     sub: IS_WEB
-      ? "Watch Together rooms are routed through Harbor's hosted relay."
+      ? "Watch Together rooms are routed through Viora's hosted relay."
       : "A Cloudflare Worker on your own account that hosts your Watch Together rooms.",
   },
   streaming: {
     label: "Streaming sources",
-    sub: "How Harbor finds and resolves playable streams. Debrid keys and addon installs live here.",
+    sub: "How Viora finds and resolves playable streams. Debrid keys and addon installs live here.",
   },
   streamFilters: {
     label: "Stream filters",
@@ -79,7 +79,7 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   },
   p2p: {
     label: "P2P & servers",
-    sub: "Harbor's built-in peer-to-peer engine, its self-test, and any streaming server you point it at.",
+    sub: "Viora's built-in peer-to-peer engine, its self-test, and any streaming server you point it at.",
   },
   language: {
     label: "Languages",
@@ -103,11 +103,11 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   },
   hotkeys: {
     label: "Hotkeys",
-    sub: "Every shortcut Harbor responds to. Click a binding to rebind it.",
+    sub: "Every shortcut Viora responds to. Click a binding to rebind it.",
   },
   theme: {
     label: "Theme & appearance",
-    sub: "Color presets, custom backgrounds, and the font pair Harbor renders in.",
+    sub: "Color presets, custom backgrounds, and the font pair Viora renders in.",
   },
   webhooks: {
     label: "Webhooks",
@@ -115,7 +115,7 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   },
   bug: {
     label: "Report a bug",
-    sub: "Send a bug report straight to the Harbor team. Screenshots and screen recordings welcome.",
+    sub: "Send a bug report straight to the Viora team. Screenshots and screen recordings welcome.",
   },
   advanced: {
     label: "Advanced",

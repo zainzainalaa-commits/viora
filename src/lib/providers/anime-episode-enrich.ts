@@ -1,5 +1,5 @@
 import { kitsuToMal, kitsuToTvdb } from "@/lib/providers/anime-mapping";
-import { harborImdbEpisodes } from "@/lib/providers/harbor-imdb";
+import { harborImdbEpisodes } from "@/lib/providers/viora-imdb";
 import { fillerEpisodes } from "@/lib/anime-fillers";
 import { fetchTvdbThumbs } from "@/lib/providers/anime-tvdb-thumbs";
 import { meta as fetchCinemetaMeta } from "@/lib/cinemeta";
@@ -76,7 +76,7 @@ async function enrichTvdbThumbs(
   }
 }
 
-async function enrichHarborImdb(episodes: KitsuEpisode[], imdbId: string | null): Promise<void> {
+async function enrichVioraImdb(episodes: KitsuEpisode[], imdbId: string | null): Promise<void> {
   if (!imdbId || !imdbId.startsWith("tt")) return;
   const map = await harborImdbEpisodes(imdbId).catch(() => null);
   if (!map || map.size === 0) return;
@@ -99,7 +99,7 @@ export async function enrichEpisodes(
 ): Promise<void> {
   await Promise.all([
     enrichFiller(episodes, kitsuId),
-    enrichHarborImdb(episodes, imdbId),
+    enrichVioraImdb(episodes, imdbId),
     (async () => {
       await enrichCinemetaThumbs(episodes, imdbId);
       await enrichTvdbThumbs(episodes, settings, kitsuId);

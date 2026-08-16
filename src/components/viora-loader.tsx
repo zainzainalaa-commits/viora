@@ -2,7 +2,7 @@ import lottie, { type AnimationItem } from "lottie-web";
 import { useCallback, useEffect, useRef, useState } from "react";
 import whiteBoat from "@/assets/lottie/addons-boat-white.json";
 import darkBoat from "@/assets/lottie/addons-boat-dark.json";
-import harborBoat from "@/assets/lottie/harbor-loader.json";
+import harborBoat from "@/assets/lottie/viora-loader.json";
 import { prefetchTopAddonLogos, prefetchedTopAddonLogos } from "@/lib/providers/addon-logo-prefetch";
 
 type Size = "sm" | "md" | "lg" | "xl";
@@ -43,7 +43,7 @@ function useTopAddonLogos(enabled: boolean): string[] {
   return logos;
 }
 
-export function HarborLoader({
+export function VioraLoader({
   size = "md",
   caption,
   className = "",
@@ -118,7 +118,22 @@ export function HarborLoader({
 
   return (
     <div className={`flex flex-col items-center justify-center gap-2 ${className}`}>
-      <div ref={ref} className={SIZE_CLASS[size]} aria-hidden />
+      {/* The owner's mark, beating.
+          What stood here was a sailboat: this fork began as a project called
+          Harbor, and the boat was that project's logo. It was still sailing on the connecting screen
+          and over the add-on catalogue, which is the last place another
+          product's identity should be. The Lottie machinery above still runs
+          for the add-on logo variant; this is the plain case, and it is now the
+          same mark and the same pulse as the boot screen, so the app looks like
+          one thing from the first frame to the last. */}
+      <div ref={ref} className="hidden" aria-hidden />
+      <img
+        src="/viora-mark.png"
+        alt=""
+        aria-hidden
+        draggable={false}
+        className={`${SIZE_CLASS[size]} viora-beat object-contain`}
+      />
       {caption && (
         <p className="mt-1 text-[12.5px] font-medium uppercase tracking-[0.18em] text-white/70">
           {caption}

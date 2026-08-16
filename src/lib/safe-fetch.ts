@@ -65,19 +65,19 @@ function rewriteForWeb(url: string, init?: RequestInit): { url: string; init?: R
   const auth = out.get("authorization");
   if (auth) {
     out.delete("authorization");
-    out.set("x-harbor-auth", auth);
+    out.set("x-viora-auth", auth);
   }
   return { url: proxied, init: { ...init, headers: out } };
 }
 
-type HarborFetchResponse = {
+type VioraFetchResponse = {
   status: number;
   ok: boolean;
   body: string;
   contentType: string | null;
 };
 
-async function tauriHarborFetch(input: string, init?: RequestInit): Promise<Response> {
+async function tauriVioraFetch(input: string, init?: RequestInit): Promise<Response> {
   const headers: Record<string, string> = {};
   if (init?.headers) {
     const h = new Headers(init.headers as HeadersInit);
@@ -93,7 +93,7 @@ async function tauriHarborFetch(input: string, init?: RequestInit): Promise<Resp
         : init?.body
           ? JSON.stringify(init.body)
           : undefined;
-  const resp = await invoke<HarborFetchResponse>("harbor_fetch", {
+  const resp = await invoke<VioraFetchResponse>("harbor_fetch", {
     args: {
       url: input,
       method: init?.method ?? "GET",
@@ -265,16 +265,16 @@ const safeFetchInner: typeof fetch = (input, init) => {
               // Blocked or unreachable from the page: this host needs the native
               // client, and now we know for the rest of the session.
               rememberTransport(target, "native");
-              return tauriHarborFetch(input, init).catch(
+              return tauriVioraFetch(input, init).catch(
                 () => tauriFetchImpl(input as string, init as RequestInit) as Promise<Response>,
               );
             });
         }
-        return tauriHarborFetch(input, init).catch(
+        return tauriVioraFetch(input, init).catch(
           () => tauriFetchImpl(input as string, init as RequestInit) as Promise<Response>,
         );
       }
-      return tauriHarborFetch(input, init);
+      return tauriVioraFetch(input, init);
     }
     return tauriFetchImpl(input as unknown as string, init as RequestInit) as Promise<Response>;
   }

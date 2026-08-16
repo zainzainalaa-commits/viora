@@ -16,7 +16,7 @@ export function SubtitlesStep() {
         </h1>
         <p className="text-[15px] leading-relaxed text-ink-muted">
           {t(
-            "When playback starts, Harbor finds and loads a subtitle in one of these languages automatically. The first available match wins, so put your main language first.",
+            "When playback starts, Viora finds and loads a subtitle in one of these languages automatically. The first available match wins, so put your main language first.",
           )}
         </p>
       </div>
