@@ -11,11 +11,11 @@ import {
   type ReactNode,
 } from "react";
 import { FocusContext } from "@noriginmedia/norigin-spatial-navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
 import { isDpadPrimary } from "@/lib/platform";
+import { ChevronRight } from "lucide-react";
 import { FocusButton, FocusCell, ScrollProvider, revealWithin, useFocusRow } from "@/lib/tv-focus";
 
 const GAP = 20;
@@ -255,7 +255,6 @@ export function Row({
   min = 144,
   shape = "portrait",
   scrollKey,
-  arrowsAlways = false,
   children,
   onEndReached,
   onViewAll,
@@ -270,7 +269,6 @@ export function Row({
   min?: number;
   shape?: RowShape;
   alwaysActive?: boolean;
-  arrowsAlways?: boolean;
   scrollKey?: string;
   children: React.ReactNode;
   onEndReached?: () => void;
@@ -291,8 +289,6 @@ export function Row({
     setTrackEl(el);
   }, []);
   const [cellWidth, setCellWidth] = useState<number | null>(null);
-  const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(false);
   const onEndRef = useRef(onEndReached);
   useEffect(() => {
     onEndRef.current = onEndReached;
@@ -340,9 +336,7 @@ export function Row({
     const el = trackRef.current;
     if (!el) return;
     const pos = readPos(el);
-    setCanPrev(pos > 1);
     const remaining = el.scrollWidth - el.clientWidth - pos;
-    setCanNext(remaining > 1);
     if (el.clientWidth > 0 && remaining < 800) onEndRef.current?.();
   };
 
@@ -583,13 +577,6 @@ export function Row({
     };
   }, [scrollKey, rememberRowScroll]);
 
-  const scroll = (dir: -1 | 1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    userInteractedRef.current = true;
-    const delta = (isRtlTrack(el) ? -dir : dir) * el.clientWidth;
-    el.scrollBy({ left: delta, behavior: "smooth" });
-  };
 
   const drag = useRef({
     active: false,
@@ -800,8 +787,6 @@ export function Row({
           </div>
         </RowTrackContext.Provider>
         </RowNearContext.Provider>
-        <EdgeArrow side="left" visible={canPrev} always={arrowsAlways} onClick={() => scroll(-1)} />
-        <EdgeArrow side="right" visible={canNext} always={arrowsAlways} onClick={() => scroll(1)} />
       </div>
     </div>
     </ScrollProvider>
@@ -809,63 +794,6 @@ export function Row({
   );
 }
 
-function EdgeArrow({
-  side,
-  visible,
-  always = false,
-  onClick,
-}: {
-  side: "left" | "right";
-  visible: boolean;
-  always?: boolean;
-  onClick: () => void;
-}) {
-  const t = useT();
-  const label = t(side === "left" ? "Scroll left" : "Scroll right");
-  if (always) {
-    return (
-      <div
-        className={`pointer-events-none absolute inset-y-0 z-30 flex w-14 items-center transition-opacity duration-200 ${
-          side === "left" ? "start-0 justify-start" : "end-0 justify-end"
-        } ${visible ? "opacity-100" : "opacity-0"}`}
-      >
-        <button
-          onClick={onClick}
-          aria-label={label}
-          tabIndex={visible ? 0 : -1}
-          className={`viora-row-arrow mx-1 flex h-12 w-12 items-center justify-center rounded-full border border-edge-soft/50 bg-canvas/90 text-ink shadow-[0_6px_20px_-6px_rgba(0,0,0,0.6)] backdrop-blur-md transition-transform duration-150 hover:scale-110 active:scale-95 ${
-            visible ? "pointer-events-auto" : "pointer-events-none"
-          }`}
-        >
-          {side === "left" ? (
-            <ChevronLeft size={22} strokeWidth={2.2} className="dir-icon" />
-          ) : (
-            <ChevronRight size={22} strokeWidth={2.2} className="dir-icon" />
-          )}
-        </button>
-      </div>
-    );
-  }
-  const sideClass = side === "left" ? "start-0 justify-start" : "end-0 justify-end";
-  return (
-    <div className={`pointer-events-none absolute inset-y-0 z-30 flex w-14 items-center ${sideClass}`}>
-      <button
-        onClick={onClick}
-        aria-label={label}
-        tabIndex={visible ? 0 : -1}
-        className={`viora-row-arrow pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full bg-canvas/85 text-ink backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-canvas ${
-          visible ? "opacity-0 group-hover/row:opacity-100 focus-visible:opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        {side === "left" ? (
-          <ChevronLeft size={22} strokeWidth={2.2} className="dir-icon" />
-        ) : (
-          <ChevronRight size={22} strokeWidth={2.2} className="dir-icon" />
-        )}
-      </button>
-    </div>
-  );
-}
 
 /**
  * The way to the rest of a row, on a television.

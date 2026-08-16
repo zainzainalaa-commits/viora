@@ -1,6 +1,5 @@
 import { FocusButton } from "@/lib/tv-focus";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { PickCard } from "@/components/pick-card";
 import { Row } from "@/components/row";
@@ -233,36 +232,6 @@ function CategoryPills({
 }) {
   const t = useT();
   const trackRef = useRef<HTMLDivElement>(null);
-  const [scrollState, setScrollState] = useState({ canLeft: false, canRight: false });
-
-  const recompute = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) {
-      setScrollState({ canLeft: false, canRight: false });
-      return;
-    }
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    setScrollState({
-      canLeft: el.scrollLeft > 4,
-      canRight: maxScroll > 4 && el.scrollLeft < maxScroll - 4,
-    });
-  }, []);
-
-  useLayoutEffect(() => {
-    recompute();
-  }, [recompute]);
-
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", recompute, { passive: true });
-    const ro = new ResizeObserver(recompute);
-    ro.observe(el);
-    return () => {
-      el.removeEventListener("scroll", recompute);
-      ro.disconnect();
-    };
-  }, [recompute]);
 
   useEffect(() => {
     const el = trackRef.current;
@@ -273,11 +242,6 @@ function CategoryPills({
     }
   }, [active.id]);
 
-  const page = (dir: -1 | 1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * Math.max(220, el.clientWidth * 0.6), behavior: "smooth" });
-  };
 
   return (
     <div className="px-12 pt-8">
@@ -302,6 +266,19 @@ function CategoryPills({
                 key={c.id}
                 data-cat={c.id}
                 onClick={() => onChange(c)}
+                // Bring the pill the remote just landed on fully into view.
+                //
+                // Nothing was doing this. The rows have the focus system's own
+                // reveal; this bar is a plain scroller, so it was left to the
+                // engine's built-in "scroll the focused thing into view", and
+                // that stops short: measured on the device, moving onto Romance
+                // scrolled the track 129px of the 439 it needed and left 311px
+                // of the pill outside the scrollport, cut off mid-word at the
+                // edge. Asking for it explicitly is the whole fix; the track's
+                // `scroll-padding` decides where it comes to rest.
+                onFocus={(e) =>
+                  e.currentTarget.scrollIntoView({ inline: "nearest", block: "nearest", behavior: "smooth" })
+                }
                 className={`shrink-0 rounded-full px-4 py-1.5 text-[13.5px] font-medium transition-colors [scroll-snap-align:start] ${
                   isActive
                     ? "bg-ink text-canvas"
@@ -313,53 +290,12 @@ function CategoryPills({
             );
           })}
         </div>
-        <EdgeFade side="left" visible={scrollState.canLeft} />
-        <EdgeFade side="right" visible={scrollState.canRight} />
-        <ScrollArrow side="left" visible={scrollState.canLeft} onClick={() => page(-1)} />
-        <ScrollArrow side="right" visible={scrollState.canRight} onClick={() => page(1)} />
       </div>
     </div>
   );
 }
 
-function ScrollArrow({
-  side,
-  visible,
-  onClick,
-}: {
-  side: "left" | "right";
-  visible: boolean;
-  onClick: () => void;
-}) {
-  const t = useT();
-  return (
-    <FocusButton
-      type="button"
-      aria-label={side === "left" ? t("Scroll filters left") : t("Scroll filters right")}
-      onClick={onClick}
-      className={`absolute top-1/2 -translate-y-1/2 ${side === "left" ? "left-0 -translate-x-1/3" : "right-0 translate-x-1/3"} z-20 flex h-9 w-9 items-center justify-center rounded-full bg-canvas/85 text-ink shadow-[0_8px_24px_-6px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all duration-200 hover:bg-canvas focus:outline-none ${
-        visible
-          ? "opacity-0 group-hover/pills:opacity-100 pointer-events-auto"
-          : "pointer-events-none opacity-0"
-      }`}
-    >
-      {side === "left" ? <ChevronLeft size={16} strokeWidth={2.4} /> : <ChevronRight size={16} strokeWidth={2.4} />}
-    </FocusButton>
-  );
-}
 
-function EdgeFade({ side, visible }: { side: "left" | "right"; visible: boolean }) {
-  return (
-    <div
-      aria-hidden
-      className={`pointer-events-none absolute inset-y-0 z-10 w-12 transition-opacity duration-200 ${
-        side === "left"
-          ? "left-0 bg-gradient-to-r from-canvas to-transparent"
-          : "right-0 bg-gradient-to-l from-canvas to-transparent"
-      } ${visible ? "opacity-100" : "opacity-0"}`}
-    />
-  );
-}
 
 
 function EmptyState({ hasKey }: { hasKey: boolean }) {
