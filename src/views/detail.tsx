@@ -1194,7 +1194,7 @@ export function DetailView({
             railSections.push({
               key: "collection",
               label: t("Collection"),
-              node: <CollectionRow collection={detail.collection} currentId={meta.id} />,
+              node: <CollectionRow collection={detail.collection} currentTmdbId={detail.id} />,
             });
           }
           if (recommendations.length > 0) {
