@@ -283,16 +283,6 @@ export function Poster({
 
   return (
     <div
-      // The artwork announces itself.
-      //
-      // A card is a focusable holding a picture with a caption under it, and the
-      // ring belongs to the picture — the rule that arranges that looks for this
-      // attribute as a direct child of whatever has focus. Naming it here covers
-      // every card that hands a Poster straight to its button, and costs nothing
-      // anywhere else: a Poster nested deeper is not a direct child, so the rule
-      // never sees it. Cards that wrap their artwork in a div of their own mark
-      // that div instead.
-      data-preview-anchor
       className={`viora-poster your-card relative w-full overflow-hidden rounded-[var(--poster-radius,12px)] ${className}`}
       style={showPlate ? { background: gradient(hue) } : undefined}
     >

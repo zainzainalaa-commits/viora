@@ -237,7 +237,7 @@ export function EpisodePicker({
                 onClick={() => onPlayEpisode(ep)}
                 className="group flex flex-col gap-2 text-start"
               >
-                <div data-preview-anchor className="relative aspect-video w-full overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition duration-200 group-hover:ring-white/25">
+                <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition duration-200 group-hover:ring-white/25">
                   {thumb ? (
                     <img
                       src={thumb}

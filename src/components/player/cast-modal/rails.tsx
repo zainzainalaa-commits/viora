@@ -109,7 +109,7 @@ function PersonCard({ person, onOpen }: { person: Person; onOpen?: (p: Person) =
   const clickable = !!onOpen && person.id > 0;
   const body = (
     <>
-      <div data-preview-anchor className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition duration-200 group-hover:ring-white/25 group-hover:brightness-110">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition duration-200 group-hover:ring-white/25 group-hover:brightness-110">
         {src ? (
           <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
@@ -168,7 +168,7 @@ function PosterCard({
       onClick={() => onOpen(meta)}
       className={`group flex flex-col gap-1.5 text-start ${grid ? "w-full" : "w-[116px] shrink-0 [scroll-snap-align:start]"}`}
     >
-      <div data-preview-anchor className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition duration-200 group-hover:scale-[1.04] group-hover:ring-white/25">
+      <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition duration-200 group-hover:scale-[1.04] group-hover:ring-white/25">
         {src ? (
           <img
             src={src}

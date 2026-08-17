@@ -35,7 +35,7 @@ function PersonCard({ person, tint }: { person: AwardPerson; tint: string }) {
       onClick={() => openPerson(person.id)}
       className="group flex w-full min-w-0 flex-col gap-2.5 text-start"
     >
-      <div data-preview-anchor className="relative transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0.24,1)] group-hover:-translate-y-1.5">
+      <div className="relative transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0.24,1)] group-hover:-translate-y-1.5">
         <Poster
           src={person.photo ?? undefined}
           seed={String(person.id)}

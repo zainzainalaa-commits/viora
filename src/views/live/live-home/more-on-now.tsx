@@ -60,7 +60,7 @@ function Pick({
       title={channel.name}
       className="group/p flex w-[164px] shrink-0 flex-col gap-2 text-start"
     >
-      <div data-preview-anchor className="relative overflow-hidden rounded-lg ring-1 ring-edge-soft/40 transition-shadow duration-200 group-hover/p:ring-edge group-hover/p:shadow-[0_8px_24px_-10px_rgba(0,0,0,0.6)]">
+      <div className="relative overflow-hidden rounded-lg ring-1 ring-edge-soft/40 transition-shadow duration-200 group-hover/p:ring-edge group-hover/p:shadow-[0_8px_24px_-10px_rgba(0,0,0,0.6)]">
         <Poster
           src={poster.src}
           onError={poster.onError}
