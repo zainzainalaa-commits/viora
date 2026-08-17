@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { CellArtNearContext, CellIsUpFrontContext } from "@/components/row";
+import { CellIsUpFrontContext } from "@/components/row";
 import { needsImdbForPoster, needsTmdbForPoster, rpdbPoster } from "@/lib/providers/rpdb";
 import {
   tmdbIdFromImdb,
@@ -185,11 +185,6 @@ export function Poster({
 }) {
   const { settings } = useSettings();
   const upFront = useContext(CellIsUpFrontContext);
-  // Far from the viewport, the card keeps everything except its picture. The
-  // plate underneath is what it already shows before the artwork arrives, so
-  // there is nothing new to look at — and nothing decoded for a card that is
-  // one and a half screens away.
-  const artNear = useContext(CellArtNearContext);
   const effect = settings.posterEffect;
   const candidates = [src, ...(fallbacks ?? [])]
     .filter((u): u is string => !!u)
@@ -275,10 +270,7 @@ export function Poster({
       setDisplayed(current);
     }
   }, [loaded, current, sig]);
-  // The plate also stands in while the picture is released, so a card that has
-  // scrolled far away shows the same coloured ground it shows before its
-  // artwork has arrived — never an empty hole.
-  const showPlate = !artNear || (!displayed && (!current || !loaded));
+  const showPlate = !displayed && (!current || !loaded);
   const hue = hash(seed) % 360;
 
   return (
@@ -297,7 +289,7 @@ export function Poster({
       style={showPlate ? { background: gradient(hue) } : undefined}
     >
       <div aria-hidden style={{ paddingTop: ASPECT_PAD[ratio] }} />
-      {artNear && displayed && displayed !== current && (
+      {displayed && displayed !== current && (
         <img
           src={displayed}
           alt=""
@@ -306,7 +298,7 @@ export function Poster({
           className="absolute inset-0 h-full w-full object-cover"
         />
       )}
-      {artNear && current && (
+      {current && (
         <img
           key={current}
           ref={handleImgRef}

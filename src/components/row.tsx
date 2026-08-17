@@ -56,85 +56,6 @@ const RowNearContext = createContext(true);
 // MyAnimeList takes about 600 ms, and there are dozens of them. Saying which
 // ones matter lets the engine fetch those first instead of treating all
 // eighty-odd as equals.
-/**
- * Whether a built card is close enough to be worth holding a picture for.
- *
- * Separate from the build gate above, and unlike it this one goes both ways.
- * Measured on the television after an ordinary session: 1,200 images in the
- * document, 405 megapixels of them decoded, and **twenty** of those images on
- * screen. 875 belonged to cards scrolled out of view in the screen being
- * looked at, 305 to screens behind it. The build gate is deliberately one-way —
- * a card the remote can reach is never taken away — so the artwork piled up
- * with every row the viewer passed.
- *
- * The card is not touched. It keeps its place, its focus, its title and its
- * size; only the picture inside it is released, and comes back when the card
- * comes near. That is what keeps this away from the navigation rules: nothing
- * about where focus can go changes.
- *
- * One observer for the whole application rather than one per card. A card
- * scrolled far along its row is outside the viewport just as surely as a row
- * scrolled off the bottom, and an observer rooted at the viewport already
- * accounts for the clipping its scrollers do — so both axes come free.
- */
-export const CellArtNearContext = createContext(true);
-
-// Released only when the screen it belongs to is not the one being looked at.
-//
-// This began as a distance — release a card once it is far enough away — and the
-// owner rejected that, rightly. Measured on his television: the file is never
-// re-downloaded, 126 of 129 responses came from the device's own disk cache and
-// 1.4 KB in total touched the network, but decoding it again costs about 9ms a
-// poster and a whole row returning at once is visible.
-//
-// So distance no longer decides anything. A card in the screen you are on keeps
-// its picture however far along the row it has scrolled. What is released is
-// every card in the screens stacked behind it — which is where the artwork was
-// piling up anyway: of 405 megapixels held on the television, the screens the
-// viewer could not see were carrying a large part, and they are not going to be
-// looked at until they come back to the top.
-//
-// A hidden screen carries `display: none`, and an element inside one has no
-// boxes at all — that is the test, and it cannot be confused with a card that is
-// merely scrolled away, which keeps its box. The observer is only a trigger: it
-// fires when a screen appears or disappears, and every watched card is then
-// asked about its own geometry.
-const artWatchers = new Map<Element, (near: boolean) => void>();
-let artObserver: IntersectionObserver | null = null;
-let artSweepTimer = 0;
-
-const hasBox = (el: Element): boolean => (el as HTMLElement).getClientRects().length > 0;
-
-function sweepArt(): void {
-  for (const [el, onChange] of artWatchers) onChange(hasBox(el));
-}
-
-function watchArt(el: Element, onChange: (near: boolean) => void): () => void {
-  if (typeof IntersectionObserver === "undefined") return () => {};
-  if (!artObserver) {
-    artObserver = new IntersectionObserver((entries) => {
-      let maybeScreenSwitch = false;
-      for (const e of entries) {
-        const box = hasBox(e.target);
-        artWatchers.get(e.target)?.(box);
-        // A card losing its box means its screen went away, and the rest of that
-        // screen went with it — including cards that were already off screen and
-        // so will not report anything of their own.
-        if (!box) maybeScreenSwitch = true;
-      }
-      if (maybeScreenSwitch) {
-        window.clearTimeout(artSweepTimer);
-        artSweepTimer = window.setTimeout(sweepArt, 120);
-      }
-    });
-  }
-  artWatchers.set(el, onChange);
-  artObserver.observe(el);
-  return () => {
-    artWatchers.delete(el);
-    artObserver?.unobserve(el);
-  };
-}
 
 export const CellIsUpFrontContext = createContext(false);
 const UP_FRONT_COUNT = 6;
@@ -236,16 +157,7 @@ function LazyChild({
   const root = useContext(RowTrackContext);
   const rowNear = useContext(RowNearContext);
   const [visible, setVisible] = useState(eager && rowNear);
-  const [artNear, setArtNear] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-
-  // Only built cells are watched: a skeleton has no picture to release.
-  useEffect(() => {
-    if (!visible) return;
-    const el = ref.current;
-    if (!el) return;
-    return watchArt(el, setArtNear);
-  }, [visible]);
 
   // The opening cards of a row are built as soon as the row itself is worth
   // building, not before. Nothing already built is taken back down.
@@ -287,10 +199,25 @@ function LazyChild({
     };
   }, [root, visible, rowNear]);
 
+  // `content-visibility: auto` on every cell, built or not.
+  //
+  // A built cell used to be pinned to `visible`, which tells the engine it may
+  // never skip that subtree — so every card the viewer had ever scrolled past
+  // kept being laid out, painted and decoded for the rest of the session. That
+  // is the cost this file spent a lot of effort measuring: on the television,
+  // 405 megapixels of artwork held for twenty images on screen.
+  //
+  // This is the browser's own answer to exactly that problem, and it is better
+  // than releasing pictures by hand: the engine skips the work for what is off
+  // screen and brings it back as it approaches, on its own margin, so a card
+  // scrolled past and returned to is simply there. `auto` on the intrinsic size
+  // makes it remember what the cell measured last time it was rendered, so the
+  // page does not resize underneath the highlight and spatial navigation still
+  // finds a box the right shape.
   const style = {
     ...(span ? { gridColumn: span } : undefined),
-    contentVisibility: visible ? ("visible" as const) : ("auto" as const),
-    containIntrinsicSize: visible ? undefined : "auto 200px",
+    contentVisibility: "auto" as const,
+    containIntrinsicSize: visible ? "auto 240px" : "auto 200px",
   };
 
   // A skeleton is not a destination: registering one would let the remote stop
@@ -299,18 +226,14 @@ function LazyChild({
   if (isDpadPrimary() && visible) {
     return (
       <FocusCell ref={ref} style={style}>
-        <CellArtNearContext.Provider value={artNear}>{children}</CellArtNearContext.Provider>
+        {children}
       </FocusCell>
     );
   }
 
   return (
     <div ref={ref} style={style}>
-      {visible ? (
-        <CellArtNearContext.Provider value={artNear}>{children}</CellArtNearContext.Provider>
-      ) : (
-        <Skeleton shape={shape} />
-      )}
+      {visible ? children : <Skeleton shape={shape} />}
     </div>
   );
 }
