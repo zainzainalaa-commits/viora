@@ -22,6 +22,7 @@ import {
   useTmdbImdbId,
 } from "@/lib/providers/tmdb";
 import { useSettings } from "@/lib/settings";
+import { useAfterIdle } from "@/lib/after-idle";
 import { useSimklCardScores, useSimklCardScoresByAnimeId } from "@/lib/simkl/ratings";
 import { simklRequest } from "@/lib/simkl/client";
 import { useView } from "@/lib/view";
@@ -116,11 +117,20 @@ export const PickCard = memo(function PickCard({
       ? meta.imdbRating
       : undefined;
   const cardRatingSource = cardImdbValue ? "imdb" : "tmdb";
+  // The Simkl badge waits for the screen to be on screen.
+  //
+  // Every card asks Simkl for its own id before it can show a score, and a row
+  // of them asks at once. Measured on a title page: a burst of twelve
+  // `simkl/search/id` calls three seconds in, for cards in "More Like This" that
+  // nobody had scrolled to — while the page was still bringing in its own
+  // artwork. A badge is worth having; it is not worth queueing in front of the
+  // picture on a slow connection.
+  const badgesReady = useAfterIdle();
   const simklCardScoreImdb = useSimklCardScores(
-    settings.showSimklBadge && !isSimklCardId ? imdbId : undefined,
+    badgesReady && settings.showSimklBadge && !isSimklCardId ? imdbId : undefined,
   );
   const simklCardScoreAnime = useSimklCardScoresByAnimeId(
-    settings.showSimklBadge && isSimklCardId ? meta.id : undefined,
+    badgesReady && settings.showSimklBadge && isSimklCardId ? meta.id : undefined,
   );
   const simklCardScore = isSimklCardId ? simklCardScoreAnime : simklCardScoreImdb;
   const cardBadges: CardBadge[] = [];
