@@ -45,6 +45,7 @@ import { profileFromDetail, trackEvent } from "@/lib/discover";
 import { MOVIE_GENRES, TV_GENRES } from "@/lib/feed/tags";
 import { useScrollMemory, useView, type PlayEpisode } from "@/lib/view";
 import { prefetchSegments } from "@/lib/skip-intro";
+import { useAfterIdle } from "@/lib/after-idle";
 import { useT } from "@/lib/i18n";
 import { AddToListMenu } from "@/components/lists/add-to-list-menu";
 import type { ListItemInput } from "@/lib/custom-lists";
@@ -121,6 +122,8 @@ export function DetailView({
 }) {
   const t = useT();
   const { settings, update } = useSettings();
+  // Everything that is not needed to show this page waits until it is shown.
+  const enrich = useAfterIdle();
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
   const [detail, setDetail] = useState<TmdbDetail | null>(null);
@@ -496,6 +499,9 @@ export function DetailView({
   }, [meta.id, meta.type, detail?.imdbId]);
 
   useEffect(() => {
+    // Ratings for the twelve cards in the rows below — none of them visible when
+    // the page opens, and each one costs a TMDB id lookup before the OMDb call.
+    if (!enrich) return;
     if (!settings.omdbKey || !detail) return;
     const queue = [...detail.recommendations.slice(0, 6), ...detail.similar.slice(0, 6)];
     for (const m of queue) {
@@ -503,7 +509,7 @@ export function DetailView({
         if (id) omdbPrefetch(settings.omdbKey, id);
       });
     }
-  }, [detail, settings.tmdbKey, settings.omdbKey]);
+  }, [enrich, detail, settings.tmdbKey, settings.omdbKey]);
 
   useEffect(() => {
     if (backdrops.length < 2) return;
@@ -554,7 +560,7 @@ export function DetailView({
   const genres = detail?.genres ?? meta.genres ?? [];
   const recommendations = detail?.recommendations ?? [];
   const similar = detail?.similar ?? [];
-  const liveAwards = useAwards(detail?.imdbId ?? undefined);
+  const liveAwards = useAwards(enrich ? detail?.imdbId ?? undefined : undefined);
   const awards = useMemo(
     () => mergeBundledAwards(liveAwards, meta.name, releaseYearNum ?? undefined),
     [liveAwards, meta.name, releaseYearNum],
@@ -693,6 +699,8 @@ export function DetailView({
     return { season: candidates[0].season, episode: candidates[0].episode };
   }, [meta.id, detail?.imdbId, detail?.id, libraryItem, episodeHint]);
   useEffect(() => {
+    // Intro markers are for a playback that has not been asked for yet.
+    if (!enrich) return;
     if (loading) return;
     let targetEp: PlayEpisode | undefined;
     if (isSeries) {
@@ -704,7 +712,7 @@ export function DetailView({
       }
     }
     prefetchSegments(playMeta, targetEp);
-  }, [loading, isSeries, lastPlay, cinemetaFull?.videos, playMeta]);
+  }, [enrich, loading, isSeries, lastPlay, cinemetaFull?.videos, playMeta]);
 
   const [currentSeason, setCurrentSeason] = useState<number>(
     () => getLastSeason(meta.id) ?? lastPlay?.season ?? 1,
