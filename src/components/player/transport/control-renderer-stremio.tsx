@@ -3,7 +3,6 @@ import { isDpadPrimary } from "@/lib/platform";
 import {
   Camera,
   ChevronLeft,
-  Cpu,
   Crop,
   Info,
   Maximize,
@@ -360,19 +359,36 @@ export function RenderedStremioControl({
         />
       );
     case "engine-switch": {
-      // Only when there is genuinely another engine to move to. The label names
-      // the destination, because that is what the viewer is pressing it for.
+      // One button per engine, the running one green — the same arrangement as
+      // the other transport. A single swap button never said which engine was
+      // playing, because its icon was the same either way.
       if (!ctx.alternateEngine) return null;
-      const engineLabel = ctx.alternateEngine === "mpv" ? "mpv" : tr("the native player");
+      const engines: Array<{ id: "mpv" | "exo"; short: string; name: string }> = [
+        { id: "mpv", short: "MPV", name: "mpv" },
+        { id: "exo", short: "TV", name: tr("the native player") },
+      ];
       return (
-        <Tooltip label={tr("Switch to {engine}", { engine: engineLabel })} side="top">
-          <StremioBtn
-            onClick={ctx.onSwitchEngine}
-            ariaLabel={tr("Switch to {engine}", { engine: engineLabel })}
-          >
-            <Cpu size={26} strokeWidth={2} />
-          </StremioBtn>
-        </Tooltip>
+        <>
+          {engines.map((e) => {
+            const running = ctx.engine === e.id;
+            const label = running
+              ? tr("Playing on {engine}", { engine: e.name })
+              : tr("Switch to {engine}", { engine: e.name });
+            return (
+              <Tooltip key={e.id} label={label} side="top">
+                <StremioBtn onClick={running ? undefined : ctx.onSwitchEngine} ariaLabel={label}>
+                  <span
+                    className={`text-[13px] font-bold uppercase tracking-[0.06em] ${
+                      running ? "text-emerald-400" : ""
+                    }`}
+                  >
+                    {e.short}
+                  </span>
+                </StremioBtn>
+              </Tooltip>
+            );
+          })}
+        </>
       );
     }
     case "audio-menu":

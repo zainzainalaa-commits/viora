@@ -1,7 +1,7 @@
 import { FocusButton } from "@/lib/tv-focus";
 import { isDpadPrimary } from "@/lib/platform";
 import { t as translate } from "@/lib/i18n";
-import { Camera, ChevronLeft, Crop, Cpu, Info, Maximize, Minimize, Pause, PauseCircle, PictureInPicture2, Play, PlayCircle, Replace, Tv } from "lucide-react";
+import { Camera, ChevronLeft, Crop, Info, Maximize, Minimize, Pause, PauseCircle, PictureInPicture2, Play, PlayCircle, Replace, Tv } from "lucide-react";
 import type { ReactNode } from "react";
 import type { PlayerEngine, PlayerCapabilities, PlayerSnapshot } from "@/lib/player/bridge";
 import type { Meta } from "@/lib/cinemeta";
@@ -342,17 +342,47 @@ export function renderControl(id: PlayerControlId, ctx: ControlContext): ReactNo
       );
     }
     case "engine-switch": {
-      // Only when there is genuinely another engine to move to. The label names
-      // the destination rather than the current engine, because the viewer is
-      // pressing it to get somewhere.
+      // One button per engine, and the running one is green.
+      //
+      // This was a single button that swapped to whichever engine was not
+      // playing. It worked, but it never said which one you were on — the icon
+      // was the same either way — so pressing it was a guess and the only way
+      // to know the answer was to watch what happened. Two buttons state the
+      // choice and mark the answer: the engine playing is lit, the other is a
+      // place to go.
+      //
+      // Both are still shown only when both exist; a device with one engine has
+      // no choice to offer.
       if (ctx.tight || !ctx.alternateEngine) return null;
-      const label = translate("Switch to {engine}", {
-        engine: ctx.alternateEngine === "mpv" ? "mpv" : translate("the native player"),
-      });
+      const engines: Array<{ id: "mpv" | "exo"; name: string }> = [
+        { id: "mpv", name: "mpv" },
+        { id: "exo", name: translate("the native player") },
+      ];
       return (
-        <BigButton onClick={ctx.onSwitchEngine} ariaLabel={label} tooltip={label}>
-          <Cpu size={22} strokeWidth={1.9} />
-        </BigButton>
+        <>
+          {engines.map((e) => {
+            const running = ctx.engine === e.id;
+            const label = running
+              ? translate("Playing on {engine}", { engine: e.name })
+              : translate("Switch to {engine}", { engine: e.name });
+            return (
+              <BigButton
+                key={e.id}
+                onClick={running ? undefined : ctx.onSwitchEngine}
+                ariaLabel={label}
+                tooltip={label}
+              >
+                <span
+                  className={`text-[12px] font-bold uppercase tracking-[0.06em] ${
+                    running ? "text-emerald-400" : ""
+                  }`}
+                >
+                  {e.id === "mpv" ? "MPV" : "TV"}
+                </span>
+              </BigButton>
+            );
+          })}
+        </>
       );
     }
     case "audio-menu": {
