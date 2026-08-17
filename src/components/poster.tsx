@@ -129,6 +129,16 @@ function cardSized(url: string, ratio: Ratio): string {
   // Metahub publishes the same artwork at two sizes and the smaller one is
   // already the right size for a card.
   out = out.replace("/poster/medium/", "/poster/small/");
+  // Backgrounds and logos were never named here, and they are the expensive
+  // ones. Measured on the device: a Continue Watching card drew a Metahub
+  // background at 645x363 device pixels while decoding it at 1920x1080 — nine
+  // times the pixels it shows — and its logo at 800x310 for a strip a third
+  // that size. A card is never a hero, so the hero's own ratio is left out of
+  // this: only a poster or a 16:9 tile gets the smaller artwork.
+  if (ratio !== "wide") {
+    out = out.replace("/background/medium/", "/background/small/");
+    out = out.replace("/logo/medium/", "/logo/small/");
+  }
   return out;
 }
 

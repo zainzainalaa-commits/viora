@@ -112,11 +112,11 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
           // language preference and falls back to it when nothing else exists.
           const key = settingsRef.current.tmdbKey;
           const cachedLogo = peekCachedLogo(key, full);
-          if (cachedLogo) setLogo(cachedLogo);
+          if (cachedLogo) setLogo(downscaleTmdb(cachedLogo));
           else
             void resolveLogo(key, full)
               .then((l) => {
-                if (!cancelled && l) setLogo(l);
+                if (!cancelled && l) setLogo(downscaleTmdb(l));
               })
               .catch(() => {});
           const bg = full.background || (item.background ? undefined : full.poster);
@@ -370,7 +370,15 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
 
 function downscaleTmdb(url?: string): string | undefined {
   if (!url) return url;
-  return url.replace(/\/t\/p\/(original|w1280|w780|w500)\//, "/t/p/w300/");
+  // This card does not go through `Poster`, so the sizing rule that lives there
+  // has to be repeated. It knew about TMDB and not about Metahub, which is
+  // where a continue card's artwork usually comes from: measured on the device,
+  // six of them were decoding 1920x1080 backgrounds for a 645x363 tile.
+  return url
+    .replace(/\/t\/p\/(original|w1280|w780|w500)\//, "/t/p/w300/")
+    .replace("/background/medium/", "/background/small/")
+    .replace("/logo/medium/", "/logo/small/")
+    .replace("/poster/medium/", "/poster/small/");
 }
 
 function formatRemaining(t: (key: string, vars?: Record<string, string | number>) => string, ms: number) {
