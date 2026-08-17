@@ -37,7 +37,22 @@ function Layer({ url, first, onReady }: { url: string; first: boolean; onReady: 
           alt=""
           aria-hidden="true"
           decoding="async"
-          className="absolute inset-0 h-full w-full scale-105 object-cover blur-2xl"
+          // Blurred small, then scaled up.
+          //
+          // A 40px blur across the whole stage is 1066x672 pixels of gaussian
+          // work every time anything above it repaints, and this television has
+          // a Mali-G52. The result is unrecognisable by design, so it does not
+          // need to be computed at full size: a quarter-scale layer with a
+          // quarter of the radius looks the same once it is scaled back up, and
+          // the blur then runs over a sixteenth of the pixels.
+          style={{
+            width: "25%",
+            height: "25%",
+            transformOrigin: "top left",
+            transform: "scale(4.2)",
+            filter: "blur(10px)",
+          }}
+          className="absolute inset-0 object-cover"
         />
       )}
       <img

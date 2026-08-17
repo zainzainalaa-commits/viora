@@ -308,7 +308,7 @@ export const PickCard = memo(function PickCard({
         )}
         {inWatchlist && settings.watchlistBadge !== "off" && (
           <span
-            className={`pointer-events-none absolute flex h-6 w-6 items-center justify-center rounded-full bg-canvas/85 text-ink ring-1 ring-edge-soft/70 backdrop-blur-sm ${WATCHLIST_POS[settings.watchlistBadge]}`}
+            className={`pointer-events-none absolute flex h-6 w-6 items-center justify-center rounded-full bg-canvas/85 text-ink ring-1 ring-edge-soft/70 ${WATCHLIST_POS[settings.watchlistBadge]}`}
             title={t("In your watchlist")}
             aria-label={t("In watchlist")}
           >
@@ -317,7 +317,7 @@ export const PickCard = memo(function PickCard({
         )}
         {watched && (
           <span
-            className="pointer-events-none absolute bottom-1.5 start-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/90 text-white ring-1 ring-emerald-300/40 backdrop-blur-sm"
+            className="pointer-events-none absolute bottom-1.5 start-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/90 text-white ring-1 ring-emerald-300/40"
             title={t("Watched")}
             aria-label={t("Watched")}
           >

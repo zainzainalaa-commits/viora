@@ -21,7 +21,7 @@ function WatchlistDot() {
   const t = useT();
   return (
     <span
-      className="pointer-events-none absolute end-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-canvas/85 text-ink ring-1 ring-edge-soft/70 backdrop-blur-sm"
+      className="pointer-events-none absolute end-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-canvas/85 text-ink ring-1 ring-edge-soft/70"
       title={t("In your watchlist")}
       aria-label={t("In watchlist")}
     >
