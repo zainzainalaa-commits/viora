@@ -79,33 +79,54 @@ const RowNearContext = createContext(true);
  */
 export const CellArtNearContext = createContext(true);
 
-// Far enough that ordinary browsing never sees it happen.
+// Released only when the screen it belongs to is not the one being looked at.
 //
-// This was a screen and a half, and the owner caught what that costs: three
-// presses down and three back up crossed it, so a row you had just left came
-// back through its coloured plate. Measured while that happened — 129 image
-// responses, 126 of them served from the device's own disk cache and 1.4 KB
-// total off the network — so nothing was being re-downloaded; the picture was
-// simply being decoded again, and that is visible.
+// This began as a distance — release a card once it is far enough away — and the
+// owner rejected that, rightly. Measured on his television: the file is never
+// re-downloaded, 126 of 129 responses came from the device's own disk cache and
+// 1.4 KB in total touched the network, but decoding it again costs about 9ms a
+// poster and a whole row returning at once is visible.
 //
-// Vertical is where the crossing happens, so it gets more room: about three
-// screens above and below, one to each side. What that still releases is the
-// part that mattered — rows many screens away, and every screen sitting behind
-// the one being looked at.
-const ART_KEEP_MARGIN = "2400px 800px";
-
-const artWatchers = new WeakMap<Element, (near: boolean) => void>();
+// So distance no longer decides anything. A card in the screen you are on keeps
+// its picture however far along the row it has scrolled. What is released is
+// every card in the screens stacked behind it — which is where the artwork was
+// piling up anyway: of 405 megapixels held on the television, the screens the
+// viewer could not see were carrying a large part, and they are not going to be
+// looked at until they come back to the top.
+//
+// A hidden screen carries `display: none`, and an element inside one has no
+// boxes at all — that is the test, and it cannot be confused with a card that is
+// merely scrolled away, which keeps its box. The observer is only a trigger: it
+// fires when a screen appears or disappears, and every watched card is then
+// asked about its own geometry.
+const artWatchers = new Map<Element, (near: boolean) => void>();
 let artObserver: IntersectionObserver | null = null;
+let artSweepTimer = 0;
+
+const hasBox = (el: Element): boolean => (el as HTMLElement).getClientRects().length > 0;
+
+function sweepArt(): void {
+  for (const [el, onChange] of artWatchers) onChange(hasBox(el));
+}
 
 function watchArt(el: Element, onChange: (near: boolean) => void): () => void {
   if (typeof IntersectionObserver === "undefined") return () => {};
   if (!artObserver) {
-    artObserver = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) artWatchers.get(e.target)?.(e.isIntersecting);
-      },
-      { rootMargin: ART_KEEP_MARGIN },
-    );
+    artObserver = new IntersectionObserver((entries) => {
+      let maybeScreenSwitch = false;
+      for (const e of entries) {
+        const box = hasBox(e.target);
+        artWatchers.get(e.target)?.(box);
+        // A card losing its box means its screen went away, and the rest of that
+        // screen went with it — including cards that were already off screen and
+        // so will not report anything of their own.
+        if (!box) maybeScreenSwitch = true;
+      }
+      if (maybeScreenSwitch) {
+        window.clearTimeout(artSweepTimer);
+        artSweepTimer = window.setTimeout(sweepArt, 120);
+      }
+    });
   }
   artWatchers.set(el, onChange);
   artObserver.observe(el);
