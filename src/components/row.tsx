@@ -79,9 +79,20 @@ const RowNearContext = createContext(true);
  */
 export const CellArtNearContext = createContext(true);
 
-// Roughly a screen and a half in every direction, so a card is dressed well
-// before it arrives and undressed only once it is properly gone.
-const ART_KEEP_MARGIN = "1200px";
+// Far enough that ordinary browsing never sees it happen.
+//
+// This was a screen and a half, and the owner caught what that costs: three
+// presses down and three back up crossed it, so a row you had just left came
+// back through its coloured plate. Measured while that happened — 129 image
+// responses, 126 of them served from the device's own disk cache and 1.4 KB
+// total off the network — so nothing was being re-downloaded; the picture was
+// simply being decoded again, and that is visible.
+//
+// Vertical is where the crossing happens, so it gets more room: about three
+// screens above and below, one to each side. What that still releases is the
+// part that mattered — rows many screens away, and every screen sitting behind
+// the one being looked at.
+const ART_KEEP_MARGIN = "2400px 800px";
 
 const artWatchers = new WeakMap<Element, (near: boolean) => void>();
 let artObserver: IntersectionObserver | null = null;
