@@ -56,6 +56,54 @@ const RowNearContext = createContext(true);
 // MyAnimeList takes about 600 ms, and there are dozens of them. Saying which
 // ones matter lets the engine fetch those first instead of treating all
 // eighty-odd as equals.
+/**
+ * Whether a built card is close enough to be worth holding a picture for.
+ *
+ * Separate from the build gate above, and unlike it this one goes both ways.
+ * Measured on the television after an ordinary session: 1,200 images in the
+ * document, 405 megapixels of them decoded, and **twenty** of those images on
+ * screen. 875 belonged to cards scrolled out of view in the screen being
+ * looked at, 305 to screens behind it. The build gate is deliberately one-way —
+ * a card the remote can reach is never taken away — so the artwork piled up
+ * with every row the viewer passed.
+ *
+ * The card is not touched. It keeps its place, its focus, its title and its
+ * size; only the picture inside it is released, and comes back when the card
+ * comes near. That is what keeps this away from the navigation rules: nothing
+ * about where focus can go changes.
+ *
+ * One observer for the whole application rather than one per card. A card
+ * scrolled far along its row is outside the viewport just as surely as a row
+ * scrolled off the bottom, and an observer rooted at the viewport already
+ * accounts for the clipping its scrollers do — so both axes come free.
+ */
+export const CellArtNearContext = createContext(true);
+
+// Roughly a screen and a half in every direction, so a card is dressed well
+// before it arrives and undressed only once it is properly gone.
+const ART_KEEP_MARGIN = "1200px";
+
+const artWatchers = new WeakMap<Element, (near: boolean) => void>();
+let artObserver: IntersectionObserver | null = null;
+
+function watchArt(el: Element, onChange: (near: boolean) => void): () => void {
+  if (typeof IntersectionObserver === "undefined") return () => {};
+  if (!artObserver) {
+    artObserver = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) artWatchers.get(e.target)?.(e.isIntersecting);
+      },
+      { rootMargin: ART_KEEP_MARGIN },
+    );
+  }
+  artWatchers.set(el, onChange);
+  artObserver.observe(el);
+  return () => {
+    artWatchers.delete(el);
+    artObserver?.unobserve(el);
+  };
+}
+
 export const CellIsUpFrontContext = createContext(false);
 const UP_FRONT_COUNT = 6;
 
@@ -156,7 +204,16 @@ function LazyChild({
   const root = useContext(RowTrackContext);
   const rowNear = useContext(RowNearContext);
   const [visible, setVisible] = useState(eager && rowNear);
+  const [artNear, setArtNear] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Only built cells are watched: a skeleton has no picture to release.
+  useEffect(() => {
+    if (!visible) return;
+    const el = ref.current;
+    if (!el) return;
+    return watchArt(el, setArtNear);
+  }, [visible]);
 
   // The opening cards of a row are built as soon as the row itself is worth
   // building, not before. Nothing already built is taken back down.
@@ -210,14 +267,18 @@ function LazyChild({
   if (isDpadPrimary() && visible) {
     return (
       <FocusCell ref={ref} style={style}>
-        {children}
+        <CellArtNearContext.Provider value={artNear}>{children}</CellArtNearContext.Provider>
       </FocusCell>
     );
   }
 
   return (
     <div ref={ref} style={style}>
-      {visible ? children : <Skeleton shape={shape} />}
+      {visible ? (
+        <CellArtNearContext.Provider value={artNear}>{children}</CellArtNearContext.Provider>
+      ) : (
+        <Skeleton shape={shape} />
+      )}
     </div>
   );
 }
