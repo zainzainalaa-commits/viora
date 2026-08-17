@@ -807,7 +807,7 @@ function Shell() {
   const addonsAlive = useIdleEvict(addonsTop);
   const calendarAlive = useIdleEvict(calendarTop);
   const queueAlive = useKeepAlive(queueTop, queueTop);
-  const serviceAlive = useKeepAlive(serviceTop, serviceTop && !!service);
+  const serviceAlive = useKeepAlive(serviceTop, !!service, stackKinds.includes("service"));
   const detailAlive = useKeepAlive(detailTop, !!meta);
   const personAlive = useKeepAlive(personTop, personId !== null);
   const collectionAlive = useKeepAlive(

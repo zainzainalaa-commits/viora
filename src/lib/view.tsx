@@ -338,7 +338,17 @@ export function ViewProvider({ children }: { children: ReactNode }) {
     }
     return "home";
   })();
-  const service = top.kind === "service" ? top.service : null;
+  // Read from the stack, not from the top, like every other pushed screen.
+  //
+  // This was the one frame answered only while it was the topmost, so opening a
+  // title from a provider's page made `service` null the instant the title went
+  // up — and App's keep-alive reads that as "no longer wanted" and unmounts on
+  // the spot, taking every card with it. The focus layer remembers where the
+  // viewer stood by focus key; the key dies with the card, so Back came home to
+  // the screen's entry point instead of the poster it was opened from.
+  // Measured: the marked card was gone from the document after Back.
+  const serviceFrame = lastOfKind(stack, "service");
+  const service = serviceFrame ? serviceFrame.service : null;
   const metaFrame = stack.slice().reverse().find((f) => f.kind === "meta");
   const meta = metaFrame && metaFrame.kind === "meta" ? metaFrame.meta : null;
   const metaLiveContext =
