@@ -65,6 +65,16 @@ export type Settings = {
   pmKey: string;
   dlKey: string;
   region: string;
+  /**
+   * The one language answer, and the only one stored.
+   *
+   * Everything below that mentions a language — subtitles, audio, artwork,
+   * metadata, how add-on sources are ranked, which rows the home screen keeps —
+   * is computed from this by `deriveLanguages` when settings are read. None of
+   * them is written, none appears in the settings screen, and an empty list
+   * means no preference rather than English.
+   */
+  contentLanguages: string[];
   preferredLanguages: string[];
   requirePreferredLanguage: boolean;
   showImdbBadge: boolean;

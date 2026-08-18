@@ -12,10 +12,33 @@ export function sourceKeyFor(profileId: string, linked: boolean): string {
   return linked ? SHARED_KEY : profileKey(profileId);
 }
 
+/**
+ * The language fields that are computed, and must never be written back.
+ *
+ * They live on the settings object because sixty places read them, but there is
+ * only one language answer now — `contentLanguages` — and everything here is
+ * derived from it when settings are loaded. Storing them would resurrect the
+ * old options: a stale `preferredSubLangs` sitting in the blob, disagreeing
+ * with the one list, and no screen anywhere to correct it.
+ */
+const DERIVED_LANGUAGE_KEYS = [
+  "preferredLanguages",
+  "requirePreferredLanguage",
+  "homeLanguages",
+  "preferredSubLangs",
+  "preferredAudioLangs",
+  "tmdbLanguage",
+  "tmdbImageLangs",
+  "translateTitles",
+  "translateDescriptions",
+] as const;
+
 export function serializeSettings(settings: Settings): string {
   const { backgroundImage: _drop, ...themeRest } = settings.theme;
   void _drop;
-  return JSON.stringify({ ...settings, theme: themeRest });
+  const out: Record<string, unknown> = { ...settings, theme: themeRest };
+  for (const k of DERIVED_LANGUAGE_KEYS) delete out[k];
+  return JSON.stringify(out);
 }
 
 export function seedSharedFromLegacy(): void {

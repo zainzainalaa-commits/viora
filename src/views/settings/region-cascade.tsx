@@ -16,15 +16,16 @@ function prepend(value: string, list: string[]): string[] {
 export function applyLocaleCascade(
   update: (patch: Partial<Settings>) => void,
   next: LocaleProfile,
-  current: Pick<Settings, "preferredLanguages" | "preferredSubLangs" | "preferredAudioLangs">,
+  current: Pick<Settings, "contentLanguages">,
 ): void {
+  // Picking a country used to write four language keys at once, each in its own
+  // vocabulary. There is one now, and the country's language goes to the front
+  // of it — the metadata locale, the artwork order and the rest are derived
+  // from that when the settings are read.
   setUiLanguage(next.uiLanguage === "ar" ? "ar" : "en");
   update({
     uiLanguage: next.uiLanguage === "ar" ? "ar" : "en",
-    tmdbLanguage: next.tmdbLanguage,
-    preferredLanguages: prepend(next.audioLanguage, current.preferredLanguages),
-    preferredSubLangs: prepend(next.subtitleLanguage, current.preferredSubLangs),
-    preferredAudioLangs: prepend(next.audioLanguage, current.preferredAudioLangs),
+    contentLanguages: prepend(next.subtitleLanguage, current.contentLanguages),
   });
 }
 

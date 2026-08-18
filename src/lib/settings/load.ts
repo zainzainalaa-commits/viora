@@ -5,11 +5,11 @@ import {
   type CustomColors,
   type ThemeSettings,
 } from "@/lib/theme";
-import { languageName } from "@/lib/subtitles/language";
 import { sanitizeSeekStep } from "@/lib/seek-step";
 import { migrateModelId } from "@/lib/ai-models";
 import { DEFAULT, STORAGE_KEY } from "./defaults";
 import type { Settings } from "./types";
+import { deriveLanguages, seedContentLanguages } from "@/lib/language";
 
 const HEX_RE = /^#[0-9a-f]{6}$/i;
 
@@ -202,10 +202,6 @@ function buildStoredSettings(raw: string | null): Settings {
         ...DEFAULT.letterboxd,
         ...(parsed.letterboxd ?? {}),
       },
-      preferredSubLangs: (parsed.preferredSubLangs ?? DEFAULT.preferredSubLangs).map(languageName),
-      preferredAudioLangs: (parsed.preferredAudioLangs ?? DEFAULT.preferredAudioLangs).map(
-        languageName,
-      ),
       badgePlacement:
         parsed.badgePlacement === "top" || parsed.badgePlacement === "bottom"
           ? parsed.badgePlacement
@@ -257,9 +253,19 @@ function buildStoredSettings(raw: string | null): Settings {
       },
       webhookRules: Array.isArray(parsed.webhookRules) ? parsed.webhookRules : [],
       customStreamFilters: Array.isArray(parsed.customStreamFilters) ? parsed.customStreamFilters : DEFAULT.customStreamFilters,
-      tmdbImageLangs: Array.isArray(parsed.tmdbImageLangs)
-        ? parsed.tmdbImageLangs.filter((l): l is string => typeof l === "string")
-        : DEFAULT.tmdbImageLangs,
+      // Every language field but one is computed, never read from storage.
+      //
+      // The viewer answers once, in `contentLanguages`; subtitles, audio,
+      // artwork, metadata, add-on ranking and the home rows are all shapes of
+      // that same answer. Anyone upgrading keeps what they had — their old
+      // subtitle list, or failing that their stream languages, is carried into
+      // the single list the first time these settings are read.
+      ...(() => {
+        const stored = Array.isArray(parsed.contentLanguages)
+          ? parsed.contentLanguages.filter((l): l is string => typeof l === "string")
+          : seedContentLanguages(parsed as Record<string, unknown>);
+        return { contentLanguages: stored, ...deriveLanguages(stored) };
+      })(),
     };
   } catch {
     return DEFAULT;
