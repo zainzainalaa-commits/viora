@@ -127,7 +127,6 @@ function buildStoredSettings(raw: string | null): Settings {
       _pickerLayoutStremio?: boolean;
       _pickerLayoutStremioV2?: boolean;
       _stremioDeeplinkOnByDefault?: boolean;
-      _anilistSyncOnV1?: boolean;
       _rememberLastStreamOnV1?: boolean;
       _streamSortAddonV1?: boolean;
       scrapers?: unknown;
@@ -142,10 +141,6 @@ function buildStoredSettings(raw: string | null): Settings {
     if (!parsed._stremioDeeplinkOnByDefault) {
       parsed.stremioDeeplinkInstall = true;
       parsed._stremioDeeplinkOnByDefault = true;
-    }
-    if (!parsed._anilistSyncOnV1) {
-      parsed.anilistAutoSync = true;
-      parsed._anilistSyncOnV1 = true;
     }
     if (!parsed._rememberLastStreamOnV1) {
       parsed.rememberLastStream = true;
@@ -211,7 +206,6 @@ function buildStoredSettings(raw: string | null): Settings {
           ? parsed.harborColor
           : DEFAULT.harborColor,
       traktClientId: parsed.traktClientId ?? DEFAULT.traktClientId,
-      traktClientSecret: parsed.traktClientSecret ?? DEFAULT.traktClientSecret,
       traktAccessToken: parsed.traktAccessToken ?? DEFAULT.traktAccessToken,
       traktRefreshToken: parsed.traktRefreshToken ?? DEFAULT.traktRefreshToken,
       traktExpiresAt: parsed.traktExpiresAt ?? DEFAULT.traktExpiresAt,

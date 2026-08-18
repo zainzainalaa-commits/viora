@@ -944,6 +944,7 @@ export function SettingsNav({
   const status: Record<SectionId, string | null> = {
     basics: null,
     account: null,
+    mpv: null,
     library: libraryKeys > 0 ? `${libraryKeys}/5` : null,
     trakt: null,
     simkl: null,
@@ -954,7 +955,6 @@ export function SettingsNav({
     p2p: null,
     language: langChip,
     player: settings.playerEngine === "auto" ? null : settings.playerEngine,
-    mpv: (settings.mpvQuality ?? "balanced") === "balanced" ? null : settings.mpvQuality === "performance" ? "lite" : "max",
     playerLayout: null,
     theme: settings.theme.preset === "cool-grey" && settings.theme.fontPair === "sentient-switzer" ? null : "•",
     webhooks: webhookActive ? "live" : null,

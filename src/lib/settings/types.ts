@@ -1,5 +1,4 @@
 import type { ThemeSettings } from "@/lib/theme";
-import type { CustomList } from "@/lib/lists/types";
 import type { SourceRow } from "@/lib/custom-sources";
 import type { CustomStreamFilter } from "@/lib/streams/custom-filters";
 
@@ -110,9 +109,6 @@ export type Settings = {
   playerTitleSeriesFirst: boolean;
   uiScale: number;
   serveWebUi: boolean;
-  trailerQuality: "auto" | "360p" | "720p" | "1080p" | "best";
-  detailTrailerAutoplay: boolean;
-  detailTrailerAudio: boolean;
   heroShadow: number;
   heroFull: boolean;
   heroFullQuality: boolean;
@@ -138,16 +134,9 @@ export type Settings = {
   tvdbOrderPanel: boolean;
   harborAvatar: string | null;
   harborColor: string;
-  anilistAutoSync: boolean;
-  malAutoSync: boolean;
-  anilistBlurComments: boolean;
-  showAnilistComments: boolean;
-  useAnilistAvatar: boolean;
   useTraktAvatar: boolean;
   useSimklAvatar: boolean;
-  useMalAvatar: boolean;
   traktClientId: string;
-  traktClientSecret: string;
   traktAccessToken: string | null;
   traktRefreshToken: string | null;
   traktExpiresAt: number;
@@ -170,8 +159,6 @@ export type Settings = {
   rememberLastStream: boolean;
   keepSourceNextEpisode: boolean;
   playerHdrToSdr: boolean;
-  playerRtxHdr: boolean;
-  playerDisplayPanel: "auto" | "oled" | "lcd";
   playerMotionInterp: boolean;
   playerMpvEmbed: boolean;
   playerP2pChip: boolean;
@@ -239,20 +226,13 @@ export type Settings = {
   aiGroqKey: string;
   jinaKey: string;
   aiWebSearch: boolean;
-  mpvExtraOptions: string;
-  mpvQuality: "balanced" | "performance" | "quality";
-  mpvHwdec: "auto" | "on" | "off";
-  mpvBufferBoost: boolean;
-  mpvDownmixStereo: boolean;
   mpvTweaks: Record<string, string>;
   playerSvp: boolean;
   svpVpyPath: string;
   seekBackStepSec: number;
   seekForwardStepSec: number;
-  playerHdrOpaqueWindow: boolean;
   playerEscExitsFullscreen: boolean;
   playerConfirmLeave: boolean;
-  playerHdrStage: "auto" | "off" | "always";
   audioNormalize: boolean;
   audioProfile: "off" | "bass" | "voice" | "bass-reduce" | "night";
   audioDevice: string;
@@ -287,7 +267,6 @@ export type Settings = {
   librarySort: "recent" | "title" | "year";
   preferCustomMetaAddon: boolean;
   cwAdvanceNext: boolean;
-  useNativeTitleBar: boolean;
   closeToTray: boolean;
   trayAlwaysOnTop: boolean;
   pauseMinimized: boolean;
@@ -395,7 +374,6 @@ export type Settings = {
   uiLanguage: "en" | "ar" | "pt";
   arabicWelcomeSeen: boolean;
   cropMode: string;
-  customLists: CustomList[];
   pauseListStatusOnPause: boolean;
   translateTitles: boolean;
   translateDescriptions: boolean;

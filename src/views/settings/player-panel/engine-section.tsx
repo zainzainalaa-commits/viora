@@ -5,7 +5,6 @@ import { useT } from "@/lib/i18n";
 import { ToggleRow } from "../shared";
 import { BandwidthInput } from "./bandwidth-section";
 import { DesktopOnlyBlock } from "./internals";
-import { DisplayPanelSelector } from "./display-panel-selector";
 
 type Choice = {
   id: "auto" | "mpv" | "exo";
@@ -132,7 +131,6 @@ export function PlayerEnginePanel() {
             value={settings.playerHdrToSdr}
             onChange={(v) => update({ playerHdrToSdr: v })}
           />
-          <DisplayPanelSelector />
         </div>
       </DesktopOnlyBlock>
 
