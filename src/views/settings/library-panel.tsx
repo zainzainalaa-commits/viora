@@ -37,6 +37,7 @@ import { ExtLink, KeyField, Section, Segmented, ToggleRow } from "./shared";
 import { TmdbGuideModal } from "./tmdb-tutorial-modal";
 import { TvdbGuideModal } from "./tvdb-tutorial-modal";
 import { EpisodeOrderSetting } from "./episode-order-setting";
+import { RegionField } from "./region-cascade";
 
 export type LibraryKey = "tmdb" | "omdb" | "rpdb" | "fanart" | "tvdb";
 
@@ -130,6 +131,13 @@ export function LibraryPanel({
           twelve thousand pixels — the key field itself was at y=6892, some
           seventeen screens down a list of six hundred controls. On a remote
           that is not a setting, it is a rumour. */}
+      <Section
+        title={t("Region")}
+        subtitle={t("Your country, used for streaming availability and for the Now Playing release window. It is not a language setting — those live on the Languages screen.")}
+      >
+        <RegionField />
+      </Section>
+
       <Section
         title={t("Metadata providers")}
         subtitle={t("A free TMDB key is highly recommended. It unlocks the full Viora experience. The rest are optional, and Cinemeta works out of the box without any.")}

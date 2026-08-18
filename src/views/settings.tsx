@@ -72,7 +72,7 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   },
   language: {
     label: "Languages",
-    sub: "Which audio and subtitle languages rank first in stream lists.",
+    sub: "Two answers: the language Viora speaks, and the language you want everything else in.",
   },
   player: {
     label: "Player & quality",

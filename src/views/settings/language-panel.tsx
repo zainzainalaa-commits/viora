@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useSettings } from "@/lib/settings";
 import { useT } from "@/lib/i18n";
 import { Section, ToggleRow } from "./shared";
-import { RegionField } from "./region-cascade";
 import { SubtitleStylePanel } from "./player-panel";
 import { LanguagesPicker } from "./streaming-panel";
 import { DisplayLanguageSection } from "./language-panel/display-language-section";
@@ -16,16 +15,6 @@ export function LanguagePanel() {
   const [blockDraft, setBlockDraft] = useState(settings.trackBlockWords.join(", "));
   return (
     <>
-    {/* Everything about language lives here now. The country and the Home
-        filter were in Library & metadata, which is where you look for keys and
-        catalogues, not for what language the app speaks. */}
-    <Section
-      title={t("Region & language")}
-      subtitle={t("Used for streaming availability and the Now Playing release window. Pick a country and Viora can match the interface, metadata, and subtitle languages to it.")}
-    >
-      <RegionField />
-    </Section>
-
     <DisplayLanguageSection />
 
     {/* The second of the two, and the last language question in the app.
@@ -35,7 +24,7 @@ export function LanguagePanel() {
         preference, so every subtitle is offered and nothing is demoted. */}
     <Section
       title={t("Content language")}
-      subtitle={t("The language you want everything in: titles and descriptions, posters and logos, subtitles, audio, and which sources from your add-ons come first. Put your main language at the top. Leave it empty and nothing is preferred — every subtitle and every source is offered, and you choose.")}
+      subtitle={t("Titles, artwork, subtitles, audio, and which sources come first — all of it follows this. Main language at the top. Leave it empty and nothing is preferred: every subtitle is offered and you choose.")}
     >
       <LanguagesPicker
         value={settings.contentLanguages}
