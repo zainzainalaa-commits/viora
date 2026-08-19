@@ -19,8 +19,6 @@ import { useSearch } from "@/lib/search-context";
 import { useSettings } from "@/lib/settings";
 import { useTogether } from "@/lib/together/provider";
 import { useSelfIdentity } from "@/lib/together/use-self-identity";
-import { activeLayout } from "@/lib/theme";
-import { useThemePreview } from "@/lib/theme-preview";
 import { useView } from "@/lib/view";
 
 
@@ -30,18 +28,13 @@ export function Topbar({ connecting = false }: { connecting?: boolean } = {}) {
   const kid = useActiveKid();
   const t = useT();
   const [closeConfirm, setCloseConfirm] = useState(false);
-  const preview = useThemePreview();
   if (chromeHidden && !connecting) return null;
-  const layout = kid ? "sidebar" : preview ? preview.layout : activeLayout(settings.theme);
   const onLiveRoot = topKind === "live";
   const sidebarHidden = connecting || view === "settings" || onLiveRoot || topKind === "picker";
   const hideSearch = view === "addons" || connecting || topKind === "picker";
-  const sidebarOffset =
-    layout === "stremio"
-      ? "ps-[80px]"
-      : settings.sidebarCollapsed
-        ? "ps-[84px]"
-        : "ps-[84px] lg:ps-[260px]";
+  const sidebarOffset = settings.sidebarCollapsed
+    ? "ps-[84px]"
+    : "ps-[84px] lg:ps-[260px]";
   const searchWidth = canGoBack
     ? "w-[14rem] sm:w-[18rem] lg:w-[22rem] xl:w-[24rem]"
     : "w-[14rem] sm:w-[20rem] lg:w-[24rem] xl:w-[28rem] hover:w-[18rem] sm:hover:w-[24rem] lg:hover:w-[28rem] xl:hover:w-[34rem] focus-within:w-[18rem] sm:focus-within:w-[24rem] lg:focus-within:w-[28rem] xl:focus-within:w-[34rem]";

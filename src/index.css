@@ -1918,17 +1918,28 @@ html[data-input="dpad"] [data-focusable="true"]:has(> [data-preview-anchor]):foc
 
    Naming the grandchild puts the frame back on the photograph without moving
    where focus lands, which is the part that is not ours to change. */
-html[data-input="dpad"] [tabindex]:focus:has(> button > [data-preview-anchor]),
-html[data-input="dpad"] [data-tv-focused="true"]:has(> button > [data-preview-anchor]) {
+/* Depth is not the relationship, and the proof is directional.
+   Measured on the emulator, same card, same row: arriving from the left, focus
+   settles on the button inside the cell and the poster rings correctly at
+   3px/4px. Arriving from the right, focus settles on the *cell* — and from
+   there the artwork is three levels down (div > button > div), which matched
+   neither `> anchor` nor `> button > anchor`. So the cell took the generic ring
+   around its whole 166x262 self, caption included, and the tile lift below —
+   guarded by the same depth — scaled it to 176x278 and left it there. Not a
+   flash: at t500 it was still 1.06.
+
+   What is true either way is that the stop contains its artwork. */
+html[data-input="dpad"] [tabindex]:focus:has([data-preview-anchor]),
+html[data-input="dpad"] button:focus:has([data-preview-anchor]),
+html[data-input="dpad"] [data-tv-focused="true"]:has([data-preview-anchor]) {
   outline: none !important;
   box-shadow: none !important;
 }
 
-html[data-input="dpad"] [tabindex]:focus > button > [data-preview-anchor],
-html[data-input="dpad"] [data-tv-focused="true"] > button > [data-preview-anchor] {
+html[data-input="dpad"] [tabindex]:focus [data-preview-anchor]:not([data-tv-focused="true"] [role="gridcell"] [data-preview-anchor]),
+html[data-input="dpad"] [data-tv-focused="true"] [data-preview-anchor]:not([data-tv-focused="true"] [role="gridcell"] [data-preview-anchor]) {
   outline: 3px solid var(--color-accent);
   outline-offset: 4px;
-  border-radius: calc(var(--poster-radius, 12px) + 4px);
   /* And it does not lift.
      A card in a row can rise into the clear because the row keeps space above
      it. This one sits directly under its heading, and the ring already stands
@@ -1946,7 +1957,6 @@ html[data-input="dpad"] [data-tv-focused="true"] > [data-preview-anchor] {
      image. */
   outline: 3px solid var(--color-accent);
   outline-offset: 4px;
-  border-radius: calc(var(--poster-radius, 12px) + 4px);
   /* Up a little, so the card separates from its row across a room. The poster
      alone moves; the name below it stays on its line, which is what keeps a row
      of captions readable while one of them is picked out. */
@@ -1969,7 +1979,49 @@ html[data-input="dpad"] [data-tv-focused="true"] > [data-preview-anchor] {
    grew 7.5px upward at 1.06 and the poster then rose 8 more inside it, putting
    the top of the ring 6.2px outside what the row draws. The card keeps its
    lift; the cell underneath it stops taking one. */
-html[data-input="dpad"] [role="gridcell"]:focus:not(:has(> button > [data-preview-anchor])) {
+/* A radius only where there is none to keep.
+   A card that wraps its poster in a plain block — to hold a rank badge outside
+   the picture, or to carry the lift — marks that block, and a plain block has
+   square corners, so the frame needed a radius given to it: the poster's, plus
+   the four pixels the ring stands off. The shared poster is the opposite case.
+   It already carries `--poster-radius`, and forcing the sum onto it would round
+   the artwork itself from 12 to 16 the moment it took focus — the picture
+   changing shape under the frame. Chrome expands an outline's corners by the
+   offset on its own, so the poster needs nothing said about it. */
+html[data-input="dpad"] [data-preview-anchor]:not(.viora-poster) {
+  border-radius: calc(var(--poster-radius, 12px) + 4px);
+}
+
+/* One frame per card, even when two blocks claim to be the artwork.
+   The shared poster marks itself, so a card that also marks a block around it
+   now has two. The outer one is the truthful one: it is what moves and what any
+   badge belongs to. An artwork block inside another is not a second frame. */
+/* A channel card wears its frame on the outside.
+
+   The focusable inside one of these fills the card exactly, and the card clips
+   its children for the sake of its rounded corners — so the ring was painted
+   and then thrown away, and a focused channel was indistinguishable from the
+   rest. An element's own outline is not clipped by its own overflow, so the
+   frame belongs to the card rather than to the button inside it, where it can
+   stand clear of the border the card already has. */
+html[data-input="dpad"] [data-live-card]:has(:focus) {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 1rem;
+  z-index: 2;
+}
+
+html[data-input="dpad"] [data-live-card] :focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+html[data-input="dpad"] [data-preview-anchor] [data-preview-anchor] {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+html[data-input="dpad"] [role="gridcell"]:focus:not(:has([data-preview-anchor])) {
   transform: scale(1.06);
   transition: transform 120ms ease-out;
 }

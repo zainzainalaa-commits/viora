@@ -9,7 +9,7 @@ import { ColorsGrid } from "./colors-grid";
 import { CustomChromeBuilder } from "./custom-chrome-builder";
 import { FontPicker } from "./font-picker";
 import { IdentityRow } from "./identity-row";
-import { LayoutPicker } from "./layout-picker";
+import { ChromeChoice } from "./chrome-choice";
 import { NavEditor } from "./nav-editor";
 import { StylePicker } from "./style-picker";
 import { StyleSpecimen } from "./style-specimen";
@@ -111,8 +111,11 @@ export function Inspector({
 
         {tab === "layout" && (
           <div className="flex flex-col">
-            <Group title="Layout" sub="Where the navigation lives. Pick one to see it live.">
-              <LayoutPicker value={draft.layout} onChange={(layout) => onPatch({ layout })} />
+            <Group
+              title="Layout"
+              sub="One navigation, built and measured against the remote. A theme is its colours."
+            >
+              <ChromeChoice value={draft.layout} onChange={(layout) => onPatch({ layout })} />
             </Group>
             {draft.layout === "custom" && (
               <CustomChromeBuilder

@@ -123,3 +123,8 @@ export function renameNavItem(cfg: NavCustomization, id: string, label: string):
 export function resetNavCustomization(): NavCustomization {
   return { order: [], hidden: [], renamed: {} };
 }
+
+/** A stable name per destination, so a rail can prefer the active one. */
+export function navFocusKey(view: View): string {
+  return `SIDEBAR_NAV_${String(view).toUpperCase()}`;
+}

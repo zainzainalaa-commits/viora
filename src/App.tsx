@@ -1,15 +1,5 @@
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
-import { FloatingBack } from "@/chrome/floating-back";
-import { MinUIDock } from "@/chrome/minui-dock";
 import { Sidebar } from "@/chrome/sidebar";
-import { DraculaSidebar } from "@/chrome/dracula-sidebar";
-import { NordSidebar } from "@/chrome/nord-sidebar";
-import { ForestSidebar } from "@/chrome/forest-sidebar";
-import { RoyalTopbar } from "@/chrome/royal-topbar";
-import { SideRail } from "@/chrome/siderail";
-import { StremioRail } from "@/chrome/stremio-rail";
-import { TopDock } from "@/chrome/topdock";
-import { CinematicOverlay } from "@/chrome/cinematic-overlay";
 import { Topbar } from "@/chrome/topbar";
 import { startMaintenance, subscribeMemoryPressure } from "@/lib/maintenance";
 import { MiddleClickScroll } from "@/lib/use-middle-click-scroll";
@@ -404,17 +394,26 @@ function Shell() {
   // top bar and a side rail are both out of thumb reach at phone width. A
   // television is all rail, so the themed chromes are the whole set again.
   const layout = kid ? "sidebar" : baseLayout;
-  const themeHasTopbar =
-    layout === "sidebar" ||
-    layout === "dracula" ||
-    layout === "nord" ||
-    layout === "forest" ||
-    layout === "stremio";
+  const themeHasTopbar = layout === "sidebar";
   useViewPreloader();
 
   // Outermost Back handler: pop the view stack while there is one, otherwise
   // fall back to the sidebar so Back never leaves the user with nowhere to go.
   useBackHandler(() => {
+    /*
+      The screen on top answers first.
+
+      `harbor:local-back` already existed as the way a screen says "this press
+      is mine" — Live uses it to step out of a category, the player to close its
+      overlays. It was only ever dispatched for the mouse's fourth button, so
+      from a remote no screen was ever asked: Back went straight to the global
+      rules, and a viewer inside a category came out somewhere else entirely.
+
+      Nothing about those rules changes. They run exactly as before whenever the
+      screen declines the press, which is every screen that does not listen.
+    */
+    const local = new Event("harbor:local-back", { cancelable: true });
+    if (!window.dispatchEvent(local)) return true;
     if (player) return false;
     // Live is entered by switching view, not by pushing onto the stack, so
     // there is nothing for goBack to pop — and Live hides the sidebar, which
@@ -837,20 +836,6 @@ function Shell() {
   return (
     <div data-kids={kidsTop || kid ? "on" : undefined} className="relative flex h-full">
       {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "sidebar" && <Sidebar />}
-      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "dracula" && <DraculaSidebar />}
-      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "nord" && <NordSidebar />}
-      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "forest" && <ForestSidebar />}
-      {!settingsTop && !playerActive && !liveHidesRail && !pickerTop && layout === "stremio" && <StremioRail />}
-      {!settingsTop && !playerActive && !pickerTop && layout === "topdock" && <TopDock />}
-      {!settingsTop && !playerActive && !pickerTop && layout === "cinematic" && <CinematicOverlay />}
-      {!settingsTop && !playerActive && !pickerTop && layout === "royal" && <RoyalTopbar />}
-      {!settingsTop && !playerActive && !pickerTop && layout === "rail" && <SideRail />}
-      {!playerActive && !pickerTop && layout === "minui" && <MinUIDock />}
-      {!playerActive && !pickerTop && layout === "topdock" && <FloatingBack offsetTop={92} />}
-      {!playerActive && !pickerTop && layout === "cinematic" && <FloatingBack offsetTop={92} />}
-      {!playerActive && !pickerTop && layout === "royal" && <FloatingBack offsetTop={92} />}
-      {!playerActive && !pickerTop && layout === "rail" && <FloatingBack offsetLeft={settings.sidebarCollapsed ? 88 : 220} offsetTop={28} />}
-      {!playerActive && !pickerTop && layout === "custom" && <FloatingBack offsetLeft={20} offsetTop={20} />}
       {/* The content half of the app is one region, so leaving it for the
           sidebar and coming back lands where you were, and so focus always has
           somewhere to return to when a view unmounts under it. */}
@@ -1049,13 +1034,7 @@ function Shell() {
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-canvas/85 via-canvas/40 to-transparent"
         />
-        {!immersive && (themeHasTopbar || (settingsTop && layout !== "minui" && layout !== "custom")) && <Topbar />}
-        {!immersive && layout === "rail" && !settingsTop && (
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-canvas/90 via-canvas/40 to-transparent"
-          />
-        )}
+        {!immersive && (themeHasTopbar || (settingsTop && layout !== "custom")) && <Topbar />}
       </FocusSection>
       {player && (
         <Suspense fallback={null}>

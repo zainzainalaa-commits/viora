@@ -12,7 +12,7 @@ import { useActiveKid } from "@/lib/profiles";
 import { useView, type View } from "@/lib/view";
 import { KidsSidebarDoodles } from "./kids-sidebar-doodles";
 import { CollapseToggle } from "@/chrome/sidebar/collapse-toggle";
-import { NAV_ITEMS, applyNavCustomization, type NavItem } from "@/chrome/nav-items";
+import { NAV_ITEMS, applyNavCustomization, type NavItem, navFocusKey } from "@/chrome/nav-items";
 import { Search as SearchIcon } from "lucide-react";
 import { useSearch } from "@/lib/search-context";
 import { isDpadPrimary } from "@/lib/platform";
@@ -406,11 +406,6 @@ function towardContent(): "left" | "right" {
   if (!aside) return "right";
   const box = aside.getBoundingClientRect();
   return box.left + box.width / 2 < window.innerWidth / 2 ? "right" : "left";
-}
-
-/** A stable name per destination, so the sidebar can prefer the active one. */
-function navFocusKey(view: View): string {
-  return `SIDEBAR_NAV_${String(view).toUpperCase()}`;
 }
 
 function NavItem({

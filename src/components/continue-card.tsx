@@ -17,6 +17,7 @@ import { useSettings } from "@/lib/settings";
 import { useView, type PlayEpisode } from "@/lib/view";
 import { getWatchedBy } from "@/lib/watched-by";
 import { playLocalAware } from "@/lib/local-library/playback";
+import { readPlayback } from "@/lib/playback-history";
 import { localPlayerSrc } from "@/lib/local-library/player-src";
 import { fetchSeasonEpisodes } from "@/lib/series-episodes";
 
@@ -170,12 +171,22 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
         background: item.background,
       };
 
-  const onClick = () => {
+  /** The title page, which is where a different source is chosen. */
+  const openTitle = () => {
     openMeta(meta, ep ? { episodeHint: ep } : undefined);
   };
 
-  const onPlay = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  /*
+    Pressing the card resumes it.
+
+    A row called Continue Watching is a row of one intention, and pressing it
+    used to open the title page instead — a page the viewer had already read,
+    standing between them and the thing they were half way through. The picker
+    already knows how to resume: given `resume`, it replays the stream this
+    title last used rather than asking again. Choosing a different source is
+    still there, one long press away, along with taking the card out.
+  */
+  const play = () => {
     let episode: PlayEpisode | undefined = item.type === "series" && ep ? ep : undefined;
     playLocalAware({
       meta,
@@ -183,7 +194,64 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
       mode: settings.localPlaybackMode,
       source: "manual",
       resumeId: meta.id,
-      playStream: () => openPicker(meta, episode, { autoPlay: settings.instantPlay, resume: true }),
+      playStream: () => {
+        /*
+          Straight back into the film, not into a list of ways to watch it.
+
+          Asking the picker to resume still meant fetching every stream from
+          every addon first, because it recognised the remembered one by
+          finding it in that list — measured on the emulator, pressing a card
+          showed "Searching streams" and then "336 found across 3 sources"
+          before anything played. But the history entry already holds the link
+          that played last, so when it is a direct one there is nothing to
+          search for: the player can open on it.
+
+          A saved link can go stale, and this cannot know that until the player
+          tries. That is what the long press is for — the title page, and a
+          different source.
+        */
+        const last = settings.rememberLastStream
+          ? readPlayback(meta.id, episode?.season, episode?.episode)
+          : null;
+        if (last?.url) {
+          openPlayer({
+            meta,
+            episode,
+            url: last.url,
+            title: episode ? episode.name || `Episode ${episode.episode}` : meta.name,
+            subtitle: episode
+              ? `${meta.name} · S${episode.imdbSeason ?? episode.season} · E${episode.imdbEpisode ?? episode.episode}`
+              : meta.releaseInfo,
+            resume: true,
+            streamRef: {
+              infoHash: last.infoHash ?? null,
+              fileIdx: last.fileIdx ?? null,
+              addonId: last.addonId ?? null,
+              title: last.title ?? null,
+              parsedTitle: last.parsedTitle ?? null,
+              resolution: last.resolution ?? null,
+              releaseGroup: last.releaseGroup ?? null,
+              source: last.source ?? null,
+              bingeGroup: last.bingeGroup ?? null,
+              size: last.size ?? null,
+            },
+          });
+          return;
+        }
+        /*
+          Nothing remembered, or a torrent that still has to be resolved — and
+          it still plays rather than asking.
+
+          A press here means "carry on watching this", and the only titles with
+          nothing remembered are the ones this app has not played before: the
+          row is built from the Stremio library, so most of what is in it was
+          watched somewhere else. Showing a list of sources on those was the
+          same press meaning two different things depending on history the
+          viewer cannot see. `instantPlay` stays the viewer's setting for
+          everywhere else; from this row the press always plays.
+        */
+        openPicker(meta, episode, { autoPlay: true, resume: true });
+      },
       playLocal: (entry, o) => {
         const s = localPlayerSrc(entry);
         openPlayer({
@@ -201,6 +269,29 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
     });
   };
 
+  /*
+    A hold is not also a press.
+
+    The engine knows to skip its own select once a long press has fired, but the
+    browser does not: releasing Enter on a focused <button> delivers a real
+    click of its own, and nothing was swallowing it. So holding OK opened the
+    menu and started the film underneath it at the same time — which is what the
+    owner saw, a menu sitting over a page he had not asked for.
+  */
+  const heldRef = useRef(false);
+  const onClick = () => {
+    if (heldRef.current) {
+      heldRef.current = false;
+      return;
+    }
+    play();
+  };
+
+  const onPlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    play();
+  };
+
   return (
     <div className="group relative w-full min-w-0">
       <FocusButton
@@ -212,26 +303,28 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
         // has neither, and the ✕ in the corner only exists under a pointer — so
         // there was no way at all to remove something from Continue Watching
         // from the sofa. The menu is opened over the card itself.
-        onLongPress={
-          onDismiss
-            ? () => {
-                const box = cardRef.current?.getBoundingClientRect();
-                openContextMenu(
-                  new MouseEvent("contextmenu", {
-                    clientX: box ? box.left + box.width / 2 : 0,
-                    clientY: box ? box.top + box.height / 2 : 0,
-                  }),
-                  { kind: "continue", label: meta.name, remove: () => onDismiss(item) },
-                );
-              }
-            : undefined
-        }
+        onLongPress={() => {
+          heldRef.current = true;
+          const box = cardRef.current?.getBoundingClientRect();
+          openContextMenu(
+            new MouseEvent("contextmenu", {
+              clientX: box ? box.left + box.width / 2 : 0,
+              clientY: box ? box.top + box.height / 2 : 0,
+            }),
+            {
+              kind: "continue",
+              label: meta.name,
+              remove: onDismiss ? () => onDismiss(item) : undefined,
+              openTitle,
+            },
+          );
+        }}
         onContextMenu={(e) =>
           openContextMenu(
             e,
             onDismiss
-              ? { kind: "continue", label: meta.name, remove: () => onDismiss(item) }
-              : { kind: "meta", meta },
+              ? { kind: "continue", label: meta.name, remove: () => onDismiss(item), openTitle }
+              : { kind: "continue", label: meta.name, openTitle },
           )
         }
         className="flex w-full min-w-0 flex-col gap-2.5 text-start"

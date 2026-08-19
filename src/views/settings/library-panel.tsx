@@ -18,7 +18,6 @@ import { EpisodeCardPreview } from "./episode-card-previews";
 import { SongCardStylePicker } from "./song-card-style-picker";
 import { HoverStyleGallery } from "./hover-style-preview";
 import { CwSnapshotShowcase } from "./cw-snapshot-showcase";
-import { AiSearchSection } from "./ai-search-section";
 import rpdbLogo from "@/assets/addon-logos/rpdb.png";
 import auddLogo from "@/assets/addon-logos/auddio.webp";
 import tmdbLogo from "@/assets/addon-logos/tmdb.png";
@@ -778,7 +777,6 @@ export function LibraryPanel({
       </Section>
 
 
-      <AiSearchSection />
 
 
       <Section

@@ -65,7 +65,7 @@ function isCustomTheme(t: unknown): t is CustomTheme {
   return true;
 }
 
-const LAYOUTS = new Set<ThemeLayout>(["sidebar", "topdock", "rail", "stremio", "minui", "dracula", "nord", "forest", "royal", "custom"]);
+const LAYOUTS = new Set<ThemeLayout>(["sidebar", "custom"]);
 const CARDS = new Set<ThemeCardStyle>(["flat", "glass", "stremio", "minui", "crunch", "noir", "custom"]);
 const BUTTONS = new Set<ThemeButtonStyle>(["flat", "glossy", "minui", "crunch", "noir", "custom"]);
 const asLayout = (v: unknown): ThemeLayout | undefined =>

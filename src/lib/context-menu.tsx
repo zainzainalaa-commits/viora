@@ -10,8 +10,12 @@ export type ContextMenuTarget =
   | { kind: "edit"; element: HTMLElement | null; selection: string }
   | { kind: "backdrop"; metaId: string; url: string }
   | { kind: "subtitle"; label: string; download?: () => void | Promise<unknown> }
-  /** A card in Continue Watching: the only thing to offer is taking it out. */
-  | { kind: "continue"; label: string; remove: () => void };
+  /**
+   * A card in Continue Watching. Pressing it now resumes on the source it last
+   * played from, so the menu carries what pressing it used to do: opening the
+   * title, which is where another source is chosen.
+   */
+  | { kind: "continue"; label: string; remove?: () => void; openTitle?: () => void };
 
 type Pos = { x: number; y: number };
 

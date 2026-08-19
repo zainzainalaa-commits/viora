@@ -874,8 +874,8 @@ export function SettingsNav({
   const { goBack, canGoBack, setView } = useView();
   const t = useT();
   const isNew = useSettingsNew();
-  const navLayout = activeLayout(settings.theme);
-  const showBack = navLayout === "custom" || navLayout === "minui";
+  // A custom chrome may not draw a Back of its own, so the panel keeps one.
+  const showBack = activeLayout(settings.theme) === "custom";
   const [query, setQuery] = useState("");
   /** Open while the remote types a settings search on the on-screen keyboard. */
   const [tvSearchOpen, setTvSearchOpen] = useState(false);

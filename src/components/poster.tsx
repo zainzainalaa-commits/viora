@@ -283,6 +283,16 @@ export function Poster({
 
   return (
     <div
+      /* Every card's frame, decided once.
+
+         This block is the artwork — the picture and its badges, with the title
+         a sibling below. Marking it here is what lets the ring belong to the
+         poster rather than to the padded cell around it, and here rather than in
+         each card because the cards that were missed are exactly the ones that
+         went wrong: counted across the app, four card types said where their
+         artwork was and thirty-three did not. A card that wraps this in a block
+         of its own still wins — the outermost mark is the one that rings. */
+      data-preview-anchor
       className={`viora-poster your-card relative w-full overflow-hidden rounded-[var(--poster-radius,12px)] ${className}`}
       style={showPlate ? { background: gradient(hue) } : undefined}
     >
